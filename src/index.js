@@ -10,7 +10,8 @@ import thunk from "redux-thunk";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-
+//reducers
+import authReducer from './store/reducers/auth'
 //checks to see if redux is available in production or not
 const composeEnhancers = process.env.NODE_ENV === "development"
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
