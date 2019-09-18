@@ -1,7 +1,7 @@
 //React Imports
 import React from 'react'
 //App Imports
-// import classes from './Auth.module.scss'
+import classes from './Auth.module.scss'
 import Logo from '../../components/Logo/Logo'
 import Input from '../../components/UI/Input/Input'
 import { updateObject, checkValidity } from "../../shared/utility";
@@ -75,12 +75,12 @@ const Auth = () => {
           invalid={!formElement.config.valid}
           shouldValidate={formElement.config.validation}
           touched={formElement.config.touched}
-          changed={event => this.inputChangedHandler(event, formElement.id)}
+          changed={event => inputChangedHandler(event, formElement.id)}
         />
       ));
 
     return (
-        <div>
+        <div className={classes.Auth}>
             <strong>
                 Welcome
             </strong>

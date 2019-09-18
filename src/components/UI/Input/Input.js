@@ -37,12 +37,12 @@ const Input = props => {
   let inputConfig = { ...props.elementConfig };
   //since material ui does not support error=false or true, then we must handle it with empty strings
   if (props.invalid && props.shouldValidate && props.touched) {
-    inputConfig.error = " ";
+    inputConfig.error = true;
   } else {
-    inputConfig.error = "";
+    delete inputConfig.error;
   }
-
-  if (props.inputStyleType === "outline") {
+  console.log("pier", props);
+  if (props.elementConfig.variant === "outlined") {
     switch (props.elementType) {
       case "input":
         inputElement = (
@@ -52,7 +52,6 @@ const Input = props => {
             value={props.value}
             onChange={props.changed}
             margin="normal"
-            variant="outlined"
           />
         );
         break;
@@ -64,7 +63,6 @@ const Input = props => {
             value={props.value}
             onChange={props.changed}
             margin="normal"
-            variant="outlined"
           />
         );
     }
