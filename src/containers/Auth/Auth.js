@@ -4,9 +4,21 @@ import React, { useState } from "react";
 import classes from "./Auth.module.scss";
 import Logo from "../../components/Logo/Logo";
 import Input from "../../components/UI/Input/Input";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import { updateObject, checkValidity } from "../../shared/utility";
 
-const Auth = (props) => {
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1)
+  },
+  input: {
+    display: "none"
+  }
+}));
+
+const Auth = props => {
+  const matClasses = useStyles();
   const [authForm, setAuthForm] = useState({
     email: {
       elementType: "input",
@@ -83,7 +95,12 @@ const Auth = (props) => {
     <div className={classes.Auth}>
       <strong>Welcome</strong>
       <Logo height="85px" />
-      <form>{form}</form>
+      <form>
+        {form}
+        <Button variant="contained" color="primary" className={matClasses.button}>
+          Submit
+        </Button>
+      </form>
     </div>
   );
 };
