@@ -3,12 +3,30 @@ import React, { useState } from "react";
 //App Imports
 import classes from "./Auth.module.scss";
 import Logo from "../../components/Logo/Logo";
-import Input from "../../components/UI/Input/Input";
+// import Input from "../../components/UI/Input/Input";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import TextField from '@material-ui/core/TextField';
+import SvgIcon from '@material-ui/core/SvgIcon';
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    '& > svg': {
+      margin: theme.spacing(2),
+    },
+  },
+  container: {
+    display: 'grid',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  dense: {
+    marginTop: theme.spacing(2),
+  },
   button: {
     margin: theme.spacing(1)
   },
@@ -19,15 +37,9 @@ const useStyles = makeStyles(theme => ({
 
 const Auth = props => {
   const matClasses = useStyles();
+
   const [authForm, setAuthForm] = useState({
     email: {
-      elementType: "input",
-      elementConfig: {
-        type: "email",
-        label: "Email",
-        placeholder: "Enter Your Email",
-        variant: "outlined"
-      },
       value: "",
       validation: {
         required: true,
@@ -70,37 +82,45 @@ const Auth = props => {
     setAuthForm(updatedControls);
   };
 
-  const formElementsArray = [];
-  // eslint-disable-next-line
-  for (let key in authForm) {
-    formElementsArray.push({
-      id: key,
-      config: authForm[key]
-    });
-  }
-  let form = formElementsArray.map(formElement => (
-    <Input
-      key={formElement.id}
-      elementType={formElement.config.elementType}
-      elementConfig={formElement.config.elementConfig}
-      value={formElement.config.value}
-      invalid={!formElement.config.valid}
-      shouldValidate={formElement.config.validation}
-      touched={formElement.config.touched}
-      changed={event => inputChangedHandler(event, formElement.id)}
-    />
-  ));
-
   return (
     <div className={classes.Auth}>
       <strong>Welcome</strong>
       <Logo height="85px" />
-      <form>
-        {form}
-        <Button variant="contained" color="primary" className={matClasses.button}>
-          Submit
-        </Button>
-      </form>
+      <div className={classes.formContainer}>
+        <form className={matClasses.container}>
+          <TextField
+            className={matClasses.textField}
+            label="Email"
+            placeholder="Enter Your Email"
+            type="Email"
+            value={authForm.email.value}
+            onChange={event => inputChangedHandler(event, 'email')}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            className={matClasses.textField}
+            label="Password"
+            placeholder="Enter Your Password"
+            type="password"
+            value={authForm.password.value}
+            onChange={event => inputChangedHandler(event, 'password')}
+            margin="normal"
+            variant="outlined"
+          />
+          <Button variant="contained" color="primary" className={matClasses.button}>
+            Submit
+          </Button>
+          <div className={classes.restoreLogin}>
+            Forgot your Login Details? <a href="/">Get Help Here.</a>
+          </div>
+          <div className={classes.textDivider}><span>OR</span></div>
+          <Button variant="outlined" className={matClasses.button}>
+          <div><img src="../../assets/images/search.png" alt=""/></div>
+            Sign in with Google
+          </Button>
+        </form>
+      </div>
     </div>
   );
 };

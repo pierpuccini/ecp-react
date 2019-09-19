@@ -7,9 +7,39 @@
     padding: 10px;
     box-sizing: border-box;
 }
+.restoreLogin {
+    font-size: small;
+}
+
+.formContainer {
+    margin: unset;
+}
+
+.textDivider {
+    margin: 1.5em 0;
+    line-height: 0;
+    text-align: center;
+}
+
+.textDivider span {
+    background-color: white;
+    padding: 1em;
+    font-size: small
+}
+
+.textDivider:before {
+    content: " ";
+    display: block;
+    border-top: 1px solid #e3e3e3;
+    border-bottom: 1px solid #f7f7f7;
+}
 
 @media (min-width: 600px) {
     .Auth {
         width: 500px;
+    }
+
+    .formContainer {
+        margin: 0px 40px;
     }
 }
