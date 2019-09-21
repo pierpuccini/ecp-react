@@ -7,14 +7,17 @@ import Logo from "../../components/Logo/Logo";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from '@material-ui/core/TextField';
-import SvgIcon from '@material-ui/core/SvgIcon';
+import gIcon from '../../assets/svg/search.svg';
+import Icon from '@material-ui/core/Icon';
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    '& > svg': {
-      margin: theme.spacing(2),
-    },
+  imageIcon: {
+    height: '100%'
+  },
+  iconRoot: {
+    textAlign: 'center',
+    padding: '4px 12px'
   },
   container: {
     display: 'grid',
@@ -94,7 +97,7 @@ const Auth = props => {
             placeholder="Enter Your Email"
             type="Email"
             value={authForm.email.value}
-            onChange={event => inputChangedHandler(event, 'email')}
+            onChange={event => inputChangedHandler(event, "email")}
             margin="normal"
             variant="outlined"
           />
@@ -104,7 +107,7 @@ const Auth = props => {
             placeholder="Enter Your Password"
             type="password"
             value={authForm.password.value}
-            onChange={event => inputChangedHandler(event, 'password')}
+            onChange={event => inputChangedHandler(event, "password")}
             margin="normal"
             variant="outlined"
           />
@@ -114,9 +117,16 @@ const Auth = props => {
           <div className={classes.restoreLogin}>
             Forgot your Login Details? <a href="/">Get Help Here.</a>
           </div>
-          <div className={classes.textDivider}><span>OR</span></div>
+          <div className={classes.textDivider}>
+            <span>OR</span>
+          </div>
           <Button variant="outlined" className={matClasses.button}>
-          <div><img src="../../assets/images/search.png" alt=""/></div>
+            <Icon classes={{ root: matClasses.iconRoot }}>
+              <img
+                className={matClasses.imageIcon}
+                src={gIcon}
+              />
+            </Icon>
             Sign in with Google
           </Button>
         </form>
