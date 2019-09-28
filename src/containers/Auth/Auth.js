@@ -87,7 +87,7 @@ const Auth = props => {
 
   return (
     <div className={classes.Auth}>
-      <strong>Hey</strong>
+      <strong>Welcome</strong>
       <Logo height="85px" />
       <div className={classes.formContainer}>
         <form className={matClasses.container}>
