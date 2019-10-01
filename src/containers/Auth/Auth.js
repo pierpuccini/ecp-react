@@ -1,5 +1,7 @@
 //React Imports
 import React, { useState } from "react";
+//Firebase Imports
+import firebase from 'firebase';
 //App Imports
 import classes from "./Auth.module.scss";
 import Logo from "../../components/Logo/Logo";
