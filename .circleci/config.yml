@@ -43,15 +43,16 @@ jobs:
       - run: # build react
           name: react-build
           command: CI=false npm run build
-      - run: # make  copy of .firebaserc
-          name: generate-firebaserc
-          command: cp .firebaserc.example .firebaserc
-      - run: # modify .firebaserc with env variable
-          name: modify-firebaserc
-          command: sed -i "s/\[edu-coins]/$FIREBASE_PROJECT_ID/g" .firebaserc
+      # - run: # make  copy of .firebaserc
+      #     name: generate-firebaserc
+      #     command: cp .firebaserc.example .firebaserc
+      # - run: # modify .firebaserc with env variable
+      #     name: modify-firebaserc
+      #     command: sed -i "s/\[edu-coins]/$FIREBASE_PROJECT_ID/g" .firebaserc
       - run:
           name: Deploy Firebase
-          command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
+          command: firebase deploy --token="$FIREBASE_TOKEN" --only hosting
+          # command: ./node_modules/.bin/firebase deploy --token="$FIREBASE_TOKEN" --only hosting
 
 workflows:
   version: 2
