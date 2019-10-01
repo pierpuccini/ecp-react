@@ -1,7 +1,9 @@
 //React Imports
 import React, { useState } from "react";
 //Firebase Imports
-import firebase from 'firebase';
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 //App Imports
 import classes from "./Auth.module.scss";
 import Logo from "../../components/Logo/Logo";
@@ -41,6 +43,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Auth = props => {
+  const uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: 'popup',
+    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+    signInSuccessUrl: '/',
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID
+    ]
+  };
+
   const matClasses = useStyles();
 
   const [authForm, setAuthForm] = useState({
@@ -71,7 +85,7 @@ const Auth = props => {
     }
   });
 
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const inputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(authForm, {
@@ -86,55 +100,65 @@ const Auth = props => {
     });
     setAuthForm(updatedControls);
   };
-
-  return (
+  return(
     <div className={classes.Auth}>
-      <strong>Welcome</strong>
-      <Logo height="85px" />
-      <div className={classes.formContainer}>
-        <form className={matClasses.container}>
-          <TextField
-            className={matClasses.textField}
-            label="Email"
-            placeholder="Enter Your Email"
-            type="Email"
-            value={authForm.email.value}
-            onChange={event => inputChangedHandler(event, "email")}
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            className={matClasses.textField}
-            label="Password"
-            placeholder="Enter Your Password"
-            type="password"
-            value={authForm.password.value}
-            onChange={event => inputChangedHandler(event, "password")}
-            margin="normal"
-            variant="outlined"
-          />
-          <Button variant="contained" color="primary" className={matClasses.button}>
-            Submit
-          </Button>
-          <div className={classes.restoreLogin}>
-            Forgot your Login Details? <a href="/">Get Help Here.</a>
-          </div>
-          <div className={classes.textDivider}>
-            <span>OR</span>
-          </div>
-          <Button variant="outlined" className={matClasses.button}>
-            <Icon classes={{ root: matClasses.iconRoot }}>
-              <img
-                className={matClasses.imageIcon}
-                src={gIcon}
-              />
-            </Icon>
-            Sign in with Google
-          </Button>
-        </form>
-      </div>
+      {isSignUp?
+       <p>Signed In</p> :
+       <div>
+         <p>Please sign-in:</p>
+         <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
+       </div>
+      }
     </div>
-  );
+  )
+  // return (
+  //   <div className={classes.Auth}>
+  //     <strong>Welcome</strong>
+  //     <Logo height="85px" />
+  //     <div className={classes.formContainer}>
+  //       <form className={matClasses.container}>
+  //         <TextField
+  //           className={matClasses.textField}
+  //           label="Email"
+  //           placeholder="Enter Your Email"
+  //           type="Email"
+  //           value={authForm.email.value}
+  //           onChange={event => inputChangedHandler(event, "email")}
+  //           margin="normal"
+  //           variant="outlined"
+  //         />
+  //         <TextField
+  //           className={matClasses.textField}
+  //           label="Password"
+  //           placeholder="Enter Your Password"
+  //           type="password"
+  //           value={authForm.password.value}
+  //           onChange={event => inputChangedHandler(event, "password")}
+  //           margin="normal"
+  //           variant="outlined"
+  //         />
+  //         <Button variant="contained" color="primary" className={matClasses.button}>
+  //           Submit
+  //         </Button>
+  //         <div className={classes.restoreLogin}>
+  //           Forgot your Login Details? <a href="/">Get Help Here.</a>
+  //         </div>
+  //         <div className={classes.textDivider}>
+  //           <span>OR</span>
+  //         </div>
+  //         <Button variant="outlined" className={matClasses.button}>
+  //           <Icon classes={{ root: matClasses.iconRoot }}>
+  //             <img
+  //               className={matClasses.imageIcon}
+  //               src={gIcon}
+  //             />
+  //           </Icon>
+  //           Sign in with Google
+  //         </Button>
+  //       </form>
+  //     </div>
+  //   </div>
+  // );
 };
 
 export default Auth;
