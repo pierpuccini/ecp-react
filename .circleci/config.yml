@@ -48,7 +48,7 @@ jobs:
           command: cp .firebaserc.example .firebaserc
       - run: # modify .firebaserc with env variable
           name: modify-firebaserc
-          command: sed -i "s/\[YOUR\-PROJECT\-ID\]/$FIREBASE_PROJECT_ID/g" .firebaserc
+          command: sed -i "s/\[edu-coins]/$FIREBASE_PROJECT_ID/g" .firebaserc
       - run:
           name: Deploy Firebase
           command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
