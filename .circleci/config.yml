@@ -42,7 +42,7 @@ jobs:
             - ./node_modules
       - run: # build react
           name: react-build
-          command: npm run build
+          command: CI=false npm run build
       - run: # make  copy of .firebaserc
           name: generate-firebaserc
           command: cp .firebaserc.example .firebaserc
