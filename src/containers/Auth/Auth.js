@@ -110,6 +110,11 @@ const Auth = props => {
     <div className={classes.Auth}>
       <strong>Welcome</strong>
       <Logo height="85px" />
+      {props.authError?
+        <div className={classes.loginError}>
+          {props.authError.customErrorMsg}
+        </div>
+        :null}
       <div className={classes.formContainer}>
         <form className={matClasses.container} onSubmit={submitHandler}>
           <TextField
@@ -183,7 +188,9 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   console.log(state);
-  return {};
+  return {
+    authError: state.auth.error
+  };
 };
 
 const mapDispatchToProps = dispatch => {
