@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 //Redux
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
+import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 //React Router
 import { Redirect } from "react-router-dom";
 //Firebase Imports
@@ -127,7 +128,7 @@ const Auth = props => {
     authRedirect = <Redirect to={props.authRedirectPath} />;
   }
   let authTemplate = null;
-  if (props.emailLoginLoading) {
+  if (props.emailLoginLoading && !isLoaded(props.fireAuth)) {
     authTemplate = (
       <div className={classes.loading}>
         <CircularProgress className={matClasses.progress} />
@@ -236,7 +237,8 @@ const mapStateToProps = state => {
     authError: state.auth.error,
     authRedirectPath: state.auth.authRedirectPath,
     authenticated: (state.firebase.auth.uid)? true : false,
-    emailLoginLoading: state.auth.loading
+    emailLoginLoading: state.auth.loading,
+    fireAuth: state.firebase.auth
   };
 };
 
