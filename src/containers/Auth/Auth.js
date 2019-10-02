@@ -14,6 +14,10 @@ import Logo from "../../components/Logo/Logo";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import gIcon from "../../assets/svg/search.svg";
 import Icon from "@material-ui/core/Icon";
 import { updateObject, checkValidity } from "../../shared/utility";
@@ -32,7 +36,8 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
+    inputAdornedEnd: "padding: unset"
   },
   dense: {
     marginTop: theme.spacing(2)
@@ -68,13 +73,6 @@ const Auth = props => {
       touched: false
     },
     password: {
-      elementType: "input",
-      elementConfig: {
-        type: "password",
-        label: "Password",
-        placeholder: "Enter Your Password",
-        variant: "outlined"
-      },
       value: "",
       validation: {
         required: true,
@@ -86,6 +84,7 @@ const Auth = props => {
   });
 
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const inputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(authForm, {
@@ -105,6 +104,11 @@ const Auth = props => {
     event.preventDefault();
     props.onAuth(authForm.email.value, authForm.password.value, isSignUp);
   };
+
+  const toggleViewPasswordHandler = () => {
+    let showPasswordCopy = !showPassword
+    setShowPassword(showPasswordCopy)
+  }
 
   return (
     <div className={classes.Auth}>
@@ -138,7 +142,7 @@ const Auth = props => {
             className={matClasses.textField}
             label="Password"
             placeholder="Enter Your Password"
-            type="password"
+            type={showPassword? 'text' : 'password'}
             value={authForm.password.value}
             onChange={event => inputChangedHandler(event, "password")}
             margin="normal"
@@ -150,6 +154,17 @@ const Auth = props => {
                 ? "Please Enter a valid Password"
                 : null
             }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment>
+                  <div onClick={()=>toggleViewPasswordHandler()}>
+                    <IconButton>
+                      {showPassword? <VisibilityOffIcon /> : <VisibilityIcon />}
+                    </IconButton>
+                  </div>
+                </InputAdornment>
+               )
+              }}
           />
           <Button
             variant="contained"

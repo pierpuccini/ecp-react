@@ -16,3 +16,6 @@ code {
 .firebaseui-card-content{
   padding: unset !important;
 }
+.MuiOutlinedInput-adornedEnd{
+  padding: unset !important;
+}
