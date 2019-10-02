@@ -25,19 +25,8 @@ export const authFail = error => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("expirationDate");
-  localStorage.removeItem("userId");
   return {
     type: actionTypes.AUTH_LOGOUT
-  };
-};
-
-export const checkAuthTimeout = expirationTime => {
-  return dispatch => {
-    setTimeout(() => {
-      dispatch(logout());
-    }, expirationTime * 1000);
   };
 };
 
@@ -57,3 +46,20 @@ export const auth = (email, password, isSignup) => {
       });
   };
 };
+
+export const setAuthRedirectPath = path => {
+    return {
+      type: actionTypes.SET_AUTH_REDIRECT_PATH,
+      path: path
+    };
+  };
+  
+  export const authCheckState = () => {
+    return (dispatch, getState, {getFirebase}) => {
+        const firebase = getFirebase();
+
+        firebase.auth().signOut().then(()=>{
+            dispatch(logout())
+        })
+    };
+  };

@@ -1,8 +1,10 @@
 //React Imports
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 //Redux
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
+//React Router
+import { Redirect } from "react-router-dom";
 //Firebase Imports
 import * as firebase from "firebase/app";
 import "firebase/auth";
@@ -18,8 +20,6 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import gIcon from "../../assets/svg/search.svg";
-import Icon from "@material-ui/core/Icon";
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const useStyles = makeStyles(theme => ({
@@ -86,6 +86,12 @@ const Auth = props => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    if (props.authenticated && props.authRedirectPath !== "/") {
+      props.onSetAuthRedirectPath();
+    }
+  })
+
   const inputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(authForm, {
       [controlName]: updateObject(authForm[controlName], {
@@ -110,8 +116,15 @@ const Auth = props => {
     setShowPassword(showPasswordCopy)
   }
 
+  let authRedirect = null;
+  if (props.authenticated) {
+    authRedirect = <Redirect to={props.authRedirectPath} />;
+  }
+
   return (
+    <React.Fragment>
     <div className={classes.Auth}>
+    {authRedirect}
       <strong>Welcome</strong>
       <Logo height="85px" />
       {props.authError?
@@ -180,7 +193,7 @@ const Auth = props => {
           </Button>
         </form>
         <div className={classes.restoreLogin}>
-          Forgot your Login Details? <a href="/">Get Help Here.</a>
+          ¿Forgot your Login Details? <a href="/">Get Help Here.</a>
         </div>
         <div className={classes.textDivider}>
           <span>OR</span>
@@ -191,27 +204,27 @@ const Auth = props => {
         />
       </div>
     </div>
+    <div className={classes.Auth}>
+      <div className={classes.restoreLogin}>
+        ¿Need an account? <a href="/">Sign Up.</a>
+      </div>
+    </div>
+    </React.Fragment>
   );
 };
 
-// <Button variant="outlined" className={matClasses.button}>
-// <Icon classes={{ root: matClasses.iconRoot }}>
-//   <img className={matClasses.imageIcon} src={gIcon} />
-// </Icon>
-// Sign in with Google
-// </Button>
-
 const mapStateToProps = state => {
-  console.log(state);
   return {
-    authError: state.auth.error
+    authError: state.auth.error,
+    authRedirectPath: state.auth.authRedirectPath,
+    authenticated: (state.firebase.auth.uid)? true : false
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, isSignUp) =>
-      dispatch(actions.auth(email, password, isSignUp))
+    onAuth: (email, password, isSignUp) => dispatch(actions.auth(email, password, isSignUp)),
+    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
   };
 };
 
