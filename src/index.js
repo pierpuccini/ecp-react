@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import { reactReduxFirebase, firebaseReducer, getFirebase  } from 'react-redux-firebase'
+import firebaseConfig from './firebase.config'
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import thunk from "redux-thunk";
@@ -28,15 +29,6 @@ const rootReducer = combineReducers({
   firebase: firebaseReducer
 });
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCE4jdBGATmhgcW30ycQyJySAQrPbu88yw",
-  authDomain: "edu-coins.firebaseapp.com",
-  databaseURL: "https://edu-coins.firebaseio.com",
-  projectId: "edu-coins",
-  storageBucket: "edu-coins.appspot.com",
-  messagingSenderId: "467893607261",
-  appId: "1:467893607261:web:2be3107fa44a3c1bbb26b4"
-};
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
