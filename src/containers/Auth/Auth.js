@@ -46,7 +46,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Auth = props => {
-
   const uiConfig = {
     // Popup signin flow rather than redirect flow.
     signInFlow: "redirect",
@@ -122,7 +121,13 @@ const Auth = props => {
             onChange={event => inputChangedHandler(event, "email")}
             margin="normal"
             variant="outlined"
+            required
             error={!authForm.email.valid && authForm.email.touched}
+            helperText={
+              !authForm.email.valid && authForm.email.touched
+                ? "Please Enter a valid Email"
+                : null
+            }
           />
           <TextField
             className={matClasses.textField}
@@ -133,9 +138,26 @@ const Auth = props => {
             onChange={event => inputChangedHandler(event, "password")}
             margin="normal"
             variant="outlined"
+            required
             error={!authForm.password.valid && authForm.password.touched}
+            helperText={
+              !authForm.password.valid && authForm.password.touched
+                ? "Please Enter a valid Password"
+                : null
+            }
           />
-          <Button variant="contained" color="primary" className={matClasses.button} type="submit">Log In</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={matClasses.button}
+            type="submit"
+            disabled={
+              (!authForm.password.valid && authForm.password.touched) ||
+              (!authForm.email.valid && authForm.email.touched)
+            }
+          >
+            Log In
+          </Button>
         </form>
         <div className={classes.restoreLogin}>
           Forgot your Login Details? <a href="/">Get Help Here.</a>
@@ -143,10 +165,10 @@ const Auth = props => {
         <div className={classes.textDivider}>
           <span>OR</span>
         </div>
-          <StyledFirebaseAuth
-            uiConfig={uiConfig}
-            firebaseAuth={firebase.auth()}
-          />
+        <StyledFirebaseAuth
+          uiConfig={uiConfig}
+          firebaseAuth={firebase.auth()}
+        />
       </div>
     </div>
   );
@@ -166,8 +188,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, isSignUp) => dispatch(actions.auth(email, password,isSignUp))
+    onAuth: (email, password, isSignUp) =>
+      dispatch(actions.auth(email, password, isSignUp))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps,mapDispatchToProps)(Auth);
