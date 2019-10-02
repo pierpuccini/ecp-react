@@ -4,9 +4,9 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
-import { reactReduxFirebase } from 'react-redux-firebase'
-import firebase from 'firebase'
-import { firebaseReducer } from 'react-redux-firebase'
+import { reactReduxFirebase, firebaseReducer, getFirebase  } from 'react-redux-firebase'
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import thunk from "redux-thunk";
 
 //App imports
@@ -14,7 +14,9 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 //reducers
+
 import authReducer from './store/reducers/auth'
+
 //checks to see if redux is available in production or not
 const composeEnhancers = process.env.NODE_ENV === "development"
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -46,7 +48,7 @@ const config = {
 // Add redux Firebase to compose
 const createStoreWithFirebase = compose(reactReduxFirebase(firebase, config))(createStore)
 
-const store = createStoreWithFirebase(rootReducer, composeEnhancers(applyMiddleware(thunk)))
+const store = createStoreWithFirebase(rootReducer, composeEnhancers(applyMiddleware(thunk.withExtraArgument({ getFirebase }))))
 
 const app = (
   <Provider store={store}>
