@@ -13,6 +13,7 @@ import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import classes from "./Auth.module.scss";
 import Logo from "../../components/Logo/Logo";
 // import Input from "../../components/UI/Input/Input";
+//MaterialUI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -20,6 +21,8 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import CircularProgress from '@material-ui/core/CircularProgress';
+//Personal Helpers
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const useStyles = makeStyles(theme => ({
@@ -47,6 +50,9 @@ const useStyles = makeStyles(theme => ({
   },
   input: {
     display: "none"
+  },
+  progress: {
+    margin: theme.spacing(2),
   }
 }));
 
@@ -120,9 +126,15 @@ const Auth = props => {
   if (props.authenticated) {
     authRedirect = <Redirect to={props.authRedirectPath} />;
   }
-
-  return (
-    <React.Fragment>
+  let authTemplate = null;
+  if (props.emailLoginLoading) {
+    authTemplate = (
+      <div className={classes.loading}>
+        <CircularProgress className={matClasses.progress} />
+      </div>
+    );
+  }else{
+    authTemplate =  <React.Fragment>
     <div className={classes.Auth}>
     {authRedirect}
       <strong>Welcome</strong>
@@ -210,6 +222,12 @@ const Auth = props => {
       </div>
     </div>
     </React.Fragment>
+  }
+
+  return (
+    <div>
+      {authTemplate}
+    </div>
   );
 };
 
@@ -217,7 +235,8 @@ const mapStateToProps = state => {
   return {
     authError: state.auth.error,
     authRedirectPath: state.auth.authRedirectPath,
-    authenticated: (state.firebase.auth.uid)? true : false
+    authenticated: (state.firebase.auth.uid)? true : false,
+    emailLoginLoading: state.auth.loading
   };
 };
 

@@ -7,7 +7,11 @@
     padding: 10px;
     box-sizing: border-box;
 }
-
+.loading{
+    margin: 20px auto;
+    width: 80%;
+    text-align: center;
+}
 .loginError {
     text-align: center;
     color: #f44336;

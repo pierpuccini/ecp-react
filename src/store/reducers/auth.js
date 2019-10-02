@@ -10,7 +10,7 @@ const initialState = {
 const authStart = state => {
   return updateObject(state, { error: null, loading: true });
 };
-const authSuccess = (state, action) => {
+const authSuccess = (state) => {
   return updateObject(state, {
     error: null,
     loading: false
