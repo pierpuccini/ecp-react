@@ -46,6 +46,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Auth = props => {
+
   const uiConfig = {
     // Popup signin flow rather than redirect flow.
     signInFlow: "redirect",
@@ -121,6 +122,7 @@ const Auth = props => {
             onChange={event => inputChangedHandler(event, "email")}
             margin="normal"
             variant="outlined"
+            error={!authForm.email.valid && authForm.email.touched}
           />
           <TextField
             className={matClasses.textField}
@@ -131,6 +133,7 @@ const Auth = props => {
             onChange={event => inputChangedHandler(event, "password")}
             margin="normal"
             variant="outlined"
+            error={!authForm.password.valid && authForm.password.touched}
           />
           <Button variant="contained" color="primary" className={matClasses.button} type="submit">Log In</Button>
         </form>
