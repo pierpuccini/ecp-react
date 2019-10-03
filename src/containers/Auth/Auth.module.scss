@@ -1,3 +1,9 @@
+@media (max-width: 599px) {
+    .AuthContainer {
+        width: 100%;
+    }
+}
+
 .Auth {
     margin: 20px auto;
     width: 80%;
@@ -7,6 +13,20 @@
     padding: 10px;
     box-sizing: border-box;
 }
+
+.loading {
+    // margin-top: 40vh;
+    margin: 20px auto;
+    width: 80%;
+    text-align: center;
+}
+
+.loginError {
+    text-align: center;
+    color: #f44336;
+    font-size: small;
+}
+
 .googleIcon {
     padding: 8px;
     height: 100%;
@@ -17,6 +37,7 @@
 .googleIcon img {
     height: 100%;
 }
+
 .restoreLogin {
     font-size: small;
 }
