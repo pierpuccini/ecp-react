@@ -54,7 +54,7 @@ export const setAuthRedirectPath = path => {
     };
   };
   
-  export const authCheckState = () => {
+  export const authLogout = () => {
     return (dispatch, getState, {getFirebase}) => {
         const firebase = getFirebase();
 

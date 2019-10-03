@@ -89,7 +89,7 @@ const Auth = props => {
     }
   });
 
-  const [isSignUp, setIsSignUp] = useState(false);
+  // const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -114,7 +114,7 @@ const Auth = props => {
 
   const submitHandler = event => {
     event.preventDefault();
-    props.onAuth(authForm.email.value, authForm.password.value, isSignUp);
+    props.onAuth(authForm.email.value, authForm.password.value);
   };
 
   const toggleViewPasswordHandler = () => {
