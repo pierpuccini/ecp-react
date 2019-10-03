@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 //Redux
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
-import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 //React Router
 import { Redirect } from "react-router-dom";
 //Firebase Imports
@@ -127,15 +126,15 @@ const Auth = props => {
   if (props.authenticated) {
     authRedirect = <Redirect to={props.authRedirectPath} />;
   }
-  let authTemplate = null;
-  if (props.emailLoginLoading && !isLoaded(props.fireAuth)) {
-    authTemplate = (
-      <div className={classes.loading}>
-        <CircularProgress className={matClasses.progress} />
-      </div>
-    );
+
+  if (props.emailLoginLoading) {
+   return (
+     <div className={classes.loading}>
+       <CircularProgress className={matClasses.progress} />
+     </div>
+   );
   }else{
-    authTemplate =  <React.Fragment>
+    return ( <div className={classes.AuthContainer}>
     <div className={classes.Auth}>
     {authRedirect}
       <strong>Welcome</strong>
@@ -222,14 +221,8 @@ const Auth = props => {
         ¿Need an account? <a href="/">Sign Up.</a>
       </div>
     </div>
-    </React.Fragment>
+    </div>)
   }
-
-  return (
-    <div>
-      {authTemplate}
-    </div>
-  );
 };
 
 const mapStateToProps = state => {
