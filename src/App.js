@@ -24,8 +24,8 @@ function App(props) {
     routes = (
       <Switch>
         <Route path="/auth" component={asyncAuth} />
-        {/* <Route path="/logout" component={Logout} /> */}
-        <Route to="/home" exact component={asyncDashboard}/>
+        <Route to="/home" component={asyncDashboard}/>
+        <Redirect to="/home"/>
       </Switch>
     );
   }

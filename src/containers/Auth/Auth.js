@@ -93,7 +93,7 @@ const Auth = props => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (props.authenticated && props.authRedirectPath !== "/") {
+    if (props.authenticated && props.authRedirectPath !== "/home") {
       props.onSetAuthRedirectPath();
     }
   })
@@ -238,7 +238,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, password, isSignUp) => dispatch(actions.auth(email, password, isSignUp)),
-    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
+    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/home'))
   };
 };
 

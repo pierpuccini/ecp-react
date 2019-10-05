@@ -34,7 +34,7 @@ firebase.initializeApp(firebaseConfig);
 
 // react-redux-firebase options
 const config = {
-  userProfile: 'users', // firebase root where user profiles are stored
+  // userProfile: 'users', // firebase root where user profiles are stored
   enableLogging: false, // enable/disable Firebase's database logging
 }
 // Add redux Firebase to compose
