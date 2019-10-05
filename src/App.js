@@ -24,8 +24,8 @@ function App(props) {
     routes = (
       <Switch>
         <Route path="/auth" component={asyncAuth} />
-        <Route to="/home" component={asyncDashboard}/>
-        <Redirect to="/home"/>
+        <Route to={`${process.env.PUBLIC_URL}/home`} component={asyncDashboard}/>
+        <Redirect to={`${process.env.PUBLIC_URL}/home`}/>
       </Switch>
     );
   }
