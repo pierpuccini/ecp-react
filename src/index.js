@@ -4,10 +4,14 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
-import { reactReduxFirebase, firebaseReducer, getFirebase  } from 'react-redux-firebase'
-import firebaseConfig from './firebase.config'
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import {
+  reactReduxFirebase,
+  firebaseReducer,
+  getFirebase
+} from "react-redux-firebase";
+import firebaseConfig from "./firebase.config";
+import firebase from "firebase/app";
+import "firebase/auth";
 import thunk from "redux-thunk";
 
 //App imports
@@ -16,10 +20,11 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 //reducers
 
-import authReducer from './store/reducers/auth'
+import authReducer from "./store/reducers/auth";
 
 //checks to see if redux is available in production or not
-const composeEnhancers = process.env.NODE_ENV === "development"
+const composeEnhancers =
+  process.env.NODE_ENV === "development"
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     : null || compose;
 
@@ -32,27 +37,38 @@ const rootReducer = combineReducers({
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-// react-redux-firebase options
-const config = {
-  // userProfile: 'users', // firebase root where user profiles are stored
-  enableLogging: false, // enable/disable Firebase's database logging
-}
+// // react-redux-firebase options
+// const config = {
+//   attachAuthIsReady: true,
+//   userProfile: 'users', // firebase root where user profiles are stored
+//   enableLogging: false, // enable/disable Firebase's database logging
+// }
+
 // Add redux Firebase to compose
-const createStoreWithFirebase = compose(reactReduxFirebase(firebase, config))(createStore)
+// const createStoreWithFirebase = compose(reactReduxFirebase(firebase, config))(createStore)
+// const store = createStoreWithFirebase(rootReducer, composeEnhancers(applyMiddleware(thunk.withExtraArgument({ getFirebase }))))
 
-const store = createStoreWithFirebase(rootReducer, composeEnhancers(applyMiddleware(thunk.withExtraArgument({ getFirebase }))))
-
-const app = (
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>
+const store = createStore(
+  rootReducer,
+  composeEnhancers(
+    applyMiddleware(thunk.withExtraArgument({ getFirebase })),
+    reactReduxFirebase(firebase, { attachAuthIsReady: true, enableRedirectHandling: true })
+  )
 );
 
-ReactDOM.render(app, document.getElementById("root"));
+store.firebaseAuthIsReady.then(() => {
+  const app = (
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+  ReactDOM.render(app, document.getElementById("root"));
+
+  // If you want your app to work offline and load faster, you can change
+  // unregister() to register() below. Note this comes with some pitfalls.
+  // Learn more about service workers: https://bit.ly/CRA-PWA
+  serviceWorker.unregister();
+});

@@ -4,6 +4,7 @@ import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 //component Imports
+import loader from "./assets/loaders/educoin(B).gif"
 import "./App.css";
 
 const asyncAuth = asyncComponent(() => {
@@ -29,12 +30,13 @@ function App(props) {
       </Switch>
     );
   }
-  return <div className="App">{routes}</div>;
+  return <div className="App">{(props.isInitializing)? (<img src={loader} alt="loading..." />) : routes}</div>;
 }
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: (state.firebase.auth.uid)? true : false
+    isAuthenticated: (state.firebase.auth.uid)? true : false,
+    isInitializing: state.firebase.isInitializing
   };
 };
 
