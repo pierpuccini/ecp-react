@@ -21,7 +21,7 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import loader from "../../assets/loaders/educoin(B).gif";
 //Personal Helpers
 import { updateObject, checkValidity } from "../../shared/utility";
 
@@ -130,7 +130,7 @@ const Auth = props => {
   if (props.emailLoginLoading) {
    return (
      <div className={classes.loading}>
-       <CircularProgress className={matClasses.progress} />
+      <img src={loader} alt="loading..." />
      </div>
    );
   }else{
