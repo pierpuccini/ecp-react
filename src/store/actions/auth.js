@@ -30,20 +30,35 @@ export const logout = () => {
   };
 };
 
-export const auth = (email, password, isSignup) => {
+export const auth = (email, password, typeOfLogin) => {
   return (dispatch, getState, { getFirebase }) => {
     dispatch(authStart());
     const firebase = getFirebase();
-
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        dispatch(authSuccess());
-      })
-      .catch(err => {
-        dispatch(authFail(err));
-      });
+    const provider = new firebase.auth.GoogleAuthProvider();
+    switch (typeOfLogin) {
+      case "google":
+        firebase
+          .auth()
+          .signInWithRedirect(provider)
+          .then(() => {
+            dispatch(authSuccess());
+          })
+          .catch(err => {
+            dispatch(authFail(err));
+          });
+        break;
+      default:
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(email, password)
+          .then(() => {
+            dispatch(authSuccess());
+          })
+          .catch(err => {
+            dispatch(authFail(err));
+          });
+        break;
+    }
   };
 };
 

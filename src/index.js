@@ -15,8 +15,8 @@ import loader from "./assets/loaders/educoin(B).gif";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-//reducers
 
+//reducers
 import authReducer from "./store/reducers/auth";
 
 //checks to see if redux is available in production or not
@@ -25,36 +25,32 @@ const composeEnhancers =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     : null || compose;
 
+// react-redux-firebase config
+const rrfConfig = {
+  attachAuthIsReady: true,
+  enableRedirectHandling: true
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
 //All reducers must be combined here
 const rootReducer = combineReducers({
   auth: authReducer,
   firebase: firebaseReducer
 });
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-// // react-redux-firebase options
-// const config = {
-//   attachAuthIsReady: true,
-//   userProfile: 'users', // firebase root where user profiles are stored
-//   enableLogging: false, // enable/disable Firebase's database logging
-// }
-
-// Add redux Firebase to compose
-// const createStoreWithFirebase = compose(reactReduxFirebase(firebase, config))(createStore)
-// const store = createStoreWithFirebase(rootReducer, composeEnhancers(applyMiddleware(thunk.withExtraArgument({ getFirebase }))))
-
+// Create store with reducers and initial state
+const initialState = {}
 const store = createStore(
   rootReducer,
+  initialState,
   composeEnhancers(
     applyMiddleware(thunk.withExtraArgument({ getFirebase })),
-    reactReduxFirebase(firebase, {
-      attachAuthIsReady: true,
-      enableRedirectHandling: true
-    })
+    reactReduxFirebase(firebase, rrfConfig)
   )
 );
+
 
 let app = (
   <div className="App">
