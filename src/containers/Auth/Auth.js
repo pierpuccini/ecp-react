@@ -8,16 +8,18 @@ import { Redirect } from "react-router-dom";
 //App Imports
 import classes from "./Auth.module.scss";
 import Logo from "../../components/Logo/Logo";
-import gIcon from '../../assets/svg/search.svg';
+import gIcon from "../../assets/svg/search.svg";
 //MaterialUI Imports
 import { makeStyles } from "@material-ui/core/styles";
-import Icon from '@material-ui/core/Icon';
+import Container from "@material-ui/core/Container";
+import Paper from '@material-ui/core/Paper';
+import Icon from "@material-ui/core/Icon";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 //Personal Helpers
 import { updateObject, checkValidity } from "../../shared/utility";
 
@@ -50,8 +52,9 @@ const useStyles = makeStyles(theme => ({
   input: {
     display: "none"
   },
-  progress: {
-    margin: theme.spacing(2),
+  paper: {
+    padding: theme.spacing(2, 2),
+    margin: theme.spacing(2)
   }
 }));
 
@@ -118,8 +121,8 @@ const Auth = props => {
   }
 
   return (
-    <div className={classes.AuthContainer}>
-      <div className={classes.Auth}>
+    <Container maxWidth="sm">
+      <Paper className={matClasses.paper}>
         {authRedirect}
         <strong>Welcome</strong>
         <Logo height="85px" />
@@ -198,7 +201,11 @@ const Auth = props => {
           <div className={classes.textDivider}>
             <span>OR</span>
           </div>
-          <Button variant="outlined" className={matClasses.button} onClick={event => submitHandler(event, "google")}>
+          <Button
+            variant="outlined"
+            className={matClasses.button}
+            onClick={event => submitHandler(event, "google")}
+          >
             <Icon classes={{ root: matClasses.iconRoot }}>
               <img
                 className={matClasses.imageIcon}
@@ -209,13 +216,13 @@ const Auth = props => {
             <span className={classes.gLogin}>Sign in with Google</span>
           </Button>
         </div>
-      </div>
-      <div className={classes.Auth}>
+      </Paper>
+      <Paper className={matClasses.paper}>
         <div className={classes.restoreLogin}>
           ¿Need an account? <a href="/">Sign Up.</a>
         </div>
-      </div>
-    </div>
+      </Paper>
+    </Container>
   );
 };
 
@@ -224,15 +231,16 @@ const mapStateToProps = state => {
     authError: state.auth.error,
     authRedirectPath: state.auth.authRedirectPath,
     emailLoginLoading: state.auth.loading,
-    authenticated: (state.firebase.auth.uid)? true : false,
+    authenticated: state.firebase.auth.uid ? true : false,
     fireAuth: state.firebase.auth
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, typeOfLogin) => dispatch(actions.auth(email, password, typeOfLogin)),
-    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/home'))
+    onAuth: (email, password, typeOfLogin) =>
+      dispatch(actions.auth(email, password, typeOfLogin)),
+    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/home"))
   };
 };
 
