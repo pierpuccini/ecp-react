@@ -28,12 +28,13 @@ export const checkValidity = (value, rules) => {
     isValid = pattern.test(value) && isValid;
   }
 
-  if (rules.isNumeric) {
-    const pattern = /^\d+$/;
+  if (rules.isName) {
+    const pattern = /\s/;
     isValid = pattern.test(value) && isValid;
   }
 
   if (rules.phone) {
+    // eslint-disable-next-line
     const pattern = /^[\d\.\-]+$/;
     isValid = pattern.test(value) && isValid;
   }

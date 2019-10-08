@@ -33,6 +33,7 @@ const Auth = props => {
       touched: false
     }
   });
+  
   /* TODO: MISSING UNIVERSITY AND ID FIELDS */
   const [signUpForm, setSignUpForm] = useState({
     fullName: {
@@ -57,17 +58,7 @@ const Auth = props => {
       value: "",
       validation: {
         required: true,
-        password: 6
-      },
-      valid: false,
-      touched: false
-    },
-    confirmPassword: {
-      value: "",
-      validation: {
-        required: true,
-        password: 6,
-        passwordVerif: true
+        minLength: 6
       },
       valid: false,
       touched: false

@@ -1,6 +1,12 @@
-.signUpContainer{
+.signUpContainer {
     padding: unset !important;
 }
+
+.topActions {
+    display: flex;
+    justify-content: space-between;
+}
+
 .gLogin {
     color: #757575;
     text-transform: capitalize;
