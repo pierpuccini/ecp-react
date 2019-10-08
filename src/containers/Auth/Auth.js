@@ -80,6 +80,7 @@ const Auth = props => {
         inputChangedHandler={inputChangedHandler}
         toogleViewPassword={showPassword}
         toggleViewPasswordHandler={toggleViewPasswordHandler}
+        authError={props.loginError}
       />
     </div>
   );
@@ -87,7 +88,7 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
-    authError: state.auth.error,
+    loginError: state.auth.error,
     authRedirectPath: state.auth.authRedirectPath,
     emailLoginLoading: state.auth.loading,
     authenticated: state.firebase.auth.uid ? true : false,
