@@ -16,14 +16,15 @@ const asyncDashboard = asyncComponent(() => {
 function App(props) {
   let routes = (
     <Switch>
-      <Route path="/auth" component={asyncAuth} />
-      <Redirect to="/auth" />
+      <Route path="/login" component={asyncAuth} />
+      <Route path="/sign-up" component={asyncAuth} />
+      <Redirect to="/login" />
     </Switch>
   );
   if (props.isAuthenticated) {
     routes = (
       <Switch>
-        <Route path="/auth" component={asyncAuth} />
+        <Route path="/login" component={asyncAuth} />
         <Route to={`${process.env.PUBLIC_URL}/home`} component={asyncDashboard}/>
         <Redirect to={`${process.env.PUBLIC_URL}/home`}/>
       </Switch>
