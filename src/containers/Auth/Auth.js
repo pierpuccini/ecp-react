@@ -4,14 +4,16 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 //React Router
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 //App Imports
 import Login from "../../components/Login/Login";
+import SignUp from "../../components/SignUp/SignUp";
 // import classes from "./Auth.module.scss";
 //Personal Helpers
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const Auth = props => {
+
   const [authForm, setAuthForm] = useState({
     email: {
       value: "",
@@ -74,14 +76,18 @@ const Auth = props => {
   return (
     <div>
       {authRedirect}
-      <Login
-        submitHandler={submitHandler}
-        authLoginForm={authForm}
-        inputChangedHandler={inputChangedHandler}
-        toogleViewPassword={showPassword}
-        toggleViewPasswordHandler={toggleViewPasswordHandler}
-        authError={props.loginError}
-      />
+      {props.location.pathname.match('/login') ? (
+        <Login
+          submitHandler={submitHandler}
+          authLoginForm={authForm}
+          inputChangedHandler={inputChangedHandler}
+          toogleViewPassword={showPassword}
+          toggleViewPasswordHandler={toggleViewPasswordHandler}
+          authError={props.loginError}
+        />
+      ) : (
+        <SignUp/>
+      )}
     </div>
   );
 };
@@ -104,4 +110,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(Auth);
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Auth));

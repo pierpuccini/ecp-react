@@ -1,11 +1,9 @@
 //React Imports
 import React from "react";
-//App Imports
-import classes from "./Login.module.scss";
-import Logo from "../../components/Logo/Logo";
-import gIcon from "../../assets/svg/search.svg";
+import { Link as RouterLink } from 'react-router-dom';
 //MaterialUI Imports
 import { makeStyles } from "@material-ui/core/styles";
+import Link from '@material-ui/core/Link';
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Icon from "@material-ui/core/Icon";
@@ -15,6 +13,12 @@ import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+//App Imports
+import classes from "./Login.module.scss";
+import Logo from "../../components/Logo/Logo";
+import gIcon from "../../assets/svg/search.svg";
+
+const SignUpLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {
@@ -160,7 +164,10 @@ const Login = props => {
       </Paper>
       <Paper className={matClasses.paper}>
         <div className={classes.restoreLogin}>
-          ¿Need an account? <a href="/">Sign Up.</a>
+          ¿Need an account?
+          <Link component={SignUpLink} to="/sign-up">
+            Sign Up.
+          </Link>
         </div>
       </Paper>
     </Container>
