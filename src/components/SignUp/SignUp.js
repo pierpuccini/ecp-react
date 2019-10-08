@@ -95,7 +95,7 @@ const SignUp = props => {
           <IconButton component={backToLogin} to="/login">
             <ArrowBackIosOutlinedIcon />
           </IconButton>
-          <p style={{ fontWeight: "bold", marginRight: "45px" }}>
+          <p style={{ fontWeight: "bold", marginRight: "45px", fontSize: "14px" }}>
             Fill In Your Profile Info!
           </p>
           <div></div>
