@@ -33,5 +33,10 @@ export const checkValidity = (value, rules) => {
     isValid = pattern.test(value) && isValid;
   }
 
+  if (rules.phone) {
+    const pattern = /^[\d\.\-]+$/;
+    isValid = pattern.test(value) && isValid;
+  }
+
   return isValid;
 };

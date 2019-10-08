@@ -11,8 +11,8 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@material-ui/icons/VisibilityOffOutlined';
 //App Imports
 import classes from "./Login.module.scss";
 import Logo from "../../components/Logo/Logo";
@@ -51,7 +51,10 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     padding: theme.spacing(2, 2),
-    margin: theme.spacing(2)
+    margin: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      "box-shadow": 'unset',
+    }
   }
 }));
 
@@ -59,7 +62,7 @@ const Login = props => {
   const matClasses = useStyles();
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" className={classes.loginContainer}>
       <Paper className={matClasses.paper}>
         <strong>Welcome</strong>
         <Logo height="85px" />
@@ -117,9 +120,9 @@ const Login = props => {
                     <div onClick={() => props.toggleViewPasswordHandler()}>
                       <IconButton>
                         {props.toogleViewPassword ? (
-                          <VisibilityOffIcon />
+                          <VisibilityOffOutlinedIcon />
                         ) : (
-                          <VisibilityIcon />
+                          <VisibilityOutlinedIcon />
                         )}
                       </IconButton>
                     </div>

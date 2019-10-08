@@ -8,13 +8,12 @@ import { Redirect, withRouter } from "react-router-dom";
 //App Imports
 import Login from "../../components/Login/Login";
 import SignUp from "../../components/SignUp/SignUp";
-// import classes from "./Auth.module.scss";
 //Personal Helpers
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const Auth = props => {
 
-  const [authForm, setAuthForm] = useState({
+  const [loginForm, setLoginForm] = useState({
     email: {
       value: "",
       validation: {
@@ -34,6 +33,56 @@ const Auth = props => {
       touched: false
     }
   });
+  /* TODO: MISSING UNIVERSITY AND ID FIELDS */
+  const [signUpForm, setSignUpForm] = useState({
+    fullName: {
+      value: "",
+      validation: {
+        required: true,
+        isName: true
+      },
+      valid: false,
+      touched: false
+    },
+    email: {
+      value: "",
+      validation: {
+        required: true,
+        isEmail: true
+      },
+      valid: false,
+      touched: false
+    },
+    password: {
+      value: "",
+      validation: {
+        required: true,
+        password: 6
+      },
+      valid: false,
+      touched: false
+    },
+    confirmPassword: {
+      value: "",
+      validation: {
+        required: true,
+        password: 6,
+        passwordVerif: true
+      },
+      valid: false,
+      touched: false
+    },
+    phoneNumber: {
+      value: "3",
+      validation: {
+        required: true,
+        phone: true,
+        minLength: 10
+      },
+      valid: false,
+      touched: false
+    }
+  })
 
   // const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -44,23 +93,37 @@ const Auth = props => {
     }
   });
 
-  const inputChangedHandler = (event, controlName) => {
-    const updatedControls = updateObject(authForm, {
-      [controlName]: updateObject(authForm[controlName], {
+  const loginInputChangedHandler = (event, controlName) => {
+    const updatedControls = updateObject(loginForm, {
+      [controlName]: updateObject(loginForm[controlName], {
         value: event.target.value,
         valid: checkValidity(
           event.target.value,
-          authForm[controlName].validation
+          loginForm[controlName].validation
         ),
         touched: true
       })
     });
-    setAuthForm(updatedControls);
+    setLoginForm(updatedControls);
+  };
+
+  const signUpInputChangedHandler = (event, controlName) => {
+    const updatedControls = updateObject(signUpForm, {
+      [controlName]: updateObject(signUpForm[controlName], {
+        value: event.target.value,
+        valid: checkValidity(
+          event.target.value,
+          signUpForm[controlName].validation,
+        ),
+        touched: true
+      })
+    });
+    setSignUpForm(updatedControls);
   };
 
   const submitHandler = (event, typeOfLogin) => {
     event.preventDefault();
-    props.onAuth(authForm.email.value, authForm.password.value, typeOfLogin);
+    props.onAuth(loginForm.email.value, loginForm.password.value, typeOfLogin);
   };
 
   const toggleViewPasswordHandler = () => {
@@ -74,21 +137,28 @@ const Auth = props => {
   }
 
   return (
-    <div>
+    <React.Fragment>
       {authRedirect}
-      {props.location.pathname.match('/login') ? (
+      {props.location.pathname.match("/login") ? (
         <Login
+          authLoginForm={loginForm}
+          inputChangedHandler={loginInputChangedHandler}
           submitHandler={submitHandler}
-          authLoginForm={authForm}
-          inputChangedHandler={inputChangedHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
           authError={props.loginError}
         />
       ) : (
-        <SignUp/>
+        <SignUp
+          authSignUpForm={signUpForm}
+          inputChangedHandler={signUpInputChangedHandler}
+          submitHandler={submitHandler}
+          toogleViewPassword={showPassword}
+          toggleViewPasswordHandler={toggleViewPasswordHandler}
+          authError={props.loginError}
+        />
       )}
-    </div>
+    </React.Fragment>
   );
 };
 
