@@ -1,21 +1,15 @@
-html {
-  height: 100%;
-}
+/* IMPORTANT FIX FOR CORRECTLY GETTING THE FULL SCREEN EXPERIENCE */
+html, 
+body {height:100%; padding:0; margin:0; width:100%;}
+body {display:flex; flex-direction:column;}
+#root {flex-grow:1;}
 body { 
-  position:absolute; top:0; bottom:0; right:0; left:0; 
-  height: 100%;
-  padding:0;
-  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 } 
-#root{
-  position:absolute; top:0; bottom:0; right:0; left:0; 
-  height: 100%;
-}
 .App{
   height: 100%;
   overflow: hidden;
