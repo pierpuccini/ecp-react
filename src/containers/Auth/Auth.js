@@ -64,7 +64,7 @@ const Auth = props => {
       touched: false
     },
     phoneNumber: {
-      value: "3",
+      value: "",
       validation: {
         required: true,
         phone: true,
@@ -73,9 +73,8 @@ const Auth = props => {
       valid: false,
       touched: false
     }
-  })
+  });
 
-  // const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
