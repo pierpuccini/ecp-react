@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2),
     [theme.breakpoints.down("sm")]: {
       padding: theme.spacing(1, 1),
-      "box-shadow": "unset"
+      boxShadow: "unset",
     }
   }
 }));
@@ -214,7 +214,7 @@ const Login = props => {
               </Link>
             </div>
           ) : (
-            <Paper className={matClasses.paper} style={{ padding: "unset" }}>
+            <Paper className={matClasses.paper} style={{ boxShadow: "unset", padding: "unset" }}>
               <div className={classes.restoreLogin}>
                 ¿Need an account?{" "}
                 <Link component={SignUpLink} to="/sign-up">
@@ -252,7 +252,7 @@ const Login = props => {
           </div>
         </Paper>
       ) : (
-        <Paper className={matClasses.paper} style={{ padding: "unset" }}>
+        <Paper className={matClasses.paper}>
           <div className={classes.restoreLogin}>
             ¿Remember your login info?{" "}
             <Link component={SignUpLink} to="/login">
