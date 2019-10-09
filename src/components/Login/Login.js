@@ -19,6 +19,7 @@ import Logo from "../../components/Logo/Logo";
 import gIcon from "../../assets/svg/search.svg";
 
 const SignUpLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
+const forgotLoginDetailsLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {
@@ -144,7 +145,7 @@ const Login = props => {
             </Button>
           </form>
           <div className={classes.restoreLogin}>
-            ¿Forgot your Login Details? <a href="/">Get Help Here.</a>
+            ¿Forgot your Login Details? <Link component={forgotLoginDetailsLink} to="/forgot-login">Get Help Here.</Link>
           </div>
           <div className={classes.textDivider}>
             <span>OR</span>

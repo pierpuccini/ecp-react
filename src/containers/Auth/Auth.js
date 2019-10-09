@@ -136,11 +136,11 @@ const Auth = props => {
   if (props.authenticated) {
     authRedirect = <Redirect to="/home" />;
   }
-
+  
   return (
     <React.Fragment>
       {authRedirect}
-      {props.location.pathname.match("/login") ? (
+      {props.location.pathname.match("/login") || props.location.pathname.match("/forgot-login") ? (
         <Login
           authLoginForm={loginForm}
           inputChangedHandler={loginInputChangedHandler}
@@ -148,8 +148,9 @@ const Auth = props => {
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
           authError={props.authError}
+          forgotLogin={props.location.pathname.match("/forgot-login") ? true: false}
         />
-      ) : (
+      ) :  (
         <SignUp
           authSignUpForm={signUpForm}
           inputChangedHandler={signUpInputChangedHandler}
