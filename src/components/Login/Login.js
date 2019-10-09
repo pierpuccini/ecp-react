@@ -70,161 +70,204 @@ const useStyles = makeStyles(theme => ({
 
 const Login = props => {
   const matClasses = useStyles();
+  let togglePhoneLogin = false;
+
+  let errors = null;
+  let topLink = null;
+  let bottomLink = null;
+  (props.authError) ?
+    errors = <div className={classes.loginError}>{props.authError.customErrorMsg}</div> :
+    errors = null;
+
+  let forgotForm = null;
+  if (props.forgotLogin) {
+    forgotForm = (
+      <form
+        className={matClasses.container}
+        onSubmit={event => props.submitHandler(event, "forgotEmail")}
+      >
+        <TextField
+          className={matClasses.textField}
+          label="Email"
+          placeholder="Enter Your Email"
+          type="Email"
+          value={props.authLoginForm.forgotEmail.value}
+          onChange={event => props.inputChangedHandler(event, "forgotEmail")}
+          margin="normal"
+          variant="outlined"
+          required
+          error={
+            !props.authLoginForm.forgotEmail.valid &&
+            props.authLoginForm.forgotEmail.touched
+          }
+          helperText={
+            !props.authLoginForm.forgotEmail.valid &&
+            props.authLoginForm.forgotEmail.touched
+              ? "Please Enter a valid Email"
+              : null
+          }
+          InputProps={{
+            endAdornment: (
+              <InputAdornment>
+                {props.passwordResetSuccess ? (
+                  <CheckCircleOutlineIcon
+                    style={{ color: "#11a208c7", padding: "12px" }}
+                  />
+                ) : (
+                  <span></span>
+                )}
+              </InputAdornment>
+            )
+          }}
+        />
+        <Typography style={{ fontSize: "small" }}>
+          The reset email will arrive in a few seconds.
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          className={matClasses.button}
+          type="submit"
+          disabled={!props.authLoginForm.forgotEmail.valid}
+        >
+          send
+        </Button>
+      </form>
+    );
+    topLink = (
+      <Paper
+        className={matClasses.paper}
+        style={{ boxShadow: "unset", padding: "unset" }}
+      >
+        <div className={classes.restoreLogin}>
+          ¿Need an account?{" "}
+          <Link
+            component={SignUpLink}
+            to="/sign-up"
+            onClick={props.clearErrors}
+          >
+            Sign Up.
+          </Link>
+        </div>
+      </Paper>
+    );
+    bottomLink = (
+      <Paper className={matClasses.paper}>
+        <div className={classes.restoreLogin}>
+          ¿Remember your login info?{" "}
+          <Link component={SignUpLink} to="/login">
+            Go back to login.
+          </Link>
+        </div>
+      </Paper>
+    );
+  } else {
+    forgotForm = (
+      <form className={matClasses.container} onSubmit={props.submitHandler}>
+        <TextField
+          className={matClasses.textField}
+          label="Email"
+          placeholder="Enter Your Email"
+          type="Email"
+          value={props.authLoginForm.email.value}
+          onChange={event => props.inputChangedHandler(event, "email")}
+          margin="normal"
+          variant="outlined"
+          required
+          error={
+            !props.authLoginForm.email.valid &&
+            props.authLoginForm.email.touched
+          }
+          helperText={
+            !props.authLoginForm.email.valid &&
+            props.authLoginForm.email.touched
+              ? "Please Enter a valid Email"
+              : null
+          }
+        />
+        <TextField
+          className={matClasses.textField}
+          label="Password"
+          placeholder="Enter Your Password"
+          type={props.toogleViewPassword ? "text" : "password"}
+          value={props.authLoginForm.password.value}
+          onChange={event => props.inputChangedHandler(event, "password")}
+          margin="normal"
+          variant="outlined"
+          required
+          error={
+            !props.authLoginForm.password.valid &&
+            props.authLoginForm.password.touched
+          }
+          helperText={
+            !props.authLoginForm.password.valid &&
+            props.authLoginForm.password.touched
+              ? "Please Enter a valid Password"
+              : null
+          }
+          InputProps={{
+            endAdornment: (
+              <InputAdornment>
+                <div onClick={() => props.toggleViewPasswordHandler()}>
+                  <IconButton>
+                    {props.toogleViewPassword ? (
+                      <VisibilityOffOutlinedIcon />
+                    ) : (
+                      <VisibilityOutlinedIcon />
+                    )}
+                  </IconButton>
+                </div>
+              </InputAdornment>
+            )
+          }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          className={matClasses.button}
+          type="submit"
+          disabled={
+            !props.authLoginForm.password.valid ||
+            !props.authLoginForm.email.valid
+          }
+        >
+          Log In
+        </Button>
+      </form>
+    );
+    topLink = (
+      <div className={classes.restoreLogin}>
+        ¿Forgot your Login Details?{" "}
+        <Link
+          component={forgotLoginDetailsLink}
+          to="/forgot-login"
+          onClick={props.clearErrors}
+        >
+          Get Help Here.
+        </Link>
+      </div>
+    );
+    bottomLink = (
+      <Paper className={matClasses.paper}>
+        <div className={classes.restoreLogin}>
+          ¿Need an account?{" "}
+          <Link component={SignUpLink} to="/sign-up">
+            Sign Up.
+          </Link>
+        </div>
+      </Paper>
+    );
+  }
 
   return (
     <Container maxWidth="sm" className={classes.loginContainer}>
       <Paper className={matClasses.paper}>
         <strong>Welcome</strong>
         <Logo height="85px" />
-        {props.authError ? (
-          <div className={classes.loginError}>
-            {props.authError.customErrorMsg}
-          </div>
-        ) : null}
+        {errors}
         <div className={classes.formContainer}>
-          {!props.forgotLogin ? (
-            <form
-              className={matClasses.container}
-              onSubmit={props.submitHandler}
-            >
-              <TextField
-                className={matClasses.textField}
-                label="Email"
-                placeholder="Enter Your Email"
-                type="Email"
-                value={props.authLoginForm.email.value}
-                onChange={event => props.inputChangedHandler(event, "email")}
-                margin="normal"
-                variant="outlined"
-                required
-                error={
-                  !props.authLoginForm.email.valid &&
-                  props.authLoginForm.email.touched
-                }
-                helperText={
-                  !props.authLoginForm.email.valid &&
-                  props.authLoginForm.email.touched
-                    ? "Please Enter a valid Email"
-                    : null
-                }
-              />
-              <TextField
-                className={matClasses.textField}
-                label="Password"
-                placeholder="Enter Your Password"
-                type={props.toogleViewPassword ? "text" : "password"}
-                value={props.authLoginForm.password.value}
-                onChange={event => props.inputChangedHandler(event, "password")}
-                margin="normal"
-                variant="outlined"
-                required
-                error={
-                  !props.authLoginForm.password.valid &&
-                  props.authLoginForm.password.touched
-                }
-                helperText={
-                  !props.authLoginForm.password.valid &&
-                  props.authLoginForm.password.touched
-                    ? "Please Enter a valid Password"
-                    : null
-                }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment>
-                      <div onClick={() => props.toggleViewPasswordHandler()}>
-                        <IconButton>
-                          {props.toogleViewPassword ? (
-                            <VisibilityOffOutlinedIcon />
-                          ) : (
-                            <VisibilityOutlinedIcon />
-                          )}
-                        </IconButton>
-                      </div>
-                    </InputAdornment>
-                  )
-                }}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                className={matClasses.button}
-                type="submit"
-                disabled={
-                  !props.authLoginForm.password.valid ||
-                  !props.authLoginForm.email.valid
-                }
-              >
-                Log In
-              </Button>
-            </form>
-          ) : (
-            <form
-              className={matClasses.container}
-              onSubmit={event => props.submitHandler(event, "forgotEmail")}
-            >
-              <TextField
-                className={matClasses.textField}
-                label="Email"
-                placeholder="Enter Your Email"
-                type="Email"
-                value={props.authLoginForm.forgotEmail.value}
-                onChange={event =>
-                  props.inputChangedHandler(event, "forgotEmail")
-                }
-                margin="normal"
-                variant="outlined"
-                required
-                error={
-                  !props.authLoginForm.forgotEmail.valid &&
-                  props.authLoginForm.forgotEmail.touched
-                }
-                helperText={
-                  !props.authLoginForm.forgotEmail.valid &&
-                  props.authLoginForm.forgotEmail.touched
-                    ? "Please Enter a valid Email"
-                    : null
-                }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment>
-                      {props.passwordResetSuccess ? (
-                          <CheckCircleOutlineIcon style={{ color: "#11a208c7", padding:"12px" }} />
-                      ) : <span></span>}
-                    </InputAdornment>
-                  )
-                }}
-              />
-              <Typography style={{ fontSize: "small" }}>
-                The reset email will arrive in a few seconds.
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                className={matClasses.button}
-                type="submit"
-                disabled={!props.authLoginForm.forgotEmail.valid}
-              >
-                send
-              </Button>
-            </form>
-          )}
-          {!props.forgotLogin ? (
-            <div className={classes.restoreLogin}>
-              ¿Forgot your Login Details?{" "}
-              <Link component={forgotLoginDetailsLink} to="/forgot-login" onClick={props.clearErrors}>
-                Get Help Here.
-              </Link>
-            </div>
-          ) : (
-            <Paper className={matClasses.paper} style={{ boxShadow: "unset", padding: "unset" }}>
-              <div className={classes.restoreLogin}>
-                ¿Need an account?{" "}
-                <Link component={SignUpLink} to="/sign-up" onClick={props.clearErrors}>
-                  Sign Up.
-                </Link>
-              </div>
-            </Paper>
-          )}
+          {forgotForm}
+          {topLink}
           <div className={classes.textDivider}>
             <span>OR</span>
           </div>
@@ -248,35 +291,17 @@ const Login = props => {
               variant="outlined"
               className={matClasses.button}
               style={{width: "210px"}}
-              onClick={event => props.submitHandler(event, "phoneNumber")}
+              onClick={togglePhoneLogin = !togglePhoneLogin}
             >
               <Icon classes={{ root: matClasses.iconRoot }}>
                 <PhoneOutlinedIcon style={{width: '18px', height: '18px'}}/>
               </Icon>
-              <span className={classes.gLogin}>Sign in with phone{" "}</span>
+              <span className={classes.gLogin}>Sign in with phone</span>
             </Button>
           </div>
         </div>
       </Paper>
-      {!props.forgotLogin ? (
-        <Paper className={matClasses.paper}>
-          <div className={classes.restoreLogin}>
-            ¿Need an account?{" "}
-            <Link component={SignUpLink} to="/sign-up">
-              Sign Up.
-            </Link>
-          </div>
-        </Paper>
-      ) : (
-        <Paper className={matClasses.paper}>
-          <div className={classes.restoreLogin}>
-            ¿Remember your login info?{" "}
-            <Link component={SignUpLink} to="/login">
-              Go back to login.
-            </Link>
-          </div>
-        </Paper>
-      )}
+      {bottomLink}
     </Container>
   );
 };
