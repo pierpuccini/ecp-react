@@ -102,8 +102,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
 const SignUp = props => {
-  const matClasses = useStyles();
+  const matClasses = useStyles();  
   return (
     <Container maxWidth="sm" className={classes.signUpContainer}>
       <Paper className={matClasses.paper}>
@@ -121,7 +122,7 @@ const SignUp = props => {
           >
             Fill In Your Profile Info!
           </span>
-          <Badge className={matClasses.badge} badgeContent={4} color="primary">
+          <Badge className={matClasses.badge} badgeContent={0} color="primary">
             <Icon classes={{ root: matClasses.iconRootCoin }}>
               <img
                 className={matClasses.imageIcon}
@@ -150,6 +151,11 @@ const SignUp = props => {
         <div className={classes.textDivider}>
           <span>OR</span>
         </div>
+        {props.authError ? (
+          <div className={classes.loginError}>
+            {props.authError.customErrorMsg}
+          </div>
+        ) : null}
         <div className={classes.formContainer}>
           <form className={matClasses.container} onSubmit={props.submitHandler}>
             <TextField

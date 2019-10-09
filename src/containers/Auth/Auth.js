@@ -111,9 +111,14 @@ const Auth = props => {
     setSignUpForm(updatedControls);
   };
 
-  const submitHandler = (event, typeOfLogin) => {
+  const submitLoginHandler = (event, typeOfLogin) => {
     event.preventDefault();
     props.onAuth(loginForm.email.value, loginForm.password.value, typeOfLogin);
+  };
+
+  const submitSignUpHandler = (event, typeOfLogin) => {
+    event.preventDefault();
+    props.onLogin(signUpForm.email.value, signUpForm.password.value, typeOfLogin);
   };
 
   const toggleViewPasswordHandler = () => {
@@ -133,19 +138,19 @@ const Auth = props => {
         <Login
           authLoginForm={loginForm}
           inputChangedHandler={loginInputChangedHandler}
-          submitHandler={submitHandler}
+          submitHandler={submitLoginHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
-          authError={props.loginError}
+          authError={props.authError}
         />
       ) : (
         <SignUp
           authSignUpForm={signUpForm}
           inputChangedHandler={signUpInputChangedHandler}
-          submitHandler={submitHandler}
+          submitHandler={submitSignUpHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
-          authError={props.loginError}
+          authError={props.authError}
         />
       )}
     </React.Fragment>
@@ -154,9 +159,9 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
-    loginError: state.auth.error,
+    authError: state.auth.error,
     authRedirectPath: state.auth.authRedirectPath,
-    emailLoginLoading: state.auth.loading,
+    authLoading: state.auth.loading,
     authenticated: state.firebase.auth.uid ? true : false,
     fireAuth: state.firebase.auth
   };
@@ -166,6 +171,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, password, typeOfLogin) =>
       dispatch(actions.auth(email, password, typeOfLogin)),
+    onLogin: (email, password, typeOfSignUp) =>
+      dispatch(actions.signUp(email, password, typeOfSignUp)),
     onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/home"))
   };
 };
