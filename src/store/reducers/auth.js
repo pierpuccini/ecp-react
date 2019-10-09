@@ -58,6 +58,10 @@ const resetSuccess = state => {
   return updateObject(state, { success: false });
 };
 
+const resetErrors = state => {
+  return updateObject(state, { error: null });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SIGN_UP_START: return signUpStart(state, action);
@@ -70,6 +74,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.PASSWORD_RESET_FAIL: return passwordResetFail(state, action);
     case actionTypes.AUTH_LOGOUT: return authLogout(state, action);
     case actionTypes.RESET_SUCCESS: return resetSuccess(state, action);
+    case actionTypes.RESET_ERRORS_ON_AUTH_LINK_CHANGE: return resetErrors(state, action);
     default:
       return state;
   }

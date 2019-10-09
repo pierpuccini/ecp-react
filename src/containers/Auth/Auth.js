@@ -40,6 +40,24 @@ const Auth = props => {
       },
       valid: false,
       touched: false
+    },
+    phoneNumber: {
+      value: "",
+      validation: {
+        required: true,
+        phone: true,
+        minLength: 10
+      },
+      valid: false,
+      touched: false
+    },
+    verifCode: {
+      value: "",
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
     }
   });
   
@@ -84,7 +102,10 @@ const Auth = props => {
     }
   });
 
+  //Toggle for showing Password
   const [showPassword, setShowPassword] = useState(false);
+  //Shows Phone Login Form
+  const [showPhoneLogin, setshowPhoneLogin] = useState(false);
 
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
@@ -141,6 +162,15 @@ const Auth = props => {
     setShowPassword(showPasswordCopy);
   };
 
+  const togglePhoneFormHandler = () => {
+    let showPhoneCopy = !showPhoneLogin;
+    setshowPhoneLogin(showPhoneCopy);
+  };
+
+  const clearErrors = () => {
+    props.resetErrors()
+  }
+
   let authRedirect = null;
   if (props.authenticated) {
     authRedirect = <Redirect to="/home" />;
@@ -164,11 +194,14 @@ const Auth = props => {
           submitHandler={submitLoginHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
+          toogleViewPhoneForm={showPhoneLogin}
+          togglePhoneFormHandler={togglePhoneFormHandler}
           authError={props.authError}
           passwordResetSuccess={props.passwordResetSuccess}
           forgotLogin={
             props.location.pathname.match("/forgot-login") ? true : false
           }
+          clearErrors={clearErrors}
         />
       ) : (
         <SignUp
@@ -178,6 +211,7 @@ const Auth = props => {
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
           authError={props.authError}
+          clearErrors={clearErrors}
         />
       )}
     </React.Fragment>
@@ -202,7 +236,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(actions.auth(email, password, typeOfLogin)),
     onSignUp: (payload, typeOfSignUp) =>
       dispatch(actions.signUp(payload, typeOfSignUp)),
-    resetSuccess: () => dispatch(actions.resetSuccess())
+    resetSuccess: () => dispatch(actions.resetSuccess()),
+    resetErrors: () => dispatch(actions.resetErrors())
   };
 };
 

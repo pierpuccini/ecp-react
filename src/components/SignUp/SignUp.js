@@ -109,7 +109,7 @@ const SignUp = props => {
     <Container maxWidth="sm" className={classes.signUpContainer}>
       <Paper className={matClasses.paper}>
         <div className={classes.topActions}>
-          <IconButton component={backToLogin} to="/login">
+          <IconButton component={backToLogin} to="/login" onClick={props.clearErrors}>
             <ArrowBackIosOutlinedIcon />
           </IconButton>
           <span
