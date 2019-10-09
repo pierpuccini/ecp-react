@@ -118,7 +118,13 @@ const Auth = props => {
 
   const submitSignUpHandler = (event, typeOfLogin) => {
     event.preventDefault();
-    props.onLogin(signUpForm.email.value, signUpForm.password.value, typeOfLogin);
+    let payload = {
+      fullName: signUpForm.fullName.value,
+      password: signUpForm.password.value,
+      email: signUpForm.email.value,
+      phoneNumber: signUpForm.phoneNumber.value,
+    }
+    props.onSignUp(payload, typeOfLogin);
   };
 
   const toggleViewPasswordHandler = () => {
@@ -128,7 +134,7 @@ const Auth = props => {
 
   let authRedirect = null;
   if (props.authenticated) {
-    authRedirect = <Redirect to={props.authRedirectPath} />;
+    authRedirect = <Redirect to="/home" />;
   }
 
   return (
@@ -171,9 +177,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, password, typeOfLogin) =>
       dispatch(actions.auth(email, password, typeOfLogin)),
-    onLogin: (email, password, typeOfSignUp) =>
-      dispatch(actions.signUp(email, password, typeOfSignUp)),
-    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/home"))
+      onSignUp: (payload, typeOfSignUp) =>
+      dispatch(actions.signUp(payload, typeOfSignUp)),
   };
 };
 

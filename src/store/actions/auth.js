@@ -38,16 +38,8 @@ export const signUpSuccess = () => {
 };
 
 export const signUpFail = error => {
-  console.log('pier error',error);
+  console.log("pier error", error);
   let customErrorMsg = error.message;
-  // error.code.includes("email-already-in-use")
-  //   ? (customErrorMsg = "There is an existing account with this email.")
-  //   : error.code.includes("credential-already-in-use")
-  //   ? (customErrorMsg = "This usear already exists.")
-  //   : error.code.includes("invalid-email") ?
-  //    (customErrorMsg = "The email address is badly formatted."):
-  //    (customErrorMsg = "General Error, Contact Support");
-
   return {
     type: actionTypes.SIGN_UP_FAIL,
     error: { ...error, customErrorMsg }
@@ -60,7 +52,7 @@ export const logout = () => {
   };
 };
 
-export const signUp = (email, password, typeOfLogin) => {
+export const signUp = (data, typeOfLogin) => {
   return (dispatch, getState, { getFirebase }) => {
     dispatch(signUpStart());
     const firebase = getFirebase();
@@ -80,9 +72,20 @@ export const signUp = (email, password, typeOfLogin) => {
       default:
         firebase
           .auth()
-          .createUserWithEmailAndPassword(email, password)
+          .createUserWithEmailAndPassword(data.email, data.password)
           .then(() => {
-            dispatch(signUpSuccess());
+            const user = firebase.auth().currentUser;
+            user
+              .updateProfile({
+                displayName: data.fullName,
+                phoneNumber: data.phoneNumber
+              })
+              .then(() => {
+                dispatch(signUpSuccess());
+              })
+              .catch(err => {
+                dispatch(signUpFail(err));
+              });
           })
           .catch(err => {
             dispatch(signUpFail(err));
@@ -121,13 +124,6 @@ export const auth = (email, password, typeOfLogin) => {
           });
         break;
     }
-  };
-};
-
-export const setAuthRedirectPath = path => {
-  return {
-    type: actionTypes.SET_AUTH_REDIRECT_PATH,
-    path: path
   };
 };
 

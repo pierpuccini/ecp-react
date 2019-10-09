@@ -27,6 +27,7 @@ const composeEnhancers =
 
 // react-redux-firebase config
 const rrfConfig = {
+  updateProfileOnLogin: true,
   attachAuthIsReady: true,
   enableRedirectHandling: true
 };
