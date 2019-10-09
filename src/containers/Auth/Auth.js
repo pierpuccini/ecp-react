@@ -1,5 +1,5 @@
 //React Imports
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 //Redux
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
@@ -86,12 +86,6 @@ const Auth = props => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    if (props.authenticated && props.authRedirectPath !== "/home") {
-      props.onSetAuthRedirectPath();
-    }
-  });
-
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
       [controlName]: updateObject(loginForm[controlName], {
@@ -122,7 +116,13 @@ const Auth = props => {
 
   const submitLoginHandler = (event, typeOfLogin) => {
     event.preventDefault();
-    props.onAuth(loginForm.email.value, loginForm.password.value, typeOfLogin);
+    props.onAuth(
+      !loginForm.email.value
+        ? loginForm.forgotEmail.value
+        : loginForm.email.value,
+      loginForm.password.value,
+      typeOfLogin
+    );
   };
 
   const submitSignUpHandler = (event, typeOfLogin) => {

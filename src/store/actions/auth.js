@@ -46,6 +46,25 @@ export const signUpFail = error => {
   };
 };
 
+export const passwordResetSuccess = () => {
+  return {
+    type: actionTypes.PASSWORD_RESET_SUCCESS
+  };
+};
+
+export const passwordResetFail = error => {
+  let customErrorMsg = null;
+  error.code.includes("user-not-found")
+    ? (customErrorMsg = "There is no user corresponding to this Email")
+    : error.code.includes("wrong-password")
+    ? (customErrorMsg = "The Email or Password is incorrect")
+    : (customErrorMsg = "General Error, Contact Support");
+  return {
+    type: actionTypes.PASSWORD_RESET_FAIL,
+    error: { ...error, customErrorMsg }
+  };
+};
+
 export const logout = () => {
   return {
     type: actionTypes.AUTH_LOGOUT
@@ -56,7 +75,7 @@ export const signUp = (data, typeOfLogin) => {
   return (dispatch, getState, { getFirebase }) => {
     dispatch(signUpStart());
     const firebase = getFirebase();
-    console.log('firebase auth state', getState().firebase);
+    console.log("firebase auth state", getState().firebase);
     const provider = new firebase.auth.GoogleAuthProvider();
     switch (typeOfLogin) {
       case "google":
@@ -110,6 +129,17 @@ export const auth = (email, password, typeOfLogin) => {
           })
           .catch(err => {
             dispatch(authFail(err));
+          });
+        break;
+      case "forgotEmail":
+        firebase
+          .auth()
+          .sendPasswordResetEmail(email)
+          .then(() => {
+            dispatch(passwordResetSuccess());
+          })
+          .catch(err => {
+            dispatch(passwordResetFail(err));
           });
         break;
       default:

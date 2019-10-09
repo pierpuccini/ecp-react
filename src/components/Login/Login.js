@@ -157,7 +157,7 @@ const Login = props => {
           ) : (
             <form
               className={matClasses.container}
-              onSubmit={event => props.submitHandler(event, "forgot")}
+              onSubmit={event => props.submitHandler(event, "forgotEmail")}
             >
               <TextField
                 className={matClasses.textField}
@@ -165,7 +165,7 @@ const Login = props => {
                 placeholder="Enter Your Email"
                 type="Email"
                 value={props.authLoginForm.forgotEmail.value}
-                onChange={event => props.inputChangedHandler(event, "email")}
+                onChange={event => props.inputChangedHandler(event, "forgotEmail")}
                 margin="normal"
                 variant="outlined"
                 required

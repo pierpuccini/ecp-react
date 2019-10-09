@@ -21,6 +21,7 @@ const signUpSuccess = (state) => {
 const signUpFail = (state, action) => {
   return updateObject(state, { error: action.error, loading: false });
 };
+
 const authStart = state => {
   return updateObject(state, { error: null, loading: true });
 };
@@ -36,6 +37,17 @@ const authFail = (state, action) => {
   return updateObject(state, { error: action.error, loading: false });
 };
 
+const passwordResetSuccess = (state) => {
+  return updateObject(state, {
+    error: null,
+    loading: false
+  });
+};
+
+const passwordResetFail = (state, action) => {
+  return updateObject(state, { error: action.error, loading: false });
+};
+
 const authLogout = (state) => {
   return updateObject(state, { token: null, userId: null });
 };
@@ -48,6 +60,8 @@ const reducer = (state = initialState, action) => {
     case actionTypes.AUTH_START: return authStart(state, action);
     case actionTypes.AUTH_SUCCESS: return authSuccess(state, action);
     case actionTypes.AUTH_FAIL: return authFail(state, action);
+    case actionTypes.PASSWORD_RESET_SUCCESS: return passwordResetSuccess(state, action);
+    case actionTypes.PASSWORD_RESET_FAIL: return passwordResetFail(state, action);
     case actionTypes.AUTH_LOGOUT: return authLogout(state, action);
     default:
       return state;
