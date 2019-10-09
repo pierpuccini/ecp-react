@@ -31,6 +31,15 @@ const Auth = props => {
       },
       valid: false,
       touched: false
+    },
+    forgotEmail: {
+      value: "",
+      validation: {
+        required: true,
+        isEmail: true
+      },
+      valid: false,
+      touched: false
     }
   });
   
@@ -140,7 +149,8 @@ const Auth = props => {
   return (
     <React.Fragment>
       {authRedirect}
-      {props.location.pathname.match("/login") || props.location.pathname.match("/forgot-login") ? (
+      {props.location.pathname.match("/login") ||
+      props.location.pathname.match("/forgot-login") ? (
         <Login
           authLoginForm={loginForm}
           inputChangedHandler={loginInputChangedHandler}
@@ -148,9 +158,11 @@ const Auth = props => {
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
           authError={props.authError}
-          forgotLogin={props.location.pathname.match("/forgot-login") ? true: false}
+          forgotLogin={
+            props.location.pathname.match("/forgot-login") ? true : false
+          }
         />
-      ) :  (
+      ) : (
         <SignUp
           authSignUpForm={signUpForm}
           inputChangedHandler={signUpInputChangedHandler}
