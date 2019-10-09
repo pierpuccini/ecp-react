@@ -51,11 +51,12 @@ export const logout = () => {
     type: actionTypes.AUTH_LOGOUT
   };
 };
-
+/* TODO: PROPERLY IMPLEMENT PHONE NUMBER */
 export const signUp = (data, typeOfLogin) => {
   return (dispatch, getState, { getFirebase }) => {
     dispatch(signUpStart());
     const firebase = getFirebase();
+    console.log('firebase auth state', getState().firebase);
     const provider = new firebase.auth.GoogleAuthProvider();
     switch (typeOfLogin) {
       case "google":
@@ -77,8 +78,7 @@ export const signUp = (data, typeOfLogin) => {
             const user = firebase.auth().currentUser;
             user
               .updateProfile({
-                displayName: data.fullName,
-                phoneNumber: data.phoneNumber
+                displayName: data.fullName
               })
               .then(() => {
                 dispatch(signUpSuccess());
