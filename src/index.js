@@ -65,7 +65,7 @@ store.firebaseAuthIsReady.then(() => {
     let app = (
       <Provider store={store}>
         <BrowserRouter>
-          <App />
+          <App className="App" />
         </BrowserRouter>
       </Provider>
     );
