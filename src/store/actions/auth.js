@@ -75,6 +75,7 @@ export const signUp = (data, typeOfLogin) => {
   return (dispatch, getState, { getFirebase }) => {
     dispatch(signUpStart());
     const firebase = getFirebase();
+    firebase.auth().useDeviceLanguage();
     console.log("firebase auth state", getState().firebase);
     const provider = new firebase.auth.GoogleAuthProvider();
     switch (typeOfLogin) {
@@ -114,10 +115,17 @@ export const signUp = (data, typeOfLogin) => {
   };
 };
 
-export const auth = (email, password, typeOfLogin) => {
+export const auth = (
+  email,
+  password,
+  phoneNumber,
+  verificationCode,
+  typeOfLogin
+) => {
   return (dispatch, getState, { getFirebase }) => {
     dispatch(authStart());
     const firebase = getFirebase();
+    firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
     switch (typeOfLogin) {
       case "google":
@@ -140,6 +148,24 @@ export const auth = (email, password, typeOfLogin) => {
           })
           .catch(err => {
             dispatch(passwordResetFail(err));
+          });
+        break;
+      case "phoneNumber":
+        let appVerifier = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+          "sign-in-phone",
+          { size: "invisible" }
+        ));
+        firebase
+          .auth()
+          .signInWithPhoneNumber(phoneNumber, appVerifier)
+          .then(function(confirmationResult) {
+            // SMS sent. Prompt user to type the code from the message, then sign the
+            // user in with confirmationResult.confirm(code).
+            window.confirmationResult = confirmationResult;
+          })
+          .catch(function(error) {
+            // Error; SMS not sent
+            // ...
           });
         break;
       default:
@@ -173,5 +199,11 @@ export const authLogout = () => {
 export const resetSuccess = () => {
   return {
     type: actionTypes.RESET_SUCCESS
+  };
+};
+
+export const resetErrors = () => {
+  return {
+    type: actionTypes.RESET_ERRORS_ON_AUTH_LINK_CHANGE
   };
 };

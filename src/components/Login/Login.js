@@ -15,6 +15,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
 //App Imports
 import classes from "./Login.module.scss";
 import Logo from "../../components/Logo/Logo";
@@ -61,6 +62,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2),
     [theme.breakpoints.down("sm")]: {
       padding: theme.spacing(1, 1),
+      margin: theme.spacing(1, 2),
       boxShadow: "unset",
     }
   }
@@ -209,7 +211,7 @@ const Login = props => {
           {!props.forgotLogin ? (
             <div className={classes.restoreLogin}>
               ¿Forgot your Login Details?{" "}
-              <Link component={forgotLoginDetailsLink} to="/forgot-login">
+              <Link component={forgotLoginDetailsLink} to="/forgot-login" onClick={props.clearErrors}>
                 Get Help Here.
               </Link>
             </div>
@@ -217,7 +219,7 @@ const Login = props => {
             <Paper className={matClasses.paper} style={{ boxShadow: "unset", padding: "unset" }}>
               <div className={classes.restoreLogin}>
                 ¿Need an account?{" "}
-                <Link component={SignUpLink} to="/sign-up">
+                <Link component={SignUpLink} to="/sign-up" onClick={props.clearErrors}>
                   Sign Up.
                 </Link>
               </div>
@@ -226,20 +228,34 @@ const Login = props => {
           <div className={classes.textDivider}>
             <span>OR</span>
           </div>
-          <Button
-            variant="outlined"
-            className={matClasses.button}
-            onClick={event => props.submitHandler(event, "google")}
-          >
-            <Icon classes={{ root: matClasses.iconRoot }}>
-              <img
-                className={matClasses.imageIcon}
-                src={gIcon}
-                alt="google login"
-              />
-            </Icon>
-            <span className={classes.gLogin}>Sign in with Google</span>
-          </Button>
+          <div>
+            <Button
+              variant="outlined"
+              className={matClasses.button}
+              style={{width: "210px"}}
+              onClick={event => props.submitHandler(event, "google")}
+            >
+              <Icon classes={{ root: matClasses.iconRoot }}>
+                <img
+                  className={matClasses.imageIcon}
+                  src={gIcon}
+                  alt="google login"
+                />
+              </Icon>
+              <span className={classes.gLogin}>Sign in with Google</span>
+            </Button>
+            <Button
+              variant="outlined"
+              className={matClasses.button}
+              style={{width: "210px"}}
+              onClick={event => props.submitHandler(event, "phoneNumber")}
+            >
+              <Icon classes={{ root: matClasses.iconRoot }}>
+                <PhoneOutlinedIcon style={{width: '18px', height: '18px'}}/>
+              </Icon>
+              <span className={classes.gLogin}>Sign in with phone{" "}</span>
+            </Button>
+          </div>
         </div>
       </Paper>
       {!props.forgotLogin ? (
