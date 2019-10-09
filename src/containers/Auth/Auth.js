@@ -102,7 +102,10 @@ const Auth = props => {
     }
   });
 
+  //Toggle for showing Password
   const [showPassword, setShowPassword] = useState(false);
+  //Shows Phone Login Form
+  const [showPhoneLogin, setshowPhoneLogin] = useState(false);
 
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
@@ -159,6 +162,11 @@ const Auth = props => {
     setShowPassword(showPasswordCopy);
   };
 
+  const togglePhoneFormHandler = () => {
+    let showPhoneCopy = !showPhoneLogin;
+    setshowPhoneLogin(showPhoneCopy);
+  };
+
   const clearErrors = () => {
     props.resetErrors()
   }
@@ -186,6 +194,8 @@ const Auth = props => {
           submitHandler={submitLoginHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
+          toogleViewPhoneForm={showPhoneLogin}
+          togglePhoneFormHandler={togglePhoneFormHandler}
           authError={props.authError}
           passwordResetSuccess={props.passwordResetSuccess}
           forgotLogin={

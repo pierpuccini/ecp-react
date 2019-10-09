@@ -70,18 +70,20 @@ const useStyles = makeStyles(theme => ({
 
 const Login = props => {
   const matClasses = useStyles();
-  let togglePhoneLogin = false;
 
+  //Error loader
   let errors = null;
-  let topLink = null;
-  let bottomLink = null;
   (props.authError) ?
     errors = <div className={classes.loginError}>{props.authError.customErrorMsg}</div> :
     errors = null;
 
-  let forgotForm = null;
+  //Form Loader for forgot form and login
+  let form = null;
+  let topLink = null;
+  let bottomLink = null;
   if (props.forgotLogin) {
-    forgotForm = (
+    //Forgot Form
+    form = (
       <form
         className={matClasses.container}
         onSubmit={event => props.submitHandler(event, "forgotEmail")}
@@ -162,7 +164,8 @@ const Login = props => {
       </Paper>
     );
   } else {
-    forgotForm = (
+    //Basic Login Form
+    form = (
       <form className={matClasses.container} onSubmit={props.submitHandler}>
         <TextField
           className={matClasses.textField}
@@ -259,6 +262,11 @@ const Login = props => {
     );
   }
 
+  //Phone Login
+  if (props.toogleViewPhoneForm) {
+    form = <div>pier</div>;
+  }
+
   return (
     <Container maxWidth="sm" className={classes.loginContainer}>
       <Paper className={matClasses.paper}>
@@ -266,7 +274,7 @@ const Login = props => {
         <Logo height="85px" />
         {errors}
         <div className={classes.formContainer}>
-          {forgotForm}
+          {form}
           {topLink}
           <div className={classes.textDivider}>
             <span>OR</span>
@@ -291,7 +299,7 @@ const Login = props => {
               variant="outlined"
               className={matClasses.button}
               style={{width: "210px"}}
-              onClick={togglePhoneLogin = !togglePhoneLogin}
+              onClick={props.togglePhoneFormHandler}
             >
               <Icon classes={{ root: matClasses.iconRoot }}>
                 <PhoneOutlinedIcon style={{width: '18px', height: '18px'}}/>
