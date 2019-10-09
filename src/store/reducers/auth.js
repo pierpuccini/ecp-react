@@ -4,11 +4,12 @@ import { updateObject } from "../../shared/utility";
 const initialState = {
   error: null,
   loading: false,
-  authRedirectPath: "/home"
+  authRedirectPath: "/home",
+  success: false
 };
 
 const signUpStart = state => {
-  return updateObject(state, { error: null, loading: true });
+  return updateObject(state, { error: null, loading: true, success: false });
 };
 
 const signUpSuccess = (state) => {
@@ -23,7 +24,7 @@ const signUpFail = (state, action) => {
 };
 
 const authStart = state => {
-  return updateObject(state, { error: null, loading: true });
+  return updateObject(state, { error: null, loading: true, success: false });
 };
 
 const authSuccess = (state) => {
@@ -34,22 +35,27 @@ const authSuccess = (state) => {
 };
 
 const authFail = (state, action) => {
-  return updateObject(state, { error: action.error, loading: false });
+  return updateObject(state, { error: action.error, loading: false, success: false });
 };
 
 const passwordResetSuccess = (state) => {
   return updateObject(state, {
     error: null,
-    loading: false
+    loading: false,
+    success: true
   });
 };
 
 const passwordResetFail = (state, action) => {
-  return updateObject(state, { error: action.error, loading: false });
+  return updateObject(state, { error: action.error, loading: false, success: false });
 };
 
 const authLogout = (state) => {
   return updateObject(state, { token: null, userId: null });
+};
+
+const resetSuccess = state => {
+  return updateObject(state, { success: false });
 };
 
 const reducer = (state = initialState, action) => {
@@ -63,6 +69,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.PASSWORD_RESET_SUCCESS: return passwordResetSuccess(state, action);
     case actionTypes.PASSWORD_RESET_FAIL: return passwordResetFail(state, action);
     case actionTypes.AUTH_LOGOUT: return authLogout(state, action);
+    case actionTypes.RESET_SUCCESS: return resetSuccess(state, action);
     default:
       return state;
   }

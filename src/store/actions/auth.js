@@ -169,3 +169,9 @@ export const authLogout = () => {
       });
   };
 };
+
+export const resetSuccess = () => {
+  return {
+    type: actionTypes.RESET_SUCCESS
+  };
+};

@@ -14,6 +14,7 @@ import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 //App Imports
 import classes from "./Login.module.scss";
 import Logo from "../../components/Logo/Logo";
@@ -165,7 +166,9 @@ const Login = props => {
                 placeholder="Enter Your Email"
                 type="Email"
                 value={props.authLoginForm.forgotEmail.value}
-                onChange={event => props.inputChangedHandler(event, "forgotEmail")}
+                onChange={event =>
+                  props.inputChangedHandler(event, "forgotEmail")
+                }
                 margin="normal"
                 variant="outlined"
                 required
@@ -179,6 +182,15 @@ const Login = props => {
                     ? "Please Enter a valid Email"
                     : null
                 }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment>
+                      {props.passwordResetSuccess ? (
+                          <CheckCircleOutlineIcon style={{ color: "#11a208c7", padding:"12px" }} />
+                      ) : <span></span>}
+                    </InputAdornment>
+                  )
+                }}
               />
               <Typography style={{ fontSize: "small" }}>
                 The reset email will arrive in a few seconds.

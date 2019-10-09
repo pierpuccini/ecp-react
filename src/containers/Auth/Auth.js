@@ -145,6 +145,12 @@ const Auth = props => {
   if (props.authenticated) {
     authRedirect = <Redirect to="/home" />;
   }
+  if (props.passwordResetSuccess) {
+    setTimeout(() => {
+      props.resetSuccess()
+      props.history.push("/login");      
+    }, 1500);
+  }
   
   return (
     <React.Fragment>
@@ -152,12 +158,14 @@ const Auth = props => {
       {props.location.pathname.match("/login") ||
       props.location.pathname.match("/forgot-login") ? (
         <Login
+          loading={props.loading}
           authLoginForm={loginForm}
           inputChangedHandler={loginInputChangedHandler}
           submitHandler={submitLoginHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
           authError={props.authError}
+          passwordResetSuccess={props.passwordResetSuccess}
           forgotLogin={
             props.location.pathname.match("/forgot-login") ? true : false
           }
@@ -178,7 +186,9 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
+    loading: state.auth.loading,
     authError: state.auth.error,
+    passwordResetSuccess: state.auth.success,
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
     authenticated: state.firebase.auth.uid ? true : false,
@@ -190,8 +200,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, password, typeOfLogin) =>
       dispatch(actions.auth(email, password, typeOfLogin)),
-      onSignUp: (payload, typeOfSignUp) =>
+    onSignUp: (payload, typeOfSignUp) =>
       dispatch(actions.signUp(payload, typeOfSignUp)),
+    resetSuccess: () => dispatch(actions.resetSuccess())
   };
 };
 
