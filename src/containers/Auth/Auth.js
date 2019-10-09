@@ -1,5 +1,5 @@
 //React Imports
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 //Redux
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
@@ -28,6 +28,15 @@ const Auth = props => {
       validation: {
         required: true,
         minLength: 6
+      },
+      valid: false,
+      touched: false
+    },
+    forgotEmail: {
+      value: "",
+      validation: {
+        required: true,
+        isEmail: true
       },
       valid: false,
       touched: false
@@ -64,7 +73,7 @@ const Auth = props => {
       touched: false
     },
     phoneNumber: {
-      value: "3",
+      value: "",
       validation: {
         required: true,
         phone: true,
@@ -73,16 +82,9 @@ const Auth = props => {
       valid: false,
       touched: false
     }
-  })
-
-  // const [isSignUp, setIsSignUp] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    if (props.authenticated && props.authRedirectPath !== "/home") {
-      props.onSetAuthRedirectPath();
-    }
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
@@ -112,9 +114,26 @@ const Auth = props => {
     setSignUpForm(updatedControls);
   };
 
-  const submitHandler = (event, typeOfLogin) => {
+  const submitLoginHandler = (event, typeOfLogin) => {
     event.preventDefault();
-    props.onAuth(loginForm.email.value, loginForm.password.value, typeOfLogin);
+    props.onAuth(
+      !loginForm.email.value
+        ? loginForm.forgotEmail.value
+        : loginForm.email.value,
+      loginForm.password.value,
+      typeOfLogin
+    );
+  };
+
+  const submitSignUpHandler = (event, typeOfLogin) => {
+    event.preventDefault();
+    let payload = {
+      fullName: signUpForm.fullName.value,
+      password: signUpForm.password.value,
+      email: signUpForm.email.value,
+      phoneNumber: signUpForm.phoneNumber.value,
+    }
+    props.onSignUp(payload, typeOfLogin);
   };
 
   const toggleViewPasswordHandler = () => {
@@ -124,29 +143,41 @@ const Auth = props => {
 
   let authRedirect = null;
   if (props.authenticated) {
-    authRedirect = <Redirect to={props.authRedirectPath} />;
+    authRedirect = <Redirect to="/home" />;
   }
-
+  if (props.passwordResetSuccess) {
+    setTimeout(() => {
+      props.resetSuccess()
+      props.history.push("/login");      
+    }, 1500);
+  }
+  
   return (
     <React.Fragment>
       {authRedirect}
-      {props.location.pathname.match("/login") ? (
+      {props.location.pathname.match("/login") ||
+      props.location.pathname.match("/forgot-login") ? (
         <Login
+          loading={props.loading}
           authLoginForm={loginForm}
           inputChangedHandler={loginInputChangedHandler}
-          submitHandler={submitHandler}
+          submitHandler={submitLoginHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
-          authError={props.loginError}
+          authError={props.authError}
+          passwordResetSuccess={props.passwordResetSuccess}
+          forgotLogin={
+            props.location.pathname.match("/forgot-login") ? true : false
+          }
         />
       ) : (
         <SignUp
           authSignUpForm={signUpForm}
           inputChangedHandler={signUpInputChangedHandler}
-          submitHandler={submitHandler}
+          submitHandler={submitSignUpHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
-          authError={props.loginError}
+          authError={props.authError}
         />
       )}
     </React.Fragment>
@@ -155,9 +186,11 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
-    loginError: state.auth.error,
+    loading: state.auth.loading,
+    authError: state.auth.error,
+    passwordResetSuccess: state.auth.success,
     authRedirectPath: state.auth.authRedirectPath,
-    emailLoginLoading: state.auth.loading,
+    authLoading: state.auth.loading,
     authenticated: state.firebase.auth.uid ? true : false,
     fireAuth: state.firebase.auth
   };
@@ -167,7 +200,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, password, typeOfLogin) =>
       dispatch(actions.auth(email, password, typeOfLogin)),
-    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/home"))
+    onSignUp: (payload, typeOfSignUp) =>
+      dispatch(actions.signUp(payload, typeOfSignUp)),
+    resetSuccess: () => dispatch(actions.resetSuccess())
   };
 };
 

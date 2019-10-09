@@ -4,10 +4,13 @@ import { Link as RouterLink } from "react-router-dom";
 import PropTypes from "prop-types";
 //MaterialUI Imports
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
+import Badge from "@material-ui/core/Badge";
 import Icon from "@material-ui/core/Icon";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -17,6 +20,7 @@ import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined"
 //App Imports
 import classes from "./SignUp.module.scss";
 import gIcon from "../../assets/svg/search.svg";
+import coinIcon from "../../assets/icons/educoin.ico";
 import NumberFormat from "react-number-format";
 
 const backToLogin = React.forwardRef((props, ref) => (
@@ -57,6 +61,12 @@ const useStyles = makeStyles(theme => ({
     height: "18px",
     "font-size": "unset"
   },
+  iconRootCoin: {
+    textAlign: "center",
+    width: "32px",
+    height: "32px",
+    "font-size": "unset"
+  },
   container: {
     display: "grid",
     flexWrap: "wrap"
@@ -79,15 +89,22 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     padding: theme.spacing(2, 2),
+    margin: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      "box-shadow": "unset"
+    }
+  },
+  badge: {
     margin: theme.spacing(2)
-    // [theme.breakpoints.down("sm")]: {
-    //   "box-shadow": "unset"
-    // }
+  },
+  link: {
+    margin: theme.spacing(1),
   }
 }));
 
+
 const SignUp = props => {
-  const matClasses = useStyles();
+  const matClasses = useStyles();  
   return (
     <Container maxWidth="sm" className={classes.signUpContainer}>
       <Paper className={matClasses.paper}>
@@ -95,10 +112,25 @@ const SignUp = props => {
           <IconButton component={backToLogin} to="/login">
             <ArrowBackIosOutlinedIcon />
           </IconButton>
-          <p style={{ fontWeight: "bold", marginRight: "45px", fontSize: "14px" }}>
+          <span
+            style={{
+              fontWeight: "bold",
+              fontSize: "14px",
+              alignSelf: "center",
+              margin: "16px"
+            }}
+          >
             Fill In Your Profile Info!
-          </p>
-          <div></div>
+          </span>
+          <Badge className={matClasses.badge} badgeContent={0} color="primary">
+            <Icon classes={{ root: matClasses.iconRootCoin }}>
+              <img
+                className={matClasses.imageIcon}
+                src={coinIcon}
+                alt="coin counter"
+              />
+            </Icon>
+          </Badge>
         </div>
         <div>
           <Button
@@ -119,6 +151,11 @@ const SignUp = props => {
         <div className={classes.textDivider}>
           <span>OR</span>
         </div>
+        {props.authError ? (
+          <div className={classes.loginError}>
+            {props.authError.customErrorMsg}
+          </div>
+        ) : null}
         <div className={classes.formContainer}>
           <form className={matClasses.container} onSubmit={props.submitHandler}>
             <TextField
@@ -240,6 +277,10 @@ const SignUp = props => {
               SIGN UP!
             </Button>
           </form>
+          <Typography style={{ fontSize: "smaller" }}>
+            *By signing up you are accepting our terms of service... Read more
+            at <Link href='google.com' className={matClasses.link} target="_blank" rel="noopener">www.placeholder.com</Link>
+          </Typography>
         </div>
       </Paper>
     </Container>
