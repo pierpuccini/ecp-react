@@ -50,9 +50,8 @@ const store = createStore(
   )
 );
 
-
 let app = (
-  <div id="App">
+  <div className="App">
     <img src={loader} alt="loading..." />
   </div>
 );
@@ -63,7 +62,7 @@ store.firebaseAuthIsReady.then(() => {
     let app = (
       <Provider store={store}>
         <BrowserRouter>
-          <App id="App" />
+          <App />
         </BrowserRouter>
       </Provider>
     );
