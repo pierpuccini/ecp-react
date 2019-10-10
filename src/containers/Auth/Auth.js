@@ -1,5 +1,5 @@
 //React Imports
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 //Redux
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
@@ -107,6 +107,15 @@ const Auth = props => {
   //Shows Phone Login Form
   const [showPhoneLogin, setshowPhoneLogin] = useState(false);
 
+  useEffect(() => {
+    if (
+      props.location.search.includes("phonefail=true") ||
+      props.location.search.includes("phonerefresh=true")
+    ) {
+      setshowPhoneLogin(true);
+    }
+  }, [props.location.search]);
+
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
       [controlName]: updateObject(loginForm[controlName], {
@@ -171,17 +180,28 @@ const Auth = props => {
     props.resetErrors()
   }
 
+  const resetPhoneLoginHandler = () => {
+    props.history.replace("/login?phonerefresh=true&phonefail=false");
+    window.location.reload();
+  };
+
   let authRedirect = null;
   if (props.authenticated) {
     authRedirect = <Redirect to="/home" />;
   }
+
   if (props.passwordResetSuccess) {
     setTimeout(() => {
       props.resetSuccess()
       props.history.push("/login");      
     }, 1500);
   }
-  
+
+  if (props.reloadOnPhoneAuthFail) {
+    props.history.replace('/login?phonerefresh=false&phonefail=true')
+    window.location.reload();
+  }
+
   return (
     <React.Fragment>
       {authRedirect}
@@ -203,6 +223,7 @@ const Auth = props => {
           }
           clearErrors={clearErrors}
           smsSent={props.smsSent}
+          resetPhoneLogin={resetPhoneLoginHandler}
         />
       ) : (
         <SignUp
@@ -228,7 +249,8 @@ const mapStateToProps = state => {
     authLoading: state.auth.loading,
     authenticated: state.firebase.auth.uid ? true : false,
     fireAuth: state.firebase.auth,
-    smsSent: state.auth.smsSent
+    smsSent: state.auth.smsSent,
+    reloadOnPhoneAuthFail: state.auth.resetCaptcha
   };
 };
 

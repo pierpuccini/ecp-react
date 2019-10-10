@@ -236,32 +236,6 @@ const SignUp = props => {
                 )
               }}
             />
-            <TextField
-              className={matClasses.textField}
-              label="Phone Number"
-              placeholder="+57 (000) 000-0000"
-              type="text"
-              value={props.authSignUpForm.phoneNumber.value}
-              onChange={event =>
-                props.inputChangedHandler(event, "phoneNumber")
-              }
-              margin="normal"
-              variant="outlined"
-              required
-              error={
-                !props.authSignUpForm.phoneNumber.valid &&
-                props.authSignUpForm.phoneNumber.touched
-              }
-              helperText={
-                !props.authSignUpForm.phoneNumber.valid &&
-                props.authSignUpForm.phoneNumber.touched
-                  ? "Please Enter a valid Phone Number"
-                  : null
-              }
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
             <Button
               variant="contained"
               color="primary"
@@ -270,8 +244,7 @@ const SignUp = props => {
               disabled={
                 !props.authSignUpForm.fullName.valid ||
                 !props.authSignUpForm.email.valid ||
-                !props.authSignUpForm.password.valid ||
-                !props.authSignUpForm.phoneNumber.valid
+                !props.authSignUpForm.password.valid
               }
             >
               SIGN UP!

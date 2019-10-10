@@ -8,7 +8,8 @@ const initialState = {
   success: false,
   smsSent : false,
   captcha: null,
-  confirmCode: null
+  confirmCode: null,
+  resetCaptcha: false
 };
 
 const signUpStart = state => {
@@ -61,7 +62,8 @@ const phoneLoginFail = (state, action) => {
     loading: false,
     success: false,
     smsSent: false,
-    captcha: null
+    captcha: null,
+    resetCaptcha: true
   });
 };
 
@@ -93,7 +95,7 @@ const passwordResetFail = (state, action) => {
 };
 
 const authLogout = (state) => {
-  return updateObject(state, { token: null, userId: null, smsSent: false, success: false });
+  return updateObject(state, { token: null, userId: null, smsSent: false, success: false, resetCaptcha: false });
 };
 
 const resetSuccess = state => {
@@ -101,7 +103,7 @@ const resetSuccess = state => {
 };
 
 const resetErrors = state => {
-  return updateObject(state, { error: null, smsSent: false });
+  return updateObject(state, { error: null, smsSent: false, resetCaptcha: false });
 };
 
 const reducer = (state = initialState, action) => {

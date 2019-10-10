@@ -18,6 +18,7 @@ import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined"
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
+import RefreshIcon from '@material-ui/icons/Refresh';
 //App Imports
 import classes from "./Login.module.scss";
 import Logo from "../../components/Logo/Logo";
@@ -336,7 +337,16 @@ const Login = props => {
               : null
           }
           InputProps={{
-            inputComponent: NumberFormatPhone
+            inputComponent: NumberFormatPhone,
+            endAdornment: (
+              <InputAdornment>
+                <div onClick={() => props.resetPhoneLogin()}>
+                  <IconButton>
+                    <RefreshIcon/>
+                  </IconButton>
+                </div>
+              </InputAdornment>
+            )
           }}
         />
         <TextField
