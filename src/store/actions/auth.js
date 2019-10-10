@@ -115,18 +115,13 @@ export const signUp = (data, typeOfLogin) => {
   };
 };
 
-export const auth = (
-  email,
-  password,
-  phoneNumber,
-  verificationCode,
-  typeOfLogin
-) => {
+export const auth = (data, typeOfLogin) => {
   return (dispatch, getState, { getFirebase }) => {
     dispatch(authStart());
     const firebase = getFirebase();
     firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
+    console.log('pier typ of login', typeOfLogin)
     switch (typeOfLogin) {
       case "google":
         firebase
@@ -142,7 +137,7 @@ export const auth = (
       case "forgotEmail":
         firebase
           .auth()
-          .sendPasswordResetEmail(email)
+          .sendPasswordResetEmail(data.email)
           .then(() => {
             dispatch(passwordResetSuccess());
           })
@@ -157,7 +152,7 @@ export const auth = (
         ));
         firebase
           .auth()
-          .signInWithPhoneNumber(phoneNumber, appVerifier)
+          .signInWithPhoneNumber(data.phoneNumber, appVerifier)
           .then(function(confirmationResult) {
             // SMS sent. Prompt user to type the code from the message, then sign the
             // user in with confirmationResult.confirm(code).
@@ -171,7 +166,7 @@ export const auth = (
       default:
         firebase
           .auth()
-          .signInWithEmailAndPassword(email, password)
+          .signInWithEmailAndPassword(data.email, data.password)
           .then(() => {
             dispatch(authSuccess());
           })
