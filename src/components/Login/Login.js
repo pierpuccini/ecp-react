@@ -1,6 +1,7 @@
 //React Imports
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
+import PropTypes from "prop-types";
 //MaterialUI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -16,10 +17,12 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
+import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
 //App Imports
 import classes from "./Login.module.scss";
 import Logo from "../../components/Logo/Logo";
 import gIcon from "../../assets/svg/search.svg";
+import NumberFormat from "react-number-format";
 
 const SignUpLink = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
@@ -27,6 +30,52 @@ const SignUpLink = React.forwardRef((props, ref) => (
 const forgotLoginDetailsLink = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
 ));
+
+const NumberFormatPhone = props => {
+  const { inputRef, onChange, ...other } = props;
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value
+          }
+        });
+      }}
+      format="+57 (###) ###-####"
+    />
+  );
+};
+
+NumberFormatPhone.propTypes = {
+  inputRef: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired
+};
+
+const NumberFormatPhoneCode = props => {
+  const { inputRef, onChange, ...other } = props;
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value
+          }
+        });
+      }}
+      format="#-#-#-#-#-#"
+    />
+  );
+};
+
+NumberFormatPhoneCode.propTypes = {
+  inputRef: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired
+};
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {
@@ -264,13 +313,76 @@ const Login = props => {
 
   //Phone Login
   if (props.toogleViewPhoneForm) {
-    form = <div>pier</div>;
+    form = (
+      <form className={matClasses.container} onSubmit={props.submitHandler}>
+        <TextField
+          className={matClasses.textField}
+          label="Phone Number"
+          placeholder="+57 (000) 000-0000"
+          type="text"
+          value={props.authLoginForm.phoneNumber.value}
+          onChange={event => props.inputChangedHandler(event, "phoneNumber")}
+          margin="normal"
+          variant="outlined"
+          required
+          error={
+            !props.authLoginForm.phoneNumber.valid &&
+            props.authLoginForm.phoneNumber.touched
+          }
+          helperText={
+            !props.authLoginForm.phoneNumber.valid &&
+            props.authLoginForm.phoneNumber.touched
+              ? "Please Enter a valid Phone Number"
+              : null
+          }
+          InputProps={{
+            inputComponent: NumberFormatPhone
+          }}
+        />
+        <TextField
+          className={matClasses.textField}
+          label="Verification Code"
+          placeholder="1-2-3-4-5-6"
+          type="text"
+          value={props.authLoginForm.verifCode.value}
+          onChange={event => props.inputChangedHandler(event, "verifCode")}
+          margin="normal"
+          variant="outlined"
+          required
+          error={
+            !props.authLoginForm.verifCode.valid &&
+            props.authLoginForm.verifCode.touched
+          }
+          helperText={
+            !props.authLoginForm.verifCode.valid &&
+            props.authLoginForm.verifCode.touched
+              ? "Please Enter a valid Code"
+              : null
+          }
+          InputProps={{
+            inputComponent: NumberFormatPhoneCode
+          }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          className={matClasses.button}
+          type="submit"
+          disabled={
+            !props.authLoginForm.phoneNumber.valid ||
+            !props.authLoginForm.verifCode.valid
+          }
+        >
+          Verify & Log In.
+        </Button>
+      </form>
+    );
   }
 
   return (
     <Container maxWidth="sm" className={classes.loginContainer}>
       <Paper className={matClasses.paper}>
-        <strong>Welcome</strong>
+        <strong>Welcome To Edu Coins!</strong>
         <Logo height="85px" />
         {errors}
         <div className={classes.formContainer}>
@@ -283,7 +395,7 @@ const Login = props => {
             <Button
               variant="outlined"
               className={matClasses.button}
-              style={{width: "210px"}}
+              style={{ width: "210px" }}
               onClick={event => props.submitHandler(event, "google")}
             >
               <Icon classes={{ root: matClasses.iconRoot }}>
@@ -295,17 +407,35 @@ const Login = props => {
               </Icon>
               <span className={classes.gLogin}>Sign in with Google</span>
             </Button>
-            <Button
-              variant="outlined"
-              className={matClasses.button}
-              style={{width: "210px"}}
-              onClick={props.togglePhoneFormHandler}
-            >
-              <Icon classes={{ root: matClasses.iconRoot }}>
-                <PhoneOutlinedIcon style={{width: '18px', height: '18px'}}/>
-              </Icon>
-              <span className={classes.gLogin}>Sign in with phone</span>
-            </Button>
+            {!props.toogleViewPhoneForm ? (
+              <Button
+                variant="outlined"
+                className={matClasses.button}
+                style={{ width: "210px" }}
+                onClick={props.togglePhoneFormHandler}
+              >
+                <Icon classes={{ root: matClasses.iconRoot }}>
+                  <PhoneOutlinedIcon
+                    style={{ width: "18px", height: "18px" }}
+                  />
+                </Icon>
+                <span className={classes.gLogin}>Sign in with phone</span>
+              </Button>
+            ) : (
+              <Button
+                variant="outlined"
+                className={matClasses.button}
+                style={{ width: "210px" }}
+                onClick={props.togglePhoneFormHandler}
+              >
+                <Icon classes={{ root: matClasses.iconRoot }}>
+                  <EmailOutlinedIcon
+                    style={{ width: "18px", height: "18px" }}
+                  />
+                </Icon>
+                <span className={classes.gLogin}>Sign in with email</span>
+              </Button>
+            )}
           </div>
         </div>
       </Paper>

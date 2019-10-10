@@ -33,7 +33,7 @@ function App(props) {
       </Switch>
     );
   }
-  return <div id="App">{routes}</div>;
+  return <div className="App">{routes}</div>;
 }
 
 const mapStateToProps = state => {

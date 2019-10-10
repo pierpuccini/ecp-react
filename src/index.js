@@ -9,21 +9,19 @@ import firebaseConfig from "./firebase.config";
 import firebase from "firebase/app";
 import "firebase/auth";
 import thunk from "redux-thunk";
-
 //App imports
 import loader from "./assets/loaders/educoin(B).gif";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-
 //reducers
 import authReducer from "./store/reducers/auth";
 
 //checks to see if redux is available in production or not
+// const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const composeEnhancers =
   process.env.NODE_ENV === "development"
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    : null || compose;
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose : compose
 
 // react-redux-firebase config
 const rrfConfig = {
@@ -52,9 +50,8 @@ const store = createStore(
   )
 );
 
-
 let app = (
-  <div id="App">
+  <div className="App">
     <img src={loader} alt="loading..." />
   </div>
 );
@@ -65,7 +62,7 @@ store.firebaseAuthIsReady.then(() => {
     let app = (
       <Provider store={store}>
         <BrowserRouter>
-          <App id="App" />
+          <App />
         </BrowserRouter>
       </Provider>
     );

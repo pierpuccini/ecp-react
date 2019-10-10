@@ -10,10 +10,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 } 
 #root {flex-grow:1;}
-#App{
-  height: 100% !important;
+.App{
+  height: 100%;
   overflow: hidden;
-  display: flex !important;
+  display: flex;
   justify-content: center;
   align-items: center; 
   text-align: center;
