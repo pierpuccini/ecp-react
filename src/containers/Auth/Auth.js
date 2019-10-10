@@ -202,6 +202,7 @@ const Auth = props => {
             props.location.pathname.match("/forgot-login") ? true : false
           }
           clearErrors={clearErrors}
+          smsSent={props.smsSent}
         />
       ) : (
         <SignUp
@@ -226,7 +227,8 @@ const mapStateToProps = state => {
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
     authenticated: state.firebase.auth.uid ? true : false,
-    fireAuth: state.firebase.auth
+    fireAuth: state.firebase.auth,
+    smsSent: state.auth.smsSent
   };
 };
 

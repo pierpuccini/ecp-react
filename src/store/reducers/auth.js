@@ -5,7 +5,10 @@ const initialState = {
   error: null,
   loading: false,
   authRedirectPath: "/home",
-  success: false
+  success: false,
+  smsSent : false,
+  captcha: null,
+  confirmCode: null
 };
 
 const signUpStart = state => {
@@ -21,6 +24,45 @@ const signUpSuccess = (state) => {
 
 const signUpFail = (state, action) => {
   return updateObject(state, { error: action.error, loading: false });
+};
+
+const phoneLoginStart = state => {
+  return updateObject(state, {
+    error: null,
+    loading: true,
+    success: false    
+  });
+};
+
+const phoneLoginSmsSent = (state, action) => {
+  return updateObject(state, {
+    error: null,
+    loading: false,
+    success: false,
+    smsSent: true,
+    captcha: action.verifier,
+    confirmCode: action.confirmation
+  });
+};
+
+const phoneLoginSuccess = (state) => {
+  return updateObject(state, {
+    error: null,
+    loading: false,
+    success: true,
+    smsSent: false,
+    captcha: null
+  });
+};
+
+const phoneLoginFail = (state, action) => {
+  return updateObject(state, {
+    error: action.error,
+    loading: false,
+    success: false,
+    smsSent: false,
+    captcha: null
+  });
 };
 
 const authStart = state => {
@@ -51,19 +93,23 @@ const passwordResetFail = (state, action) => {
 };
 
 const authLogout = (state) => {
-  return updateObject(state, { token: null, userId: null });
+  return updateObject(state, { token: null, userId: null, smsSent: false, success: false });
 };
 
 const resetSuccess = state => {
-  return updateObject(state, { success: false });
+  return updateObject(state, { success: false, smsSent: false });
 };
 
 const resetErrors = state => {
-  return updateObject(state, { error: null });
+  return updateObject(state, { error: null, smsSent: false });
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.PHONE_LOGIN_START: return phoneLoginStart(state, action);
+    case actionTypes.PHONE_LOGIN_SMS_SENT: return phoneLoginSmsSent(state, action);
+    case actionTypes.PHONE_LOGIN_SUCCESS: return phoneLoginSuccess(state, action);
+    case actionTypes.PHONE_LOGIN_FAIL: return phoneLoginFail(state, action);
     case actionTypes.SIGN_UP_START: return signUpStart(state, action);
     case actionTypes.SIGN_UP_SUCCESS: return signUpSuccess(state, action);
     case actionTypes.SIGN_UP_FAIL: return signUpFail(state, action);
