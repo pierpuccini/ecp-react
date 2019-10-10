@@ -103,7 +103,6 @@ export const signUp = (data, typeOfLogin) => {
     dispatch(signUpStart());
     const firebase = getFirebase();
     firebase.auth().useDeviceLanguage();
-    console.log("firebase auth state", getState().firebase);
     const provider = new firebase.auth.GoogleAuthProvider();
     switch (typeOfLogin) {
       case "google":
@@ -148,7 +147,6 @@ export const auth = (data, typeOfLogin) => {
     const firebase = getFirebase();
     firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
-    console.log('pier typ of login', typeOfLogin)
     switch (typeOfLogin) {
       case "google":
         firebase
@@ -179,7 +177,6 @@ export const auth = (data, typeOfLogin) => {
             "sign-in-phone",
             { size: "invisible" }
           ));
-          console.log("pier phone", data.phoneNumber);
           firebase
             .auth()
             .signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
