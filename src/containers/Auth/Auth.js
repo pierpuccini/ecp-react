@@ -136,14 +136,14 @@ const Auth = props => {
   };
 
   const submitLoginHandler = (event, typeOfLogin) => {
+    let payload = {
+      email: loginForm.email.value,
+      password: loginForm.password.value,
+      phoneNumber: loginForm.phoneNumber.value,
+      verif: loginForm.verifCode.value
+    };
     event.preventDefault();
-    props.onAuth(
-      !loginForm.email.value
-        ? loginForm.forgotEmail.value
-        : loginForm.email.value,
-      loginForm.password.value,
-      typeOfLogin
-    );
+    props.onAuth(payload, typeOfLogin);
   };
 
   const submitSignUpHandler = (event, typeOfLogin) => {
@@ -232,8 +232,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, typeOfLogin) =>
-      dispatch(actions.auth(email, password, typeOfLogin)),
+    onAuth: (payload, typeOfLogin) =>
+      dispatch(actions.auth(payload, typeOfLogin)),
     onSignUp: (payload, typeOfSignUp) =>
       dispatch(actions.signUp(payload, typeOfSignUp)),
     resetSuccess: () => dispatch(actions.resetSuccess()),
