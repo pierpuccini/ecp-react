@@ -317,9 +317,9 @@ const Login = props => {
       <form className={matClasses.container} onSubmit={props.submitHandler}>
         <TextField
           className={matClasses.textField}
-          label="Phone Number"
+          label="Tel"
           placeholder="+57 (000) 000-0000"
-          type="text"
+          type="tel"
           value={props.authLoginForm.phoneNumber.value}
           onChange={event => props.inputChangedHandler(event, "phoneNumber")}
           margin="normal"
@@ -341,14 +341,15 @@ const Login = props => {
         />
         <TextField
           className={matClasses.textField}
-          label="Verification Code"
+          label="SMS Code"
           placeholder="1-2-3-4-5-6"
           type="text"
           value={props.authLoginForm.verifCode.value}
           onChange={event => props.inputChangedHandler(event, "verifCode")}
           margin="normal"
           variant="outlined"
-          required
+          required={props.smsSent}
+          disabled={!props.smsSent}
           error={
             !props.authLoginForm.verifCode.valid &&
             props.authLoginForm.verifCode.touched
@@ -363,18 +364,32 @@ const Login = props => {
             inputComponent: NumberFormatPhoneCode
           }}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          className={matClasses.button}
-          type="submit"
-          disabled={
-            !props.authLoginForm.phoneNumber.valid ||
-            !props.authLoginForm.verifCode.valid
-          }
-        >
-          Verify & Log In.
-        </Button>
+        {props.smsSent ? (
+          <Button
+            id="sign-in-phone"
+            variant="contained"
+            color="primary"
+            className={matClasses.button}
+            onClick={event => props.submitHandler(event, "phoneNumber")}
+            disabled={
+              !props.authLoginForm.phoneNumber.valid ||
+              !props.authLoginForm.verifCode.valid
+            }
+          >
+            Verify & Log In
+          </Button>
+        ) : (
+          <Button
+            id="sign-in-phone"
+            variant="contained"
+            color="primary"
+            className={matClasses.button}
+            onClick={event => props.submitHandler(event, "phoneNumber")}
+            disabled={!props.authLoginForm.phoneNumber.valid}
+          >
+            Send SMS
+          </Button>
+        )}
       </form>
     );
   }

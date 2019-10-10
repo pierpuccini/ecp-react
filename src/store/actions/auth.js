@@ -1,5 +1,33 @@
 import * as actionTypes from "./actionTypes";
 
+export const phoneLoginStart = () => {
+  return {
+    type: actionTypes.PHONE_LOGIN_START
+  };
+};
+
+export const phoneLoginSmsSent = (captcha, confirmationResult) => {
+  return {
+    type: actionTypes.PHONE_LOGIN_SMS_SENT,
+    verifier: captcha,
+    confirmation: confirmationResult
+  };
+};
+
+export const phoneLoginSuccess = () => {
+  return {
+    type: actionTypes.PHONE_LOGIN_SUCCESS
+  };
+};
+
+export const phoneLoginFail = error => {
+  let customErrorMsg = error.message;
+  return {
+    type: actionTypes.PHONE_LOGIN_FAIL,
+    error: { ...error, customErrorMsg }
+  };
+};
+
 export const authStart = () => {
   return {
     type: actionTypes.AUTH_START
@@ -38,7 +66,6 @@ export const signUpSuccess = () => {
 };
 
 export const signUpFail = error => {
-  console.log("pier error", error);
   let customErrorMsg = error.message;
   return {
     type: actionTypes.SIGN_UP_FAIL,
@@ -146,22 +173,36 @@ export const auth = (data, typeOfLogin) => {
           });
         break;
       case "phoneNumber":
-        let appVerifier = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-          "sign-in-phone",
-          { size: "invisible" }
-        ));
-        firebase
-          .auth()
-          .signInWithPhoneNumber(data.phoneNumber, appVerifier)
-          .then(function(confirmationResult) {
-            // SMS sent. Prompt user to type the code from the message, then sign the
-            // user in with confirmationResult.confirm(code).
-            window.confirmationResult = confirmationResult;
-          })
-          .catch(function(error) {
-            // Error; SMS not sent
-            // ...
-          });
+        dispatch(phoneLoginStart());
+        if (!getState().auth.smsSent) {
+          let appVerifier = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+            "sign-in-phone",
+            { size: "invisible" }
+          ));
+          console.log("pier phone", data.phoneNumber);
+          firebase
+            .auth()
+            .signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
+            .then(confirmationResult => {
+              dispatch(phoneLoginSmsSent(appVerifier, confirmationResult));
+            })
+            .catch(err => {
+              appVerifier = null;
+              dispatch(phoneLoginFail(err));
+            });
+        } else {
+          let credential = firebase.auth.PhoneAuthProvider.credential(
+            getState().auth.confirmCode.verificationId,
+            data.verif
+          );
+          firebase.auth().signInWithCredential(credential)
+            .then(() => {
+              dispatch(phoneLoginSuccess());
+            })
+            .catch(err => {
+              dispatch(phoneLoginFail(err));
+            });
+        }
         break;
       default:
         firebase
