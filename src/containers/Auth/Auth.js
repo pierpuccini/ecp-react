@@ -190,6 +190,10 @@ const Auth = props => {
     authRedirect = <Redirect to="/home" />;
   }
 
+  if (props.newUser) {
+    authRedirect = <Redirect to="/sign-up" />;
+  }
+
   if (props.passwordResetSuccess) {
     setTimeout(() => {
       props.resetSuccess()
@@ -247,7 +251,8 @@ const mapStateToProps = state => {
     passwordResetSuccess: state.auth.success,
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
-    authenticated: state.firebase.auth.uid ? true : false,
+    authenticated: state.firebase.auth.uid && !state.auth.newUser,
+    newUser: state.auth.newUser,
     fireAuth: state.firebase.auth,
     smsSent: state.auth.smsSent,
     reloadOnPhoneAuthFail: state.auth.resetCaptcha

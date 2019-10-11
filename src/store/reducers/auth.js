@@ -9,7 +9,8 @@ const initialState = {
   smsSent : false,
   captcha: null,
   confirmCode: null,
-  resetCaptcha: false
+  resetCaptcha: false,
+  newUser: false
 };
 
 const signUpStart = state => {
@@ -46,13 +47,14 @@ const phoneLoginSmsSent = (state, action) => {
   });
 };
 
-const phoneLoginSuccess = (state) => {
+const phoneLoginSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: false,
     success: true,
     smsSent: false,
-    captcha: null
+    captcha: null,
+    newUser: action.newUser
   });
 };
 
@@ -71,10 +73,11 @@ const authStart = state => {
   return updateObject(state, { error: null, loading: true, success: false });
 };
 
-const authSuccess = (state) => {
+const authSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
-    loading: false
+    loading: false,
+    newUser: action.newUser
   });
 };
 
@@ -94,8 +97,20 @@ const passwordResetFail = (state, action) => {
   return updateObject(state, { error: action.error, loading: false, success: false });
 };
 
-const authLogout = (state) => {
-  return updateObject(state, { token: null, userId: null, smsSent: false, success: false, resetCaptcha: false });
+const authLogout = (state, action) => {
+  let error = null;
+  let newUser = null;
+  
+  action.cleanErrors ? (error = false) : (error = action.errors);
+  action.cleanNewUser ? (newUser = false) : (newUser = action.newUser);
+
+  return updateObject(state, {
+    error: error,
+    smsSent: false,
+    success: false,
+    resetCaptcha: false,
+    newUser: newUser
+  });
 };
 
 const resetSuccess = state => {

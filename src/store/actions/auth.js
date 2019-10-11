@@ -14,9 +14,10 @@ export const phoneLoginSmsSent = (captcha, confirmationResult) => {
   };
 };
 
-export const phoneLoginSuccess = () => {
+export const phoneLoginSuccess = (newUser) => {
   return {
-    type: actionTypes.PHONE_LOGIN_SUCCESS
+    type: actionTypes.PHONE_LOGIN_SUCCESS,
+    newUser: newUser
   };
 };
 
@@ -34,9 +35,10 @@ export const authStart = () => {
   };
 };
 
-export const authSuccess = () => {
+export const authSuccess = (newUser) => {
   return {
-    type: actionTypes.AUTH_SUCCESS
+    type: actionTypes.AUTH_SUCCESS,
+    newUser: newUser
   };
 };
 
@@ -46,6 +48,8 @@ export const authFail = error => {
     ? (customErrorMsg = "There is no user corresponding to this Email")
     : error.code.includes("wrong-password")
     ? (customErrorMsg = "The Email or Password is incorrect")
+    : error.code.includes("new-user") ?
+     (customErrorMsg = "Please Sign Up")
     : (customErrorMsg = "General Error, Contact Support");
   return {
     type: actionTypes.AUTH_FAIL,
@@ -92,9 +96,13 @@ export const passwordResetFail = error => {
   };
 };
 
-export const logout = () => {
+export const logout = (cleanErrors, cleanNewUser, errors, newUser) => {
   return {
-    type: actionTypes.AUTH_LOGOUT
+    type: actionTypes.AUTH_LOGOUT,
+    cleanErrors: cleanErrors,
+    cleanNewUser: cleanNewUser,
+    errors: errors,
+    newUser: newUser
   };
 };
 /* TODO: PROPERLY IMPLEMENT PHONE NUMBER */
@@ -151,11 +159,28 @@ export const auth = (data, typeOfLogin) => {
       case "google":
         firebase
           .auth()
-          .signInWithRedirect(provider)
-          .then(() => {
-            dispatch(authSuccess());
+          .signInWithPopup(provider)
+          .then((result) => {
+            console.log('pier user cred',result);
+            if (result.additionalUserInfo.isNewUser) {
+              const error = {
+                code: "new-user",
+                message: "Please Sign Up"
+              }
+              dispatch(authSuccess(result.additionalUserInfo.isNewUser));
+              dispatch(authFail(error));
+              firebase
+              .auth()
+              .signOut()
+              .then(() => {
+                dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser ));
+              });
+            } else {
+              dispatch(authSuccess(result.additionalUserInfo.isNewUser));
+            }
           })
           .catch(err => {
+            console.log('google error',err);
             dispatch(authFail(err));
           });
         break;
@@ -193,8 +218,24 @@ export const auth = (data, typeOfLogin) => {
             data.verif
           );
           firebase.auth().signInWithCredential(credential)
-            .then(() => {
-              dispatch(phoneLoginSuccess());
+            .then((result) => {
+              console.log('pier user cred',result);
+              if (result.additionalUserInfo.isNewUser) {
+                const error = {
+                  code: "new-user",
+                  message: "Please Sign Up"
+                }
+                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser));
+                dispatch(phoneLoginFail(error));
+                firebase
+                .auth()
+                .signOut()
+                .then(() => {
+                  dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser ));
+                });
+              } else {
+                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser));
+              }
             })
             .catch(err => {
               dispatch(phoneLoginFail(err));
@@ -219,12 +260,13 @@ export const auth = (data, typeOfLogin) => {
 export const authLogout = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
-
+    let errors = getState().auth.error;
+    let newUser = getState().auth.newUser;
     firebase
       .auth()
       .signOut()
       .then(() => {
-        dispatch(logout());
+        dispatch(logout(true, true, errors, newUser));
       });
   };
 };
