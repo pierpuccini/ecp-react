@@ -153,7 +153,7 @@ const SignUp = props => {
         </div>
         {props.authError ? (
           <div className={classes.loginError}>
-            {props.authError.customErrorMsg}
+            {props.authError.message}
           </div>
         ) : null}
         <div className={classes.formContainer}>
