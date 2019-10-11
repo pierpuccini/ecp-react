@@ -22,23 +22,24 @@ function App(props) {
       <Redirect to="/login" />
     </Switch>
   );
+
   if (props.isAuthenticated) {
-    routes = (
-      <Switch>
-        <Route path="/login" component={asyncAuth} />
-        <Route path="/forgot-login" component={asyncAuth} />
-        <Route path="/sign-up" component={asyncAuth} />
-        <Route to={`${process.env.PUBLIC_URL}/home`} component={asyncDashboard}/>
-        <Redirect to={`${process.env.PUBLIC_URL}/home`} />
-      </Switch>
-    );
+      routes = (
+        <Switch>
+          <Route path="/login" component={asyncAuth} />
+          <Route path="/forgot-login" component={asyncAuth} />
+          <Route path="/sign-up" component={asyncAuth} />
+          <Route to={`${process.env.PUBLIC_URL}/home`} component={asyncDashboard}/>
+          <Redirect to={`${process.env.PUBLIC_URL}/home`} />
+        </Switch>
+      );
   }
   return <div className="App">{routes}</div>;
 }
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: (state.firebase.auth.uid)? true : false,
+    isAuthenticated: state.firebase.auth.uid && !state.auth.newUser,
     isInitializing: state.firebase.isInitializing
   };
 };

@@ -1,8 +1,10 @@
 import * as actionTypes from "./actionTypes";
 
-export const phoneLoginStart = () => {
+export const phoneLoginStart = (phoneLoginStarted, verifingSMS) => {
   return {
-    type: actionTypes.PHONE_LOGIN_START
+    type: actionTypes.PHONE_LOGIN_START,
+    verifingSMS: verifingSMS,
+    phoneLoginStarted: phoneLoginStarted
   };
 };
 
@@ -14,17 +16,23 @@ export const phoneLoginSmsSent = (captcha, confirmationResult) => {
   };
 };
 
-export const phoneLoginSuccess = () => {
+export const phoneLoginSuccess = (newUser, phoneLoginStarted, verifingSMS, loading) => {
   return {
-    type: actionTypes.PHONE_LOGIN_SUCCESS
+    type: actionTypes.PHONE_LOGIN_SUCCESS,
+    newUser: newUser,
+    phoneLoginStarted: phoneLoginStarted,
+    verifingSMS: verifingSMS,
+    loading: loading
   };
 };
 
-export const phoneLoginFail = error => {
+export const phoneLoginFail = (error, newUser, loading) => {
   let customErrorMsg = error.message;
   return {
     type: actionTypes.PHONE_LOGIN_FAIL,
-    error: { ...error, customErrorMsg }
+    error: { ...error, customErrorMsg },
+    newUser : newUser,
+    loading: loading
   };
 };
 
@@ -34,22 +42,27 @@ export const authStart = () => {
   };
 };
 
-export const authSuccess = () => {
+export const authSuccess = (newUser, loading) => {
   return {
-    type: actionTypes.AUTH_SUCCESS
+    type: actionTypes.AUTH_SUCCESS,
+    newUser: newUser,
+    loading: loading
   };
 };
 
-export const authFail = error => {
+export const authFail = (error, loading) => {
   let customErrorMsg = null;
   error.code.includes("user-not-found")
     ? (customErrorMsg = "There is no user corresponding to this Email")
     : error.code.includes("wrong-password")
     ? (customErrorMsg = "The Email or Password is incorrect")
+    : error.code.includes("new-user")
+    ? (customErrorMsg = "Please Sign Up")
     : (customErrorMsg = "General Error, Contact Support");
   return {
     type: actionTypes.AUTH_FAIL,
-    error: { ...error, customErrorMsg }
+    error: { ...error, customErrorMsg },
+    loading: loading
   };
 };
 
@@ -92,9 +105,15 @@ export const passwordResetFail = error => {
   };
 };
 
-export const logout = () => {
+export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading, createPhoneUser) => {
   return {
-    type: actionTypes.AUTH_LOGOUT
+    type: actionTypes.AUTH_LOGOUT,
+    cleanErrors: cleanErrors,
+    cleanNewUser: cleanNewUser,
+    errors: errors,
+    newUser: newUser,
+    loading: loading,
+    createPhoneUser: createPhoneUser
   };
 };
 /* TODO: PROPERLY IMPLEMENT PHONE NUMBER */
@@ -151,11 +170,28 @@ export const auth = (data, typeOfLogin) => {
       case "google":
         firebase
           .auth()
-          .signInWithRedirect(provider)
-          .then(() => {
-            dispatch(authSuccess());
+          .signInWithPopup(provider)
+          .then((result) => {
+            console.log('pier user cred',result);
+            if (result.additionalUserInfo.isNewUser) {
+              const error = {
+                code: "new-user",
+                message: "Please Sign Up"
+              }
+              dispatch(authSuccess(result.additionalUserInfo.isNewUser, true));
+              dispatch(authFail(error, true));
+              firebase
+              .auth()
+              .signOut()
+              .then(() => {
+                dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser, false ));
+              });
+            } else {
+              dispatch(authSuccess(result.additionalUserInfo.isNewUser, false));
+            }
           })
           .catch(err => {
+            console.log('google error',err);
             dispatch(authFail(err));
           });
         break;
@@ -171,8 +207,8 @@ export const auth = (data, typeOfLogin) => {
           });
         break;
       case "phoneNumber":
-        dispatch(phoneLoginStart());
         if (!getState().auth.smsSent) {
+          dispatch(phoneLoginStart(true));
           let appVerifier = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
             "sign-in-phone",
             { size: "invisible" }
@@ -188,13 +224,35 @@ export const auth = (data, typeOfLogin) => {
               dispatch(phoneLoginFail(err));
             });
         } else {
+          dispatch(phoneLoginStart(false, true));
           let credential = firebase.auth.PhoneAuthProvider.credential(
             getState().auth.confirmCode.verificationId,
             data.verif
           );
           firebase.auth().signInWithCredential(credential)
-            .then(() => {
-              dispatch(phoneLoginSuccess());
+            .then((result) => {
+              console.log('pier user cred',result);
+              if (result.additionalUserInfo.isNewUser) {
+                const error = {
+                  code: "new-user",
+                  message: "Please Sign Up"
+                }
+                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser, false, true, true));
+                dispatch(phoneLoginFail(error, result.additionalUserInfo.isNewUser, true));
+                firebase
+                .auth()
+                .signOut()
+                .then(() => {
+                  const createPhoneUser = {
+                    url: 'phoneloginfailed=true',
+                    message: 'Please Sign Up',
+                    error: true
+                  }
+                  dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser, false, createPhoneUser ));
+                });
+              } else {
+                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser, false, false));
+              }
             })
             .catch(err => {
               dispatch(phoneLoginFail(err));
@@ -209,7 +267,9 @@ export const auth = (data, typeOfLogin) => {
             dispatch(authSuccess());
           })
           .catch(err => {
-            dispatch(authFail(err));
+            setTimeout(() => {
+              dispatch(authFail(err));
+            }, 1500);
           });
         break;
     }
@@ -219,12 +279,13 @@ export const auth = (data, typeOfLogin) => {
 export const authLogout = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
-
+    let errors = getState().auth.error;
+    let newUser = getState().auth.newUser;
     firebase
       .auth()
       .signOut()
       .then(() => {
-        dispatch(logout());
+        dispatch(logout(true, true, errors, newUser));
       });
   };
 };

@@ -8,6 +8,7 @@ import { Redirect, withRouter } from "react-router-dom";
 //App Imports
 import Login from "../../components/Login/Login";
 import SignUp from "../../components/SignUp/SignUp";
+import loader from "../../assets/loaders/educoin(B).gif";
 //Personal Helpers
 import { updateObject, checkValidity } from "../../shared/utility";
 
@@ -190,6 +191,10 @@ const Auth = props => {
     authRedirect = <Redirect to="/home" />;
   }
 
+  if (props.newUser) {
+    authRedirect = <Redirect to="/sign-up" />;
+  }
+
   if (props.passwordResetSuccess) {
     setTimeout(() => {
       props.resetSuccess()
@@ -202,12 +207,34 @@ const Auth = props => {
     window.location.reload();
   }
 
+  if (props.phoneLoginFailed.error) {
+    props.history.replace(`/sign-up?${props.phoneLoginFailed.url}+${props.phoneLoginFailed.message}`)
+    window.location.reload();
+  }
+
+  let urlErrorMessage = {message : ''};
+  let message = null;
+  let signInError = null;
+  if (props.location.search.includes('+')) {
+    message = props.location.search.split('+')
+    signInError = message[0].includes('phoneloginfailed=true')
+    message = message[1].replace('%20', ' ')
+    urlErrorMessage.message = message.replace('%20', ' ')
+  }
+
+  const loadingGIF = (
+    <div className="App">
+      <img src={loader} alt="loading..." />
+    </div>
+  );
+  
   return (
     <React.Fragment>
       {authRedirect}
-      {props.location.pathname.match("/login") ||
+      {(props.loading && !props.phoneLoginStarted)? loadingGIF : (props.location.pathname.match("/login") ||
       props.location.pathname.match("/forgot-login") ? (
         <Login
+          phoneAuthLoading={(props.loading && props.phoneLoginStarted)}
           loading={props.loading}
           authLoginForm={loginForm}
           inputChangedHandler={loginInputChangedHandler}
@@ -232,22 +259,25 @@ const Auth = props => {
           submitHandler={submitSignUpHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
-          authError={props.authError}
+          authError={(signInError)? urlErrorMessage : props.authError}
           clearErrors={clearErrors}
         />
-      )}
+      ))}
     </React.Fragment>
   );
 };
 
 const mapStateToProps = state => {
   return {
+    phoneLoginFailed: state.auth.createPhoneUser,
+    phoneLoginStarted: state.auth.phoneLoginStarted,
     loading: state.auth.loading,
     authError: state.auth.error,
     passwordResetSuccess: state.auth.success,
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
-    authenticated: state.firebase.auth.uid ? true : false,
+    authenticated: state.firebase.auth.uid && !state.auth.newUser,
+    newUser: state.auth.newUser,
     fireAuth: state.firebase.auth,
     smsSent: state.auth.smsSent,
     reloadOnPhoneAuthFail: state.auth.resetCaptcha
