@@ -22,6 +22,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 //App Imports
 import classes from "./Login.module.scss";
 import Logo from "../../components/Logo/Logo";
+import loader from "../../assets/loaders/educoin(B).gif";
 import gIcon from "../../assets/svg/search.svg";
 import NumberFormat from "react-number-format";
 
@@ -404,11 +405,17 @@ const Login = props => {
     );
   }
 
+  const loadingGIF = (
+    <div className="App">
+      <img src={loader} alt="loading..." />
+    </div>
+  );
+
   return (
     <Container maxWidth="sm" className={classes.loginContainer}>
       <Paper className={matClasses.paper}>
         <strong>Welcome To Edu Coins!</strong>
-        <Logo height="85px" />
+        {(props.phoneAuthLoading)? loadingGIF : <Logo height="85px" />}
         {errors}
         <div className={classes.formContainer}>
           {form}

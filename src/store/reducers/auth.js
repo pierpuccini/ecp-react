@@ -6,11 +6,14 @@ const initialState = {
   loading: false,
   authRedirectPath: "/home",
   success: false,
-  smsSent : false,
+  smsSent: false,
   captcha: null,
   confirmCode: null,
   resetCaptcha: false,
-  newUser: false
+  newUser: false,
+  phoneLoginStarted: false,
+  verifingSMS: false,
+  createPhoneUser: { error: false }
 };
 
 const signUpStart = state => {
@@ -28,11 +31,13 @@ const signUpFail = (state, action) => {
   return updateObject(state, { error: action.error, loading: false });
 };
 
-const phoneLoginStart = state => {
+const phoneLoginStart = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: true,
-    success: false    
+    success: false,
+    phoneLoginStarted: action.phoneLoginStarted,
+    verifingSMS: action.verifingSMS   
   });
 };
 
@@ -43,24 +48,27 @@ const phoneLoginSmsSent = (state, action) => {
     success: false,
     smsSent: true,
     captcha: action.verifier,
-    confirmCode: action.confirmation
+    confirmCode: action.confirmation,
+    phoneLoginStarted: false
   });
 };
 
 const phoneLoginSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
-    loading: false,
+    loading: action.loading,
     smsSent: false,
     captcha: null,
-    newUser: action.newUser
+    newUser: action.newUser,
+    phoneLoginStarted: action.phoneLoginStarted,
+    verifingSMS: action.verifingSMS
   });
 };
 
 const phoneLoginFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
-    loading: false,
+    loading: action.loading,
     success: false,
     smsSent: false,
     captcha: null,
@@ -109,7 +117,8 @@ const authLogout = (state, action) => {
     success: false,
     resetCaptcha: false,
     newUser: newUser,
-    loading: action.loading
+    loading: action.loading,
+    createPhoneUser: action.createPhoneUser
   });
 };
 

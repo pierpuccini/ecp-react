@@ -1,8 +1,10 @@
 import * as actionTypes from "./actionTypes";
 
-export const phoneLoginStart = () => {
+export const phoneLoginStart = (phoneLoginStarted, verifingSMS) => {
   return {
-    type: actionTypes.PHONE_LOGIN_START
+    type: actionTypes.PHONE_LOGIN_START,
+    verifingSMS: verifingSMS,
+    phoneLoginStarted: phoneLoginStarted
   };
 };
 
@@ -14,19 +16,23 @@ export const phoneLoginSmsSent = (captcha, confirmationResult) => {
   };
 };
 
-export const phoneLoginSuccess = (newUser) => {
+export const phoneLoginSuccess = (newUser, phoneLoginStarted, verifingSMS, loading) => {
   return {
     type: actionTypes.PHONE_LOGIN_SUCCESS,
-    newUser: newUser
+    newUser: newUser,
+    phoneLoginStarted: phoneLoginStarted,
+    verifingSMS: verifingSMS,
+    loading: loading
   };
 };
 
-export const phoneLoginFail = (error, newUser) => {
+export const phoneLoginFail = (error, newUser, loading) => {
   let customErrorMsg = error.message;
   return {
     type: actionTypes.PHONE_LOGIN_FAIL,
     error: { ...error, customErrorMsg },
-    newUser : newUser
+    newUser : newUser,
+    loading: loading
   };
 };
 
@@ -99,14 +105,15 @@ export const passwordResetFail = error => {
   };
 };
 
-export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading) => {
+export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading, createPhoneUser) => {
   return {
     type: actionTypes.AUTH_LOGOUT,
     cleanErrors: cleanErrors,
     cleanNewUser: cleanNewUser,
     errors: errors,
     newUser: newUser,
-    loading: loading
+    loading: loading,
+    createPhoneUser: createPhoneUser
   };
 };
 /* TODO: PROPERLY IMPLEMENT PHONE NUMBER */
@@ -200,8 +207,8 @@ export const auth = (data, typeOfLogin) => {
           });
         break;
       case "phoneNumber":
-        dispatch(phoneLoginStart());
         if (!getState().auth.smsSent) {
+          dispatch(phoneLoginStart(true));
           let appVerifier = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
             "sign-in-phone",
             { size: "invisible" }
@@ -217,6 +224,7 @@ export const auth = (data, typeOfLogin) => {
               dispatch(phoneLoginFail(err));
             });
         } else {
+          dispatch(phoneLoginStart(false, true));
           let credential = firebase.auth.PhoneAuthProvider.credential(
             getState().auth.confirmCode.verificationId,
             data.verif
@@ -229,16 +237,21 @@ export const auth = (data, typeOfLogin) => {
                   code: "new-user",
                   message: "Please Sign Up"
                 }
-                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser));
-                dispatch(phoneLoginFail(error, result.additionalUserInfo.isNewUser));
+                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser, false, true, true));
+                dispatch(phoneLoginFail(error, result.additionalUserInfo.isNewUser, true));
                 firebase
                 .auth()
                 .signOut()
                 .then(() => {
-                  dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser ));
+                  const createPhoneUser = {
+                    url: 'phoneloginfailed=true',
+                    message: 'Please Sign Up',
+                    error: true
+                  }
+                  dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser, false, createPhoneUser ));
                 });
               } else {
-                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser));
+                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser, false, false));
               }
             })
             .catch(err => {
