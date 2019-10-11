@@ -75,13 +75,13 @@ const authStart = state => {
 const authSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
-    loading: false,
+    loading: action.loading,
     newUser: action.newUser
   });
 };
 
 const authFail = (state, action) => {
-  return updateObject(state, { error: action.error, loading: false, success: false });
+  return updateObject(state, { error: action.error, loading: action.loading, success: false });
 };
 
 const passwordResetSuccess = (state) => {
@@ -108,7 +108,8 @@ const authLogout = (state, action) => {
     smsSent: false,
     success: false,
     resetCaptcha: false,
-    newUser: newUser
+    newUser: newUser,
+    loading: action.loading
   });
 };
 

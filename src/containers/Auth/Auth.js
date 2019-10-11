@@ -8,6 +8,7 @@ import { Redirect, withRouter } from "react-router-dom";
 //App Imports
 import Login from "../../components/Login/Login";
 import SignUp from "../../components/SignUp/SignUp";
+import loader from "../../assets/loaders/educoin(B).gif";
 //Personal Helpers
 import { updateObject, checkValidity } from "../../shared/utility";
 
@@ -206,10 +207,16 @@ const Auth = props => {
     window.location.reload();
   }
 
+  const loadingGIF = (
+    <div className="App">
+      <img src={loader} alt="loading..." />
+    </div>
+  );
+
   return (
     <React.Fragment>
       {authRedirect}
-      {props.location.pathname.match("/login") ||
+      {(props.loading)? loadingGIF : (props.location.pathname.match("/login") ||
       props.location.pathname.match("/forgot-login") ? (
         <Login
           loading={props.loading}
@@ -239,7 +246,7 @@ const Auth = props => {
           authError={props.authError}
           clearErrors={clearErrors}
         />
-      )}
+      ))}
     </React.Fragment>
   );
 };

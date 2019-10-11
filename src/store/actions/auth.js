@@ -36,25 +36,27 @@ export const authStart = () => {
   };
 };
 
-export const authSuccess = (newUser) => {
+export const authSuccess = (newUser, loading) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
-    newUser: newUser
+    newUser: newUser,
+    loading: loading
   };
 };
 
-export const authFail = error => {
+export const authFail = (error, loading) => {
   let customErrorMsg = null;
   error.code.includes("user-not-found")
     ? (customErrorMsg = "There is no user corresponding to this Email")
     : error.code.includes("wrong-password")
     ? (customErrorMsg = "The Email or Password is incorrect")
-    : error.code.includes("new-user") ?
-     (customErrorMsg = "Please Sign Up")
+    : error.code.includes("new-user")
+    ? (customErrorMsg = "Please Sign Up")
     : (customErrorMsg = "General Error, Contact Support");
   return {
     type: actionTypes.AUTH_FAIL,
-    error: { ...error, customErrorMsg }
+    error: { ...error, customErrorMsg },
+    loading: loading
   };
 };
 
@@ -97,13 +99,14 @@ export const passwordResetFail = error => {
   };
 };
 
-export const logout = (cleanErrors, cleanNewUser, errors, newUser) => {
+export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading) => {
   return {
     type: actionTypes.AUTH_LOGOUT,
     cleanErrors: cleanErrors,
     cleanNewUser: cleanNewUser,
     errors: errors,
-    newUser: newUser
+    newUser: newUser,
+    loading: loading
   };
 };
 /* TODO: PROPERLY IMPLEMENT PHONE NUMBER */
@@ -168,16 +171,16 @@ export const auth = (data, typeOfLogin) => {
                 code: "new-user",
                 message: "Please Sign Up"
               }
-              dispatch(authSuccess(result.additionalUserInfo.isNewUser));
-              dispatch(authFail(error));
+              dispatch(authSuccess(result.additionalUserInfo.isNewUser, true));
+              dispatch(authFail(error, true));
               firebase
               .auth()
               .signOut()
               .then(() => {
-                dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser ));
+                dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser, false ));
               });
             } else {
-              dispatch(authSuccess(result.additionalUserInfo.isNewUser));
+              dispatch(authSuccess(result.additionalUserInfo.isNewUser, false));
             }
           })
           .catch(err => {
@@ -251,7 +254,9 @@ export const auth = (data, typeOfLogin) => {
             dispatch(authSuccess());
           })
           .catch(err => {
-            dispatch(authFail(err));
+            setTimeout(() => {
+              dispatch(authFail(err));
+            }, 1500);
           });
         break;
     }
