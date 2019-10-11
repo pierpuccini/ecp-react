@@ -51,7 +51,6 @@ const phoneLoginSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: false,
-    success: true,
     smsSent: false,
     captcha: null,
     newUser: action.newUser
@@ -65,7 +64,7 @@ const phoneLoginFail = (state, action) => {
     success: false,
     smsSent: false,
     captcha: null,
-    resetCaptcha: true
+    resetCaptcha: (action.newUser)? false : true
   });
 };
 

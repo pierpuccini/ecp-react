@@ -21,11 +21,12 @@ export const phoneLoginSuccess = (newUser) => {
   };
 };
 
-export const phoneLoginFail = error => {
+export const phoneLoginFail = (error, newUser) => {
   let customErrorMsg = error.message;
   return {
     type: actionTypes.PHONE_LOGIN_FAIL,
-    error: { ...error, customErrorMsg }
+    error: { ...error, customErrorMsg },
+    newUser : newUser
   };
 };
 
@@ -226,7 +227,7 @@ export const auth = (data, typeOfLogin) => {
                   message: "Please Sign Up"
                 }
                 dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser));
-                dispatch(phoneLoginFail(error));
+                dispatch(phoneLoginFail(error, result.additionalUserInfo.isNewUser));
                 firebase
                 .auth()
                 .signOut()
