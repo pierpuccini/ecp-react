@@ -77,7 +77,12 @@ const phoneLoginFail = (state, action) => {
 };
 
 const authStart = state => {
-  return updateObject(state, { error: null, loading: true, success: false });
+  return updateObject(state, {
+    error: null,
+    loading: true,
+    success: false,
+    createPhoneUser: updateObject(state.createPhoneUser, { error: false })
+  });
 };
 
 const authSuccess = (state, action) => {
@@ -118,7 +123,7 @@ const authLogout = (state, action) => {
     resetCaptcha: false,
     newUser: newUser,
     loading: action.loading,
-    createPhoneUser: action.createPhoneUser
+    createPhoneUser: updateObject(state.createPhoneUser, { ...action.createPhoneUser})
   });
 };
 
