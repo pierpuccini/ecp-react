@@ -134,7 +134,6 @@ export const deleteNewUser = (cleanErrors, cleanNewUser, errors, newUser, loadin
   };
 };
 
-/* TODO: PROPERLY IMPLEMENT PHONE NUMBER */
 export const signUp = (data, typeOfSignUp) => {
   return (dispatch, getState, { getFirebase }) => {
 
