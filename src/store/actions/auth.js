@@ -16,13 +16,14 @@ export const phoneLoginSmsSent = (captcha, confirmationResult) => {
   };
 };
 
-export const phoneLoginSuccess = (newUser, phoneLoginStarted, verifingSMS, loading) => {
+export const phoneLoginSuccess = (newUser, phoneLoginStarted, verifingSMS, loading, phoneLoginDone) => {
   return {
     type: actionTypes.PHONE_LOGIN_SUCCESS,
     newUser: newUser,
     phoneLoginStarted: phoneLoginStarted,
     verifingSMS: verifingSMS,
-    loading: loading
+    loading: loading,
+    phoneLoginDone: phoneLoginDone
   };
 };
 
@@ -116,6 +117,7 @@ export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading, crea
     createPhoneUser: createPhoneUser
   };
 };
+
 /* TODO: PROPERLY IMPLEMENT PHONE NUMBER */
 export const signUp = (data, typeOfLogin) => {
   return (dispatch, getState, { getFirebase }) => {
@@ -162,60 +164,77 @@ export const signUp = (data, typeOfLogin) => {
 
 export const auth = (data, typeOfLogin) => {
   return (dispatch, getState, { getFirebase }) => {
+    /* Starting Login */
     dispatch(authStart());
+
+    /* Setting variables */
+    let newUser = false;
+    let error = {} 
+    let loading = false;
+    let cleanErrors = false
+    let cleanNewUser = false; 
+    let phoneLoginStarted = false;
+    let verifingSMS = true;
+    let verificationId = null;
+    let credential = null;
+
+    /* Getting firebase and redux ready for login */
     const firebase = getFirebase();
     firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
+
+    /* Detects what login was clicked */ 
     switch (typeOfLogin) {
       case "google":
-        firebase
-          .auth()
-          .signInWithPopup(provider)
+        firebase.auth().signInWithPopup(provider)
           .then((result) => {
-            console.log('pier user cred',result);
+            /* Detects if a user is new or not */
             if (result.additionalUserInfo.isNewUser) {
-              const error = {
+              /* Sets the necesary variables to dispatch */
+              error = {
                 code: "new-user",
                 message: "Please Sign Up"
-              }
-              dispatch(authSuccess(result.additionalUserInfo.isNewUser, true));
-              dispatch(authFail(error, true));
-              firebase
-              .auth()
-              .signOut()
-              .then(() => {
-                dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser, false ));
-              });
+              };
+              newUser = result.additionalUserInfo.isNewUser;
+              loading = true;
+
+              /* Dispatches actions for new user */
+              dispatch(authSuccess(newUser, loading));
+              dispatch(authFail(error, loading));
+
+              /* Since its a new user, prevents login and redirects to sig nup */
+              firebase.auth().signOut()
+                .then(() => {
+                  cleanErrors = false;
+                  cleanNewUser = false;
+                  newUser = result.additionalUserInfo.isNewUser;
+                  loading = false;
+                  dispatch(logout(cleanErrors, cleanNewUser, error, newUser, loading));
+                });
             } else {
-              dispatch(authSuccess(result.additionalUserInfo.isNewUser, false));
+              newUser = result.additionalUserInfo.isNewUse;
+              loading = false;
+              dispatch(authSuccess(newUser, loading));
             }
           })
           .catch(err => {
-            console.log('google error',err);
+            /* Dispatches any google errors */
             dispatch(authFail(err));
           });
         break;
-      case "forgotEmail":
-        firebase
-          .auth()
-          .sendPasswordResetEmail(data.email)
-          .then(() => {
-            dispatch(passwordResetSuccess());
-          })
-          .catch(err => {
-            dispatch(passwordResetFail(err));
-          });
-        break;
+        
       case "phoneNumber":
+        /* First detects if the sms was sent or not */
         if (!getState().auth.smsSent) {
+          /* If the sms was not sent we dispatch the login start for phone */
           dispatch(phoneLoginStart(true));
+          /* Initialize captcha */
           let appVerifier = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
             "sign-in-phone",
             { size: "invisible" }
           ));
-          firebase
-            .auth()
-            .signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
+          /* Sends SMS */
+          firebase.auth().signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
             .then(confirmationResult => {
               dispatch(phoneLoginSmsSent(appVerifier, confirmationResult));
             })
@@ -224,34 +243,53 @@ export const auth = (data, typeOfLogin) => {
               dispatch(phoneLoginFail(err));
             });
         } else {
-          dispatch(phoneLoginStart(false, true));
-          let credential = firebase.auth.PhoneAuthProvider.credential(
-            getState().auth.confirmCode.verificationId,
-            data.verif
-          );
+          /* Redispatches phone start as this one will be login us in */
+          dispatch(phoneLoginStart(phoneLoginStarted, verifingSMS));
+
+          /* Gets from store what the sms sender returns in order to verify the sms */
+          verificationId = getState().auth.confirmCode.verificationId
+          credential = firebase.auth.PhoneAuthProvider.credential(verificationId, data.verif);
+
+          /* Logs us into app */
           firebase.auth().signInWithCredential(credential)
             .then((result) => {
-              console.log('pier user cred',result);
+              /* Checks if the user is new */
               if (result.additionalUserInfo.isNewUser) {
-                const error = {
+                /* Since user is new, sets up necessary variables */
+                error = {
                   code: "new-user",
                   message: "Please Sign Up"
                 }
-                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser, false, true, true));
-                dispatch(phoneLoginFail(error, result.additionalUserInfo.isNewUser, true));
-                firebase
-                .auth()
-                .signOut()
+                newUser = result.additionalUserInfo.isNewUser;
+                verifingSMS = false;
+                loading = true;
+
+                /* Dispatches previous variables */
+                dispatch(phoneLoginSuccess(newUser, phoneLoginStarted, verifingSMS, loading));
+                dispatch(phoneLoginFail(error, newUser, loading));
+
+                /* prevents login of non sign up useres */
+                firebase.auth().signOut()
                 .then(() => {
-                  const createPhoneUser = {
+                  let cleanErrors = false;
+                  let cleanNewUser = false;
+                  newUser = result.additionalUserInfo.isNewUser;
+                  loading = false;
+                  let createPhoneUser = {
                     url: 'phoneloginfailed=true',
                     message: 'Please Sign Up',
                     error: true
                   }
-                  dispatch(logout(false, false, error, result.additionalUserInfo.isNewUser, false, createPhoneUser ));
+                  dispatch(logout(cleanErrors, cleanNewUser, error, newUser, loading, createPhoneUser ));
                 });
               } else {
-                dispatch(phoneLoginSuccess(result.additionalUserInfo.isNewUser, false, false));
+                /* since user is not new, accepts login */
+                newUser = result.additionalUserInfo.isNewUser;
+                phoneLoginStarted = false;
+                verifingSMS = false;
+                loading = false;
+                let phoneLoginDone = true;
+                dispatch(phoneLoginSuccess(newUser, phoneLoginStarted, verifingSMS, loading, phoneLoginDone));
               }
             })
             .catch(err => {
@@ -259,10 +297,18 @@ export const auth = (data, typeOfLogin) => {
             });
         }
         break;
+
+      case "forgotEmail":
+        firebase.auth().sendPasswordResetEmail(data.email)
+          .then(() => {
+            dispatch(passwordResetSuccess());
+          })
+          .catch(err => {
+            dispatch(passwordResetFail(err));
+          });
+        break;
       default:
-        firebase
-          .auth()
-          .signInWithEmailAndPassword(data.email, data.password)
+        firebase.auth().signInWithEmailAndPassword(data.email, data.password)
           .then(() => {
             dispatch(authSuccess());
           })
@@ -281,11 +327,11 @@ export const authLogout = () => {
     const firebase = getFirebase();
     let errors = getState().auth.error;
     let newUser = getState().auth.newUser;
-    firebase
-      .auth()
-      .signOut()
+    const cleanErrors = true;
+    const cleanNewUser = true;
+    firebase.auth().signOut()
       .then(() => {
-        dispatch(logout(true, true, errors, newUser));
+        dispatch(logout(cleanErrors, cleanNewUser, errors, newUser));
       });
   };
 };

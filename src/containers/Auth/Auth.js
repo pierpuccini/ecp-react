@@ -212,6 +212,10 @@ const Auth = props => {
     window.location.reload();
   }
 
+  if (props.phoneLoginDone) {
+    window.location.reload();
+  }
+
   let urlErrorMessage = {message : ''};
   let message = null;
   let signInError = null;
@@ -269,6 +273,7 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
+    phoneLoginDone: state.auth.phoneLoginDone,
     phoneLoginFailed: state.auth.createPhoneUser,
     phoneLoginStarted: state.auth.phoneLoginStarted,
     loading: state.auth.loading,
