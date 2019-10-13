@@ -11,38 +11,48 @@ const initialState = {
   confirmCode: null,
   resetCaptcha: false,
   newUser: false,
-  phoneLoginStarted: false,
+  phoneAuthStarted: false,
   verifingSMS: false,
   createPhoneUser: { error: false },
-  phoneLoginDone: false
+  phoneAuthDone: false,
+  isGoogleSignUp: false,
+  googleSignUpInfo: null,
+  savedGoogleInfo: false
+}
+
+const signUpStart = (state, action) => {
+  return updateObject(state, { error: null, loading: true, success: false, isGoogleSignUp: action.isGoogleSignUp });
 };
 
-const signUpStart = state => {
-  return updateObject(state, { error: null, loading: true, success: false });
-};
-
-const signUpSuccess = (state) => {
+const signUpSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
-    loading: false
+    loading: false,
+    isGoogleSignUp: action.isGoogleSignUp,
+    googleSignUpInfo: updateObject(state.googleSignUpInfo, {...action.googleSignUpInfo}),
+    savedGoogleInfo: action.savedGoogleInfo
   });
 };
 
 const signUpFail = (state, action) => {
-  return updateObject(state, { error: action.error, loading: false });
+  return updateObject(state, {
+    error: action.error,
+    loading: false,
+    isGoogleSignUp: false
+  });
 };
 
-const phoneLoginStart = (state, action) => {
+const phoneAuthStart = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: true,
     success: false,
-    phoneLoginStarted: action.phoneLoginStarted,
+    phoneAuthStarted: action.phoneAuthStarted,
     verifingSMS: action.verifingSMS   
   });
 };
 
-const phoneLoginSmsSent = (state, action) => {
+const phoneAuthSmsSent = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: false,
@@ -50,25 +60,25 @@ const phoneLoginSmsSent = (state, action) => {
     smsSent: true,
     captcha: action.verifier,
     confirmCode: action.confirmation,
-    phoneLoginStarted: false
+    phoneAuthStarted: false
   });
 };
 
-const phoneLoginSuccess = (state, action) => {
+const phoneAuthSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: action.loading,
     smsSent: false,
     captcha: null,
     newUser: action.newUser,
-    phoneLoginStarted: action.phoneLoginStarted,
+    phoneAuthStarted: action.phoneAuthStarted,
     verifingSMS: action.verifingSMS,
-    phoneLoginDone: action.phoneLoginDone
+    phoneAuthDone: action.phoneAuthDone
 
   });
 };
 
-const phoneLoginFail = (state, action) => {
+const phoneAuthFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: action.loading,
@@ -85,7 +95,7 @@ const authStart = state => {
     loading: true,
     success: false,
     createPhoneUser: updateObject(state.createPhoneUser, { error: false }),
-    phoneLoginDone: false
+    phoneAuthDone: false
   });
 };
 
@@ -141,10 +151,10 @@ const resetErrors = state => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.PHONE_LOGIN_START: return phoneLoginStart(state, action);
-    case actionTypes.PHONE_LOGIN_SMS_SENT: return phoneLoginSmsSent(state, action);
-    case actionTypes.PHONE_LOGIN_SUCCESS: return phoneLoginSuccess(state, action);
-    case actionTypes.PHONE_LOGIN_FAIL: return phoneLoginFail(state, action);
+    case actionTypes.PHONE_AUTH_START: return phoneAuthStart(state, action);
+    case actionTypes.PHONE_AUTH_SMS_SENT: return phoneAuthSmsSent(state, action);
+    case actionTypes.PHONE_AUTH_SUCCESS: return phoneAuthSuccess(state, action);
+    case actionTypes.PHONE_AUTH_FAIL: return phoneAuthFail(state, action);
     case actionTypes.SIGN_UP_START: return signUpStart(state, action);
     case actionTypes.SIGN_UP_SUCCESS: return signUpSuccess(state, action);
     case actionTypes.SIGN_UP_FAIL: return signUpFail(state, action);

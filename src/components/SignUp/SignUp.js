@@ -8,10 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import Badge from "@material-ui/core/Badge";
 import Icon from "@material-ui/core/Icon";
+import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -46,6 +46,29 @@ const NumberFormatCustom = props => {
 };
 
 NumberFormatCustom.propTypes = {
+  inputRef: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired
+};
+
+const NumberFormatPhoneCode = props => {
+  const { inputRef, onChange, ...other } = props;
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value
+          }
+        });
+      }}
+      format="#-#-#-#-#-#"
+    />
+  );
+};
+
+NumberFormatPhoneCode.propTypes = {
   inputRef: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired
 };
@@ -109,7 +132,11 @@ const SignUp = props => {
     <Container maxWidth="sm" className={classes.signUpContainer}>
       <Paper className={matClasses.paper}>
         <div className={classes.topActions}>
-          <IconButton component={backToLogin} to="/login" onClick={props.clearErrors}>
+          <IconButton
+            component={backToLogin}
+            to="/login"
+            onClick={props.clearErrors}
+          >
             <ArrowBackIosOutlinedIcon />
           </IconButton>
           <span
@@ -132,7 +159,7 @@ const SignUp = props => {
             </Icon>
           </Badge>
         </div>
-        <div>
+        <div className={classes.gSignUp}>
           <Button
             variant="outlined"
             className={matClasses.button}
@@ -152,9 +179,7 @@ const SignUp = props => {
           <span>OR</span>
         </div>
         {props.authError ? (
-          <div className={classes.loginError}>
-            {props.authError.message}
-          </div>
+          <div className={classes.loginError}>{props.authError.message}</div>
         ) : null}
         <div className={classes.formContainer}>
           <form className={matClasses.container} onSubmit={props.submitHandler}>
@@ -236,6 +261,76 @@ const SignUp = props => {
                 )
               }}
             />
+            <TextField
+              className={matClasses.textField}
+              label="Phone Number"
+              placeholder="+57 (000) 000-0000"
+              type="tel"
+              value={props.authSignUpForm.phoneNumber.value}
+              onChange={event =>
+                props.inputChangedHandler(event, "phoneNumber")
+              }
+              margin="normal"
+              variant="outlined"
+              required
+              error={
+                !props.authSignUpForm.phoneNumber.valid &&
+                props.authSignUpForm.phoneNumber.touched
+              }
+              helperText={
+                !props.authSignUpForm.phoneNumber.valid &&
+                props.authSignUpForm.phoneNumber.touched
+                  ? "Please Enter a valid Phone Number"
+                  : null
+              }
+              InputProps={{
+                inputComponent: NumberFormatCustom,
+                endAdornment: (
+                  <InputAdornment>
+                    <div
+                      onClick={event => props.submitHandler(event, "phoneNumber")}
+                    >
+                      <Button
+                        id="sign-up-phone"
+                        style={{ fontSize: "smaller", color: "#757575" }}
+                        disabled={!props.authSignUpForm.phoneNumber.valid}
+                      >
+                        Send SMS
+                      </Button>
+                    </div>
+                  </InputAdornment>
+                )
+              }}
+            />
+            {props.authSignUpForm.phoneNumber.valid ? (
+              <TextField
+                className={matClasses.textField}
+                label="SMS Code"
+                placeholder="1-2-3-4-5-6"
+                type="text"
+                value={props.authSignUpForm.verifCode.value}
+                onChange={event =>
+                  props.inputChangedHandler(event, "verifCode")
+                }
+                margin="normal"
+                variant="outlined"
+                required={props.smsSent}
+                disabled={!props.smsSent}
+                error={
+                  !props.authSignUpForm.verifCode.valid &&
+                  props.authSignUpForm.verifCode.touched
+                }
+                helperText={
+                  !props.authSignUpForm.verifCode.valid &&
+                  props.authSignUpForm.verifCode.touched
+                    ? "Please Enter a valid Code"
+                    : null
+                }
+                InputProps={{
+                  inputComponent: NumberFormatPhoneCode
+                }}
+              />
+            ) : null}
             <Button
               variant="contained"
               color="primary"
@@ -244,7 +339,9 @@ const SignUp = props => {
               disabled={
                 !props.authSignUpForm.fullName.valid ||
                 !props.authSignUpForm.email.valid ||
-                !props.authSignUpForm.password.valid
+                !props.authSignUpForm.password.valid ||
+                !props.authSignUpForm.phoneNumber.valid ||
+                !props.authSignUpForm.verifCode.valid
               }
             >
               SIGN UP!
@@ -252,7 +349,15 @@ const SignUp = props => {
           </form>
           <Typography style={{ fontSize: "smaller" }}>
             *By signing up you are accepting our terms of service... Read more
-            at <Link href='google.com' className={matClasses.link} target="_blank" rel="noopener">www.placeholder.com</Link>
+            at{" "}
+            <Link
+              href="google.com"
+              className={matClasses.link}
+              target="_blank"
+              rel="noopener"
+            >
+              www.placeholder.com
+            </Link>
           </Typography>
         </div>
       </Paper>

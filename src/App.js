@@ -40,7 +40,7 @@ function App(props) {
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: state.firebase.auth.uid && !state.auth.newUser,
+    isAuthenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp,
     isInitializing: state.firebase.isInitializing
   };
 };
