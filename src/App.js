@@ -14,6 +14,7 @@ const asyncDashboard = asyncComponent(() => {
 });
 
 function App(props) {
+
   let routes = (
     <Switch>
       <Route path="/login" component={asyncAuth} />

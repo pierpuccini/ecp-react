@@ -13,7 +13,8 @@ const initialState = {
   newUser: false,
   phoneLoginStarted: false,
   verifingSMS: false,
-  createPhoneUser: { error: false }
+  createPhoneUser: { error: false },
+  phoneLoginDone: false
 };
 
 const signUpStart = state => {
@@ -61,7 +62,9 @@ const phoneLoginSuccess = (state, action) => {
     captcha: null,
     newUser: action.newUser,
     phoneLoginStarted: action.phoneLoginStarted,
-    verifingSMS: action.verifingSMS
+    verifingSMS: action.verifingSMS,
+    phoneLoginDone: action.phoneLoginDone
+
   });
 };
 
@@ -77,7 +80,13 @@ const phoneLoginFail = (state, action) => {
 };
 
 const authStart = state => {
-  return updateObject(state, { error: null, loading: true, success: false });
+  return updateObject(state, {
+    error: null,
+    loading: true,
+    success: false,
+    createPhoneUser: updateObject(state.createPhoneUser, { error: false }),
+    phoneLoginDone: false
+  });
 };
 
 const authSuccess = (state, action) => {
@@ -118,7 +127,7 @@ const authLogout = (state, action) => {
     resetCaptcha: false,
     newUser: newUser,
     loading: action.loading,
-    createPhoneUser: action.createPhoneUser
+    createPhoneUser: updateObject(state.createPhoneUser, { ...action.createPhoneUser})
   });
 };
 

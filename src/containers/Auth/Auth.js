@@ -188,7 +188,12 @@ const Auth = props => {
 
   let authRedirect = null;
   if (props.authenticated) {
-    authRedirect = <Redirect to="/home" />;
+    if (props.phoneLoginDone) {
+      props.history.replace("/home?login-method=phone")
+      // window.location.reload();
+    }else{
+      authRedirect = <Redirect to="/home" />;
+    }
   }
 
   if (props.newUser) {
@@ -269,6 +274,7 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
+    phoneLoginDone: state.auth.phoneLoginDone,
     phoneLoginFailed: state.auth.createPhoneUser,
     phoneLoginStarted: state.auth.phoneLoginStarted,
     loading: state.auth.loading,
