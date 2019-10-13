@@ -188,7 +188,12 @@ const Auth = props => {
 
   let authRedirect = null;
   if (props.authenticated) {
-    authRedirect = <Redirect to="/home" />;
+    if (props.phoneLoginDone) {
+      props.history.replace("/home?login-method=phone")
+      // window.location.reload();
+    }else{
+      authRedirect = <Redirect to="/home" />;
+    }
   }
 
   if (props.newUser) {
@@ -209,10 +214,6 @@ const Auth = props => {
 
   if (props.phoneLoginFailed.error) {
     props.history.replace(`/sign-up?${props.phoneLoginFailed.url}+${props.phoneLoginFailed.message}`)
-    window.location.reload();
-  }
-
-  if (props.phoneLoginDone) {
     window.location.reload();
   }
 
