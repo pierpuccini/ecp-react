@@ -196,7 +196,6 @@ export const signUp = (data, typeOfSignUp) => {
             data.verif
           );
           /* updates phone number for created profile */
-          console.log('current user', firebase.auth().currentUser);
           const user = firebase.auth().currentUser;
           user.updatePhoneNumber(credential);
           /* param inside signUpSuccess is isGoogleSignUp */
