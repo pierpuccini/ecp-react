@@ -100,6 +100,14 @@ const Auth = props => {
       },
       valid: false,
       touched: false
+    },
+    verifCode: {
+      value: "",
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
     }
   });
 

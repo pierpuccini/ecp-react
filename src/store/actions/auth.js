@@ -122,9 +122,11 @@ export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading, crea
 export const signUp = (data, typeOfLogin) => {
   return (dispatch, getState, { getFirebase }) => {
     dispatch(signUpStart());
+
     const firebase = getFirebase();
     firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
+
     switch (typeOfLogin) {
       case "google":
         firebase
@@ -137,6 +139,7 @@ export const signUp = (data, typeOfLogin) => {
             dispatch(authFail(err));
           });
         break;
+        
       default:
         firebase
           .auth()
