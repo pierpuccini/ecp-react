@@ -1,36 +1,36 @@
 import * as actionTypes from "./actionTypes";
 
-export const phoneLoginStart = (phoneLoginStarted, verifingSMS) => {
+export const phoneAuthStart = (phoneAuthStarted, verifingSMS) => {
   return {
-    type: actionTypes.PHONE_LOGIN_START,
+    type: actionTypes.PHONE_AUTH_START,
     verifingSMS: verifingSMS,
-    phoneLoginStarted: phoneLoginStarted
+    phoneAuthStarted: phoneAuthStarted
   };
 };
 
-export const phoneLoginSmsSent = (captcha, confirmationResult) => {
+export const phoneAuthSmsSent = (captcha, confirmationResult) => {
   return {
-    type: actionTypes.PHONE_LOGIN_SMS_SENT,
+    type: actionTypes.PHONE_AUTH_SMS_SENT,
     verifier: captcha,
     confirmation: confirmationResult
   };
 };
 
-export const phoneLoginSuccess = (newUser, phoneLoginStarted, verifingSMS, loading, phoneLoginDone) => {
+export const phoneAuthSuccess = (newUser, phoneAuthStarted, verifingSMS, loading, phoneLoginDone) => {
   return {
-    type: actionTypes.PHONE_LOGIN_SUCCESS,
+    type: actionTypes.PHONE_AUTH_SUCCESS,
     newUser: newUser,
-    phoneLoginStarted: phoneLoginStarted,
+    phoneAuthStarted: phoneAuthStarted,
     verifingSMS: verifingSMS,
     loading: loading,
     phoneLoginDone: phoneLoginDone
   };
 };
 
-export const phoneLoginFail = (error, newUser, loading) => {
+export const phoneAuthFail = (error, newUser, loading) => {
   let customErrorMsg = error.message;
   return {
-    type: actionTypes.PHONE_LOGIN_FAIL,
+    type: actionTypes.PHONE_AUTH_FAIL,
     error: { ...error, customErrorMsg },
     newUser : newUser,
     loading: loading
@@ -139,18 +139,55 @@ export const signUp = (data, typeOfLogin) => {
             dispatch(authFail(err));
           });
         break;
-        
+
+        case "phoneNumber":
+        /* Setting variables */
+        let phoneSignUpStarted = false;
+
+        phoneSignUpStarted = true;
+        dispatch(phoneAuthStart(phoneSignUpStarted));
+        /* Initialize captcha */
+        let appVerifier = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+          "sign-up-phone",
+          { size: "invisible" }
+        ));
+        /* Sends SMS */
+        firebase.auth().signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
+          .then(confirmationResult => {
+            dispatch(phoneAuthSmsSent(appVerifier, confirmationResult));
+          })
+          .catch(err => {
+            appVerifier = null;
+            dispatch(phoneAuthFail(err));
+          });        
+        break;
+
       default:
-        firebase
-          .auth()
+        /* Informes that user sign up will begin */
+        firebase.auth()
           .createUserWithEmailAndPassword(data.email, data.password)
           .then(() => {
             const user = firebase.auth().currentUser;
-            user
-              .updateProfile({
+            user.updateProfile({
                 displayName: data.fullName
               })
               .then(() => {
+                let phoneSignUpStarted = false;
+                let verifingSMS = true;
+                let verificationId = null;
+                let credential = null;
+                /* Redispatches phone start as this one will be adding the phone to exisiting profile */
+                dispatch(phoneAuthStart(phoneSignUpStarted, verifingSMS));
+
+                /* Gets from store what the sms sender returns in order to verify the sms */
+                verificationId = getState().auth.confirmCode.verificationId;
+                credential = firebase.auth.PhoneAuthProvider.credential(
+                  verificationId,
+                  data.verif
+                );
+                /* updates phone number for created profile */
+                user.updatePhoneNumber(credential)
+                console.log('check if number updated', firebase.auth().currentUser);
                 dispatch(signUpSuccess());
               })
               .catch(err => {
@@ -176,7 +213,7 @@ export const auth = (data, typeOfLogin) => {
     let loading = false;
     let cleanErrors = false
     let cleanNewUser = false; 
-    let phoneLoginStarted = false;
+    let phoneAuthStarted = false;
     let verifingSMS = true;
     let verificationId = null;
     let credential = null;
@@ -230,7 +267,8 @@ export const auth = (data, typeOfLogin) => {
         /* First detects if the sms was sent or not */
         if (!getState().auth.smsSent) {
           /* If the sms was not sent we dispatch the login start for phone */
-          dispatch(phoneLoginStart(true));
+          phoneAuthStarted = true;
+          dispatch(phoneAuthStart(phoneAuthStarted));
           /* Initialize captcha */
           let appVerifier = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
             "sign-in-phone",
@@ -239,15 +277,15 @@ export const auth = (data, typeOfLogin) => {
           /* Sends SMS */
           firebase.auth().signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
             .then(confirmationResult => {
-              dispatch(phoneLoginSmsSent(appVerifier, confirmationResult));
+              dispatch(phoneAuthSmsSent(appVerifier, confirmationResult));
             })
             .catch(err => {
               appVerifier = null;
-              dispatch(phoneLoginFail(err));
+              dispatch(phoneAuthFail(err));
             });
         } else {
           /* Redispatches phone start as this one will be login us in */
-          dispatch(phoneLoginStart(phoneLoginStarted, verifingSMS));
+          dispatch(phoneAuthStart(phoneAuthStarted, verifingSMS));
 
           /* Gets from store what the sms sender returns in order to verify the sms */
           verificationId = getState().auth.confirmCode.verificationId
@@ -268,8 +306,8 @@ export const auth = (data, typeOfLogin) => {
                 loading = true;
 
                 /* Dispatches previous variables */
-                dispatch(phoneLoginSuccess(newUser, phoneLoginStarted, verifingSMS, loading));
-                dispatch(phoneLoginFail(error, newUser, loading));
+                dispatch(phoneAuthSuccess(newUser, phoneAuthStarted, verifingSMS, loading));
+                dispatch(phoneAuthFail(error, newUser, loading));
 
                 /* prevents login of non sign up useres */
                 firebase.auth().signOut()
@@ -288,15 +326,15 @@ export const auth = (data, typeOfLogin) => {
               } else {
                 /* since user is not new, accepts login */
                 newUser = result.additionalUserInfo.isNewUser;
-                phoneLoginStarted = false;
+                phoneAuthStarted = false;
                 verifingSMS = false;
                 loading = false;
                 let phoneLoginDone = true;
-                dispatch(phoneLoginSuccess(newUser, phoneLoginStarted, verifingSMS, loading, phoneLoginDone));
+                dispatch(phoneAuthSuccess(newUser, phoneAuthStarted, verifingSMS, loading, phoneLoginDone));
               }
             })
             .catch(err => {
-              dispatch(phoneLoginFail(err));
+              dispatch(phoneAuthFail(err));
             });
         }
         break;

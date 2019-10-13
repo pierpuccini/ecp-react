@@ -8,10 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import Badge from "@material-ui/core/Badge";
 import Icon from "@material-ui/core/Icon";
+import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -284,11 +284,25 @@ const SignUp = props => {
                   : null
               }
               InputProps={{
-                inputComponent: NumberFormatCustom
+                inputComponent: NumberFormatCustom,
+                endAdornment: (
+                  <InputAdornment>
+                    <div
+                      onClick={event => props.submitHandler(event, "phoneNumber")}
+                    >
+                      <Button
+                        id="sign-up-phone"
+                        style={{ fontSize: "smaller", color: "#757575" }}
+                        disabled={!props.authSignUpForm.phoneNumber.valid}
+                      >
+                        Send SMS
+                      </Button>
+                    </div>
+                  </InputAdornment>
+                )
               }}
             />
-            {props.authSignUpForm.phoneNumber.valid &&
-            props.authSignUpForm.phoneNumber.touched ? (
+            {props.authSignUpForm.phoneNumber.valid ? (
               <TextField
                 className={matClasses.textField}
                 label="SMS Code"
@@ -326,7 +340,8 @@ const SignUp = props => {
                 !props.authSignUpForm.fullName.valid ||
                 !props.authSignUpForm.email.valid ||
                 !props.authSignUpForm.password.valid ||
-                !props.authSignUpForm.phoneNumber.valid
+                !props.authSignUpForm.phoneNumber.valid ||
+                !props.authSignUpForm.verifCode.valid
               }
             >
               SIGN UP!

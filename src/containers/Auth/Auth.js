@@ -171,6 +171,7 @@ const Auth = props => {
       password: signUpForm.password.value,
       email: signUpForm.email.value,
       phoneNumber: signUpForm.phoneNumber.value,
+      verif: signUpForm.verifCode.value
     }
     props.onSignUp(payload, typeOfLogin);
   };
@@ -196,7 +197,7 @@ const Auth = props => {
 
   let authRedirect = null;
   if (props.authenticated) {
-    if (props.phoneLoginDone) {
+    if (props.phoneAuthDone) {
       props.history.replace("/home?login-method=phone")
       // window.location.reload();
     }else{
@@ -244,10 +245,10 @@ const Auth = props => {
   return (
     <React.Fragment>
       {authRedirect}
-      {(props.loading && !props.phoneLoginStarted)? loadingGIF : (props.location.pathname.match("/login") ||
+      {(props.loading && !props.phoneAuthStarted)? loadingGIF : (props.location.pathname.match("/login") ||
       props.location.pathname.match("/forgot-login") ? (
         <Login
-          phoneAuthLoading={(props.loading && props.phoneLoginStarted)}
+          phoneAuthLoading={(props.loading && props.phoneAuthStarted)}
           loading={props.loading}
           authLoginForm={loginForm}
           inputChangedHandler={loginInputChangedHandler}
@@ -274,6 +275,7 @@ const Auth = props => {
           toggleViewPasswordHandler={toggleViewPasswordHandler}
           authError={(signInError)? urlErrorMessage : props.authError}
           clearErrors={clearErrors}
+          smsSent={props.smsSent}
         />
       ))}
     </React.Fragment>
@@ -282,9 +284,9 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
-    phoneLoginDone: state.auth.phoneLoginDone,
+    phoneAuthDone: state.auth.phoneLoginDone,
     phoneLoginFailed: state.auth.createPhoneUser,
-    phoneLoginStarted: state.auth.phoneLoginStarted,
+    phoneAuthStarted: state.auth.phoneAuthStarted,
     loading: state.auth.loading,
     authError: state.auth.error,
     passwordResetSuccess: state.auth.success,
