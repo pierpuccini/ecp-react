@@ -16,7 +16,8 @@ const initialState = {
   createPhoneUser: { error: false },
   phoneAuthDone: false,
   isGoogleSignUp: false,
-  googleSignUpInfo: null 
+  googleSignUpInfo: null,
+  savedGoogleInfo: false
 }
 
 const signUpStart = (state, action) => {
@@ -28,7 +29,8 @@ const signUpSuccess = (state, action) => {
     error: null,
     loading: false,
     isGoogleSignUp: action.isGoogleSignUp,
-    googleSignUpInfo: updateObject(state.googleSignUpInfo, {...action.googleSignUpInfo})
+    googleSignUpInfo: updateObject(state.googleSignUpInfo, {...action.googleSignUpInfo}),
+    savedGoogleInfo: action.savedGoogleInfo
   });
 };
 

@@ -124,7 +124,7 @@ const Auth = props => {
       setshowPhoneLogin(true);
     }
 
-    if (props.googleSignUp && props.googleSignUpInfo) {
+    if (props.googleSignUp && props.googleSignUpInfo && !props.savedGoogleInfo) {
       const {fullName, email} = props.googleSignUpInfo
       const updateFromGoogle = {
         ...signUpForm,
@@ -137,12 +137,16 @@ const Auth = props => {
           value: email,
           valid: true,
           touched: true
-        }
+        },
+        password: {
+          value: "************",
+          valid: true,
+          touched: true
+        },
       };
-      setSignUpForm(updateFromGoogle);
+        setSignUpForm(updateFromGoogle);
     }
-    
-  }, [signUpForm, props.location.search, props.googleSignUp, props.googleSignUpInfo]);
+  }, [signUpForm, props.location.search, props.googleSignUp, props.googleSignUpInfo, props.savedGoogleInfo]);
 
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
@@ -303,6 +307,7 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
+    savedGoogleInfo: state.auth.savedGoogleInfo,
     googleSignUp: state.auth.isGoogleSignUp,
     googleSignUpInfo: state.auth.googleSignUpInfo,
     phoneAuthDone: state.auth.phoneLoginDone,

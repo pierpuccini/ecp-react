@@ -74,11 +74,12 @@ export const signUpStart = (isGoogleSignUp) => {
   };
 };
 
-export const signUpSuccess = (isGoogleSignUp, googleSignUpInfo) => {
+export const signUpSuccess = (isGoogleSignUp, googleSignUpInfo, savedGoogleInfo) => {
   return {
     type: actionTypes.SIGN_UP_SUCCESS,
     googleSignUpInfo: googleSignUpInfo,
-    isGoogleSignUp: isGoogleSignUp
+    isGoogleSignUp: isGoogleSignUp,
+    savedGoogleInfo: savedGoogleInfo
   };
 };
 
@@ -141,6 +142,11 @@ export const signUp = (data, typeOfSignUp) => {
               email: email
             }
             dispatch(signUpSuccess(isGoogleSignUp, googleInfo));
+            /* Since its a a sign up and we must add thephone number this prevents the page from staying loged in */
+            setTimeout(() => {
+              let savedGoogleInfo = true
+              dispatch(signUpSuccess(isGoogleSignUp, googleInfo, savedGoogleInfo));
+            }, 500);
           })
           .catch(err => {
             dispatch(signUpFail(err));
@@ -148,8 +154,7 @@ export const signUp = (data, typeOfSignUp) => {
         break;
 
         case "phoneNumber":
-        isGoogleSignUp = getState().auth.isGoogleSignUp
-        dispatch(signUpStart(isGoogleSignUp));
+        dispatch(signUpStart(getState().auth.isGoogleSignUp));
         /* Setting variables */
         let phoneSignUpStarted = false;
 
@@ -172,39 +177,63 @@ export const signUp = (data, typeOfSignUp) => {
         break;
 
       default:
-        isGoogleSignUp = getState().auth.isGoogleSignUp
-        dispatch(signUpStart(isGoogleSignUp));
+        dispatch(signUpStart(getState().auth.isGoogleSignUp));
         /* Informes that user sign up will begin */
-        firebase.auth()
-          .createUserWithEmailAndPassword(data.email, data.password)
-          .then(() => {
-            const user = firebase.auth().currentUser;
-            user.updateProfile({displayName: data.fullName})
-              .then(() => {
-                let phoneSignUpStarted = false;
-                let verifingSMS = true;
-                let verificationId = null;
-                let credential = null;
-                /* Redispatches phone start as this one will be adding the phone to exisiting profile */
-                dispatch(phoneAuthStart(phoneSignUpStarted, verifingSMS));
+        if (getState().auth.isGoogleSignUp) {
+          /* If google sign up then there is no email user creation */
+          
+          let phoneSignUpStarted = false;
+          let verifingSMS = true;
+          let verificationId = null;
+          let credential = null;
+          /* Redispatches phone start as this one will be adding the phone to exisiting profile */
+          dispatch(phoneAuthStart(phoneSignUpStarted, verifingSMS));
 
-                /* Gets from store what the sms sender returns in order to verify the sms */
-                verificationId = getState().auth.confirmCode.verificationId;
-                credential = firebase.auth.PhoneAuthProvider.credential(
-                  verificationId,
-                  data.verif
-                );
-                /* updates phone number for created profile */
-                user.updatePhoneNumber(credential)
-                dispatch(signUpSuccess(isGoogleSignUp));
-              })
-              .catch(err => {
-                dispatch(signUpFail(err));
-              });
-          })
-          .catch(err => {
-            dispatch(signUpFail(err));
-          });
+          /* Gets from store what the sms sender returns in order to verify the sms */
+          verificationId = getState().auth.confirmCode.verificationId;
+          credential = firebase.auth.PhoneAuthProvider.credential(
+            verificationId,
+            data.verif
+          );
+          /* updates phone number for created profile */
+          console.log('current user', firebase.auth().currentUser);
+          const user = firebase.auth().currentUser;
+          user.updatePhoneNumber(credential);
+          /* param inside signUpSuccess is isGoogleSignUp */
+          dispatch(signUpSuccess(false));
+        } else {
+          firebase.auth()
+            .createUserWithEmailAndPassword(data.email, data.password)
+            .then(() => {
+              const user = firebase.auth().currentUser;
+              user
+                .updateProfile({ displayName: data.fullName })
+                .then(() => {
+                  let phoneSignUpStarted = false;
+                  let verifingSMS = true;
+                  let verificationId = null;
+                  let credential = null;
+                  /* Redispatches phone start as this one will be adding the phone to exisiting profile */
+                  dispatch(phoneAuthStart(phoneSignUpStarted, verifingSMS));
+
+                  /* Gets from store what the sms sender returns in order to verify the sms */
+                  verificationId = getState().auth.confirmCode.verificationId;
+                  credential = firebase.auth.PhoneAuthProvider.credential(
+                    verificationId,
+                    data.verif
+                  );
+                  /* updates phone number for created profile */
+                  user.updatePhoneNumber(credential);
+                  dispatch(signUpSuccess(isGoogleSignUp));
+                })
+                .catch(err => {
+                  dispatch(signUpFail(err));
+                });
+            })
+            .catch(err => {
+              dispatch(signUpFail(err));
+            });
+        }
         break;
     }
   };
