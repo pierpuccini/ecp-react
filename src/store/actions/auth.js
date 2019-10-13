@@ -67,15 +67,18 @@ export const authFail = (error, loading) => {
   };
 };
 
-export const signUpStart = () => {
+export const signUpStart = (isGoogleSignUp) => {
   return {
-    type: actionTypes.SIGN_UP_START
+    type: actionTypes.SIGN_UP_START,
+    isGoogleSignUp: isGoogleSignUp
   };
 };
 
-export const signUpSuccess = () => {
+export const signUpSuccess = (isGoogleSignUp, googleSignUpInfo) => {
   return {
-    type: actionTypes.SIGN_UP_SUCCESS
+    type: actionTypes.SIGN_UP_SUCCESS,
+    googleSignUpInfo: googleSignUpInfo,
+    isGoogleSignUp: isGoogleSignUp
   };
 };
 
@@ -119,28 +122,34 @@ export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading, crea
 };
 
 /* TODO: PROPERLY IMPLEMENT PHONE NUMBER */
-export const signUp = (data, typeOfLogin) => {
+export const signUp = (data, typeOfSignUp) => {
   return (dispatch, getState, { getFirebase }) => {
-    dispatch(signUpStart());
 
     const firebase = getFirebase();
     firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
 
-    switch (typeOfLogin) {
+    switch (typeOfSignUp) {
       case "google":
-        firebase
-          .auth()
-          .signInWithRedirect(provider)
-          .then(() => {
-            dispatch(authSuccess());
+        let isGoogleSignUp = true;
+        dispatch(signUpStart(isGoogleSignUp));
+        firebase.auth().signInWithPopup(provider)
+          .then((result) => {
+            let {name, email} = {...result.additionalUserInfo.profile}
+            let googleInfo = {
+              displayName: name,
+              email: email
+            }
+            dispatch(signUpSuccess(isGoogleSignUp, googleInfo));
           })
           .catch(err => {
-            dispatch(authFail(err));
+            dispatch(signUpFail(err));
           });
         break;
 
         case "phoneNumber":
+        isGoogleSignUp = getState().auth.isGoogleSignUp
+        dispatch(signUpStart(isGoogleSignUp));
         /* Setting variables */
         let phoneSignUpStarted = false;
 
@@ -163,14 +172,14 @@ export const signUp = (data, typeOfLogin) => {
         break;
 
       default:
+        isGoogleSignUp = getState().auth.isGoogleSignUp
+        dispatch(signUpStart(isGoogleSignUp));
         /* Informes that user sign up will begin */
         firebase.auth()
           .createUserWithEmailAndPassword(data.email, data.password)
           .then(() => {
             const user = firebase.auth().currentUser;
-            user.updateProfile({
-                displayName: data.fullName
-              })
+            user.updateProfile({displayName: data.fullName})
               .then(() => {
                 let phoneSignUpStarted = false;
                 let verifingSMS = true;
@@ -187,8 +196,7 @@ export const signUp = (data, typeOfLogin) => {
                 );
                 /* updates phone number for created profile */
                 user.updatePhoneNumber(credential)
-                console.log('check if number updated', firebase.auth().currentUser);
-                dispatch(signUpSuccess());
+                dispatch(signUpSuccess(isGoogleSignUp));
               })
               .catch(err => {
                 dispatch(signUpFail(err));

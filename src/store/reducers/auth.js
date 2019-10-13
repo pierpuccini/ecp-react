@@ -14,22 +14,30 @@ const initialState = {
   phoneAuthStarted: false,
   verifingSMS: false,
   createPhoneUser: { error: false },
-  phoneAuthDone: false
+  phoneAuthDone: false,
+  isGoogleSignUp: false,
+  googleSignUpInfo: null 
+}
+
+const signUpStart = (state, action) => {
+  return updateObject(state, { error: null, loading: true, success: false, isGoogleSignUp: action.isGoogleSignUp });
 };
 
-const signUpStart = state => {
-  return updateObject(state, { error: null, loading: true, success: false });
-};
-
-const signUpSuccess = (state) => {
+const signUpSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
-    loading: false
+    loading: false,
+    isGoogleSignUp: action.isGoogleSignUp,
+    googleSignUpInfo: updateObject(state.googleSignUpInfo, {...action.googleSignUpInfo})
   });
 };
 
 const signUpFail = (state, action) => {
-  return updateObject(state, { error: action.error, loading: false });
+  return updateObject(state, {
+    error: action.error,
+    loading: false,
+    isGoogleSignUp: false
+  });
 };
 
 const phoneAuthStart = (state, action) => {
