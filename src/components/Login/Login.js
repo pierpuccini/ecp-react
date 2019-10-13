@@ -354,7 +354,7 @@ const Login = props => {
           className={matClasses.textField}
           label="SMS Code"
           placeholder="1-2-3-4-5-6"
-          type="text"
+          type="tel"
           value={props.authLoginForm.verifCode.value}
           onChange={event => props.inputChangedHandler(event, "verifCode")}
           margin="normal"

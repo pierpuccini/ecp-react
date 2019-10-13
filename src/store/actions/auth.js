@@ -122,6 +122,18 @@ export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading, crea
   };
 };
 
+export const deleteNewUser = (cleanErrors, cleanNewUser, errors, newUser, loading, createPhoneUser) => {
+  return {
+    type: actionTypes.DELETE_NEW_USER,
+    cleanErrors: cleanErrors,
+    cleanNewUser: cleanNewUser,
+    errors: errors,
+    newUser: newUser,
+    loading: loading,
+    createPhoneUser: createPhoneUser
+  };
+};
+
 /* TODO: PROPERLY IMPLEMENT PHONE NUMBER */
 export const signUp = (data, typeOfSignUp) => {
   return (dispatch, getState, { getFirebase }) => {
@@ -278,14 +290,14 @@ export const auth = (data, typeOfLogin) => {
               dispatch(authSuccess(newUser, loading));
               dispatch(authFail(error, loading));
 
-              /* Since its a new user, prevents login and redirects to sig nup */
-              firebase.auth().signOut()
-                .then(() => {
+              /* Since its a new user, prevents login and redirects to sign up and deletes from DB*/
+              const user = firebase.auth().currentUser;
+              user.delete().then(() => {
                   cleanErrors = false;
                   cleanNewUser = false;
                   newUser = result.additionalUserInfo.isNewUser;
                   loading = false;
-                  dispatch(logout(cleanErrors, cleanNewUser, error, newUser, loading));
+                  dispatch(deleteNewUser(cleanErrors, cleanNewUser, error, newUser, loading));
                 });
             } else {
               newUser = result.additionalUserInfo.isNewUse;
@@ -345,9 +357,9 @@ export const auth = (data, typeOfLogin) => {
                 dispatch(phoneAuthSuccess(newUser, phoneAuthStarted, verifingSMS, loading));
                 dispatch(phoneAuthFail(error, newUser, loading));
 
-                /* prevents login of non sign up useres */
-                firebase.auth().signOut()
-                .then(() => {
+                /* Since its a new user, prevents login and redirects to sign up and deletes from DB*/
+                const user = firebase.auth().currentUser;
+                user.delete().then(() => {
                   let cleanErrors = false;
                   let cleanNewUser = false;
                   newUser = result.additionalUserInfo.isNewUser;

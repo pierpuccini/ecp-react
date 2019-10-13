@@ -141,6 +141,24 @@ const authLogout = (state, action) => {
   });
 };
 
+const deleteNewUser = (state, action) => {
+  let error = null;
+  let newUser = null;
+  
+  action.cleanErrors ? (error = false) : (error = action.errors);
+  action.cleanNewUser ? (newUser = false) : (newUser = action.newUser);
+
+  return updateObject(state, {
+    error: error,
+    smsSent: false,
+    success: false,
+    resetCaptcha: false,
+    newUser: newUser,
+    loading: action.loading,
+    createPhoneUser: updateObject(state.createPhoneUser, { ...action.createPhoneUser})
+  });
+};
+
 const resetSuccess = state => {
   return updateObject(state, { success: false, smsSent: false });
 };
@@ -164,6 +182,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.PASSWORD_RESET_SUCCESS: return passwordResetSuccess(state, action);
     case actionTypes.PASSWORD_RESET_FAIL: return passwordResetFail(state, action);
     case actionTypes.AUTH_LOGOUT: return authLogout(state, action);
+    case actionTypes.DELETE_NEW_USER: return deleteNewUser(state, action);
     case actionTypes.RESET_SUCCESS: return resetSuccess(state, action);
     case actionTypes.RESET_ERRORS_ON_AUTH_LINK_CHANGE: return resetErrors(state, action);
     default:
