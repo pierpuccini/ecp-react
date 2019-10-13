@@ -137,7 +137,7 @@ export const signUp = (data, typeOfSignUp) => {
           .then((result) => {
             let {name, email} = {...result.additionalUserInfo.profile}
             let googleInfo = {
-              displayName: name,
+              fullName: name,
               email: email
             }
             dispatch(signUpSuccess(isGoogleSignUp, googleInfo));

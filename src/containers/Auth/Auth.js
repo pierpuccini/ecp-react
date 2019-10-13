@@ -117,13 +117,32 @@ const Auth = props => {
   const [showPhoneLogin, setshowPhoneLogin] = useState(false);
 
   useEffect(() => {
-    if (
-      props.location.search.includes("phonefail=true") ||
-      props.location.search.includes("phonerefresh=true")
-    ) {
+    let phoneFail = props.location.search.includes("phonefail=true");
+    let phoneRefresh = props.location.search.includes("phonerefresh=true");
+
+    if (phoneFail || phoneRefresh) {
       setshowPhoneLogin(true);
     }
-  }, [props.location.search]);
+
+    if (props.googleSignUp && props.googleSignUpInfo) {
+      const {fullName, email} = props.googleSignUpInfo
+      const updateFromGoogle = {
+        ...signUpForm,
+        fullName: {
+          value: fullName,
+          valid: true,
+          touched: true
+        },
+        email: {
+          value: email,
+          valid: true,
+          touched: true
+        }
+      };
+      setSignUpForm(updateFromGoogle);
+    }
+    
+  }, [signUpForm, props.location.search, props.googleSignUp, props.googleSignUpInfo]);
 
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
@@ -284,6 +303,8 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
+    googleSignUp: state.auth.isGoogleSignUp,
+    googleSignUpInfo: state.auth.googleSignUpInfo,
     phoneAuthDone: state.auth.phoneLoginDone,
     phoneLoginFailed: state.auth.createPhoneUser,
     phoneAuthStarted: state.auth.phoneAuthStarted,
