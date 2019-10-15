@@ -127,7 +127,6 @@ const useStyles = makeStyles(theme => ({
 
 const smsField = makeStyles(theme => ({
   textFieldReady: {
-    borderWidth: "1px",
     borderColor: "green !important"
   }
 }));
