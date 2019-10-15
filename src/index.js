@@ -2,14 +2,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
+//Redux Imports
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import { reactReduxFirebase, firebaseReducer, getFirebase } from "react-redux-firebase";
+import { firestoreReducer } from 'redux-firestore'
+//Firebase Imports
 import firebaseConfig from "./firebase.config";
 import firebase from "firebase/app";
 import "firebase/auth";
+import 'firebase/firestore'
 import thunk from "redux-thunk";
-//App imports
+//App Imports
 import loader from "./assets/loaders/educoin(B).gif";
 import "./index.css";
 import App from "./App";
@@ -25,6 +29,8 @@ const composeEnhancers =
 
 // react-redux-firebase config
 const rrfConfig = {
+  userProfile: 'users',
+  useFirestoreForProfile: true,
   updateProfileOnLogin: true,
   attachAuthIsReady: true,
   enableRedirectHandling: true
@@ -32,11 +38,14 @@ const rrfConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+//Inits Firestore
+firebase.firestore()
 
 //All reducers must be combined here
 const rootReducer = combineReducers({
   auth: authReducer,
-  firebase: firebaseReducer
+  firebase: firebaseReducer,
+  firestore: firestoreReducer
 });
 
 // Create store with reducers and initial state

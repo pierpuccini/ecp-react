@@ -125,9 +125,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const smsField = makeStyles(theme => ({
+  notchedOutline: {
+    borderWidth: "1px",
+    borderColor: "green !important"
+  }
+}));
+
 
 const SignUp = props => {
   const matClasses = useStyles();  
+  const smsFieldInput = smsField();  
   return (
     <Container maxWidth="sm" className={classes.signUpContainer}>
       <Paper className={matClasses.paper}>
@@ -294,6 +302,7 @@ const SignUp = props => {
                         id="sign-up-phone"
                         style={{ fontSize: "smaller", color: "#757575" }}
                         disabled={!props.authSignUpForm.phoneNumber.valid}
+                        className={(props.authSignUpForm.phoneNumber.valid)?classes.sendSMSOn:classes.sendSMSOff}
                       >
                         Send SMS
                       </Button>
@@ -327,6 +336,9 @@ const SignUp = props => {
                     : null
                 }
                 InputProps={{
+                  classes: {
+                    notchedOutline: smsFieldInput.textFieldReady
+                  },
                   inputComponent: NumberFormatPhoneCode
                 }}
               />
