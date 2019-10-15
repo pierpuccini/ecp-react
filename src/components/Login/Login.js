@@ -119,7 +119,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const smsField = makeStyles(theme => ({
+const smsFieldInput = makeStyles(theme => ({
   textFieldOn: {
     borderColor: "green !important"
   },
