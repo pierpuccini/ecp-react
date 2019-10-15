@@ -126,9 +126,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const smsField = makeStyles(theme => ({
-  textFieldReady: {
+  textFieldOn: {
     borderColor: "green !important"
-  }
+  },
+  textFieldOff: {}
 }));
 
 
@@ -336,7 +337,7 @@ const SignUp = props => {
                 }
                 InputProps={{
                   classes: {
-                    notchedOutline: smsFieldInput.textFieldReady
+                    notchedOutline: (props.smsSent)?(smsFieldInput.textFieldOn):(smsFieldInput.textFieldOff)
                   },
                   inputComponent: NumberFormatPhoneCode
                 }}

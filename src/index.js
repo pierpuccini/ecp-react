@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import { reactReduxFirebase, firebaseReducer, getFirebase } from "react-redux-firebase";
-import { firestoreReducer } from 'redux-firestore'
+import { reduxFirestore, firestoreReducer } from 'redux-firestore'
 //Firebase Imports
 import firebaseConfig from "./firebase.config";
 import firebase from "firebase/app";
@@ -55,7 +55,8 @@ const store = createStore(
   initialState,
   composeEnhancers(
     applyMiddleware(thunk.withExtraArgument({ getFirebase })),
-    reactReduxFirebase(firebase, rrfConfig)
+    reactReduxFirebase(firebase, rrfConfig),
+    reduxFirestore(firebase)
   )
 );
 
