@@ -126,7 +126,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const smsField = makeStyles(theme => ({
-  notchedOutline: {
+  textFieldReady: {
     borderWidth: "1px",
     borderColor: "green !important"
   }
