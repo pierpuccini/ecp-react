@@ -234,7 +234,7 @@ export const signUp = (data, typeOfSignUp) => {
                   );
                   /* updates phone number for created profile */
                   user.updatePhoneNumber(credential);
-                  dispatch(signUpSuccess(isGoogleSignUp));
+                  dispatch(signUpSuccess(false));
                 })
                 .catch(err => {
                   dispatch(signUpFail(err));
