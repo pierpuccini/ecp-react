@@ -119,7 +119,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const smsFieldInput = makeStyles(theme => ({
+const smsField = makeStyles(theme => ({
   textFieldOn: {
     borderColor: "green !important"
   },
@@ -128,7 +128,7 @@ const smsFieldInput = makeStyles(theme => ({
 
 const Login = props => {
   const matClasses = useStyles();
-  const smsField = useStyles();
+  const smsFieldInput = smsField();
 
   //Error loader
   let errors = null;
