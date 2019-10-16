@@ -208,7 +208,7 @@ const SignUp = props => {
               helperText={
                 !props.authSignUpForm.fullName.valid &&
                 props.authSignUpForm.fullName.touched
-                  ? "Please Enter a valid Full Name"
+                  ? "Separate First & Last name by space"
                   : null
               }
             />
