@@ -193,7 +193,7 @@ export const signUp = (data, typeOfSignUp) => {
         /* Informes that user sign up will begin */
         if (getState().auth.isGoogleSignUp) {
           /* If google sign up then there is no email user creation */
-          
+
           let phoneSignUpStarted = false;
           let verifingSMS = true;
           let verificationId = null;
@@ -210,12 +210,20 @@ export const signUp = (data, typeOfSignUp) => {
           /* updates phone number for created profile */
           const user = firebase.auth().currentUser;
           user.updatePhoneNumber(credential);
+          /* Creates user doc in firestore */
+          firestore
+            .collection("users")
+            .doc(user.uid)
+            .set({
+              email: user.email
+            });
           /* param inside signUpSuccess is isGoogleSignUp */
           dispatch(signUpSuccess(false));
         } else {
-          firebase.auth()
+          firebase
+            .auth()
             .createUserWithEmailAndPassword(data.email, data.password)
-            .then((result) => {
+            .then(result => {
               const user = firebase.auth().currentUser;
               user
                 .updateProfile({ displayName: data.fullName })
@@ -235,12 +243,14 @@ export const signUp = (data, typeOfSignUp) => {
                   );
                   /* updates phone number for created profile */
                   user.updatePhoneNumber(credential);
-                  console.log('can view result', result);
+                  /* Creates user doc in firestore */
+                  firestore
+                    .collection("users")
+                    .doc(result.user.uid)
+                    .set({
+                      email: data.email
+                    });
                   dispatch(signUpSuccess(false));
-                  return firestore.collection('users').doc(result.user.uid).set({
-                    email: data.email
-                  })
-
                 })
                 .catch(err => {
                   dispatch(signUpFail(err));
@@ -423,10 +433,8 @@ export const authLogout = () => {
     let newUser = getState().auth.newUser;
     const cleanErrors = true;
     const cleanNewUser = true;
-    firebase.auth().signOut()
-      .then(() => {
-        dispatch(logout(cleanErrors, cleanNewUser, errors, newUser));
-      });
+    firebase.logout()
+    dispatch(logout(cleanErrors, cleanNewUser, errors, newUser));
   };
 };
 
