@@ -135,9 +135,10 @@ export const deleteNewUser = (cleanErrors, cleanNewUser, errors, newUser, loadin
 };
 
 export const signUp = (data, typeOfSignUp) => {
-  return (dispatch, getState, { getFirebase }) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
 
     const firebase = getFirebase();
+    const firestore = getFirestore();
     firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
 
@@ -214,7 +215,7 @@ export const signUp = (data, typeOfSignUp) => {
         } else {
           firebase.auth()
             .createUserWithEmailAndPassword(data.email, data.password)
-            .then(() => {
+            .then((result) => {
               const user = firebase.auth().currentUser;
               user
                 .updateProfile({ displayName: data.fullName })
@@ -234,7 +235,12 @@ export const signUp = (data, typeOfSignUp) => {
                   );
                   /* updates phone number for created profile */
                   user.updatePhoneNumber(credential);
+                  console.log('can view result', result);
                   dispatch(signUpSuccess(false));
+                  return firestore.collection('users').doc(result.user.uid).set({
+                    email: data.email
+                  })
+
                 })
                 .catch(err => {
                   dispatch(signUpFail(err));

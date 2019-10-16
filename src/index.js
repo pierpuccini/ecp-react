@@ -6,12 +6,8 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
-import {
-  ReactReduxFirebaseProvider,
-  firebaseReducer,
-  getFirebase
-} from "react-redux-firebase";
-import { createFirestoreInstance, firestoreReducer } from "redux-firestore";
+import { ReactReduxFirebaseProvider, firebaseReducer, getFirebase } from "react-redux-firebase";
+import { reduxFirestore, createFirestoreInstance, firestoreReducer, getFirestore } from "redux-firestore";
 //Firebase Imports
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -24,12 +20,14 @@ import "./index.css";
 //reducers
 import authReducer from "./store/reducers/auth";
 
-// Initialize Firebase
+// Initialize Firebase & firebase services
 firebase.initializeApp(firebaseConfig);
-//Inits Firestore
 firebase.firestore();
 
-const enhancers = [applyMiddleware(thunk.withExtraArgument({ getFirebase }))];
+const enhancers = [
+  applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
+  reduxFirestore(firebase)
+];
 
 //checks to see if redux is available in production or not
 // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -60,7 +58,6 @@ const rrfConfig = {
   userProfile: "users",
   useFirestoreForProfile: true,
   updateProfileOnLogin: true,
-  attachAuthIsReady: true,
   enableRedirectHandling: true
 };
 
