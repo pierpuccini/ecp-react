@@ -58,7 +58,8 @@ const rrfConfig = {
   userProfile: "users",
   useFirestoreForProfile: true,
   updateProfileOnLogin: true,
-  enableRedirectHandling: true
+  enableRedirectHandling: true,
+  logErrors: (process.env.NODE_ENV === "development")?true:false
 };
 
 const rrfProps = {
