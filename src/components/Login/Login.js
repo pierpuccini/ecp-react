@@ -19,6 +19,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import Collapse from '@material-ui/core/Collapse';
 //App Imports
 import classes from "./Login.module.scss";
 import Logo from "../../components/Logo/Logo";
@@ -358,34 +359,37 @@ const Login = props => {
             )
           }}
         />
-        <TextField
-          className={matClasses.textField}
-          label="SMS Code"
-          placeholder="1-2-3-4-5-6"
-          type="tel"
-          value={props.authLoginForm.verifCode.value}
-          onChange={event => props.inputChangedHandler(event, "verifCode")}
-          margin="normal"
-          variant="outlined"
-          required={props.smsSent}
-          disabled={!props.smsSent}
-          error={
-            !props.authLoginForm.verifCode.valid &&
-            props.authLoginForm.verifCode.touched
-          }
-          helperText={
-            !props.authLoginForm.verifCode.valid &&
-            props.authLoginForm.verifCode.touched
-              ? "Please Enter a valid Code"
-              : null
-          }
-          InputProps={{
-            classes: {
-              notchedOutline: (props.smsSent)?(smsFieldInput.textFieldOn):(smsFieldInput.textFieldOff)
-            },
-            inputComponent: NumberFormatPhoneCode
-          }}
-        />
+        <Collapse in={props.authLoginForm.phoneNumber.valid}>
+          <TextField
+            className={matClasses.textField}
+            style={{width: "-webkit-fill-available"}}
+            label="SMS Code"
+            placeholder="1-2-3-4-5-6"
+            type="tel"
+            value={props.authLoginForm.verifCode.value}
+            onChange={event => props.inputChangedHandler(event, "verifCode")}
+            margin="normal"
+            variant="outlined"
+            required={props.smsSent}
+            disabled={!props.smsSent}
+            error={
+              !props.authLoginForm.verifCode.valid &&
+              props.authLoginForm.verifCode.touched
+            }
+            helperText={
+              !props.authLoginForm.verifCode.valid &&
+              props.authLoginForm.verifCode.touched
+                ? "Please Enter a valid Code"
+                : null
+            }
+            InputProps={{
+              classes: {
+                notchedOutline: (props.smsSent)?(smsFieldInput.textFieldOn):(smsFieldInput.textFieldOff)
+              },
+              inputComponent: NumberFormatPhoneCode
+            }}
+          />
+        </Collapse>
         {props.smsSent ? (
           <Button
             id="sign-in-phone"
