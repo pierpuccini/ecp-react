@@ -17,6 +17,7 @@ import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
+import Collapse from '@material-ui/core/Collapse';
 //App Imports
 import classes from "./SignUp.module.scss";
 import gIcon from "../../assets/svg/search.svg";
@@ -296,13 +297,19 @@ const SignUp = props => {
                 endAdornment: (
                   <InputAdornment>
                     <div
-                      onClick={event => props.submitHandler(event, "phoneNumber")}
+                      onClick={event =>
+                        props.submitHandler(event, "phoneNumber")
+                      }
                     >
                       <Button
                         id="sign-up-phone"
                         style={{ fontSize: "smaller", color: "#757575" }}
                         disabled={!props.authSignUpForm.phoneNumber.valid}
-                        className={(props.authSignUpForm.phoneNumber.valid)?classes.sendSMSOn:classes.sendSMSOff}
+                        className={
+                          props.authSignUpForm.phoneNumber.valid
+                            ? classes.sendSMSOn
+                            : classes.sendSMSOff
+                        }
                       >
                         Send SMS
                       </Button>
@@ -311,9 +318,10 @@ const SignUp = props => {
                 )
               }}
             />
-            {props.authSignUpForm.phoneNumber.valid ? (
+            <Collapse in={props.authSignUpForm.phoneNumber.valid}>
               <TextField
                 className={matClasses.textField}
+                style={{width: "-webkit-fill-available"}}
                 label="SMS Code"
                 placeholder="1-2-3-4-5-6"
                 type="tel"
@@ -337,12 +345,14 @@ const SignUp = props => {
                 }
                 InputProps={{
                   classes: {
-                    notchedOutline: (props.smsSent)?(smsFieldInput.textFieldOn):(smsFieldInput.textFieldOff)
+                    notchedOutline: props.smsSent
+                      ? smsFieldInput.textFieldOn
+                      : smsFieldInput.textFieldOff
                   },
                   inputComponent: NumberFormatPhoneCode
                 }}
               />
-            ) : null}
+            </Collapse>
             <Button
               variant="contained"
               color="primary"
