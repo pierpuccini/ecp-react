@@ -92,8 +92,8 @@ const useStyles = makeStyles(theme => ({
     "font-size": "unset"
   },
   container: {
-    display: "grid",
-    flexWrap: "wrap"
+    display: "flex",
+    flexDirection: "column"
   },
   textField: {
     marginLeft: theme.spacing(1),
