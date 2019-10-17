@@ -29,7 +29,7 @@ export const checkValidity = (value, rules) => {
   }
 
   if (rules.isName) {
-    const pattern = /\s/;
+    const pattern = /(\w.+\s+\w.).+/i;
     isValid = pattern.test(value) && isValid;
   }
 

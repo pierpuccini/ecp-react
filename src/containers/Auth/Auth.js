@@ -123,6 +123,22 @@ const Auth = props => {
     if (phoneFail || phoneRefresh) {
       setshowPhoneLogin(true);
     }
+    if (props.authError) {
+      if (props.authError.code === "auth/invalid-verification-code") {
+        let removeVerifCode = {
+          ...signUpForm,
+          verifCode: {
+            value: "",
+            validation: {
+              required: true
+            },
+            valid: false,
+            touched: false
+          }
+        };
+        setSignUpForm(removeVerifCode);
+      }
+    }
 
     if (props.googleSignUp && props.googleSignUpInfo && !props.savedGoogleInfo) {
       const {fullName, email} = props.googleSignUpInfo
@@ -146,7 +162,7 @@ const Auth = props => {
       };
         setSignUpForm(updateFromGoogle);
     }
-  }, [signUpForm, props.location.search, props.googleSignUp, props.googleSignUpInfo, props.savedGoogleInfo]);
+  }, [signUpForm, props.location.search, props.googleSignUp, props.googleSignUpInfo, props.savedGoogleInfo, props.authError]);
 
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
@@ -318,7 +334,7 @@ const mapStateToProps = state => {
     passwordResetSuccess: state.auth.success,
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
-    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp,
+    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp && !state.auth.isPhoneSignUpVerified,
     newUser: state.auth.newUser,
     fireAuth: state.firebase.auth,
     smsSent: state.auth.smsSent,
