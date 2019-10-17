@@ -318,7 +318,7 @@ const mapStateToProps = state => {
     passwordResetSuccess: state.auth.success,
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
-    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp,
+    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp && !state.auth.isPhoneSignUpVerified,
     newUser: state.auth.newUser,
     fireAuth: state.firebase.auth,
     smsSent: state.auth.smsSent,

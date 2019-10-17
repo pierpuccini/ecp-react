@@ -16,7 +16,13 @@ export const phoneAuthSmsSent = (captcha, confirmationResult) => {
   };
 };
 
-export const phoneAuthSuccess = (newUser, phoneAuthStarted, verifingSMS, loading, phoneLoginDone) => {
+export const phoneAuthSuccess = (
+  newUser,
+  phoneAuthStarted,
+  verifingSMS,
+  loading,
+  phoneLoginDone
+) => {
   return {
     type: actionTypes.PHONE_AUTH_SUCCESS,
     newUser: newUser,
@@ -32,7 +38,7 @@ export const phoneAuthFail = (error, newUser, loading) => {
   return {
     type: actionTypes.PHONE_AUTH_FAIL,
     error: { ...error, customErrorMsg },
-    newUser : newUser,
+    newUser: newUser,
     loading: loading
   };
 };
@@ -67,14 +73,26 @@ export const authFail = (error, loading) => {
   };
 };
 
-export const signUpStart = (isGoogleSignUp) => {
+export const signUpStart = isGoogleSignUp => {
   return {
     type: actionTypes.SIGN_UP_START,
     isGoogleSignUp: isGoogleSignUp
   };
 };
 
-export const signUpSuccess = (isGoogleSignUp, googleSignUpInfo, savedGoogleInfo) => {
+export const signUpPhoneVerified = (isPhoneSignUpVerified, error) => {
+  return {
+    type: actionTypes.SIGN_UP_PHONE_VERIF,
+    isPhoneSignUpVerified: isPhoneSignUpVerified,
+    error: error
+  };
+};
+
+export const signUpSuccess = (
+  isGoogleSignUp,
+  googleSignUpInfo,
+  savedGoogleInfo
+) => {
   return {
     type: actionTypes.SIGN_UP_SUCCESS,
     googleSignUpInfo: googleSignUpInfo,
@@ -110,7 +128,14 @@ export const passwordResetFail = error => {
   };
 };
 
-export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading, createPhoneUser) => {
+export const logout = (
+  cleanErrors,
+  cleanNewUser,
+  errors,
+  newUser,
+  loading,
+  createPhoneUser
+) => {
   return {
     type: actionTypes.AUTH_LOGOUT,
     cleanErrors: cleanErrors,
@@ -122,7 +147,14 @@ export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading, crea
   };
 };
 
-export const deleteNewUser = (cleanErrors, cleanNewUser, errors, newUser, loading, createPhoneUser) => {
+export const deleteNewUser = (
+  cleanErrors,
+  cleanNewUser,
+  errors,
+  newUser,
+  loading,
+  createPhoneUser
+) => {
   return {
     type: actionTypes.DELETE_NEW_USER,
     cleanErrors: cleanErrors,
@@ -136,7 +168,6 @@ export const deleteNewUser = (cleanErrors, cleanNewUser, errors, newUser, loadin
 
 export const signUp = (data, typeOfSignUp) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-
     const firebase = getFirebase();
     const firestore = getFirestore();
     firebase.auth().useDeviceLanguage();
@@ -146,18 +177,22 @@ export const signUp = (data, typeOfSignUp) => {
       case "google":
         let isGoogleSignUp = true;
         dispatch(signUpStart(isGoogleSignUp));
-        firebase.auth().signInWithPopup(provider)
-          .then((result) => {
-            let {name, email} = {...result.additionalUserInfo.profile}
+        firebase
+          .auth()
+          .signInWithPopup(provider)
+          .then(result => {
+            let { name, email } = { ...result.additionalUserInfo.profile };
             let googleInfo = {
               fullName: name,
               email: email
-            }
+            };
             dispatch(signUpSuccess(isGoogleSignUp, googleInfo));
             /* Since its a a sign up and we must add thephone number this prevents the page from staying loged in */
             setTimeout(() => {
-              let savedGoogleInfo = true
-              dispatch(signUpSuccess(isGoogleSignUp, googleInfo, savedGoogleInfo));
+              let savedGoogleInfo = true;
+              dispatch(
+                signUpSuccess(isGoogleSignUp, googleInfo, savedGoogleInfo)
+              );
             }, 500);
           })
           .catch(err => {
@@ -165,7 +200,7 @@ export const signUp = (data, typeOfSignUp) => {
           });
         break;
 
-        case "phoneNumber":
+      case "phoneNumber":
         dispatch(signUpStart(getState().auth.isGoogleSignUp));
         /* Setting variables */
         let phoneSignUpStarted = false;
@@ -178,14 +213,16 @@ export const signUp = (data, typeOfSignUp) => {
           { size: "invisible" }
         ));
         /* Sends SMS */
-        firebase.auth().signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
+        firebase
+          .auth()
+          .signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
           .then(confirmationResult => {
             dispatch(phoneAuthSmsSent(appVerifier, confirmationResult));
           })
           .catch(err => {
             appVerifier = null;
             dispatch(phoneAuthFail(err));
-          });        
+          });
         break;
 
       default:
@@ -210,54 +247,91 @@ export const signUp = (data, typeOfSignUp) => {
           /* updates phone number for created profile */
           const user = firebase.auth().currentUser;
           user.updatePhoneNumber(credential);
+          /* Extracts initials from name */
+          let initials = user.displayName.split(" ");
+          let initialsArray = initials.map(name => {
+            return name[0].toString().toUpperCase();
+          });
+          initials = initialsArray.toString();
           /* Creates user doc in firestore */
           firestore
             .collection("users")
             .doc(user.uid)
             .set({
-              email: user.email
+              initials: initials
             });
           /* param inside signUpSuccess is isGoogleSignUp */
           dispatch(signUpSuccess(false));
         } else {
+          /* Gets from store what the sms sender returns in order to verify the sms */
+          let verificationId = getState().auth.confirmCode.verificationId;
+          let credential = firebase.auth.PhoneAuthProvider.credential(
+            verificationId,
+            data.verif
+          );
+          /* Will verify phone number */
           firebase
             .auth()
-            .createUserWithEmailAndPassword(data.email, data.password)
-            .then(result => {
+            .signInWithCredential(credential)
+            .then(() => {
+              /* Prevents platform auth */
+              dispatch(signUpPhoneVerified(true));
+              /* Retreived phone user for removal and future link with other provider */
               const user = firebase.auth().currentUser;
-              user
-                .updateProfile({ displayName: data.fullName })
-                .then(() => {
-                  let phoneSignUpStarted = false;
-                  let verifingSMS = true;
-                  let verificationId = null;
-                  let credential = null;
-                  /* Redispatches phone start as this one will be adding the phone to exisiting profile */
-                  dispatch(phoneAuthStart(phoneSignUpStarted, verifingSMS));
+              firebase.logout();
+              user.delete();
+              /* Starts new user auth with email */
 
-                  /* Gets from store what the sms sender returns in order to verify the sms */
-                  verificationId = getState().auth.confirmCode.verificationId;
-                  credential = firebase.auth.PhoneAuthProvider.credential(
-                    verificationId,
-                    data.verif
-                  );
-                  /* updates phone number for created profile */
-                  user.updatePhoneNumber(credential);
-                  /* Creates user doc in firestore */
-                  firestore
-                    .collection("users")
-                    .doc(result.user.uid)
-                    .set({
-                      email: data.email
+              firebase
+                .auth()
+                .createUserWithEmailAndPassword(data.email, data.password)
+                .then(result => {
+                  const user = firebase.auth().currentUser;
+                  user
+                    .updateProfile({ displayName: data.fullName })
+                    .then(() => {
+                      let phoneSignUpStarted = false;
+                      let verifingSMS = true;
+                      let verificationId = null;
+                      let credential = null;
+                      /* Redispatches phone start as this one will be adding the phone to exisiting profile */
+                      dispatch(phoneAuthStart(phoneSignUpStarted, verifingSMS));
+
+                      /* Gets from store what the sms sender returns in order to verify the sms */
+                      verificationId = getState().auth.confirmCode
+                        .verificationId;
+                      credential = firebase.auth.PhoneAuthProvider.credential(
+                        verificationId,
+                        data.verif
+                      );
+                      /* updates phone number for created profile */
+                      user.updatePhoneNumber(credential);
+                      /* Extracts initials from name */
+                      let initials = user.displayName.split(" ");
+                      let initialsArray = initials.map(name => {
+                        return name[0].toString().toUpperCase();
+                      });
+                      initials = initialsArray.toString();
+                      /* Creates user doc in firestore */
+                      firestore
+                        .collection("users")
+                        .doc(result.user.uid)
+                        .set({
+                          initials: initials
+                        });
+                      dispatch(signUpSuccess(false));
+                      dispatch(signUpPhoneVerified(false));
+                    })
+                    .catch(err => {
+                      dispatch(signUpFail(err));
                     });
-                  dispatch(signUpSuccess(false));
                 })
                 .catch(err => {
                   dispatch(signUpFail(err));
                 });
             })
             .catch(err => {
-              dispatch(signUpFail(err));
+              dispatch(signUpPhoneVerified(false, err));
             });
         }
         break;
@@ -272,10 +346,10 @@ export const auth = (data, typeOfLogin) => {
 
     /* Setting variables */
     let newUser = false;
-    let error = {} 
+    let error = {};
     let loading = false;
-    let cleanErrors = false
-    let cleanNewUser = false; 
+    let cleanErrors = false;
+    let cleanNewUser = false;
     let phoneAuthStarted = false;
     let verifingSMS = true;
     let verificationId = null;
@@ -286,11 +360,14 @@ export const auth = (data, typeOfLogin) => {
     firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
 
-    /* Detects what login was clicked */ 
+    /* Detects what login was clicked */
+
     switch (typeOfLogin) {
       case "google":
-        firebase.auth().signInWithPopup(provider)
-          .then((result) => {
+        firebase
+          .auth()
+          .signInWithPopup(provider)
+          .then(result => {
             /* Detects if a user is new or not */
             if (result.additionalUserInfo.isNewUser) {
               /* Sets the necesary variables to dispatch */
@@ -308,12 +385,20 @@ export const auth = (data, typeOfLogin) => {
               /* Since its a new user, prevents login and redirects to sign up and deletes from DB*/
               const user = firebase.auth().currentUser;
               user.delete().then(() => {
-                  cleanErrors = false;
-                  cleanNewUser = false;
-                  newUser = result.additionalUserInfo.isNewUser;
-                  loading = false;
-                  dispatch(deleteNewUser(cleanErrors, cleanNewUser, error, newUser, loading));
-                });
+                cleanErrors = false;
+                cleanNewUser = false;
+                newUser = result.additionalUserInfo.isNewUser;
+                loading = false;
+                dispatch(
+                  deleteNewUser(
+                    cleanErrors,
+                    cleanNewUser,
+                    error,
+                    newUser,
+                    loading
+                  )
+                );
+              });
             } else {
               newUser = result.additionalUserInfo.isNewUse;
               loading = false;
@@ -325,7 +410,7 @@ export const auth = (data, typeOfLogin) => {
             dispatch(authFail(err));
           });
         break;
-        
+
       case "phoneNumber":
         /* First detects if the sms was sent or not */
         if (!getState().auth.smsSent) {
@@ -338,7 +423,9 @@ export const auth = (data, typeOfLogin) => {
             { size: "invisible" }
           ));
           /* Sends SMS */
-          firebase.auth().signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
+          firebase
+            .auth()
+            .signInWithPhoneNumber(`+57${data.phoneNumber}`, appVerifier)
             .then(confirmationResult => {
               dispatch(phoneAuthSmsSent(appVerifier, confirmationResult));
             })
@@ -351,25 +438,37 @@ export const auth = (data, typeOfLogin) => {
           dispatch(phoneAuthStart(phoneAuthStarted, verifingSMS));
 
           /* Gets from store what the sms sender returns in order to verify the sms */
-          verificationId = getState().auth.confirmCode.verificationId
-          credential = firebase.auth.PhoneAuthProvider.credential(verificationId, data.verif);
+          verificationId = getState().auth.confirmCode.verificationId;
+          credential = firebase.auth.PhoneAuthProvider.credential(
+            verificationId,
+            data.verif
+          );
 
           /* Logs us into app */
-          firebase.auth().signInWithCredential(credential)
-            .then((result) => {
+          firebase
+            .auth()
+            .signInWithCredential(credential)
+            .then(result => {
               /* Checks if the user is new */
               if (result.additionalUserInfo.isNewUser) {
                 /* Since user is new, sets up necessary variables */
                 error = {
                   code: "new-user",
                   message: "Please Sign Up"
-                }
+                };
                 newUser = result.additionalUserInfo.isNewUser;
                 verifingSMS = false;
                 loading = true;
 
                 /* Dispatches previous variables */
-                dispatch(phoneAuthSuccess(newUser, phoneAuthStarted, verifingSMS, loading));
+                dispatch(
+                  phoneAuthSuccess(
+                    newUser,
+                    phoneAuthStarted,
+                    verifingSMS,
+                    loading
+                  )
+                );
                 dispatch(phoneAuthFail(error, newUser, loading));
 
                 /* Since its a new user, prevents login and redirects to sign up and deletes from DB*/
@@ -380,11 +479,20 @@ export const auth = (data, typeOfLogin) => {
                   newUser = result.additionalUserInfo.isNewUser;
                   loading = false;
                   let createPhoneUser = {
-                    url: 'phoneloginfailed=true',
-                    message: 'Please Sign Up',
+                    url: "phoneloginfailed=true",
+                    message: "Please Sign Up",
                     error: true
-                  }
-                  dispatch(logout(cleanErrors, cleanNewUser, error, newUser, loading, createPhoneUser ));
+                  };
+                  dispatch(
+                    logout(
+                      cleanErrors,
+                      cleanNewUser,
+                      error,
+                      newUser,
+                      loading,
+                      createPhoneUser
+                    )
+                  );
                 });
               } else {
                 /* since user is not new, accepts login */
@@ -393,7 +501,15 @@ export const auth = (data, typeOfLogin) => {
                 verifingSMS = false;
                 loading = false;
                 let phoneLoginDone = true;
-                dispatch(phoneAuthSuccess(newUser, phoneAuthStarted, verifingSMS, loading, phoneLoginDone));
+                dispatch(
+                  phoneAuthSuccess(
+                    newUser,
+                    phoneAuthStarted,
+                    verifingSMS,
+                    loading,
+                    phoneLoginDone
+                  )
+                );
               }
             })
             .catch(err => {
@@ -403,7 +519,9 @@ export const auth = (data, typeOfLogin) => {
         break;
 
       case "forgotEmail":
-        firebase.auth().sendPasswordResetEmail(data.email)
+        firebase
+          .auth()
+          .sendPasswordResetEmail(data.email)
           .then(() => {
             dispatch(passwordResetSuccess());
           })
@@ -412,7 +530,9 @@ export const auth = (data, typeOfLogin) => {
           });
         break;
       default:
-        firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(data.email, data.password)
           .then(() => {
             dispatch(authSuccess());
           })
@@ -433,7 +553,7 @@ export const authLogout = () => {
     let newUser = getState().auth.newUser;
     const cleanErrors = true;
     const cleanNewUser = true;
-    firebase.logout()
+    firebase.logout();
     dispatch(logout(cleanErrors, cleanNewUser, errors, newUser));
   };
 };
