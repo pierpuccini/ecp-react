@@ -31,7 +31,8 @@ const signUpPhoneVerified = (state, action) => {
     loading: action.isPhoneSignUpVerified,
     success: false,
     isGoogleSignUp: action.isGoogleSignUp,
-    isPhoneSignUpVerified: action.isPhoneSignUpVerified
+    isPhoneSignUpVerified: action.isPhoneSignUpVerified,
+    smsSent: action.isPhoneSignUpVerified
   });
 };
 

@@ -280,8 +280,8 @@ export const signUp = (data, typeOfSignUp) => {
               const user = firebase.auth().currentUser;
               firebase.logout();
               user.delete();
+              
               /* Starts new user auth with email */
-
               firebase
                 .auth()
                 .createUserWithEmailAndPassword(data.email, data.password)
@@ -317,7 +317,8 @@ export const signUp = (data, typeOfSignUp) => {
                         .collection("users")
                         .doc(result.user.uid)
                         .set({
-                          initials: initials
+                          initials: initials,
+                          displayName: data.fullName
                         });
                       dispatch(signUpSuccess(false));
                       dispatch(signUpPhoneVerified(false));
