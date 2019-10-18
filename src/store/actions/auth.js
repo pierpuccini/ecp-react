@@ -16,14 +16,14 @@ export const phoneAuthSmsSent = (captcha, confirmationResult) => {
   };
 };
 
-export const phoneAuthSuccess = ( newUser, phoneAuthStarted, verifingSMS, loading, phoneLoginDone) => {
+export const phoneAuthSuccess = ( newUser, phoneAuthStarted, verifingSMS, loading, phoneAuthDone) => {
   return {
     type: actionTypes.PHONE_AUTH_SUCCESS,
     newUser: newUser,
     phoneAuthStarted: phoneAuthStarted,
     verifingSMS: verifingSMS,
     loading: loading,
-    phoneLoginDone: phoneLoginDone
+    phoneAuthDone: phoneAuthDone
   };
 };
 
@@ -474,17 +474,9 @@ export const auth = (data, typeOfLogin) => {
                 newUser = result.additionalUserInfo.isNewUser;
                 phoneAuthStarted = false;
                 verifingSMS = false;
-                loading = false;
-                let phoneLoginDone = true;
-                dispatch(
-                  phoneAuthSuccess(
-                    newUser,
-                    phoneAuthStarted,
-                    verifingSMS,
-                    loading,
-                    phoneLoginDone
-                  )
-                );
+                loading = true;
+                let phoneAuthDone = true;
+                dispatch(phoneAuthSuccess( newUser, phoneAuthStarted, verifingSMS, loading, phoneAuthDone));
               }
             })
             .catch(err => {
