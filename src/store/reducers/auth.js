@@ -18,21 +18,24 @@ const initialState = {
   isGoogleSignUp: false,
   googleSignUpInfo: null,
   savedGoogleInfo: false,
-  isPhoneSignUpVerified: false
+  isPhoneLinkSucces: false
 }
 
 const signUpStart = (state, action) => {
   return updateObject(state, { error: null, loading: true, success: false, isGoogleSignUp: action.isGoogleSignUp });
 };
 
-const signUpPhoneVerified = (state, action) => {
+const signUpPhoneLinkSuccess = (state, action) => {
+  return updateObject(state, {
+    isPhoneLinkSucces: action.isPhoneSignUpVerified
+  });
+};
+
+const signUpPhoneLinkFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
-    loading: action.isPhoneSignUpVerified,
-    success: false,
-    isGoogleSignUp: action.isGoogleSignUp,
-    isPhoneSignUpVerified: action.isPhoneSignUpVerified,
-    smsSent: action.isPhoneSignUpVerified
+    isPhoneLinkSucces: false,
+    smsSent: false
   });
 };
 
@@ -50,7 +53,7 @@ const signUpFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false,
-    isGoogleSignUp: false
+    isGoogleSignUp: action.isGoogleSignUp
   });
 };
 
@@ -186,7 +189,8 @@ const reducer = (state = initialState, action) => {
     case actionTypes.PHONE_AUTH_SUCCESS: return phoneAuthSuccess(state, action);
     case actionTypes.PHONE_AUTH_FAIL: return phoneAuthFail(state, action);
     case actionTypes.SIGN_UP_START: return signUpStart(state, action);
-    case actionTypes.SIGN_UP_PHONE_VERIF: return signUpPhoneVerified(state, action);
+    case actionTypes.SIGN_UP_PHONE_LINK_SUCCESS: return signUpPhoneLinkSuccess(state, action);
+    case actionTypes.SIGN_UP_PHONE_LINK_FAIL: return signUpPhoneLinkFail(state, action);
     case actionTypes.SIGN_UP_SUCCESS: return signUpSuccess(state, action);
     case actionTypes.SIGN_UP_FAIL: return signUpFail(state, action);
     case actionTypes.AUTH_START: return authStart(state, action);

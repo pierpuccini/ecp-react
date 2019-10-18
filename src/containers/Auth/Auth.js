@@ -146,23 +146,36 @@ const Auth = props => {
         ...signUpForm,
         fullName: {
           value: fullName,
+          validation: {
+            required: true,
+            isName: true
+          },
           valid: true,
           touched: true
         },
         email: {
           value: email,
+          validation: {
+            required: true,
+            isEmail: true
+          },
           valid: true,
           touched: true
         },
         password: {
           value: "************",
+          validation: {
+            required: true,
+            minLength: 6
+          },
           valid: true,
           touched: true
         },
       };
         setSignUpForm(updateFromGoogle);
     }
-  }, [signUpForm, props.location.search, props.googleSignUp, props.googleSignUpInfo, props.savedGoogleInfo, props.authError]);
+    // eslint-disable-next-line
+  }, [props.location.search, props.googleSignUp, props.googleSignUpInfo, props.savedGoogleInfo, props.authError]);
 
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
@@ -230,7 +243,7 @@ const Auth = props => {
   }
 
   const resetPhoneLoginHandler = () => {
-    props.history.replace("/login?phonerefresh=true&phonefail=false");
+    // props.history.replace("/login?phonerefresh=true&phonefail=false");
     window.location.reload();
   };
 
@@ -334,7 +347,7 @@ const mapStateToProps = state => {
     passwordResetSuccess: state.auth.success,
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
-    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp && !state.auth.isPhoneSignUpVerified,
+    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp && state.auth.isPhoneLinkSucces,
     newUser: state.auth.newUser,
     fireAuth: state.firebase.auth,
     smsSent: state.auth.smsSent,
