@@ -244,7 +244,8 @@ export const signUp = (data, typeOfSignUp) => {
                 .collection("users")
                 .doc(user.uid)
                 .set({
-                  initials: initials
+                  initials: initials,
+                  displayName: user.displayName
                 });
               dispatch(signUpPhoneLinkedSuccess());
               /* param inside signUpSuccess is isGoogleSignUp */
