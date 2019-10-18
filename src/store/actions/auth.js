@@ -280,7 +280,7 @@ export const signUp = (data, typeOfSignUp) => {
                 .updatePhoneNumber(credential)
                 .then(() => {
                   /* Extracts initials from name */
-                  let initials = user.displayName.split(" ");
+                  let initials = data.fullName.split(" ");
                   let initialsArray = initials.map(name => {
                     return name[0].toString().toUpperCase();
                   });
