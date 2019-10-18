@@ -98,11 +98,12 @@ export const signUpSuccess = ( isGoogleSignUp, googleSignUpInfo, savedGoogleInfo
   };
 };
 
-export const signUpFail = error => {
+export const signUpFail = (error, isGoogleSignUp) => {
   let customErrorMsg = error.message;
   return {
     type: actionTypes.SIGN_UP_FAIL,
-    error: { ...error, customErrorMsg }
+    error: { ...error, customErrorMsg },
+    isGoogleSignUp: isGoogleSignUp
   };
 };
 
@@ -179,7 +180,8 @@ export const signUp = (data, typeOfSignUp) => {
             }, 500);
           })
           .catch(err => {
-            dispatch(signUpFail(err));
+            /* second param inside signUpFail is isGoogleSignUp */
+            dispatch(signUpFail(err, true));
           });
         break;
 
@@ -213,7 +215,6 @@ export const signUp = (data, typeOfSignUp) => {
         /* Informes that user sign up will begin */
         if (getState().auth.isGoogleSignUp) {
           /* If google sign up then there is no email user creation */
-
           let phoneSignUpStarted = false;
           let verifingSMS = true;
           let verificationId = null;
@@ -229,22 +230,31 @@ export const signUp = (data, typeOfSignUp) => {
           );
           /* updates phone number for created profile */
           const user = firebase.auth().currentUser;
-          user.updatePhoneNumber(credential);
-          /* Extracts initials from name */
-          let initials = user.displayName.split(" ");
-          let initialsArray = initials.map(name => {
-            return name[0].toString().toUpperCase();
-          });
-          initials = initialsArray.toString();
-          /* Creates user doc in firestore */
-          firestore
-            .collection("users")
-            .doc(user.uid)
-            .set({
-              initials: initials
+          user
+            .updatePhoneNumber(credential)
+            .then(() => {
+              /* Extracts initials from name */
+              let initials = user.displayName.split(" ");
+              let initialsArray = initials.map(name => {
+                return name[0].toString().toUpperCase();
+              });
+              initials = initialsArray.toString();
+              /* Creates user doc in firestore */
+              firestore
+                .collection("users")
+                .doc(user.uid)
+                .set({
+                  initials: initials
+                });
+              dispatch(signUpPhoneLinkedSuccess());
+              /* param inside signUpSuccess is isGoogleSignUp */
+              dispatch(signUpSuccess(false));
+            })
+            .catch(err => {
+              dispatch(signUpPhoneLinkedFailed(err));
+              /* second param inside signUpFail is isGoogleSignUp */
+              dispatch(signUpFail(err, true));
             });
-          /* param inside signUpSuccess is isGoogleSignUp */
-          dispatch(signUpSuccess(false));
         } else {
           firebase
             .auth()
@@ -268,25 +278,33 @@ export const signUp = (data, typeOfSignUp) => {
               user
                 .updatePhoneNumber(credential)
                 .then(() => {
+                  /* Extracts initials from name */
+                  let initials = user.displayName.split(" ");
+                  let initialsArray = initials.map(name => {
+                    return name[0].toString().toUpperCase();
+                  });
+                  initials = initialsArray.toString();
                   /* Creates user doc in firestore */
                   firestore
                     .collection("users")
                     .doc(result.user.uid)
                     .set({
-                      email: data.email
+                      initials: initials,
+                      displayName: data.fullName
                     });
                   dispatch(signUpPhoneLinkedSuccess());
                   dispatch(signUpSuccess(false));
                 })
-                .catch(err => {;
+                .catch(err => {
                   dispatch(signUpPhoneLinkedFailed(err));
-                  user.delete()
-                  firebase.logout()
-                  dispatch(signUpFail(err));
+                  firebase.logout();
+                  /* second param inside signUpFail is isGoogleSignUp */
+                  dispatch(signUpFail(err, false));
                 });
             })
             .catch(err => {
-              dispatch(signUpFail(err));
+              /* second param inside signUpFail is isGoogleSignUp */
+              dispatch(signUpFail(err, false));
             });
         }
         break;

@@ -53,7 +53,7 @@ const signUpFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
     loading: false,
-    isGoogleSignUp: false
+    isGoogleSignUp: action.isGoogleSignUp
   });
 };
 
