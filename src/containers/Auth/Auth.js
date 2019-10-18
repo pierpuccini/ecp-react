@@ -251,7 +251,7 @@ const Auth = props => {
   if (props.authenticated) {
     if (props.phoneAuthDone) {
       props.history.replace("/home?login-method=phone")
-      // window.location.reload();
+      window.location.reload();
     }else{
       authRedirect = <Redirect to="/home" />;
     }
