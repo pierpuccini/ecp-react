@@ -9,6 +9,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 //component Imports
@@ -86,6 +87,7 @@ function App(props) {
 
     app = (
       <React.Fragment>
+        <CssBaseline/>
         <ElevationScroll {...props}>
           <AppBar>
             <Toolbar>
