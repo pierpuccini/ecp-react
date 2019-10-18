@@ -249,9 +249,9 @@ const Auth = props => {
   let authRedirect = null;
   if (props.authenticated) {
     if (props.phoneAuthDone) {
-      props.history.replace("/home?login-method=phone")
+      props.history.replace("/home?login-method=phone");
       window.location.reload();
-    }else{
+    } else {
       authRedirect = <Redirect to="/home" />;
     }
   }
@@ -282,7 +282,7 @@ const Auth = props => {
         decodedError.customErrorMsg = decodeURI(errorMsgEncoded[1])
       }
     });
-    console.log('decoded error ',decodedError.customErrorMsg);
+    console.log('props.authenticated',props.authenticated);
   }
 
   if (props.phoneLoginFailed.error) {

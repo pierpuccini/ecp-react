@@ -118,7 +118,8 @@ const authSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: action.loading,
-    newUser: action.newUser
+    newUser: action.newUser,
+    isPhoneLinkSucces: true
   });
 };
 
