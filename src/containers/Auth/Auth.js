@@ -62,7 +62,6 @@ const Auth = props => {
     }
   });
   
-  /* TODO: MISSING UNIVERSITY AND ID FIELDS */
   const [signUpForm, setSignUpForm] = useState({
     fullName: {
       value: "",
@@ -243,7 +242,7 @@ const Auth = props => {
   }
 
   const resetPhoneLoginHandler = () => {
-    // props.history.replace("/login?phonerefresh=true&phonefail=false");
+    props.history.replace("/login?phonerefresh=true&phonefail=false");
     window.location.reload();
   };
 
@@ -269,8 +268,21 @@ const Auth = props => {
   }
 
   if (props.reloadOnPhoneAuthFail) {
-    props.history.replace('/login?phonerefresh=false&phonefail=true')
+    props.history.replace(`/login?phonerefresh=false&phonefail=true&error=${props.authError.message}`)
     window.location.reload();
+  }
+
+  let decodedError = {customErrorMsg: ''};
+  if (showPhoneLogin) {
+    let errorMsgEncoded = ''
+    let searchParams = props.location.search.replace('?','').split('&')
+    searchParams.forEach(searchParam => {
+      if(searchParam.includes('error')){
+        errorMsgEncoded = searchParam.split('=')
+        decodedError.customErrorMsg = decodeURI(errorMsgEncoded[1])
+      }
+    });
+    console.log('decoded error ',decodedError.customErrorMsg);
   }
 
   if (props.phoneLoginFailed.error) {
@@ -309,7 +321,7 @@ const Auth = props => {
           toggleViewPasswordHandler={toggleViewPasswordHandler}
           toogleViewPhoneForm={showPhoneLogin}
           togglePhoneFormHandler={togglePhoneFormHandler}
-          authError={props.authError}
+          authError={(showPhoneLogin)? decodedError : props.authError}
           passwordResetSuccess={props.passwordResetSuccess}
           forgotLogin={
             props.location.pathname.match("/forgot-login") ? true : false
