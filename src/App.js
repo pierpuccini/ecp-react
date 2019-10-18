@@ -32,7 +32,8 @@ function App(props) {
       <img src={loader} alt="loading..." />
     </div>
   );
-
+  
+  /* Routes for non-authenticated users */
   let routes = (
     <Switch>
       <Route path="/login" component={asyncAuth} />
@@ -41,7 +42,7 @@ function App(props) {
       <Redirect to="/login" />
     </Switch>
   );
-
+  /* Routes for authenticated users */
   if (props.isAuthenticated) {
     routes = (
       <Switch>
