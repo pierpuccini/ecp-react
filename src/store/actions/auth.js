@@ -298,7 +298,8 @@ export const signUp = (data, typeOfSignUp) => {
                 })
                 .catch(err => {
                   dispatch(signUpPhoneLinkedFailed(err));
-                  firebase.logout();
+                  // firebase.logout();
+                  user.delete()
                   /* second param inside signUpFail is isGoogleSignUp */
                   dispatch(signUpFail(err, false));
                 });

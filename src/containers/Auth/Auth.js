@@ -146,23 +146,36 @@ const Auth = props => {
         ...signUpForm,
         fullName: {
           value: fullName,
+          validation: {
+            required: true,
+            isName: true
+          },
           valid: true,
           touched: true
         },
         email: {
           value: email,
+          validation: {
+            required: true,
+            isEmail: true
+          },
           valid: true,
           touched: true
         },
         password: {
           value: "************",
+          validation: {
+            required: true,
+            minLength: 6
+          },
           valid: true,
           touched: true
         },
       };
         setSignUpForm(updateFromGoogle);
     }
-  }, [signUpForm, props.location.search, props.googleSignUp, props.googleSignUpInfo, props.savedGoogleInfo, props.authError]);
+    // eslint-disable-next-line
+  }, [props.location.search, props.googleSignUp, props.googleSignUpInfo, props.savedGoogleInfo, props.authError]);
 
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
@@ -230,7 +243,7 @@ const Auth = props => {
   }
 
   const resetPhoneLoginHandler = () => {
-    props.history.replace("/login?phonerefresh=true&phonefail=false");
+    // props.history.replace("/login?phonerefresh=true&phonefail=false");
     window.location.reload();
   };
 
