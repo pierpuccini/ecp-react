@@ -282,7 +282,6 @@ const Auth = props => {
         decodedError.customErrorMsg = decodeURI(errorMsgEncoded[1])
       }
     });
-    console.log('props.authenticated',props.authenticated);
   }
 
   if (props.phoneLoginFailed.error) {

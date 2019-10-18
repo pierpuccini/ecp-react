@@ -18,7 +18,7 @@ const initialState = {
   isGoogleSignUp: false,
   googleSignUpInfo: null,
   savedGoogleInfo: false,
-  isPhoneLinkSucces: false
+  isPhoneLinkSucces: true
 }
 
 const signUpStart = (state, action) => {
@@ -45,7 +45,8 @@ const signUpSuccess = (state, action) => {
     loading: false,
     isGoogleSignUp: action.isGoogleSignUp,
     googleSignUpInfo: updateObject(state.googleSignUpInfo, {...action.googleSignUpInfo}),
-    savedGoogleInfo: action.savedGoogleInfo
+    savedGoogleInfo: action.savedGoogleInfo,
+    newUser: false
   });
 };
 

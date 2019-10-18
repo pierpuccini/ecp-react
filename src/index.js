@@ -69,6 +69,7 @@ const rrfProps = {
   createFirestoreInstance
 };
 
+//CssBaseline is used to give the app a more material approach
 let app = (
   <Provider store={store}>
     <ReactReduxFirebaseProvider {...rrfProps}>
