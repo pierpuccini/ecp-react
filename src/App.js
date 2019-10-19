@@ -11,7 +11,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
@@ -33,6 +32,9 @@ const asyncAuth = asyncComponent(() => {
 });
 const asyncDashboard = asyncComponent(() => {
   return import("./containers/Dashboard/Dashboard");
+});
+const asyncUsers = asyncComponent(() => {
+  return import("./containers/Users/Users");
 });
 
 const useStyles = makeStyles(theme => ({
@@ -130,18 +132,14 @@ function App(props) {
     </div>
   );
   let routes = null;
+  let redirect = null;
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
+    (props.profileLoaded && props.newUser === '')? redirect = <Redirect to="/onboarding" /> : redirect = <Redirect to="/home" />
     routes = (
       <Switch>
-        <Route path="/login" component={asyncAuth} />
-        <Route path="/forgot-login" component={asyncAuth} />
-        <Route path="/sign-up" component={asyncAuth} />
-        <Route
-          to={`${process.env.PUBLIC_URL}/home`}
-          component={asyncDashboard}
-        />
-        <Redirect to={`${process.env.PUBLIC_URL}/home`} />
+        <Route path="/onboarding" component={asyncUsers}/>
+        <Route path="/home" component={asyncDashboard}/>    
       </Switch>
     );
 
@@ -172,17 +170,8 @@ function App(props) {
         </SwipeableDrawer>
         <Toolbar className={classes.topbarSpace} />
         <Container className={classes.container}>
+          {redirect}
           {routes}
-          <Box my={2}>
-            {[...new Array(12)]
-              .map(
-                () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-              )
-              .join("\n")}
-          </Box>
         </Container>
         <BottomNavigation className={classes.bottomNav} value={bottomBarSelect} onChange={handleBottomBarChange}>
           <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} />
@@ -194,7 +183,7 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
     );
   }
 
-  return <React.Fragment>{domReady ? app : loadingDom}</React.Fragment>;
+  return <React.Fragment>{(domReady && props.profileLoaded) ? app : loadingDom}</React.Fragment>;
 }
 
 function ElevationScroll(props) {
@@ -220,8 +209,10 @@ const mapStateToProps = state => {
       !state.auth.newUser &&
       !state.auth.isGoogleSignUp &&
       state.auth.isPhoneLinkSucces,
+      profileLoaded: state.firebase.profile.isLoaded,
       initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
-      name: (state.firebase.profile.displayName)?state.firebase.profile.displayName:null
+      name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:null,
+      newUser: (state.firebase.profile.isLoaded)?state.firebase.profile.studentId: null
   };
 };
 
