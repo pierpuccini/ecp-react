@@ -50,6 +50,14 @@ const useStyles = makeStyles(theme => ({
       marginTop: "5px",
       marginBottom: "5px"
     }
+  },
+  topbarSpace: {
+    [theme.breakpoints.up("md")]: {
+      height: "64px"
+    },
+    [theme.breakpoints.down("md")]: {
+      height: "74px"
+    }
   }
 }));
 
@@ -110,7 +118,7 @@ function App(props) {
             </Toolbar>
           </AppBar>
         </ElevationScroll>
-        <Toolbar />
+        <Toolbar className={classes.topbarSpace} />
         <Container>
           {routes}
           <Box my={2}>
@@ -138,7 +146,7 @@ const mapStateToProps = state => {
       !state.auth.newUser &&
       !state.auth.isGoogleSignUp &&
       state.auth.isPhoneLinkSucces,
-      initials: state.firebase.profile.initials,
+      initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
   };
 };
 

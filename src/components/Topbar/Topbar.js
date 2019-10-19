@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Fade from '@material-ui/core/Fade';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
 import Badge from "@material-ui/core/Badge";
-import AccountCircle from "@material-ui/icons/AccountCircle";
 import Avatar from "@material-ui/core/Avatar";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import NotificationsNoneOutlinedIcon from '@material-ui/icons/NotificationsNoneOutlined';
+import PowerSettingsNewOutlinedIcon from '@material-ui/icons/PowerSettingsNewOutlined';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -84,9 +86,16 @@ const Topbar = props => {
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMenuOpen}
       onClose={handleMenuClose}
+      TransitionComponent={Fade}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <AccountCircleOutlinedIcon />
+        <p>My Account</p>
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <PowerSettingsNewOutlinedIcon />
+        <p>Sign Out</p>
+      </MenuItem>
     </Menu>
   );
 
@@ -100,25 +109,21 @@ const Topbar = props => {
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      TransitionComponent={Fade}
     >
       <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
+        <Badge badgeContent={11} color="secondary">
+          <NotificationsNoneOutlinedIcon />
+        </Badge>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
+      <MenuItem>
+        <AccountCircleOutlinedIcon />
+        <p>My Account</p>
+      </MenuItem>
+      <MenuItem>
+        <PowerSettingsNewOutlinedIcon />
+        <p>Sign Out</p>
       </MenuItem>
     </Menu>
   );
@@ -139,7 +144,7 @@ const Topbar = props => {
       <div className={classes.sectionDesktop}>
         <IconButton aria-label="show 17 new notifications" color="inherit">
           <Badge badgeContent={17} color="secondary">
-            <NotificationsIcon />
+            <NotificationsNoneOutlinedIcon />
           </Badge>
         </IconButton>
         <IconButton
@@ -165,7 +170,7 @@ const Topbar = props => {
         >
           <Badge badgeContent={11} color="secondary">
             <Avatar className={classes.purpleAvatar}>
-              {props.initials.replace(",", "")}
+              {props.initials}
             </Avatar>
           </Badge>
         </IconButton>
