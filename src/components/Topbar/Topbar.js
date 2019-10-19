@@ -48,6 +48,9 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("md")]: {
       display: "none"
     }
+  },
+  menuItem: {
+    justifyContent: "space-between"
   }
 }));
 
@@ -88,13 +91,13 @@ const Topbar = props => {
       onClose={handleMenuClose}
       TransitionComponent={Fade}
     >
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
         <AccountCircleOutlinedIcon />
-        <p>My Account</p>
+        <Typography>My Account</Typography>
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
         <PowerSettingsNewOutlinedIcon />
-        <p>Sign Out</p>
+        <Typography>Sign Out</Typography>
       </MenuItem>
     </Menu>
   );
@@ -111,19 +114,19 @@ const Topbar = props => {
       onClose={handleMobileMenuClose}
       TransitionComponent={Fade}
     >
-      <MenuItem>
+      <MenuItem className={classes.menuItem}>
         <Badge badgeContent={11} color="secondary">
           <NotificationsNoneOutlinedIcon />
         </Badge>
-        <p>Notifications</p>
+        <Typography>Notifications</Typography>
       </MenuItem>
-      <MenuItem>
+      <MenuItem className={classes.menuItem}>
         <AccountCircleOutlinedIcon />
-        <p>My Account</p>
+        <Typography>My Account</Typography>
       </MenuItem>
-      <MenuItem>
+      <MenuItem className={classes.menuItem}>
         <PowerSettingsNewOutlinedIcon />
-        <p>Sign Out</p>
+        <Typography>Sign Out</Typography>
       </MenuItem>
     </Menu>
   );
@@ -168,7 +171,7 @@ const Topbar = props => {
           onClick={handleMobileMenuOpen}
           color="inherit"
         >
-          <Badge badgeContent={11} color="secondary">
+          <Badge badgeContent={(mobileMoreAnchorEl)? null :11} color="secondary">
             <Avatar className={classes.purpleAvatar}>
               {props.initials}
             </Avatar>
