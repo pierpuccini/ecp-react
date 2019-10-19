@@ -107,10 +107,15 @@ function App(props) {
   let title = null
   switch (props.location.pathname) {
     case "/home":
-      title = `Hi, ${props.name}`
+      title = `Welcome Back, ${props.name}`
+      break;
+  
+    case "/onboarding":
+      title = `Welcome ${props.name.split(' ')[0]}`
       break;
   
     default:
+      title = 'Edu Coins'
       break;
   }
 
@@ -142,7 +147,8 @@ function App(props) {
         <Route path="/home" component={asyncDashboard}/>    
       </Switch>
     );
-
+    
+    /* Top bar title is handled in switch statment above */
     app = (
       <React.Fragment>
         <CssBaseline />
@@ -211,7 +217,7 @@ const mapStateToProps = state => {
       state.auth.isPhoneLinkSucces,
       profileLoaded: state.firebase.profile.isLoaded,
       initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
-      name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:null,
+      name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:' ',
       newUser: (state.firebase.profile.isLoaded)?state.firebase.profile.studentId: null
   };
 };
