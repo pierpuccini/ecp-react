@@ -5,6 +5,7 @@ import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 //Redux Imports
 import { connect } from "react-redux";
 //Material UI Imports
+import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
@@ -40,8 +41,20 @@ ElevationScroll.propTypes = {
   children: PropTypes.element.isRequired
 };
 
-function App(props) {
+const useStyles = makeStyles(theme => ({
+  topbar: {
+    [theme.breakpoints.up("md")]: {
+      margin: "unset"
+    },
+    [theme.breakpoints.down("md")]: {
+      marginTop: "5px",
+      marginBottom: "5px"
+    }
+  }
+}));
 
+function App(props) {
+  const classes = useStyles();
   //Checks if DOM is ready to un mount loading icon
   const [domReady, setDomReady] = useState(false);
 
@@ -92,8 +105,8 @@ function App(props) {
         <CssBaseline />
         <ElevationScroll {...props}>
           <AppBar>
-            <Toolbar>
-              <Topbar/>
+            <Toolbar className={classes.topbar}>
+              <Topbar initials={props.initials}/>
             </Toolbar>
           </AppBar>
         </ElevationScroll>
@@ -124,7 +137,8 @@ const mapStateToProps = state => {
       state.firebase.auth.uid &&
       !state.auth.newUser &&
       !state.auth.isGoogleSignUp &&
-      state.auth.isPhoneLinkSucces
+      state.auth.isPhoneLinkSucces,
+      initials: state.firebase.profile.initials,
   };
 };
 
