@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 //Redux Imports
 import { connect } from "react-redux";
+import * as actions from "./store/actions/index";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -114,7 +115,7 @@ function App(props) {
         <ElevationScroll {...props}>
           <AppBar>
             <Toolbar className={classes.topbar}>
-              <Topbar initials={props.initials}/>
+              <Topbar initials={props.initials} logout={props.logout}/>
             </Toolbar>
           </AppBar>
         </ElevationScroll>
@@ -150,4 +151,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(App));
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => dispatch(actions.authLogout())
+  };
+};
+
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App));

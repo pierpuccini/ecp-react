@@ -79,6 +79,11 @@ const Topbar = props => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const logout = (typeOfScreen) => {
+    (typeOfScreen === 'desktop')?handleMenuClose():handleMobileMenuClose();
+    props.logout();
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -95,7 +100,7 @@ const Topbar = props => {
         <AccountCircleOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
+      <MenuItem className={classes.menuItem} onClick={()=>{logout('desktop')}}>
         <PowerSettingsNewOutlinedIcon />
         <Typography>Sign Out</Typography>
       </MenuItem>
@@ -124,7 +129,7 @@ const Topbar = props => {
         <AccountCircleOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>
-      <MenuItem className={classes.menuItem}>
+      <MenuItem className={classes.menuItem} onClick={()=>{logout('desktop')}}>
         <PowerSettingsNewOutlinedIcon />
         <Typography>Sign Out</Typography>
       </MenuItem>
@@ -159,7 +164,7 @@ const Topbar = props => {
           color="inherit"
         >
           <Avatar className={classes.purpleAvatar}>
-            {props.initials.replace(",", "")}
+            {props.initials}
           </Avatar>
         </IconButton>
       </div>
