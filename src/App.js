@@ -14,18 +14,12 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 //component Imports
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import "./App.css";
 import loader from "./assets/loaders/educoin(B).gif";
 import Topbar from "./components/UI/Topbar/Topbar";
+import SideList from './components/UI/SideList/SideList'
 
 const asyncAuth = asyncComponent(() => {
   return import("./containers/Auth/Auth");
@@ -87,34 +81,6 @@ function App(props) {
       break;
   }
 
-  /* TODO: Use my own list */
-  const sideList = () => (
-    <div
-      className={classes.list}
-      role="presentation"
-      onClick={()=>{toggleDrawer(false)}}
-      onKeyDown={()=>{toggleDrawer(false)}}
-    >
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-
   let loadingDom = (
     <div className="App">
       <img src={loader} alt="loading..." />
@@ -171,7 +137,7 @@ function App(props) {
           onClose={() => {toggleDrawer(false)}}
           onOpen={() => {toggleDrawer(true)}}
         >
-          {sideList()}
+          <SideList toggleDrawer={toggleDrawer} />
         </SwipeableDrawer>
         <Toolbar className={classes.topbarSpace} />
         <Container>
