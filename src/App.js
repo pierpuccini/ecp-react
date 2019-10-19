@@ -13,7 +13,6 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import FolderIcon from '@material-ui/icons/Folder';
@@ -148,6 +147,22 @@ function App(props) {
       </Switch>
     );
     
+    let swipeDrawer = (
+      <SwipeableDrawer
+        disableBackdropTransition={!iOS}
+        disableDiscovery={iOS}
+        open={drawerOpen}
+        onClose={() => {
+          toggleDrawer(false);
+        }}
+        onOpen={() => {
+          toggleDrawer(true);
+        }}
+      >
+        <SideList toggleDrawer={toggleDrawer} />
+      </SwipeableDrawer>
+    );
+
     /* Top bar title is handled in switch statment above */
     app = (
       <React.Fragment>
@@ -161,19 +176,12 @@ function App(props) {
                 toggleDrawer={toggleDrawer}
                 drawerState={drawerOpen}
                 title={title}
+                newUser={props.newUser === ''}
               />
             </Toolbar>
           </AppBar>
         </ElevationScroll>
-        <SwipeableDrawer
-          disableBackdropTransition={!iOS}
-          disableDiscovery={iOS}
-          open={drawerOpen}
-          onClose={() => {toggleDrawer(false)}}
-          onOpen={() => {toggleDrawer(true)}}
-        >
-          <SideList toggleDrawer={toggleDrawer} />
-        </SwipeableDrawer>
+        {(props.newUser)? null : swipeDrawer}
         <Toolbar className={classes.topbarSpace} />
         <Container className={classes.container}>
           {redirect}
@@ -218,7 +226,7 @@ const mapStateToProps = state => {
       profileLoaded: state.firebase.profile.isLoaded,
       initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
       name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:' ',
-      newUser: (state.firebase.profile.isLoaded)?state.firebase.profile.studentId: null
+      newUser: (state.firebase.profile.isLoaded)?state.firebase.profile.studentId: false
   };
 };
 

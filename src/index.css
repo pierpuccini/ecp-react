@@ -30,6 +30,9 @@ code {
 .MuiOutlinedInput-adornedEnd{
   padding: unset !important;
 }
-.MuiMenu-list{
+#primary-search-account-menu-mobile .MuiMenu-list{
+  width: 180px;
+}
+#primary-search-account-menu .MuiMenu-list{
   width: 180px;
 }

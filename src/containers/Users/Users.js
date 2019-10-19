@@ -4,14 +4,19 @@ import { withRouter } from "react-router-dom";
 // import { Route, withRouter, Redirect } from "react-router-dom";
 //Redux
 import { connect } from "react-redux";
+//App Imports
+import Onboarding from "../../components/Onboarding/Onboarding";
 
 const Users = () => {
-  return <div>Onboarding</div>;
+  return (
+    <React.Fragment>
+      <Onboarding />
+    </React.Fragment>
+  );
 };
 
 const mapStateToProps = state => {
-  return {
-  };
+  return {};
 };
 
 export default withRouter(connect(mapStateToProps)(Users));
