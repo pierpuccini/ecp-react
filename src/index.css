@@ -30,4 +30,6 @@ code {
 .MuiOutlinedInput-adornedEnd{
   padding: unset !important;
 }
-
+.MuiMenu-list{
+  width: 180px;
+}

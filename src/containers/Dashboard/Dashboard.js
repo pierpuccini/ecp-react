@@ -9,19 +9,18 @@ import * as actions from "../../store/actions/index";
 import loader from "../../assets/loaders/educoin(B).gif";
 // import classes from "./Dashboard.module.scss";
 //MaterialUI Imports
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+// import { makeStyles } from "@material-ui/core/styles";
 //Personal Helpers
 // import { updateObject, checkValidity } from "../../shared/utility";
 
-const useStyles = makeStyles(theme => ({
-  button: {
-    margin: theme.spacing(1)
-  }
-}));
+// const useStyles = makeStyles(theme => ({
+//   button: {
+//     margin: theme.spacing(1)
+//   }
+// }));
 
 const Dashboard = props => {
-  const matClasses = useStyles();
+  // const matClasses = useStyles();
 
   let phoneLogin = false;
   if (props.location.search.includes("login-method=phone")) {
@@ -42,14 +41,6 @@ const Dashboard = props => {
   const dashboard = (
     <div>
       <p>Loged In</p>
-      <Button
-        className={matClasses.button}
-        variant="contained"
-        color="primary"
-        onClick={() => props.logout()}
-      >
-        Log Out
-      </Button>
     </div>
   );
 

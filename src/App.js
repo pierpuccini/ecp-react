@@ -4,27 +4,29 @@ import PropTypes from "prop-types";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 //Redux Imports
 import { connect } from "react-redux";
+import * as actions from "./store/actions/index";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Badge from '@material-ui/core/Badge';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import MoreIcon from '@material-ui/icons/MoreVert';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import FolderIcon from '@material-ui/icons/Folder';
+import RestoreIcon from '@material-ui/icons/Restore';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 //component Imports
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import "./App.css";
 import loader from "./assets/loaders/educoin(B).gif";
+import Topbar from "./components/UI/Topbar/Topbar";
+import SideList from './components/UI/SideList/SideList'
 
 const asyncAuth = asyncComponent(() => {
   return import("./containers/Auth/Auth");
@@ -33,70 +35,52 @@ const asyncDashboard = asyncComponent(() => {
   return import("./containers/Dashboard/Dashboard");
 });
 
-function ElevationScroll(props) {
-  const { children } = props;
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0
-  });
-
-  return React.cloneElement(children, {
-    elevation: trigger ? 4 : 0
-  });
-}
-
-ElevationScroll.propTypes = {
-  children: PropTypes.element.isRequired
-};
-
 const useStyles = makeStyles(theme => ({
-  grow: {
-    flexGrow: 1
+  topbar: {
+    [theme.breakpoints.up("md")]: {
+      margin: "unset"
+    },
+    [theme.breakpoints.down("md")]: {
+      marginTop: "5px",
+      marginBottom: "5px"
+    }
   },
-  menuButton: {
-    marginRight: theme.spacing(2)
+  topbarSpace: {
+    [theme.breakpoints.up("md")]: {
+      height: "64px"
+    },
+    [theme.breakpoints.down("md")]: {
+      height: "74px"
+    }
   },
-  title: {
-    display: "none",
+  bottomNav: {
     [theme.breakpoints.up("sm")]: {
-      display: "block"
+      display: 'none'
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: '100%',
+      position: 'fixed',
+      bottom: '0',
     }
   },
-  inputRoot: {
-    color: "inherit"
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 7),
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: 200
+  container: {
+    [theme.breakpoints.up("sm")]: {
+      marginBottom: '0px !important'
+    },
+    [theme.breakpoints.down("sm")]: {
+      marginBottom: '56px'
     }
   },
-  sectionDesktop: {
-    display: "none",
-    [theme.breakpoints.up("md")]: {
-      display: "flex"
-    }
-  },
-  sectionMobile: {
-    display: "flex",
-    [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  }
 }));
 
 function App(props) {
+  const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
+
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
   //Checks if DOM is ready to un mount loading icon
   const [domReady, setDomReady] = useState(false);
+
+  const [drawerOpen, setdrawerOpen] = useState(false);
 
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
@@ -107,71 +91,26 @@ function App(props) {
     };
   }, []);
 
-  const handleProfileMenuOpen = event => {
-    setAnchorEl(event.currentTarget);
+  const toggleDrawer = (open) => {
+    setdrawerOpen(open);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+  const [bottomBarSelect, setbottomBarSelect] = useState('recents');
+
+  const handleBottomBarChange = (event, newValue) => {
+    setbottomBarSelect(newValue);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = event => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+  //Title Checker
+  let title = null
+  switch (props.location.pathname) {
+    case "/home":
+      title = `Hi, ${props.name}`
+      break;
+  
+    default:
+      break;
+  }
 
   let loadingDom = (
     <div className="App">
@@ -211,57 +150,28 @@ function App(props) {
         <CssBaseline />
         <ElevationScroll {...props}>
           <AppBar>
-            <Toolbar>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="open drawer"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography className={classes.title} variant="h6" noWrap>
-                Material-UI
-              </Typography>
-              <div className={classes.grow} />
-              <div className={classes.sectionDesktop}>
-                <IconButton
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                >
-                  <Badge badgeContent={17} color="secondary">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="account of current user"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-              </div>
-              <div className={classes.sectionMobile}>
-                <IconButton
-                  aria-label="show more"
-                  aria-controls={mobileMenuId}
-                  aria-haspopup="true"
-                  onClick={handleMobileMenuOpen}
-                  color="inherit"
-                >
-                  <MoreIcon />
-                </IconButton>
-              </div>
-              {renderMobileMenu}
-              {renderMenu}
+            <Toolbar className={classes.topbar}>
+              <Topbar
+                initials={props.initials}
+                logout={props.logout}
+                toggleDrawer={toggleDrawer}
+                drawerState={drawerOpen}
+                title={title}
+              />
             </Toolbar>
           </AppBar>
         </ElevationScroll>
-        <Toolbar />
-        <Container>
+        <SwipeableDrawer
+          disableBackdropTransition={!iOS}
+          disableDiscovery={iOS}
+          open={drawerOpen}
+          onClose={() => {toggleDrawer(false)}}
+          onOpen={() => {toggleDrawer(true)}}
+        >
+          <SideList toggleDrawer={toggleDrawer} />
+        </SwipeableDrawer>
+        <Toolbar className={classes.topbarSpace} />
+        <Container className={classes.container}>
           {routes}
           <Box my={2}>
             {[...new Array(12)]
@@ -274,6 +184,12 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
               .join("\n")}
           </Box>
         </Container>
+        <BottomNavigation className={classes.bottomNav} value={bottomBarSelect} onChange={handleBottomBarChange}>
+          <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} />
+          <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
+          <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOnIcon />} />
+          <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
+        </BottomNavigation>        
       </React.Fragment>
     );
   }
@@ -281,14 +197,38 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
   return <React.Fragment>{domReady ? app : loadingDom}</React.Fragment>;
 }
 
+function ElevationScroll(props) {
+  const { children } = props;
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0
+  });
+
+  return React.cloneElement(children, {
+    elevation: trigger ? 4 : 0
+  });
+}
+
+ElevationScroll.propTypes = {
+  children: PropTypes.element.isRequired
+};
+
 const mapStateToProps = state => {
   return {
     isAuthenticated:
       state.firebase.auth.uid &&
       !state.auth.newUser &&
       !state.auth.isGoogleSignUp &&
-      state.auth.isPhoneLinkSucces
+      state.auth.isPhoneLinkSucces,
+      initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
+      name: (state.firebase.profile.displayName)?state.firebase.profile.displayName:null
   };
 };
 
-export default withRouter(connect(mapStateToProps)(App));
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => dispatch(actions.authLogout())
+  };
+};
+
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App));
