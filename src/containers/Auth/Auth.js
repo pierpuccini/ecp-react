@@ -246,11 +246,12 @@ const Auth = props => {
     window.location.reload();
   };
 
+  /* TODO: In case that dashboard looks opaque, turn on reload for phone auth done */
   let authRedirect = null;
   if (props.authenticated) {
     if (props.phoneAuthDone) {
       props.history.replace("/home?login-method=phone");
-      window.location.reload();
+      // window.location.reload();
     } else {
       authRedirect = <Redirect to="/home" />;
     }
@@ -350,7 +351,7 @@ const mapStateToProps = state => {
     savedGoogleInfo: state.auth.savedGoogleInfo,
     googleSignUp: state.auth.isGoogleSignUp,
     googleSignUpInfo: state.auth.googleSignUpInfo,
-    phoneAuthDone: state.auth.phoneLoginDone,
+    phoneAuthDone: state.auth.phoneAuthDone,
     phoneLoginFailed: state.auth.createPhoneUser,
     phoneAuthStarted: state.auth.phoneAuthStarted,
     loading: state.auth.loading,

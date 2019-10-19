@@ -29,7 +29,7 @@ const Dashboard = props => {
     setTimeout(() => {
       props.history.replace('/home')
       phoneLogin = false;
-      document.getElementById("Dashboard").click();
+      document.getElementById("root").click();
     }, 1500);
   }
 
@@ -40,7 +40,7 @@ const Dashboard = props => {
   );
   
   const dashboard = (
-    <div id="Dashboard">
+    <div>
       <p>Loged In</p>
       <Button
         className={matClasses.button}
