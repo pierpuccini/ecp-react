@@ -14,6 +14,13 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import FolderIcon from '@material-ui/icons/Folder';
+import RestoreIcon from '@material-ui/icons/Restore';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 //component Imports
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import "./App.css";
@@ -45,7 +52,25 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("md")]: {
       height: "74px"
     }
-  }
+  },
+  bottomNav: {
+    [theme.breakpoints.up("sm")]: {
+      display: 'none'
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: '100%',
+      position: 'fixed',
+      bottom: '0',
+    }
+  },
+  container: {
+    [theme.breakpoints.up("sm")]: {
+      marginBottom: '0px !important'
+    },
+    [theme.breakpoints.down("sm")]: {
+      marginBottom: '56px'
+    }
+  },
 }));
 
 function App(props) {
@@ -68,6 +93,12 @@ function App(props) {
 
   const toggleDrawer = (open) => {
     setdrawerOpen(open);
+  };
+
+  const [bottomBarSelect, setbottomBarSelect] = useState('recents');
+
+  const handleBottomBarChange = (event, newValue) => {
+    setbottomBarSelect(newValue);
   };
 
   //Title Checker
@@ -140,7 +171,7 @@ function App(props) {
           <SideList toggleDrawer={toggleDrawer} />
         </SwipeableDrawer>
         <Toolbar className={classes.topbarSpace} />
-        <Container>
+        <Container className={classes.container}>
           {routes}
           <Box my={2}>
             {[...new Array(12)]
@@ -153,6 +184,12 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
               .join("\n")}
           </Box>
         </Container>
+        <BottomNavigation className={classes.bottomNav} value={bottomBarSelect} onChange={handleBottomBarChange}>
+          <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} />
+          <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
+          <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOnIcon />} />
+          <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
+        </BottomNavigation>        
       </React.Fragment>
     );
   }
