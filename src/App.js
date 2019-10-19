@@ -34,22 +34,6 @@ const asyncDashboard = asyncComponent(() => {
   return import("./containers/Dashboard/Dashboard");
 });
 
-function ElevationScroll(props) {
-  const { children } = props;
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 0
-  });
-
-  return React.cloneElement(children, {
-    elevation: trigger ? 4 : 0
-  });
-}
-
-ElevationScroll.propTypes = {
-  children: PropTypes.element.isRequired
-};
-
 const useStyles = makeStyles(theme => ({
   topbar: {
     [theme.breakpoints.up("md")]: {
@@ -91,6 +75,17 @@ function App(props) {
   const toggleDrawer = (open) => {
     setdrawerOpen(open);
   };
+
+  //Title Checker
+  let title = null
+  switch (props.location.pathname) {
+    case "/home":
+      title = `Hi, ${props.name}`
+      break;
+  
+    default:
+      break;
+  }
 
   /* TODO: Use my own list */
   const sideList = () => (
@@ -164,6 +159,7 @@ function App(props) {
                 logout={props.logout}
                 toggleDrawer={toggleDrawer}
                 drawerState={drawerOpen}
+                title={title}
               />
             </Toolbar>
           </AppBar>
@@ -198,6 +194,22 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
   return <React.Fragment>{domReady ? app : loadingDom}</React.Fragment>;
 }
 
+function ElevationScroll(props) {
+  const { children } = props;
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0
+  });
+
+  return React.cloneElement(children, {
+    elevation: trigger ? 4 : 0
+  });
+}
+
+ElevationScroll.propTypes = {
+  children: PropTypes.element.isRequired
+};
+
 const mapStateToProps = state => {
   return {
     isAuthenticated:
@@ -206,6 +218,7 @@ const mapStateToProps = state => {
       !state.auth.isGoogleSignUp &&
       state.auth.isPhoneLinkSucces,
       initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
+      name: (state.firebase.profile.displayName)?state.firebase.profile.displayName:null
   };
 };
 

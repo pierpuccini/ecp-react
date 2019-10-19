@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
   title: {
     display: "none",
     [theme.breakpoints.up("sm")]: {
-      display: "block"
+      display: "block",
+      textTransform: 'capitalize'
     }
   },
   inputRoot: {
@@ -147,7 +148,7 @@ const Topbar = props => {
         <MenuIcon />
       </IconButton>
       <Typography className={classes.title} variant="h6" noWrap>
-        Material-UI
+        {props.title}
       </Typography>
       <div className={classes.grow} />
       <div className={classes.sectionDesktop}>
@@ -170,6 +171,7 @@ const Topbar = props => {
         </IconButton>
       </div>
       <div className={classes.sectionMobile}>
+
         <IconButton
           aria-label="show more"
           aria-controls={mobileMenuId}
