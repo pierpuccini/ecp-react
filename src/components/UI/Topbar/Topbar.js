@@ -142,6 +142,7 @@ const Topbar = props => {
         className={classes.menuButton}
         color="inherit"
         aria-label="open drawer"
+        onClick={()=>{props.toggleDrawer(!props.drawerState)}}
       >
         <MenuIcon />
       </IconButton>
