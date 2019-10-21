@@ -168,7 +168,7 @@ function App(props) {
     app = (
       <React.Fragment>
         <CssBaseline />
-        <ElevationScroll {...props}>
+        <ElevationScroll id="header" {...props}>
           <AppBar>
             <Toolbar className={classes.topbar}>
               <Topbar
@@ -183,11 +183,11 @@ function App(props) {
           </AppBar>
         </ElevationScroll>
         {(props.newUser)? null : swipeDrawer}
-        <Toolbar className={classes.topbarSpace} />
-        <Container className={classes.container}>
+        <Toolbar id="header" className={classes.topbarSpace} />
+        <Container id="content" className={classes.container}>
           {routes}
         </Container>
-        <BottomNavigation className={classes.bottomNav} value={bottomBarSelect} onChange={handleBottomBarChange}>
+        <BottomNavigation id="footer" className={classes.bottomNav} value={bottomBarSelect} onChange={handleBottomBarChange}>
           <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} />
           <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
           <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOnIcon />} />
