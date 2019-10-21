@@ -6,30 +6,18 @@ const initialState = {
   loading: false,
   authRedirectPath: "/home",
   success: false,
-  smsSent: false,
-  captcha: null,
-  confirmCode: null,
-  resetCaptcha: false,
   newUser: false,
-  verifingSMS: false,
-  isGoogleSignUp: false,
-  googleSignUpInfo: null,
-  savedGoogleInfo: false,
   logout: false
 }
 
 const signUpStart = (state, action) => {
-  return updateObject(state, { error: null, loading: true, success: false, isGoogleSignUp: action.isGoogleSignUp, logout: false });
+  return updateObject(state, { error: null, loading: true, success: false, logout: false });
 };
-
 
 const signUpSuccess = (state, action) => {
   return updateObject(state, {
     error: null,
     loading: false,
-    isGoogleSignUp: action.isGoogleSignUp,
-    googleSignUpInfo: updateObject(state.googleSignUpInfo, {...action.googleSignUpInfo}),
-    savedGoogleInfo: action.savedGoogleInfo,
     newUser: false
   });
 };
@@ -37,8 +25,7 @@ const signUpSuccess = (state, action) => {
 const signUpFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
-    loading: false,
-    isGoogleSignUp: action.isGoogleSignUp
+    loading: false
   });
 };
 
@@ -60,7 +47,7 @@ const authSuccess = (state, action) => {
 };
 
 const authFail = (state, action) => {
-  return updateObject(state, { error: action.error, loading: action.loading, success: false });
+  return updateObject(state, { error: action.error, loading: action.loading, success: false, newUser: action.newUser });
 };
 
 const passwordResetSuccess = (state) => {

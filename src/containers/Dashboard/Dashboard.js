@@ -22,16 +22,6 @@ import loader from "../../assets/loaders/educoin(B).gif";
 const Dashboard = props => {
   // const matClasses = useStyles();
 
-  let phoneLogin = false;
-  if (props.location.search.includes("login-method=phone")) {
-    phoneLogin = true;
-    setTimeout(() => {
-      props.history.replace('/home')
-      phoneLogin = false;
-      document.getElementById("root").click();
-    }, 1500);
-  }
-
   const loadingGIF = (
     <div className="App">
       <img src={loader} alt="loading..." />
@@ -46,7 +36,7 @@ const Dashboard = props => {
 
   return (
     <div>
-      {phoneLogin ? loadingGIF : dashboard}
+      {dashboard}
     </div>
   );
 };
