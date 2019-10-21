@@ -103,21 +103,6 @@ function App(props) {
     setbottomBarSelect(newValue);
   };
 
-  //Title Checker
-  let title = null
-  switch (props.location.pathname) {
-    case "/home":
-      title = `Welcome Back, ${props.name}`
-      break;
-  
-    case "/onboarding":
-      title = `Welcome ${props.name.split(' ')[0]}`
-      break;
-  
-    default:
-      title = 'Edu Coins'
-      break;
-  }
 
   let loadingDom = (
     <div className="App">
@@ -125,11 +110,29 @@ function App(props) {
     </div>
   );
 
-  let redirect = <Redirect to="/" />;
-  let app = null;
-  let routes = null;
+  let routes, redirect, app
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
+    //Title Checker
+    let title = null;
+    switch (props.location.pathname) {
+      case "/home":
+        title = `Welcome Back, ${props.name}`;
+        break;
+
+      case "/onboarding":
+        title = `Welcome ${props.name.split(" ")[0]}`;
+        break;
+
+      default:
+        title = "Edu Coins";
+        break;
+    }
+    app = (
+      <div className="App">
+        <img src={loader} alt="loading..." />
+      </div>
+    );
     props.profileLoaded && props.newUser === ""
       ? (redirect = <Redirect to="/onboarding" />)
       : (redirect = <Redirect to="/home" />);
@@ -159,6 +162,7 @@ function App(props) {
     /* Top bar title is handled in switch statment above */
     app = (
       <React.Fragment>
+        {redirect}
         <CssBaseline />
         <ElevationScroll id="header" {...props}>
           <AppBar>
@@ -209,19 +213,27 @@ function App(props) {
       </React.Fragment>
     );
   } /* Routes for non-authenticated users */ else {
-    redirect = <Redirect to="/login" />;
+    let urlPath = props.location.pathname;
+    urlPath !== "/login" &&
+    urlPath !== "/sign-up" &&
+    urlPath !== "/forgot-login"
+      ? (redirect = <Redirect to="/login" />)
+      : (redirect = null);
+
     app = (
       <div className="App">
         <Switch>
+          {redirect}
           <Route path="/login" component={asyncAuth} />
           <Route path="/sign-up" component={asyncAuth} />
           <Route path="/forgot-login" component={asyncAuth} />
+          <Redirect to="/login" />
         </Switch>
       </div>
     );
   }
 
-  return <React.Fragment>{redirect}{(domReady && props.profileLoaded) ? app : loadingDom}</React.Fragment>;
+  return <React.Fragment>{(domReady && props.profileLoaded) ? app : loadingDom}</React.Fragment>;
 }
 
 function ElevationScroll(props) {
