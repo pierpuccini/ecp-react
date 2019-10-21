@@ -258,7 +258,6 @@ const mapStateToProps = state => {
       state.firebase.auth.uid &&
       !state.auth.newUser &&
       !state.auth.isGoogleSignUp &&
-      state.auth.isPhoneLinkSucces && 
       !state.auth.logout,
       profileLoaded: state.firebase.profile.isLoaded,
       initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
