@@ -125,29 +125,21 @@ function App(props) {
     </div>
   );
 
-  /* Routes for non-authenticated users */
-  let redirect = <Redirect to="/login" />;
-  let app = (
-    <div className="App">
-      {/* redirect */}
-      <Switch>
-        <Route path="/login" component={asyncAuth} />
-        <Route path="/sign-up" component={asyncAuth} />
-        <Route path="/forgot-login" component={asyncAuth} />
-      </Switch>
-    </div>
-  );
+  let redirect = <Redirect to="/" />;
+  let app = null;
   let routes = null;
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
-    (props.profileLoaded && props.newUser === '')? redirect = <Redirect to="/onboarding" /> : redirect = <Redirect to="/home" />
+    props.profileLoaded && props.newUser === ""
+      ? (redirect = <Redirect to="/onboarding" />)
+      : (redirect = <Redirect to="/home" />);
     routes = (
       <Switch>
-        <Route path="/onboarding" component={asyncUsers}/>
-        <Route path="/home" component={asyncDashboard}/>    
+        <Route path="/onboarding" component={asyncUsers} />
+        <Route path="/home" component={asyncDashboard} />
       </Switch>
     );
-    
+
     let swipeDrawer = (
       <SwipeableDrawer
         disableBackdropTransition={!iOS}
@@ -177,23 +169,55 @@ function App(props) {
                 toggleDrawer={toggleDrawer}
                 drawerState={drawerOpen}
                 title={title}
-                newUser={props.newUser === ''}
+                newUser={props.newUser === ""}
               />
             </Toolbar>
           </AppBar>
         </ElevationScroll>
-        {(props.newUser)? null : swipeDrawer}
+        {props.newUser ? null : swipeDrawer}
         <Toolbar id="header" className={classes.topbarSpace} />
         <Container id="content" className={classes.container}>
           {routes}
         </Container>
-        <BottomNavigation id="footer" className={classes.bottomNav} value={bottomBarSelect} onChange={handleBottomBarChange}>
-          <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} />
-          <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
-          <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOnIcon />} />
-          <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
-        </BottomNavigation>        
+        <BottomNavigation
+          id="footer"
+          className={classes.bottomNav}
+          value={bottomBarSelect}
+          onChange={handleBottomBarChange}
+        >
+          <BottomNavigationAction
+            label="Recents"
+            value="recents"
+            icon={<RestoreIcon />}
+          />
+          <BottomNavigationAction
+            label="Favorites"
+            value="favorites"
+            icon={<FavoriteIcon />}
+          />
+          <BottomNavigationAction
+            label="Nearby"
+            value="nearby"
+            icon={<LocationOnIcon />}
+          />
+          <BottomNavigationAction
+            label="Folder"
+            value="folder"
+            icon={<FolderIcon />}
+          />
+        </BottomNavigation>
       </React.Fragment>
+    );
+  } /* Routes for non-authenticated users */ else {
+    redirect = <Redirect to="/login" />;
+    app = (
+      <div className="App">
+        <Switch>
+          <Route path="/login" component={asyncAuth} />
+          <Route path="/sign-up" component={asyncAuth} />
+          <Route path="/forgot-login" component={asyncAuth} />
+        </Switch>
+      </div>
     );
   }
 
@@ -222,7 +246,8 @@ const mapStateToProps = state => {
       state.firebase.auth.uid &&
       !state.auth.newUser &&
       !state.auth.isGoogleSignUp &&
-      state.auth.isPhoneLinkSucces,
+      state.auth.isPhoneLinkSucces && 
+      !state.auth.logout,
       profileLoaded: state.firebase.profile.isLoaded,
       initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
       name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:' ',

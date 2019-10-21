@@ -18,11 +18,12 @@ const initialState = {
   isGoogleSignUp: false,
   googleSignUpInfo: null,
   savedGoogleInfo: false,
-  isPhoneLinkSucces: true
+  isPhoneLinkSucces: true,
+  logout: false
 }
 
 const signUpStart = (state, action) => {
-  return updateObject(state, { error: null, loading: true, success: false, isGoogleSignUp: action.isGoogleSignUp });
+  return updateObject(state, { error: null, loading: true, success: false, isGoogleSignUp: action.isGoogleSignUp, logout: false });
 };
 
 const signUpPhoneLinkSuccess = (state, action) => {
@@ -64,7 +65,8 @@ const phoneAuthStart = (state, action) => {
     loading: true,
     success: false,
     phoneAuthStarted: action.phoneAuthStarted,
-    verifingSMS: action.verifingSMS   
+    verifingSMS: action.verifingSMS,
+    logout: false   
   });
 };
 
@@ -111,7 +113,8 @@ const authStart = state => {
     loading: true,
     success: false,
     createPhoneUser: updateObject(state.createPhoneUser, { error: false }),
-    phoneAuthDone: false
+    phoneAuthDone: false,
+    logout: false
   });
 };
 
@@ -154,7 +157,8 @@ const authLogout = (state, action) => {
     resetCaptcha: false,
     newUser: newUser,
     loading: action.loading,
-    createPhoneUser: updateObject(state.createPhoneUser, { ...action.createPhoneUser})
+    createPhoneUser: updateObject(state.createPhoneUser, { ...action.createPhoneUser}),
+    logout: true
   });
 };
 
