@@ -36,3 +36,7 @@ code {
 #primary-search-account-menu .MuiMenu-list{
   width: 180px;
 }
+
+.MuiMenu-list{
+  text-transform: capitalize;
+}

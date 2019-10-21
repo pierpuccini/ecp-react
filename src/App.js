@@ -125,18 +125,18 @@ function App(props) {
   );
 
   /* Routes for non-authenticated users */
+  let redirect = <Redirect to="/login" />;
   let app = (
     <div className="App">
+      {/* redirect */}
       <Switch>
         <Route path="/login" component={asyncAuth} />
         <Route path="/sign-up" component={asyncAuth} />
         <Route path="/forgot-login" component={asyncAuth} />
-        <Redirect to="/login" />
       </Switch>
     </div>
   );
   let routes = null;
-  let redirect = null;
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
     (props.profileLoaded && props.newUser === '')? redirect = <Redirect to="/onboarding" /> : redirect = <Redirect to="/home" />
@@ -184,7 +184,6 @@ function App(props) {
         {(props.newUser)? null : swipeDrawer}
         <Toolbar className={classes.topbarSpace} />
         <Container className={classes.container}>
-          {redirect}
           {routes}
         </Container>
         <BottomNavigation className={classes.bottomNav} value={bottomBarSelect} onChange={handleBottomBarChange}>
@@ -197,7 +196,7 @@ function App(props) {
     );
   }
 
-  return <React.Fragment>{(domReady && props.profileLoaded) ? app : loadingDom}</React.Fragment>;
+  return <React.Fragment>{redirect}{(domReady && props.profileLoaded) ? app : loadingDom}</React.Fragment>;
 }
 
 function ElevationScroll(props) {

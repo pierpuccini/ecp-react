@@ -10,25 +10,6 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 
-const currencies = [
-  {
-    value: "USD",
-    label: "$"
-  },
-  {
-    value: "EUR",
-    label: "€"
-  },
-  {
-    value: "BTC",
-    label: "฿"
-  },
-  {
-    value: "JPY",
-    label: "¥"
-  }
-];
-
 const useStyles = makeStyles(theme => ({
   container: {
     display: "flex",
@@ -60,12 +41,22 @@ const useStyles = makeStyles(theme => ({
   dense: {
     marginTop: theme.spacing(2)
   },
-  MuiMenuList:{
-    width:'auto !important'
+  MuiMenuList: {
+    width: "auto !important"
   }
 }));
 
-const Onboarding = () => {
+const Onboarding = props => {
+  let { clients } = props;
+  console.log("clients from onboarding component", clients);
+  
+  clients.sort((a, b) => {
+    var textA = a.value.toUpperCase();
+    var textB = b.value.toUpperCase();
+    return textA < textB ? -1 : textA > textB ? 1 : 0;
+  });
+
+  console.log("clients from onboarding component sorted", clients);
   const matClasses = useStyles();
   return (
     <Container className={matClasses.loginContainer}>
@@ -82,13 +73,13 @@ const Onboarding = () => {
             variant="outlined"
             required
           >
-            {currencies.map(option => (
+            {clients.map(option => (
               <MenuItem
                 className={matClasses.MuiMenuList}
-                key={option.value}
+                key={option.id}
                 value={option.value}
               >
-                {option.label}
+                {option.value}
               </MenuItem>
             ))}
           </TextField>
