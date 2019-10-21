@@ -53,22 +53,22 @@ const Users = (props) => {
     setOnboardingForm(updatedControls);
   };
 
-  // if (isLoaded(clients)) {
+  if (!isLoaded(clients)) {
     return (
       <div className="App">
         <img src={loader} alt="loading..." />
       </div>
     );
-  // };
-  // return (
-  //   <React.Fragment>
-  //     <Onboarding
-  //       clients={clients}
-  //       OnboardingForm={OnboardingForm}
-  //       OnboardingFormChanged={OnboardingFormHandler}
-  //     />
-  //   </React.Fragment>
-  // );
+  };
+  return (
+    <React.Fragment>
+      <Onboarding
+        clients={clients}
+        OnboardingForm={OnboardingForm}
+        OnboardingFormChanged={OnboardingFormHandler}
+      />
+    </React.Fragment>
+  );
 };
 
 const mapStateToProps = state => {
