@@ -11,10 +11,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import FolderIcon from '@material-ui/icons/Folder';
@@ -33,6 +31,9 @@ const asyncAuth = asyncComponent(() => {
 });
 const asyncDashboard = asyncComponent(() => {
   return import("./containers/Dashboard/Dashboard");
+});
+const asyncUsers = asyncComponent(() => {
+  return import("./containers/Users/Users");
 });
 
 const useStyles = makeStyles(theme => ({
@@ -64,6 +65,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   container: {
+    height: '85%',
     [theme.breakpoints.up("sm")]: {
       marginBottom: '0px !important'
     },
@@ -105,10 +107,15 @@ function App(props) {
   let title = null
   switch (props.location.pathname) {
     case "/home":
-      title = `Hi, ${props.name}`
+      title = `Welcome Back, ${props.name}`
+      break;
+  
+    case "/onboarding":
+      title = `Welcome ${props.name.split(' ')[0]}`
       break;
   
     default:
+      title = 'Edu Coins'
       break;
   }
 
@@ -118,37 +125,42 @@ function App(props) {
     </div>
   );
 
-  /* Routes for non-authenticated users */
-  let app = (
-    <div className="App">
-      <Switch>
-        <Route path="/login" component={asyncAuth} />
-        <Route path="/sign-up" component={asyncAuth} />
-        <Route path="/forgot-login" component={asyncAuth} />
-        <Redirect to="/login" />
-      </Switch>
-    </div>
-  );
+  let redirect = <Redirect to="/" />;
+  let app = null;
   let routes = null;
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
+    props.profileLoaded && props.newUser === ""
+      ? (redirect = <Redirect to="/onboarding" />)
+      : (redirect = <Redirect to="/home" />);
     routes = (
       <Switch>
-        <Route path="/login" component={asyncAuth} />
-        <Route path="/forgot-login" component={asyncAuth} />
-        <Route path="/sign-up" component={asyncAuth} />
-        <Route
-          to={`${process.env.PUBLIC_URL}/home`}
-          component={asyncDashboard}
-        />
-        <Redirect to={`${process.env.PUBLIC_URL}/home`} />
+        <Route path="/onboarding" component={asyncUsers} />
+        <Route path="/home" component={asyncDashboard} />
       </Switch>
     );
 
+    let swipeDrawer = (
+      <SwipeableDrawer
+        disableBackdropTransition={!iOS}
+        disableDiscovery={iOS}
+        open={drawerOpen}
+        onClose={() => {
+          toggleDrawer(false);
+        }}
+        onOpen={() => {
+          toggleDrawer(true);
+        }}
+      >
+        <SideList toggleDrawer={toggleDrawer} />
+      </SwipeableDrawer>
+    );
+
+    /* Top bar title is handled in switch statment above */
     app = (
       <React.Fragment>
         <CssBaseline />
-        <ElevationScroll {...props}>
+        <ElevationScroll id="header" {...props}>
           <AppBar>
             <Toolbar className={classes.topbar}>
               <Topbar
@@ -157,44 +169,59 @@ function App(props) {
                 toggleDrawer={toggleDrawer}
                 drawerState={drawerOpen}
                 title={title}
+                newUser={props.newUser === ""}
               />
             </Toolbar>
           </AppBar>
         </ElevationScroll>
-        <SwipeableDrawer
-          disableBackdropTransition={!iOS}
-          disableDiscovery={iOS}
-          open={drawerOpen}
-          onClose={() => {toggleDrawer(false)}}
-          onOpen={() => {toggleDrawer(true)}}
-        >
-          <SideList toggleDrawer={toggleDrawer} />
-        </SwipeableDrawer>
-        <Toolbar className={classes.topbarSpace} />
-        <Container className={classes.container}>
+        {props.newUser ? null : swipeDrawer}
+        <Toolbar id="header" className={classes.topbarSpace} />
+        <Container id="content" className={classes.container}>
           {routes}
-          <Box my={2}>
-            {[...new Array(12)]
-              .map(
-                () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-              )
-              .join("\n")}
-          </Box>
         </Container>
-        <BottomNavigation className={classes.bottomNav} value={bottomBarSelect} onChange={handleBottomBarChange}>
-          <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} />
-          <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
-          <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOnIcon />} />
-          <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
-        </BottomNavigation>        
+        <BottomNavigation
+          id="footer"
+          className={classes.bottomNav}
+          value={bottomBarSelect}
+          onChange={handleBottomBarChange}
+        >
+          <BottomNavigationAction
+            label="Recents"
+            value="recents"
+            icon={<RestoreIcon />}
+          />
+          <BottomNavigationAction
+            label="Favorites"
+            value="favorites"
+            icon={<FavoriteIcon />}
+          />
+          <BottomNavigationAction
+            label="Nearby"
+            value="nearby"
+            icon={<LocationOnIcon />}
+          />
+          <BottomNavigationAction
+            label="Folder"
+            value="folder"
+            icon={<FolderIcon />}
+          />
+        </BottomNavigation>
       </React.Fragment>
+    );
+  } /* Routes for non-authenticated users */ else {
+    redirect = <Redirect to="/login" />;
+    app = (
+      <div className="App">
+        <Switch>
+          <Route path="/login" component={asyncAuth} />
+          <Route path="/sign-up" component={asyncAuth} />
+          <Route path="/forgot-login" component={asyncAuth} />
+        </Switch>
+      </div>
     );
   }
 
-  return <React.Fragment>{domReady ? app : loadingDom}</React.Fragment>;
+  return <React.Fragment>{redirect}{(domReady && props.profileLoaded) ? app : loadingDom}</React.Fragment>;
 }
 
 function ElevationScroll(props) {
@@ -219,9 +246,12 @@ const mapStateToProps = state => {
       state.firebase.auth.uid &&
       !state.auth.newUser &&
       !state.auth.isGoogleSignUp &&
-      state.auth.isPhoneLinkSucces,
+      state.auth.isPhoneLinkSucces && 
+      !state.auth.logout,
+      profileLoaded: state.firebase.profile.isLoaded,
       initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
-      name: (state.firebase.profile.displayName)?state.firebase.profile.displayName:null
+      name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:' ',
+      newUser: (state.firebase.profile.isLoaded)?state.firebase.profile.studentId: false
   };
 };
 

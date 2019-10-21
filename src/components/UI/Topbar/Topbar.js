@@ -136,6 +136,7 @@ const Topbar = props => {
       </MenuItem>
     </Menu>
   );
+  
   return (
     <React.Fragment>
       <IconButton
@@ -143,6 +144,7 @@ const Topbar = props => {
         className={classes.menuButton}
         color="inherit"
         aria-label="open drawer"
+        disabled={props.newUser}
         onClick={()=>{props.toggleDrawer(!props.drawerState)}}
       >
         <MenuIcon />
