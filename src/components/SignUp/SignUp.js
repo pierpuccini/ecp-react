@@ -1,7 +1,6 @@
 //React Imports
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import PropTypes from "prop-types";
 //MaterialUI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
@@ -17,62 +16,14 @@ import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
-import Collapse from '@material-ui/core/Collapse';
 //App Imports
 import classes from "./SignUp.module.scss";
 import gIcon from "../../assets/svg/search.svg";
 import coinIcon from "../../assets/icons/educoin.ico";
-import NumberFormat from "react-number-format";
 
 const backToLogin = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
 ));
-
-const NumberFormatCustom = props => {
-  const { inputRef, onChange, ...other } = props;
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={values => {
-        onChange({
-          target: {
-            value: values.value
-          }
-        });
-      }}
-      format="+57 (###) ###-####"
-    />
-  );
-};
-
-NumberFormatCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired
-};
-
-const NumberFormatPhoneCode = props => {
-  const { inputRef, onChange, ...other } = props;
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={values => {
-        onChange({
-          target: {
-            value: values.value
-          }
-        });
-      }}
-      format="#-#-#-#-#-#"
-    />
-  );
-};
-
-NumberFormatPhoneCode.propTypes = {
-  inputRef: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired
-};
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {
@@ -126,17 +77,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const smsField = makeStyles(theme => ({
-  textFieldOn: {
-    borderColor: "green !important"
-  },
-  textFieldOff: {}
-}));
-
-
 const SignUp = props => {
   const matClasses = useStyles();  
-  const smsFieldInput = smsField();  
   return (
     <Container maxWidth="sm" className={classes.signUpContainer}>
       <Paper className={matClasses.paper}>
@@ -270,89 +212,6 @@ const SignUp = props => {
                 )
               }}
             />
-            <TextField
-              className={matClasses.textField}
-              label="Phone Number"
-              placeholder="+57 (000) 000-0000"
-              type="tel"
-              value={props.authSignUpForm.phoneNumber.value}
-              onChange={event =>
-                props.inputChangedHandler(event, "phoneNumber")
-              }
-              margin="normal"
-              variant="outlined"
-              required
-              error={
-                !props.authSignUpForm.phoneNumber.valid &&
-                props.authSignUpForm.phoneNumber.touched
-              }
-              helperText={
-                !props.authSignUpForm.phoneNumber.valid &&
-                props.authSignUpForm.phoneNumber.touched
-                  ? "Please Enter a valid Phone Number"
-                  : null
-              }
-              InputProps={{
-                inputComponent: NumberFormatCustom,
-                endAdornment: (
-                  <InputAdornment>
-                    <div
-                      onClick={event =>
-                        props.submitHandler(event, "phoneNumber")
-                      }
-                    >
-                      <Button
-                        id="sign-up-phone"
-                        style={{ fontSize: "smaller", color: "#757575" }}
-                        disabled={!props.authSignUpForm.phoneNumber.valid}
-                        className={
-                          props.authSignUpForm.phoneNumber.valid
-                            ? classes.sendSMSOn
-                            : classes.sendSMSOff
-                        }
-                      >
-                        Send SMS
-                      </Button>
-                    </div>
-                  </InputAdornment>
-                )
-              }}
-            />
-            <Collapse in={props.authSignUpForm.phoneNumber.valid}>
-              <TextField
-                className={matClasses.textField}
-                style={{width: "-webkit-fill-available"}}
-                label="SMS Code"
-                placeholder="1-2-3-4-5-6"
-                type="tel"
-                value={props.authSignUpForm.verifCode.value}
-                onChange={event =>
-                  props.inputChangedHandler(event, "verifCode")
-                }
-                margin="normal"
-                variant="outlined"
-                required={props.smsSent}
-                disabled={!props.smsSent}
-                error={
-                  !props.authSignUpForm.verifCode.valid &&
-                  props.authSignUpForm.verifCode.touched
-                }
-                helperText={
-                  !props.authSignUpForm.verifCode.valid &&
-                  props.authSignUpForm.verifCode.touched
-                    ? "Please Enter a valid Code"
-                    : null
-                }
-                InputProps={{
-                  classes: {
-                    notchedOutline: props.smsSent
-                      ? smsFieldInput.textFieldOn
-                      : smsFieldInput.textFieldOff
-                  },
-                  inputComponent: NumberFormatPhoneCode
-                }}
-              />
-            </Collapse>
             <Button
               variant="contained"
               color="primary"
@@ -361,9 +220,7 @@ const SignUp = props => {
               disabled={
                 !props.authSignUpForm.fullName.valid ||
                 !props.authSignUpForm.email.valid ||
-                !props.authSignUpForm.password.valid ||
-                !props.authSignUpForm.phoneNumber.valid ||
-                !props.authSignUpForm.verifCode.valid
+                !props.authSignUpForm.password.valid
               }
             >
               SIGN UP!

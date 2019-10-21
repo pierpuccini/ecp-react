@@ -41,24 +41,6 @@ const Auth = props => {
       },
       valid: false,
       touched: false
-    },
-    phoneNumber: {
-      value: "",
-      validation: {
-        required: true,
-        phone: true,
-        minLength: 10
-      },
-      valid: false,
-      touched: false
-    },
-    verifCode: {
-      value: "",
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
     }
   });
   
@@ -89,56 +71,13 @@ const Auth = props => {
       },
       valid: false,
       touched: false
-    },
-    phoneNumber: {
-      value: "",
-      validation: {
-        required: true,
-        phone: true,
-        minLength: 10
-      },
-      valid: false,
-      touched: false
-    },
-    verifCode: {
-      value: "",
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
     }
   });
 
   //Toggle for showing Password
   const [showPassword, setShowPassword] = useState(false);
-  //Shows Phone Login Form
-  const [showPhoneLogin, setshowPhoneLogin] = useState(false);
 
   useEffect(() => {
-    let phoneFail = props.location.search.includes("phonefail=true");
-    let phoneRefresh = props.location.search.includes("phonerefresh=true");
-
-    if (phoneFail || phoneRefresh) {
-      setshowPhoneLogin(true);
-    }
-    if (props.authError) {
-      if (props.authError.code === "auth/invalid-verification-code") {
-        let removeVerifCode = {
-          ...signUpForm,
-          verifCode: {
-            value: "",
-            validation: {
-              required: true
-            },
-            valid: false,
-            touched: false
-          }
-        };
-        setSignUpForm(removeVerifCode);
-      }
-    }
-
     if (props.googleSignUp && props.googleSignUpInfo && !props.savedGoogleInfo) {
       const {fullName, email} = props.googleSignUpInfo
       const updateFromGoogle = {
@@ -208,8 +147,6 @@ const Auth = props => {
     let payload = {
       email: loginForm.email.value,
       password: loginForm.password.value,
-      phoneNumber: loginForm.phoneNumber.value,
-      verif: loginForm.verifCode.value
     };
     event.preventDefault();
     props.onAuth(payload, typeOfLogin);
@@ -221,8 +158,6 @@ const Auth = props => {
       fullName: signUpForm.fullName.value,
       password: signUpForm.password.value,
       email: signUpForm.email.value,
-      phoneNumber: signUpForm.phoneNumber.value,
-      verif: signUpForm.verifCode.value
     }
     props.onSignUp(payload, typeOfLogin);
   };
@@ -232,29 +167,13 @@ const Auth = props => {
     setShowPassword(showPasswordCopy);
   };
 
-  const togglePhoneFormHandler = () => {
-    let showPhoneCopy = !showPhoneLogin;
-    setshowPhoneLogin(showPhoneCopy);
-  };
-
   const clearErrors = () => {
     props.resetErrors()
   }
 
-  const resetPhoneLoginHandler = () => {
-    props.history.replace("/login?phonerefresh=true&phonefail=false");
-    window.location.reload();
-  };
-
-  /* TODO: In case that dashboard looks opaque, turn on reload for phone auth done */
   let authRedirect = null;
   if (props.authenticated) {
-    if (props.phoneAuthDone) {
-      props.history.replace("/home?login-method=phone");
-      // window.location.reload();
-    } else {
       authRedirect = <Redirect to="/home" />;
-    }
   }
 
   if (props.newUser) {
@@ -268,38 +187,6 @@ const Auth = props => {
     }, 1500);
   }
 
-  if (props.reloadOnPhoneAuthFail) {
-    props.history.replace(`/login?phonerefresh=false&phonefail=true&error=${props.authError.message}`)
-    window.location.reload();
-  }
-
-  let decodedError = {customErrorMsg: ''};
-  if (showPhoneLogin) {
-    let errorMsgEncoded = ''
-    let searchParams = props.location.search.replace('?','').split('&')
-    searchParams.forEach(searchParam => {
-      if(searchParam.includes('error')){
-        errorMsgEncoded = searchParam.split('=')
-        decodedError.customErrorMsg = decodeURI(errorMsgEncoded[1])
-      }
-    });
-  }
-
-  if (props.phoneLoginFailed.error) {
-    props.history.replace(`/sign-up?${props.phoneLoginFailed.url}+${props.phoneLoginFailed.message}`)
-    window.location.reload();
-  }
-
-  let urlErrorMessage = {message : ''};
-  let message = null;
-  let signInError = null;
-  if (props.location.search.includes('+')) {
-    message = props.location.search.split('+')
-    signInError = message[0].includes('phoneloginfailed=true')
-    message = message[1].replace('%20', ' ')
-    urlErrorMessage.message = message.replace('%20', ' ')
-  }
-
   const loadingGIF = (
     <div className="App">
       <img src={loader} alt="loading..." />
@@ -309,26 +196,21 @@ const Auth = props => {
   return (
     <React.Fragment>
       {authRedirect}
-      {(props.loading && !props.phoneAuthStarted)? loadingGIF : (props.location.pathname.match("/login") ||
+      {(props.loading)? loadingGIF : (props.location.pathname.match("/login") ||
       props.location.pathname.match("/forgot-login") ? (
         <Login
-          phoneAuthLoading={(props.loading && props.phoneAuthStarted)}
           loading={props.loading}
           authLoginForm={loginForm}
           inputChangedHandler={loginInputChangedHandler}
           submitHandler={submitLoginHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
-          toogleViewPhoneForm={showPhoneLogin}
-          togglePhoneFormHandler={togglePhoneFormHandler}
-          authError={(showPhoneLogin)? decodedError : props.authError}
+          authError={props.authError}
           passwordResetSuccess={props.passwordResetSuccess}
           forgotLogin={
             props.location.pathname.match("/forgot-login") ? true : false
           }
           clearErrors={clearErrors}
-          smsSent={props.smsSent}
-          resetPhoneLogin={resetPhoneLoginHandler}
         />
       ) : (
         <SignUp
@@ -337,9 +219,8 @@ const Auth = props => {
           submitHandler={submitSignUpHandler}
           toogleViewPassword={showPassword}
           toggleViewPasswordHandler={toggleViewPasswordHandler}
-          authError={(signInError)? urlErrorMessage : props.authError}
+          authError={props.authError}
           clearErrors={clearErrors}
-          smsSent={props.smsSent}
         />
       ))}
     </React.Fragment>
@@ -351,19 +232,14 @@ const mapStateToProps = state => {
     savedGoogleInfo: state.auth.savedGoogleInfo,
     googleSignUp: state.auth.isGoogleSignUp,
     googleSignUpInfo: state.auth.googleSignUpInfo,
-    phoneAuthDone: state.auth.phoneAuthDone,
-    phoneLoginFailed: state.auth.createPhoneUser,
-    phoneAuthStarted: state.auth.phoneAuthStarted,
     loading: state.auth.loading,
     authError: state.auth.error,
     passwordResetSuccess: state.auth.success,
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
-    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp && state.auth.isPhoneLinkSucces && !state.auth.logout,
+    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp && !state.auth.logout,
     newUser: state.auth.newUser,
     fireAuth: state.firebase.auth,
-    smsSent: state.auth.smsSent,
-    reloadOnPhoneAuthFail: state.auth.resetCaptcha
   };
 };
 
