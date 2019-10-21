@@ -30,7 +30,6 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    inputAdornedEnd: "padding: unset"
   },
   button: {
     margin: theme.spacing(1)
@@ -47,8 +46,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Onboarding = props => {
-  let { clients } = props;
-  console.log("clients from onboarding component", clients);
+  let { clients, OnboardingForm, OnboardingFormChanged } = props;
   
   clients.sort((a, b) => {
     var textA = a.value.toUpperCase();
@@ -56,7 +54,6 @@ const Onboarding = props => {
     return textA < textB ? -1 : textA > textB ? 1 : 0;
   });
 
-  console.log("clients from onboarding component sorted", clients);
   const matClasses = useStyles();
   return (
     <Container className={matClasses.loginContainer}>
@@ -69,6 +66,8 @@ const Onboarding = props => {
             label="Institution"
             select
             placeholder="Select Your Institution"
+            value={OnboardingForm.institution.value}
+            onChange={(event)=>{OnboardingFormChanged(event,'institution')}}
             margin="normal"
             variant="outlined"
             required
@@ -87,6 +86,8 @@ const Onboarding = props => {
             className={matClasses.textField}
             label="Unique Code"
             placeholder="Enter code provided by your teacher"
+            value={OnboardingForm.linkCode.value}
+            onChange={(event)=>{OnboardingFormChanged(event,'linkCode')}}
             type="text"
             margin="normal"
             variant="outlined"

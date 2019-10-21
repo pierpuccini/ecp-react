@@ -65,6 +65,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   container: {
+    height: '85%',
     [theme.breakpoints.up("sm")]: {
       marginBottom: '0px !important'
     },
