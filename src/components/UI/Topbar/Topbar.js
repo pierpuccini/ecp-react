@@ -120,17 +120,24 @@ const Topbar = props => {
       onClose={handleMobileMenuClose}
       TransitionComponent={Fade}
     >
-      <MenuItem className={classes.menuItem}>
-        <Badge badgeContent={11} color="secondary">
-          <NotificationsNoneOutlinedIcon />
-        </Badge>
-        <Typography>Notifications</Typography>
-      </MenuItem>
+      {props.newUser ? null : (
+        <MenuItem className={classes.menuItem}>
+          <Badge badgeContent={11} color="secondary">
+            <NotificationsNoneOutlinedIcon />
+          </Badge>
+          <Typography>Notifications</Typography>
+        </MenuItem>
+      )}
       <MenuItem className={classes.menuItem}>
         <AccountCircleOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={()=>{logout('desktop')}}>
+      <MenuItem
+        className={classes.menuItem}
+        onClick={() => {
+          logout("desktop");
+        }}
+      >
         <PowerSettingsNewOutlinedIcon />
         <Typography>Sign Out</Typography>
       </MenuItem>
@@ -145,7 +152,9 @@ const Topbar = props => {
         color="inherit"
         aria-label="open drawer"
         disabled={props.newUser}
-        onClick={()=>{props.toggleDrawer(!props.drawerState)}}
+        onClick={() => {
+          props.toggleDrawer(!props.drawerState);
+        }}
       >
         <MenuIcon />
       </IconButton>
@@ -154,11 +163,13 @@ const Topbar = props => {
       </Typography>
       <div className={classes.grow} />
       <div className={classes.sectionDesktop}>
-        <IconButton aria-label="show 17 new notifications" color="inherit">
-          <Badge badgeContent={17} color="secondary">
-            <NotificationsNoneOutlinedIcon />
-          </Badge>
-        </IconButton>
+        {props.newUser ? null : (
+          <IconButton aria-label="show 17 new notifications" color="inherit">
+            <Badge badgeContent={17} color="secondary">
+              <NotificationsNoneOutlinedIcon />
+            </Badge>
+          </IconButton>
+        )}
         <IconButton
           edge="end"
           aria-label="account of current user"
@@ -167,13 +178,10 @@ const Topbar = props => {
           onClick={handleProfileMenuOpen}
           color="inherit"
         >
-          <Avatar className={classes.purpleAvatar}>
-            {props.initials}
-          </Avatar>
+          <Avatar className={classes.purpleAvatar}>{props.initials}</Avatar>
         </IconButton>
       </div>
       <div className={classes.sectionMobile}>
-
         <IconButton
           aria-label="show more"
           aria-controls={mobileMenuId}
@@ -181,10 +189,11 @@ const Topbar = props => {
           onClick={handleMobileMenuOpen}
           color="inherit"
         >
-          <Badge badgeContent={(mobileMoreAnchorEl)? null :11} color="secondary">
-            <Avatar className={classes.purpleAvatar}>
-              {props.initials}
-            </Avatar>
+          <Badge
+            badgeContent={mobileMoreAnchorEl ? null : 11}
+            color="secondary"
+          >
+            <Avatar className={classes.purpleAvatar}>{props.initials}</Avatar>
           </Badge>
         </IconButton>
       </div>

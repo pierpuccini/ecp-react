@@ -245,7 +245,9 @@ export const signUp = (data, typeOfSignUp) => {
                 .doc(user.uid)
                 .set({
                   initials: initials,
-                  displayName: user.displayName
+                  displayName: user.displayName,
+                  studentId: "",
+                  universidad: ""
                 });
               dispatch(signUpPhoneLinkedSuccess());
               /* param inside signUpSuccess is isGoogleSignUp */
@@ -291,7 +293,9 @@ export const signUp = (data, typeOfSignUp) => {
                     .doc(result.user.uid)
                     .set({
                       initials: initials,
-                      displayName: data.fullName
+                      displayName: data.fullName,
+                      studentId: "",
+                      universidad: ""
                     });
                   dispatch(signUpPhoneLinkedSuccess());
                   dispatch(signUpSuccess(false));
