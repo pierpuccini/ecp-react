@@ -1,5 +1,5 @@
 //React Imports
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 //Redux
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
@@ -77,44 +77,6 @@ const Auth = props => {
   //Toggle for showing Password
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    if (props.googleSignUp && props.googleSignUpInfo && !props.savedGoogleInfo) {
-      const {fullName, email} = props.googleSignUpInfo
-      const updateFromGoogle = {
-        ...signUpForm,
-        fullName: {
-          value: fullName,
-          validation: {
-            required: true,
-            isName: true
-          },
-          valid: true,
-          touched: true
-        },
-        email: {
-          value: email,
-          validation: {
-            required: true,
-            isEmail: true
-          },
-          valid: true,
-          touched: true
-        },
-        password: {
-          value: "************",
-          validation: {
-            required: true,
-            minLength: 6
-          },
-          valid: true,
-          touched: true
-        },
-      };
-        setSignUpForm(updateFromGoogle);
-    }
-    // eslint-disable-next-line
-  }, [props.location.search, props.googleSignUp, props.googleSignUpInfo, props.savedGoogleInfo, props.authError]);
-
   const loginInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(loginForm, {
       [controlName]: updateObject(loginForm[controlName], {
@@ -146,7 +108,7 @@ const Auth = props => {
   const submitLoginHandler = (event, typeOfLogin) => {
     let payload = {
       email: loginForm.email.value,
-      password: loginForm.password.value,
+      password: loginForm.password.value
     };
     event.preventDefault();
     props.onAuth(payload, typeOfLogin);
@@ -157,7 +119,7 @@ const Auth = props => {
     let payload = {
       fullName: signUpForm.fullName.value,
       password: signUpForm.password.value,
-      email: signUpForm.email.value,
+      email: signUpForm.email.value
     }
     props.onSignUp(payload, typeOfLogin);
   };
@@ -229,15 +191,12 @@ const Auth = props => {
 
 const mapStateToProps = state => {
   return {
-    savedGoogleInfo: state.auth.savedGoogleInfo,
-    googleSignUp: state.auth.isGoogleSignUp,
-    googleSignUpInfo: state.auth.googleSignUpInfo,
     loading: state.auth.loading,
     authError: state.auth.error,
     passwordResetSuccess: state.auth.success,
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
-    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.isGoogleSignUp && !state.auth.logout,
+    authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.logout,
     newUser: state.auth.newUser,
     fireAuth: state.firebase.auth,
   };

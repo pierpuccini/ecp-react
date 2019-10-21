@@ -23,35 +23,32 @@ export const authFail = (error, loading) => {
     : error.code.includes("new-user")
     ? (customErrorMsg = "Please Sign Up")
     : (customErrorMsg = "General Error, Contact Support");
+  let newUser = (error.code.includes("user-not-found"))?true:false;
   return {
     type: actionTypes.AUTH_FAIL,
     error: { ...error, customErrorMsg },
-    loading: loading
+    loading: loading,
+    newUser: newUser
   };
 };
 
-export const signUpStart = isGoogleSignUp => {
+export const signUpStart = () => {
   return {
     type: actionTypes.SIGN_UP_START,
-    isGoogleSignUp: isGoogleSignUp
   };
 };
 
-export const signUpSuccess = ( isGoogleSignUp, googleSignUpInfo, savedGoogleInfo) => {
+export const signUpSuccess = () => {
   return {
     type: actionTypes.SIGN_UP_SUCCESS,
-    googleSignUpInfo: googleSignUpInfo,
-    isGoogleSignUp: isGoogleSignUp,
-    savedGoogleInfo: savedGoogleInfo
   };
 };
 
-export const signUpFail = (error, isGoogleSignUp) => {
+export const signUpFail = (error) => {
   let customErrorMsg = error.message;
   return {
     type: actionTypes.SIGN_UP_FAIL,
     error: { ...error, customErrorMsg },
-    isGoogleSignUp: isGoogleSignUp
   };
 };
 
@@ -74,19 +71,18 @@ export const passwordResetFail = error => {
   };
 };
 
-export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading, createPhoneUser) => {
+export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading) => {
   return {
     type: actionTypes.AUTH_LOGOUT,
     cleanErrors: cleanErrors,
     cleanNewUser: cleanNewUser,
     errors: errors,
     newUser: newUser,
-    loading: loading,
-    createPhoneUser: createPhoneUser
+    loading: loading
   };
 };
 
-export const deleteNewUser = (cleanErrors, cleanNewUser, errors, newUser, loading, createPhoneUser) => {
+export const deleteNewUser = (cleanErrors, cleanNewUser, errors, newUser, loading) => {
   return {
     type: actionTypes.DELETE_NEW_USER,
     cleanErrors: cleanErrors,
@@ -94,7 +90,6 @@ export const deleteNewUser = (cleanErrors, cleanNewUser, errors, newUser, loadin
     errors: errors,
     newUser: newUser,
     loading: loading,
-    createPhoneUser: createPhoneUser
   };
 };
 
@@ -107,8 +102,7 @@ export const signUp = (data, typeOfSignUp) => {
 
     switch (typeOfSignUp) {
       case "google":
-        let isGoogleSignUp = true;
-        dispatch(signUpStart(isGoogleSignUp));
+        dispatch(signUpStart());
         firebase
           .auth()
           .signInWithPopup(provider)
@@ -134,8 +128,7 @@ export const signUp = (data, typeOfSignUp) => {
             dispatch(signUpSuccess(false));
           })
           .catch(err => {
-            /* second param inside signUpFail is isGoogleSignUp */
-            dispatch(signUpFail(err, true));
+            dispatch(signUpFail(err));
           });
         break;
 
@@ -166,8 +159,7 @@ export const signUp = (data, typeOfSignUp) => {
             dispatch(signUpSuccess(false));
           })
           .catch(err => {
-            /* second param inside signUpFail is isGoogleSignUp */
-            dispatch(signUpFail(err, false));
+            dispatch(signUpFail(err));
           });
         break;
     }
