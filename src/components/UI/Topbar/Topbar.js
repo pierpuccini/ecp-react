@@ -189,12 +189,16 @@ const Topbar = props => {
           onClick={handleMobileMenuOpen}
           color="inherit"
         >
-          <Badge
-            badgeContent={mobileMoreAnchorEl ? null : 11}
-            color="secondary"
-          >
+          {props.newUser ? (
             <Avatar className={classes.purpleAvatar}>{props.initials}</Avatar>
-          </Badge>
+          ) : (
+            <Badge
+              badgeContent={mobileMoreAnchorEl ? null : 11}
+              color="secondary"
+            >
+              <Avatar className={classes.purpleAvatar}>{props.initials}</Avatar>
+            </Badge>
+          )}
         </IconButton>
       </div>
       {renderMobileMenu}
