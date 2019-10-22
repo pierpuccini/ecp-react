@@ -9,6 +9,8 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Icon from "@material-ui/core/Icon";
+import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -47,24 +49,48 @@ const useStyles = makeStyles(theme => ({
   },
   MuiMenuList: {
     width: "auto !important"
+  },
+  codeVerifError: {
+    textAlign: "center",
+    color: "#f44336",
+    fontSize: "small"
+  },
+  customeHeader: {
+    display: "flex",
+    justifyContent: "space-between"
   }
 }));
 
 const Onboarding = props => {
+  const matClasses = useStyles();
   let { clients, OnboardingForm, OnboardingFormChanged } = props;
-  
+
   clients.sort((a, b) => {
     var textA = a.value.toUpperCase();
     var textB = b.value.toUpperCase();
     return textA < textB ? -1 : textA > textB ? 1 : 0;
   });
 
-  const matClasses = useStyles();
+  let errorMessage = null;
+  if (props.error) {
+    errorMessage = (
+      <div className={matClasses.codeVerifError}>{props.error.message}</div>
+    );
+  }
+
   return (
     <Container className={matClasses.onboardingContainer}>
       <CssBaseline />
       <Paper className={matClasses.paper}>
-        <Typography>Onboarding</Typography>
+        <div className={matClasses.customeHeader}>
+          <Typography>
+            <strong>Register your subject</strong>
+          </Typography>
+          <Icon>
+            <MenuBookOutlinedIcon />
+          </Icon>
+        </div>
+        <Typography>{errorMessage}</Typography>
         <form className={matClasses.container} onSubmit={props.submitHandler}>
           <TextField
             className={matClasses.textField}
@@ -72,7 +98,9 @@ const Onboarding = props => {
             select
             placeholder="Select Your Institution"
             value={OnboardingForm.institution.value}
-            onChange={(event)=>{OnboardingFormChanged(event,'institution')}}
+            onChange={event => {
+              OnboardingFormChanged(event, "institution");
+            }}
             margin="normal"
             variant="outlined"
             required
@@ -92,7 +120,9 @@ const Onboarding = props => {
             label="Unique Code"
             placeholder="Code provided by your teacher"
             value={OnboardingForm.linkCode.value}
-            onChange={(event)=>{OnboardingFormChanged(event,'linkCode')}}
+            onChange={event => {
+              OnboardingFormChanged(event, "linkCode");
+            }}
             type="text"
             margin="normal"
             variant="outlined"

@@ -70,6 +70,7 @@ const Users = (props) => {
       OnboardingForm={OnboardingForm}
       OnboardingFormChanged={OnboardingFormHandler}
       submitHandler={submitOnboardingHandler}
+      error={props.codeVerifError}
     />
   );
   /* Checks if code is verified */
@@ -80,6 +81,7 @@ const Users = (props) => {
           clients={clients}
           OnboardingForm={OnboardingForm}
           OnboardingFormChanged={OnboardingFormHandler}
+          error={props.codeVerifError}
           submitHandler={submitOnboardingHandler}
         />
       </FloatingLoader>
