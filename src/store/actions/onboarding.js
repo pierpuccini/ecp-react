@@ -54,7 +54,8 @@ export const checkOnboarding = data => {
                 ...user.data(),
                 institution: res.institution,
                 classrooms: classrooms,
-                studentId: res.studentId
+                studentId: res.studentId,
+                role: "student"
               })
               .then(() => {
                 dispatch(onboardingSuccess());
