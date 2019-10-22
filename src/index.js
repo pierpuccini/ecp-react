@@ -19,6 +19,7 @@ import * as serviceWorker from "./serviceWorker";
 import "./index.css";
 //reducers
 import authReducer from "./store/reducers/auth";
+import onboardingReducer from "./store/reducers/onboarding";
 
 // Initialize Firebase & firebase services
 firebase.initializeApp(firebaseConfig);
@@ -42,6 +43,7 @@ if (
 //All reducers must be combined here
 const rootReducer = combineReducers({
   auth: authReducer,
+  onboarding: onboardingReducer,
   firebase: firebaseReducer,
   firestore: firestoreReducer
 });

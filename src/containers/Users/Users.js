@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 // import { Route, withRouter, Redirect } from "react-router-dom";
 //Redux
 import { connect } from "react-redux";
-// import * as actions from "../../store/actions/index";
+import * as actions from "../../store/actions/index";
 import { useSelector } from 'react-redux'
 import { useFirestoreConnect, isLoaded } from 'react-redux-firebase'
 //App Imports
@@ -27,6 +27,7 @@ const Users = (props) => {
       value: "",
       validation: {
         required: true,
+        minLength: 6
       },
       valid: false,
       touched: false
@@ -53,6 +54,15 @@ const Users = (props) => {
     setOnboardingForm(updatedControls);
   };
 
+  const submitOnboardingHandler = (event) => {
+    let payload = {
+      institution: OnboardingForm.institution.value,
+      linkCode: OnboardingForm.linkCode.value
+    };
+    event.preventDefault();
+    props.checkOnboarding(payload);
+  };
+
   if (!isLoaded(clients)) {
     return (
       <div className="App">
@@ -66,6 +76,7 @@ const Users = (props) => {
         clients={clients}
         OnboardingForm={OnboardingForm}
         OnboardingFormChanged={OnboardingFormHandler}
+        submitHandler={submitOnboardingHandler}
       />
     </React.Fragment>
   );
@@ -77,7 +88,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getClients: () => console.log('pier')
+    checkOnboarding: (payload) => dispatch(actions.checkOnboarding(payload))
   };
 };
 

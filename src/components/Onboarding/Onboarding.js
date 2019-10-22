@@ -65,7 +65,7 @@ const Onboarding = props => {
       <CssBaseline />
       <Paper className={matClasses.paper}>
         <Typography>Onboarding</Typography>
-        <form className={matClasses.container}>
+        <form className={matClasses.container} onSubmit={props.submitHandler}>
           <TextField
             className={matClasses.textField}
             label="Institution"
@@ -90,7 +90,7 @@ const Onboarding = props => {
           <TextField
             className={matClasses.textField}
             label="Unique Code"
-            placeholder="Enter code provided by your teacher"
+            placeholder="Code provided by your teacher"
             value={OnboardingForm.linkCode.value}
             onChange={(event)=>{OnboardingFormChanged(event,'linkCode')}}
             type="text"
@@ -102,6 +102,11 @@ const Onboarding = props => {
             className={matClasses.button}
             variant="contained"
             color="primary"
+            type="submit"
+            disabled={
+              !props.OnboardingForm.institution.valid ||
+              !props.OnboardingForm.linkCode.valid
+            }
           >
             Submit
           </Button>
