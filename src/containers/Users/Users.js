@@ -4,10 +4,11 @@ import { withRouter } from "react-router-dom";
 // import { Route, withRouter, Redirect } from "react-router-dom";
 //Redux
 import { connect } from "react-redux";
-// import * as actions from "../../store/actions/index";
+import * as actions from "../../store/actions/index";
 import { useSelector } from 'react-redux'
 import { useFirestoreConnect, isLoaded } from 'react-redux-firebase'
 //App Imports
+import FloatingLoader from '../../components/Loader/FloatingLoader'
 import Onboarding from "../../components/Onboarding/Onboarding";
 import loader from "../../assets/loaders/educoin(B).gif";
 import { updateObject, checkValidity } from "../../shared/utility";
@@ -27,6 +28,7 @@ const Users = (props) => {
       value: "",
       validation: {
         required: true,
+        minLength: 6
       },
       valid: false,
       touched: false
@@ -53,6 +55,38 @@ const Users = (props) => {
     setOnboardingForm(updatedControls);
   };
 
+  const submitOnboardingHandler = (event) => {
+    let payload = {
+      institution: OnboardingForm.institution.value,
+      linkCode: OnboardingForm.linkCode.value
+    };
+    event.preventDefault();
+    props.checkOnboarding(payload);
+  };
+  
+  let onboardingPage = (
+    <Onboarding
+      clients={clients}
+      OnboardingForm={OnboardingForm}
+      OnboardingFormChanged={OnboardingFormHandler}
+      submitHandler={submitOnboardingHandler}
+    />
+  );
+  /* Checks if code is verified */
+  if (props.codeVerifLoading) {
+    onboardingPage = (
+      <FloatingLoader>
+        <Onboarding
+          clients={clients}
+          OnboardingForm={OnboardingForm}
+          OnboardingFormChanged={OnboardingFormHandler}
+          submitHandler={submitOnboardingHandler}
+        />
+      </FloatingLoader>
+    );
+  } 
+
+  /* Checks if data is loaded from firestore */
   if (!isLoaded(clients)) {
     return (
       <div className="App">
@@ -62,22 +96,22 @@ const Users = (props) => {
   };
   return (
     <React.Fragment>
-      <Onboarding
-        clients={clients}
-        OnboardingForm={OnboardingForm}
-        OnboardingFormChanged={OnboardingFormHandler}
-      />
+      {onboardingPage}
     </React.Fragment>
   );
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    codeVerifLoading: state.onboarding.loading,
+    codeVerifError: state.onboarding.error,
+    codeVerifSucces: state.onboarding.success,
+  };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getClients: () => console.log('pier')
+    checkOnboarding: (payload) => dispatch(actions.checkOnboarding(payload))
   };
 };
 
