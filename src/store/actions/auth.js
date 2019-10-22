@@ -141,7 +141,6 @@ export const signUp = (data, typeOfSignUp) => {
           .auth()
           .createUserWithEmailAndPassword(data.email, data.password)
           .then(result => {
-            console.log('result',result);
             const user = firebase.auth().currentUser;
             user.updateProfile({ displayName: data.fullName });
             /* Extracts initials from name */
@@ -150,7 +149,6 @@ export const signUp = (data, typeOfSignUp) => {
               return name[0].toString().toUpperCase();
             });
             initials = initialsArray.toString();
-            console.log('user.uid',user.uid);
             /* Creates user doc in firestore */
             firestore
               .collection("users")
