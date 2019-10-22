@@ -265,7 +265,7 @@ const mapStateToProps = state => {
       profileLoaded: state.firebase.profile.isLoaded,
       initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
       name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:' ',
-      newUser: (state.firebase.profile.isLoaded)?state.firebase.profile.studentId: false
+      newUser: (state.firebase.profile.isLoaded)?state.firebase.profile.role: false
   };
 };
 

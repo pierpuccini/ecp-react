@@ -18,7 +18,7 @@ const onboardingStart = state => {
 const onboardingFailed = (state, action) => {
   return updateObject(state, {
     loading: false,
-    error: action.err,
+    error: action.error,
     success: false
   });
 };

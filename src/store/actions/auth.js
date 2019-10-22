@@ -124,7 +124,8 @@ export const signUp = (data, typeOfSignUp) => {
                 displayName: user.displayName,
                 studentId: "",
                 institution: "",
-                classrooms: []
+                classrooms: [],
+                role:""
               });
             dispatch(signUpSuccess(false));
           })
@@ -156,7 +157,8 @@ export const signUp = (data, typeOfSignUp) => {
                 displayName: data.fullName,
                 studentId: "",
                 institution: "",
-                classrooms: []
+                classrooms: [],
+                role:""
               });
             dispatch(signUpSuccess(false));
           })
