@@ -15,8 +15,13 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column"
   },
-  loginContainer: {
-    padding: "unset !important"
+  onboardingContainer: {
+    [theme.breakpoints.up("sm")]: {
+      width: "50%"
+    },
+    [theme.breakpoints.up("lg")]: {
+      width: "40%"
+    }
   },
   paper: {
     padding: theme.spacing(2, 2),
@@ -29,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   button: {
     margin: theme.spacing(1)
@@ -56,7 +61,7 @@ const Onboarding = props => {
 
   const matClasses = useStyles();
   return (
-    <Container className={matClasses.loginContainer}>
+    <Container className={matClasses.onboardingContainer}>
       <CssBaseline />
       <Paper className={matClasses.paper}>
         <Typography>Onboarding</Typography>

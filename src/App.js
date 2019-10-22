@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
       marginBottom: '0px !important'
     },
     [theme.breakpoints.down("sm")]: {
-      marginBottom: '70px'
+      marginBottom: '76px'
     }
   },
 }));
