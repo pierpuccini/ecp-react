@@ -140,7 +140,7 @@ export const signUp = (data, typeOfSignUp) => {
         firebase
           .auth()
           .createUserWithEmailAndPassword(data.email, data.password)
-          .then(result => {
+          .then(() => {
             const user = firebase.auth().currentUser;
             user.updateProfile({ displayName: data.fullName });
             /* Extracts initials from name */
