@@ -107,7 +107,7 @@ export const signUp = (data, typeOfSignUp) => {
         firebase
           .auth()
           .signInWithPopup(provider)
-          .then(result => {
+          .then(() => {
             /* Gets user for creating firestore document */
             const user = firebase.auth().currentUser;
             /* Extracts initials from name */
@@ -150,10 +150,11 @@ export const signUp = (data, typeOfSignUp) => {
               return name[0].toString().toUpperCase();
             });
             initials = initialsArray.toString();
+            console.log('user.uid',user.uid);
             /* Creates user doc in firestore */
             firestore
               .collection("users")
-              .doc(result.user.uid)
+              .doc(user.uid)
               .set({
                 initials: initials,
                 displayName: data.fullName,
