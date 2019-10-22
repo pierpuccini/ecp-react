@@ -123,7 +123,8 @@ export const signUp = (data, typeOfSignUp) => {
                 initials: initials,
                 displayName: user.displayName,
                 studentId: "",
-                universidad: ""
+                institution: "",
+                classrooms: []
               });
             dispatch(signUpSuccess(false));
           })
@@ -154,7 +155,8 @@ export const signUp = (data, typeOfSignUp) => {
                 initials: initials,
                 displayName: data.fullName,
                 studentId: "",
-                universidad: ""
+                institution: "",
+                classrooms: []
               });
             dispatch(signUpSuccess(false));
           })
