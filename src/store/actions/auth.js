@@ -28,6 +28,7 @@ export const authFail = (error, loading) => {
     type: actionTypes.AUTH_FAIL,
     error: { ...error, customErrorMsg },
     loading: loading,
+    newUserGoogleLogin: loading,
     newUser: newUser
   };
 };
@@ -193,7 +194,7 @@ export const auth = (data, typeOfLogin) => {
       case "google":
         firebase
           .auth()
-          .signInWithRedirect(provider)
+          .signInWithPopup(provider)
           .then(result => {
             /* Detects if a user is new or not */
             if (result.additionalUserInfo.isNewUser) {

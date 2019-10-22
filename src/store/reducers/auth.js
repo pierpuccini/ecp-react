@@ -7,11 +7,12 @@ const initialState = {
   authRedirectPath: "/home",
   success: false,
   newUser: false,
-  logout: false
+  logout: false,
+  newUserGoogleLogin: false
 }
 
 const signUpStart = (state, action) => {
-  return updateObject(state, { error: null, loading: true, success: false, logout: false });
+  return updateObject(state, { error: null, loading: true, success: false, logout: false, newUserGoogleLogin: false });
 };
 
 const signUpSuccess = (state, action) => {
@@ -34,7 +35,8 @@ const authStart = state => {
     error: null,
     loading: true,
     success: false,
-    logout: false
+    logout: false,
+    newUserGoogleLogin: false
   });
 };
 
@@ -43,11 +45,12 @@ const authSuccess = (state, action) => {
     error: null,
     loading: action.loading,
     newUser: action.newUser,
+    newUserGoogleLogin: false
   });
 };
 
 const authFail = (state, action) => {
-  return updateObject(state, { error: action.error, loading: action.loading, success: false, newUser: action.newUser });
+  return updateObject(state, { error: action.error, loading: action.loading, success: false, newUser: action.newUser, newUserGoogleLogin: action.newUserGoogleLogin });
 };
 
 const passwordResetSuccess = (state) => {
