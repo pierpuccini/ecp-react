@@ -126,7 +126,7 @@ export const signUp = (data, typeOfSignUp) => {
                 studentId: "",
                 institution: "",
                 classrooms: [],
-                role:""
+                role: ""
               });
             dispatch(signUpSuccess(false));
           })
@@ -140,7 +140,7 @@ export const signUp = (data, typeOfSignUp) => {
         firebase
           .auth()
           .createUserWithEmailAndPassword(data.email, data.password)
-          .then(() => {
+          .then(result => {
             const user = firebase.auth().currentUser;
             user.updateProfile({ displayName: data.fullName });
             /* Extracts initials from name */
@@ -149,19 +149,29 @@ export const signUp = (data, typeOfSignUp) => {
               return name[0].toString().toUpperCase();
             });
             initials = initialsArray.toString();
+            console.log('result',result.user.uid);
+            console.log('user',user.uid);
             /* Creates user doc in firestore */
             firestore
               .collection("users")
-              .doc(user.uid)
+              .doc(result.user.uid)
               .set({
                 initials: initials,
                 displayName: data.fullName,
                 studentId: "",
                 institution: "",
                 classrooms: [],
-                role:""
+                role: ""
+              })
+              .then(() => {
+                dispatch(signUpSuccess(false));
+              })
+              .catch(error => {
+                const user = firebase.auth().currentUser;
+                user.delete().then(() => {
+                  dispatch(signUpFail(error));
+                });
               });
-            dispatch(signUpSuccess(false));
           })
           .catch(err => {
             dispatch(signUpFail(err));
