@@ -141,6 +141,7 @@ export const signUp = (data, typeOfSignUp) => {
           .auth()
           .createUserWithEmailAndPassword(data.email, data.password)
           .then(result => {
+            console.log('result',result);
             const user = firebase.auth().currentUser;
             user.updateProfile({ displayName: data.fullName });
             /* Extracts initials from name */
