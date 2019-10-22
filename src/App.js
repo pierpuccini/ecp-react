@@ -143,7 +143,7 @@ function App(props) {
       </Switch>
     );
 
-    let swipeDrawer = (
+    const swipeDrawer = (
       <SwipeableDrawer
         disableBackdropTransition={!iOS}
         disableDiscovery={iOS}
@@ -157,6 +157,36 @@ function App(props) {
       >
         <SideList toggleDrawer={toggleDrawer} />
       </SwipeableDrawer>
+    );
+
+    const bottomNavigation = (
+      <BottomNavigation
+        id="footer"
+        className={classes.bottomNav}
+        value={bottomBarSelect}
+        onChange={handleBottomBarChange}
+      >
+        <BottomNavigationAction
+          label="Recents"
+          value="recents"
+          icon={<RestoreIcon />}
+        />
+        <BottomNavigationAction
+          label="Favorites"
+          value="favorites"
+          icon={<FavoriteIcon />}
+        />
+        <BottomNavigationAction
+          label="Nearby"
+          value="nearby"
+          icon={<LocationOnIcon />}
+        />
+        <BottomNavigationAction
+          label="Folder"
+          value="folder"
+          icon={<FolderIcon />}
+        />
+      </BottomNavigation>
     );
 
     /* Top bar title is handled in switch statment above */
@@ -178,38 +208,12 @@ function App(props) {
             </Toolbar>
           </AppBar>
         </ElevationScroll>
-        {props.newUser ? null : swipeDrawer}
+        {props.newUser === "" ? null : swipeDrawer}
         <Toolbar id="header" className={classes.topbarSpace} />
         <Container id="content" className={classes.container}>
           {routes}
         </Container>
-        <BottomNavigation
-          id="footer"
-          className={classes.bottomNav}
-          value={bottomBarSelect}
-          onChange={handleBottomBarChange}
-        >
-          <BottomNavigationAction
-            label="Recents"
-            value="recents"
-            icon={<RestoreIcon />}
-          />
-          <BottomNavigationAction
-            label="Favorites"
-            value="favorites"
-            icon={<FavoriteIcon />}
-          />
-          <BottomNavigationAction
-            label="Nearby"
-            value="nearby"
-            icon={<LocationOnIcon />}
-          />
-          <BottomNavigationAction
-            label="Folder"
-            value="folder"
-            icon={<FolderIcon />}
-          />
-        </BottomNavigation>
+        {props.newUser === "" ? null : bottomNavigation}
       </React.Fragment>
     );
   } /* Routes for non-authenticated users */ else {
