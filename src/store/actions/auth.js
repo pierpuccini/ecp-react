@@ -193,7 +193,7 @@ export const auth = (data, typeOfLogin) => {
       case "google":
         firebase
           .auth()
-          .signInWithPopup(provider)
+          .signInWithRedirect(provider)
           .then(result => {
             /* Detects if a user is new or not */
             if (result.additionalUserInfo.isNewUser) {
