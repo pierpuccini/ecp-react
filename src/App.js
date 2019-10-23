@@ -105,6 +105,10 @@ function App(props) {
     setbottomBarSelect(newValue);
   };
 
+  const viewAccountHandler = () => {
+    setViewAccount(true);
+  };
+
   const logoutHandler = () => {
     setDomReady(true);
     setdrawerOpen(false);
@@ -121,11 +125,12 @@ function App(props) {
   let routes, redirect, app;
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
+    /* Conditional routes section */
+    redirect = <Redirect to="/home" />;
 
-    const viewAccountHandler = () => {
-      console.log("viewing account");
-      setViewAccount(true);
-    };
+    if (props.profileLoaded && props.newUser === "") {redirect = <Redirect to="/onboarding" />}
+
+    if (viewAccount) {redirect = <Redirect to="/my-account" />}
 
     //Title Checker
     let title = null;
@@ -142,43 +147,19 @@ function App(props) {
         title = "Edu Coins";
         break;
     }
+    //Loader
     app = (
       <div className="App">
         <img src={loader} alt="loading..." />
       </div>
     );
-
-    if (props.profileLoaded && props.newUser === "") {
-      redirect = <Redirect to="/onboarding" />;
-    } else if (viewAccount) {
-      console.log('my acc');
-      redirect = <Redirect to="/my-account" />;
-    } else {
-      redirect = <Redirect to="/home" />;
-    }
-
+    //Available routes or Guarded routes
     routes = (
       <Switch>
         <Route path="/my-account" component={asyncUsers} />
         <Route path="/onboarding" component={asyncUsers} />
         <Route path="/home" component={asyncDashboard} />
       </Switch>
-    );
-
-    const swipeDrawer = (
-      <SwipeableDrawer
-        disableBackdropTransition={!iOS}
-        disableDiscovery={iOS}
-        open={drawerOpen}
-        onClose={() => {
-          toggleDrawer(false);
-        }}
-        onOpen={() => {
-          toggleDrawer(true);
-        }}
-      >
-        <SideList toggleDrawer={toggleDrawer} />
-      </SwipeableDrawer>
     );
 
     const bottomNavigation = (
@@ -209,6 +190,22 @@ function App(props) {
           icon={<FolderIcon />}
         />
       </BottomNavigation>
+    );
+
+    const swipeDrawer = (
+      <SwipeableDrawer
+        disableBackdropTransition={!iOS}
+        disableDiscovery={iOS}
+        open={drawerOpen}
+        onClose={() => {
+          toggleDrawer(false);
+        }}
+        onOpen={() => {
+          toggleDrawer(true);
+        }}
+      >
+        <SideList toggleDrawer={toggleDrawer} />
+      </SwipeableDrawer>
     );
 
     /* Top bar title is handled in switch statment above */

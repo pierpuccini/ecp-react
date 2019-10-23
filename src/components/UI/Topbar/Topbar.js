@@ -2,16 +2,16 @@ import React, { useState } from "react";
 //Material UI Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Fade from '@material-ui/core/Fade';
+import Fade from "@material-ui/core/Fade";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Badge from "@material-ui/core/Badge";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
-import NotificationsNoneOutlinedIcon from '@material-ui/icons/NotificationsNoneOutlined';
-import PowerSettingsNewOutlinedIcon from '@material-ui/icons/PowerSettingsNewOutlined';
-import AssignmentIndOutlinedIcon from '@material-ui/icons/AssignmentIndOutlined';
+import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
+import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
+import PowerSettingsNewOutlinedIcon from "@material-ui/icons/PowerSettingsNewOutlined";
+import AssignmentIndOutlinedIcon from "@material-ui/icons/AssignmentIndOutlined";
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     display: "none",
     [theme.breakpoints.up("sm")]: {
       display: "block",
-      textTransform: 'capitalize'
+      textTransform: "capitalize"
     }
   },
   inputRoot: {
@@ -69,6 +69,7 @@ const Topbar = props => {
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
+    props.viewAccountHandler();
   };
 
   const handleMenuClose = () => {
@@ -81,8 +82,8 @@ const Topbar = props => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const logout = (typeOfScreen) => {
-    (typeOfScreen === 'desktop')?handleMenuClose():handleMobileMenuClose();
+  const logout = typeOfScreen => {
+    typeOfScreen === "desktop" ? handleMenuClose() : handleMobileMenuClose();
     props.logout();
   };
 
@@ -102,7 +103,12 @@ const Topbar = props => {
         <AssignmentIndOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={()=>{logout('desktop')}}>
+      <MenuItem
+        className={classes.menuItem}
+        onClick={() => {
+          logout("desktop");
+        }}
+      >
         <PowerSettingsNewOutlinedIcon />
         <Typography>Sign Out</Typography>
       </MenuItem>
@@ -129,7 +135,7 @@ const Topbar = props => {
           <Typography>Notifications</Typography>
         </MenuItem>
       )}
-      <MenuItem className={classes.menuItem} onClick={props.viewAccountHandler}>
+      <MenuItem className={classes.menuItem} onClick={handleMobileMenuClose}>
         <AssignmentIndOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>
@@ -144,7 +150,7 @@ const Topbar = props => {
       </MenuItem>
     </Menu>
   );
-  
+
   return (
     <React.Fragment>
       <IconButton
@@ -179,7 +185,7 @@ const Topbar = props => {
           onClick={handleProfileMenuOpen}
           color="inherit"
         >
-          <AccountCircleOutlinedIcon/>
+          <AccountCircleOutlinedIcon />
         </IconButton>
       </div>
       <div className={classes.sectionMobile}>
@@ -191,13 +197,13 @@ const Topbar = props => {
           color="inherit"
         >
           {props.newUser ? (
-            <AccountCircleOutlinedIcon/>
+            <AccountCircleOutlinedIcon />
           ) : (
             <Badge
               badgeContent={mobileMoreAnchorEl ? null : 11}
               color="secondary"
             >
-              <AccountCircleOutlinedIcon/>
+              <AccountCircleOutlinedIcon />
             </Badge>
           )}
         </IconButton>
