@@ -57,11 +57,12 @@ const store = createStore(rootReducer, initialState, composedEnhancers);
 
 // react-redux-firebase config
 const rrfConfig = {
-  userProfile: "users",
+  userProfile: 'users',
   useFirestoreForProfile: true,
-  updateProfileOnLogin: true,
-  enableRedirectHandling: true,
-  logErrors: (process.env.NODE_ENV === "development")?true:false
+  enableRedirectHandling: false,
+  resetBeforeLogin: false,
+  // enableRedirectHandling: true,
+  // logErrors: (process.env.NODE_ENV === "development")?true:false
 };
 
 const rrfProps = {

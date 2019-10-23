@@ -149,8 +149,6 @@ export const signUp = (data, typeOfSignUp) => {
               return name[0].toString().toUpperCase();
             });
             initials = initialsArray.toString();
-            console.log('result',result.user.uid);
-            console.log('user',user.uid);
             /* Creates user doc in firestore */
             firestore
               .collection("users")
