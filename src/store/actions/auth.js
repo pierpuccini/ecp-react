@@ -102,6 +102,7 @@ export const signUp = (data, typeOfSignUp) => {
     const provider = new firebase.auth.GoogleAuthProvider();
     /* Extracts initials from name */
     const initialExtractor = fullName => {
+      console.log('getting initials')
       let initials = fullName.split(" ");
       let initialsArray = initials.map(name => {
         return name[0].toString().toUpperCase();
