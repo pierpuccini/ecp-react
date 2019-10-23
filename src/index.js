@@ -33,12 +33,12 @@ const enhancers = [
 //checks to see if redux is available in production or not
 // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const reduxDevToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-if (
-  process.env.NODE_ENV === "development" &&
-  typeof reduxDevToolsExtension === "function"
-) {
+// if (
+//   process.env.NODE_ENV === "development" &&
+//   typeof reduxDevToolsExtension === "function"
+// ) {
   enhancers.push(reduxDevToolsExtension());
-}
+// }
 
 //All reducers must be combined here
 const rootReducer = combineReducers({
