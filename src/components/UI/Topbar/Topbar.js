@@ -6,12 +6,12 @@ import Fade from '@material-ui/core/Fade';
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Badge from "@material-ui/core/Badge";
-import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import NotificationsNoneOutlinedIcon from '@material-ui/icons/NotificationsNoneOutlined';
 import PowerSettingsNewOutlinedIcon from '@material-ui/icons/PowerSettingsNewOutlined';
+import AssignmentIndOutlinedIcon from '@material-ui/icons/AssignmentIndOutlined';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -98,7 +98,7 @@ const Topbar = props => {
       TransitionComponent={Fade}
     >
       <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
-        <AccountCircleOutlinedIcon />
+        <AssignmentIndOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>
       <MenuItem className={classes.menuItem} onClick={()=>{logout('desktop')}}>
@@ -129,7 +129,7 @@ const Topbar = props => {
         </MenuItem>
       )}
       <MenuItem className={classes.menuItem}>
-        <AccountCircleOutlinedIcon />
+        <AssignmentIndOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>
       <MenuItem
@@ -178,7 +178,7 @@ const Topbar = props => {
           onClick={handleProfileMenuOpen}
           color="inherit"
         >
-          <Avatar className={classes.purpleAvatar}>{props.initials}</Avatar>
+          <AccountCircleOutlinedIcon/>
         </IconButton>
       </div>
       <div className={classes.sectionMobile}>
@@ -190,13 +190,13 @@ const Topbar = props => {
           color="inherit"
         >
           {props.newUser ? (
-            <Avatar className={classes.purpleAvatar}>{props.initials}</Avatar>
+            <AccountCircleOutlinedIcon/>
           ) : (
             <Badge
               badgeContent={mobileMoreAnchorEl ? null : 11}
               color="secondary"
             >
-              <Avatar className={classes.purpleAvatar}>{props.initials}</Avatar>
+              <AccountCircleOutlinedIcon/>
             </Badge>
           )}
         </IconButton>

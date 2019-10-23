@@ -84,35 +84,14 @@ function App(props) {
 
   const [drawerOpen, setdrawerOpen] = useState(false);
 
-  const [initialsState, setInitialsState] = useState({initials: ''});
-
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
     }, 1500);
-    let initialsCreator = initialsState;
-    if (Boolean(props.name)) {
-      /* Extracts initials from name */
-      initialsCreator = props.name.split(" ");
-      let initialsArray = initialsCreator.map(name => {
-        return name[0].toString().toUpperCase();
-      });
-      initialsArray.forEach(()=>{
-        if (initialsArray.length != 2) {
-          initialsArray.pop();
-        } else {
-          return initialsArray;
-        }
-      })
-      initialsCreator = initialsArray.join('');
-      setInitialsState({initials: initialsCreator});
-      console.log("initialsCreator", initialsCreator);
-    }
     return () => {
       clearTimeout(showCoinLoader);
     };
-    // eslint-disable-next-line
-  }, [props.name]);
+  }, []);
 
   const toggleDrawer = (open) => {
     setdrawerOpen(open);
@@ -222,7 +201,6 @@ function App(props) {
           <AppBar>
             <Toolbar className={classes.topbar}>
               <Topbar
-                initials={initialsState.initials}
                 logout={props.logout}
                 toggleDrawer={toggleDrawer}
                 drawerState={drawerOpen}
