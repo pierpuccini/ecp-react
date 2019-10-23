@@ -143,13 +143,10 @@ export const signUp = (data, typeOfSignUp) => {
 
       default:
         dispatch(signUpStart());
-        /* Gets initials */
-        let initials = initialExtractor(data.fullName);
         firebase
           .createUser(
             { email: data.email, password: data.password },
             {
-              initials: initials,
               displayName: data.fullName,
               studentId: "",
               institution: "",
@@ -159,6 +156,15 @@ export const signUp = (data, typeOfSignUp) => {
           )
           .then(res => {
             console.log("res", res);
+            /* Gets initials */
+            let initials = initialExtractor(res.displayName);
+            firestore
+              .collection("users")
+              .doc(getState().firebase.auth.uid)
+              .set({
+                ...res,
+                initials: initials
+              });
             dispatch(signUpSuccess(false));
           })
           .catch(err => {
