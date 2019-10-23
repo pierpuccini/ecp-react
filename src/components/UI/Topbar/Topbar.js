@@ -74,6 +74,7 @@ const Topbar = props => {
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+    props.viewAccountHandler();
   };
 
   const handleMobileMenuOpen = event => {
@@ -128,7 +129,7 @@ const Topbar = props => {
           <Typography>Notifications</Typography>
         </MenuItem>
       )}
-      <MenuItem className={classes.menuItem}>
+      <MenuItem className={classes.menuItem} onClick={props.viewAccountHandler}>
         <AssignmentIndOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>

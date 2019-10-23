@@ -10,16 +10,20 @@ import { useFirestoreConnect, isLoaded } from 'react-redux-firebase'
 //App Imports
 import FloatingLoader from '../../components/Loader/FloatingLoader'
 import Onboarding from "../../components/Onboarding/Onboarding";
+import MyAccount from "../../components/MyAccount/MyAccount";
 import loader from "../../assets/loaders/educoin(B).gif";
 import { updateObject, checkValidity } from "../../shared/utility";
 
-const Users = (props) => {
+const Users = props => {
+  /* Inits user container view */
+  let userView;
 
+  /* Container States */
   const [OnboardingForm, setOnboardingForm] = useState({
     institution: {
       value: "",
       validation: {
-        required: true,
+        required: true
       },
       valid: false,
       touched: false
@@ -32,15 +36,15 @@ const Users = (props) => {
       },
       valid: false,
       touched: false
-    },
-
-  })
-
+    }
+  });
+  /* Loads clients data from Firestore */
   useFirestoreConnect(() => [
-    { collection: 'clients', where: ["active", "==", true] }
+    { collection: "clients", where: ["active", "==", true] }
   ]);
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
+  /* Onboarding Logic */
   const OnboardingFormHandler = (event, controlName) => {
     const updatedControls = updateObject(OnboardingForm, {
       [controlName]: updateObject(OnboardingForm[controlName], {
@@ -55,7 +59,7 @@ const Users = (props) => {
     setOnboardingForm(updatedControls);
   };
 
-  const submitOnboardingHandler = (event) => {
+  const submitOnboardingHandler = event => {
     let payload = {
       institution: OnboardingForm.institution.value,
       linkCode: OnboardingForm.linkCode.value
@@ -63,7 +67,8 @@ const Users = (props) => {
     event.preventDefault();
     props.checkOnboarding(payload);
   };
-  
+
+  /* Onboarding view */
   let onboardingPage = (
     <Onboarding
       clients={clients}
@@ -73,20 +78,21 @@ const Users = (props) => {
       error={props.codeVerifError}
     />
   );
+  /* My Account view */
+  let myAccountPage = <MyAccount />;
+
+  /* URL Check to see if onboarding should be loaded or my account */
+  const currentPath = props.location.pathname;
+  if (currentPath.match("/onboarding")) {
+    userView = onboardingPage;
+  } else if (currentPath.match("/my-account")) {
+    userView = myAccountPage;
+  }
+
   /* Checks if code is verified */
   if (props.codeVerifLoading) {
-    onboardingPage = (
-      <FloatingLoader>
-        <Onboarding
-          clients={clients}
-          OnboardingForm={OnboardingForm}
-          OnboardingFormChanged={OnboardingFormHandler}
-          error={props.codeVerifError}
-          submitHandler={submitOnboardingHandler}
-        />
-      </FloatingLoader>
-    );
-  } 
+    userView = <FloatingLoader>{userView}</FloatingLoader>;
+  }
 
   /* Checks if data is loaded from firestore */
   if (!isLoaded(clients)) {
@@ -95,12 +101,8 @@ const Users = (props) => {
         <img src={loader} alt="loading..." />
       </div>
     );
-  };
-  return (
-    <React.Fragment>
-      {onboardingPage}
-    </React.Fragment>
-  );
+  }
+  return <React.Fragment>{userView}</React.Fragment>;
 };
 
 const mapStateToProps = state => {

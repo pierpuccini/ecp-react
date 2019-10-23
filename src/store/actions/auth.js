@@ -140,7 +140,6 @@ export const signUp = (data, typeOfSignUp) => {
             }
           )
           .then(res => {
-            console.log("res", res);
             dispatch(signUpSuccess(false));
           })
           .catch(err => {

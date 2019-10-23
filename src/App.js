@@ -12,19 +12,19 @@ import Toolbar from "@material-ui/core/Toolbar";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import FolderIcon from '@material-ui/icons/Folder';
-import RestoreIcon from '@material-ui/icons/Restore';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import BottomNavigation from "@material-ui/core/BottomNavigation";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import FolderIcon from "@material-ui/icons/Folder";
+import RestoreIcon from "@material-ui/icons/Restore";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
 //component Imports
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import "./App.css";
 import loader from "./assets/loaders/educoin(B).gif";
 import Topbar from "./components/UI/Topbar/Topbar";
-import SideList from './components/UI/SideList/SideList'
+import SideList from "./components/UI/SideList/SideList";
 
 const asyncAuth = asyncComponent(() => {
   return import("./containers/Auth/Auth");
@@ -56,23 +56,23 @@ const useStyles = makeStyles(theme => ({
   },
   bottomNav: {
     [theme.breakpoints.up("sm")]: {
-      display: 'none'
+      display: "none"
     },
     [theme.breakpoints.down("sm")]: {
-      width: '100%',
-      position: 'fixed',
-      bottom: '0',
+      width: "100%",
+      position: "fixed",
+      bottom: "0"
     }
   },
   container: {
-    height: '85%',
+    height: "85%",
     [theme.breakpoints.up("sm")]: {
-      marginBottom: '0px !important'
+      marginBottom: "0px !important"
     },
     [theme.breakpoints.down("sm")]: {
-      marginBottom: '76px'
+      marginBottom: "76px"
     }
-  },
+  }
 }));
 
 function App(props) {
@@ -84,6 +84,8 @@ function App(props) {
 
   const [drawerOpen, setdrawerOpen] = useState(false);
 
+  const [viewAccount, setViewAccount] = useState(false);
+
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
@@ -93,14 +95,21 @@ function App(props) {
     };
   }, []);
 
-  const toggleDrawer = (open) => {
+  const toggleDrawer = open => {
     setdrawerOpen(open);
   };
 
-  const [bottomBarSelect, setbottomBarSelect] = useState('recents');
+  const [bottomBarSelect, setbottomBarSelect] = useState("recents");
 
   const handleBottomBarChange = (event, newValue) => {
     setbottomBarSelect(newValue);
+  };
+
+  const logoutHandler = () => {
+    setDomReady(true);
+    setdrawerOpen(false);
+    setViewAccount(false);
+    props.logout();
   };
 
   let loadingDom = (
@@ -109,9 +118,15 @@ function App(props) {
     </div>
   );
 
-  let routes, redirect, app
+  let routes, redirect, app;
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
+
+    const viewAccountHandler = () => {
+      console.log("viewing account");
+      setViewAccount(true);
+    };
+
     //Title Checker
     let title = null;
     switch (props.location.pathname) {
@@ -132,15 +147,19 @@ function App(props) {
         <img src={loader} alt="loading..." />
       </div>
     );
-        
+
     if (props.profileLoaded && props.newUser === "") {
       redirect = <Redirect to="/onboarding" />;
+    } else if (viewAccount) {
+      console.log('my acc');
+      redirect = <Redirect to="/my-account" />;
     } else {
       redirect = <Redirect to="/home" />;
     }
 
     routes = (
       <Switch>
+        <Route path="/my-account" component={asyncUsers} />
         <Route path="/onboarding" component={asyncUsers} />
         <Route path="/home" component={asyncDashboard} />
       </Switch>
@@ -201,11 +220,12 @@ function App(props) {
           <AppBar>
             <Toolbar className={classes.topbar}>
               <Topbar
-                logout={props.logout}
+                logout={logoutHandler}
                 toggleDrawer={toggleDrawer}
                 drawerState={drawerOpen}
                 title={title}
                 newUser={props.newUser === ""}
+                viewAccountHandler={viewAccountHandler}
               />
             </Toolbar>
           </AppBar>
@@ -239,7 +259,11 @@ function App(props) {
     );
   }
 
-  return <React.Fragment>{(domReady && props.profileLoaded) ? app : loadingDom}</React.Fragment>;
+  return (
+    <React.Fragment>
+      {domReady && props.profileLoaded ? app : loadingDom}
+    </React.Fragment>
+  );
 }
 
 function ElevationScroll(props) {
@@ -263,11 +287,15 @@ const mapStateToProps = state => {
     isAuthenticated:
       state.firebase.auth.uid &&
       !state.auth.newUser &&
-      !state.auth.logout && 
+      !state.auth.logout &&
       !state.auth.newUserGoogleLogin,
-      profileLoaded: state.firebase.profile.isLoaded,
-      name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:false,
-      newUser: (state.firebase.profile.isLoaded)?state.firebase.profile.role: false
+    profileLoaded: state.firebase.profile.isLoaded,
+    name: state.firebase.profile.isLoaded
+      ? state.firebase.profile.displayName
+      : false,
+    newUser: state.firebase.profile.isLoaded
+      ? state.firebase.profile.role
+      : false
   };
 };
 
