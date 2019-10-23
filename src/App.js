@@ -25,6 +25,7 @@ import "./App.css";
 import loader from "./assets/loaders/educoin(B).gif";
 import Topbar from "./components/UI/Topbar/Topbar";
 import SideList from './components/UI/SideList/SideList'
+import Auth from './containers/Auth/Auth'
 
 const asyncAuth = asyncComponent(() => {
   return import("./containers/Auth/Auth");
@@ -228,9 +229,9 @@ function App(props) {
       <div className="App">
         <Switch>
           {redirect}
-          <Route path="/login" component={asyncAuth} />
-          <Route path="/sign-up" component={asyncAuth} />
-          <Route path="/forgot-login" component={asyncAuth} />
+          <Route path="/login" component={Auth} />
+          <Route path="/sign-up" component={Auth} />
+          <Route path="/forgot-login" component={Auth} />
           <Redirect to="/login" />
         </Switch>
       </div>
