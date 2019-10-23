@@ -16,7 +16,7 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import FolderIcon from "@material-ui/icons/Folder";
-import RestoreIcon from "@material-ui/icons/Restore";
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 //component Imports
@@ -99,7 +99,7 @@ function App(props) {
     setdrawerOpen(open);
   };
 
-  const [bottomBarSelect, setbottomBarSelect] = useState("recents");
+  const [bottomBarSelect, setbottomBarSelect] = useState("home");
 
   const handleBottomBarChange = (event, newValue) => {
     setbottomBarSelect(newValue);
@@ -170,9 +170,9 @@ function App(props) {
         onChange={handleBottomBarChange}
       >
         <BottomNavigationAction
-          label="Recents"
-          value="recents"
-          icon={<RestoreIcon />}
+          label="Home"
+          value="home"
+          icon={<HomeOutlinedIcon />}
         />
         <BottomNavigationAction
           label="Favorites"
