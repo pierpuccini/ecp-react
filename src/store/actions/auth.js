@@ -100,6 +100,15 @@ export const signUp = (data, typeOfSignUp) => {
     const firestore = getFirestore();
     firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
+    /* Extracts initials from name */
+    const initialExtractor = fullName => {
+      let initials = fullName.split(" ");
+      let initialsArray = initials.map(name => {
+        return name[0].toString().toUpperCase();
+      });
+      initials = initialsArray.toString();
+      return initials;
+    }; 
 
     switch (typeOfSignUp) {
       case "google":
@@ -110,18 +119,18 @@ export const signUp = (data, typeOfSignUp) => {
           .then(() => {
             /* Gets user for creating firestore document */
             const user = firebase.auth().currentUser;
-            /* Extracts initials from name */
-            let initials = user.displayName.split(" ");
-            let initialsArray = initials.map(name => {
-              return name[0].toString().toUpperCase();
-            });
-            initials = initialsArray.toString();
+            // /* Extracts initials from name */
+            // let initials = user.displayName.split(" ");
+            // let initialsArray = initials.map(name => {
+            //   return name[0].toString().toUpperCase();
+            // });
+            // initials = initialsArray.toString();
             /* Creates user doc in firestore */
             firestore
               .collection("users")
               .doc(user.uid)
               .set({
-                initials: initials,
+                initials: initialExtractor(user.displayName),
                 displayName: user.displayName,
                 studentId: "",
                 institution: "",
@@ -138,42 +147,61 @@ export const signUp = (data, typeOfSignUp) => {
       default:
         dispatch(signUpStart());
         firebase
-          .auth()
-          .createUserWithEmailAndPassword(data.email, data.password)
-          .then(result => {
-            const user = firebase.auth().currentUser;
-            user.updateProfile({ displayName: data.fullName });
-            /* Extracts initials from name */
-            let initials = data.fullName.split(" ");
-            let initialsArray = initials.map(name => {
-              return name[0].toString().toUpperCase();
-            });
-            initials = initialsArray.toString();
-            /* Creates user doc in firestore */
-            firestore
-              .collection("users")
-              .doc(result.user.uid)
-              .set({
-                initials: initials,
-                displayName: data.fullName,
-                studentId: "",
-                institution: "",
-                classrooms: [],
-                role: ""
-              })
-              .then(() => {
-                dispatch(signUpSuccess(false));
-              })
-              .catch(error => {
-                const user = firebase.auth().currentUser;
-                user.delete().then(() => {
-                  dispatch(signUpFail(error));
-                });
-              });
+          .createUser(
+            { email: data.email, password: data.password },
+            {
+              initials: initialExtractor(data.fullName),
+              displayName: data.fullName,
+              studentId: "",
+              institution: "",
+              classrooms: [],
+              role: ""
+            }
+          )
+          .then(res => {
+            console.log("res", res);
+            dispatch(signUpSuccess(false));
           })
           .catch(err => {
+            console.log("res", err);
             dispatch(signUpFail(err));
           });
+          // .auth()
+          // .createUserWithEmailAndPassword(data.email, data.password)
+          // .then(result => {
+          //   const user = firebase.auth().currentUser;
+          //   user.updateProfile({ displayName: data.fullName });
+          //   /* Extracts initials from name */
+          //   let initials = data.fullName.split(" ");
+          //   let initialsArray = initials.map(name => {
+          //     return name[0].toString().toUpperCase();
+          //   });
+          //   initials = initialsArray.toString();
+          //   /* Creates user doc in firestore */
+          //   firestore
+          //     .collection("users")
+          //     .doc(result.user.uid)
+          //     .set({
+          //       initials: initials,
+          //       displayName: data.fullName,
+          //       studentId: "",
+          //       institution: "",
+          //       classrooms: [],
+          //       role: ""
+          //     })
+          //     .then(() => {
+          //       dispatch(signUpSuccess(false));
+          //     })
+          //     .catch(error => {
+          //       const user = firebase.auth().currentUser;
+          //       user.delete().then(() => {
+          //         dispatch(signUpFail(error));
+          //       });
+          //     });
+          // })
+          // .catch(err => {
+          //   dispatch(signUpFail(err));
+          // });
         break;
     }
   };
