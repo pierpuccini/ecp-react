@@ -197,8 +197,7 @@ const mapStateToProps = state => {
     authRedirectPath: state.auth.authRedirectPath,
     authLoading: state.auth.loading,
     authenticated: state.firebase.auth.uid && !state.auth.newUser && !state.auth.logout && !state.auth.newUserGoogleLogin,
-    newUser: state.auth.newUser,
-    fireAuth: state.firebase.auth,
+    newUser: state.auth.newUser
   };
 };
 

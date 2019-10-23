@@ -101,17 +101,6 @@ export const signUp = (data, typeOfSignUp) => {
     firebase.auth().useDeviceLanguage();
     const provider = new firebase.auth.GoogleAuthProvider();
 
-    /* Extracts initials from name */
-    const initialExtractor = fullName => {
-      console.log("getting initials");
-      let initials = fullName.split(" ");
-      let initialsArray = initials.map(name => {
-        return name[0].toString().toUpperCase();
-      });
-      initials = initialsArray.toString();
-      return initials;
-    };
-
     switch (typeOfSignUp) {
       case "google":
         dispatch(signUpStart());
@@ -119,15 +108,11 @@ export const signUp = (data, typeOfSignUp) => {
           .auth()
           .signInWithPopup(provider)
           .then(result => {
-            console.log("res", result);
-            /* Gets initials */
-            let initials = initialExtractor(result.user.displayName);
             /* Creates user doc in firestore */
             firestore
               .collection("users")
               .doc(result.user.uid)
               .set({
-                initials: initials,
                 displayName: result.user.displayName,
                 studentId: "",
                 institution: "",
@@ -156,15 +141,6 @@ export const signUp = (data, typeOfSignUp) => {
           )
           .then(res => {
             console.log("res", res);
-            /* Gets initials */
-            let initials = initialExtractor(res.displayName);
-            firestore
-              .collection("users")
-              .doc(getState().firebase.auth.uid)
-              .set({
-                ...res,
-                initials: initials
-              });
             dispatch(signUpSuccess(false));
           })
           .catch(err => {

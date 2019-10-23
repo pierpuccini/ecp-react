@@ -118,7 +118,7 @@ const Onboarding = props => {
           <TextField
             className={matClasses.textField}
             label="Unique Code"
-            placeholder="Code provided by your teacher"
+            placeholder="Provided by your teacher"
             value={OnboardingForm.linkCode.value}
             onChange={event => {
               OnboardingFormChanged(event, "linkCode");

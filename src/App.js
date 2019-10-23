@@ -84,14 +84,35 @@ function App(props) {
 
   const [drawerOpen, setdrawerOpen] = useState(false);
 
+  const [initialsState, setInitialsState] = useState({initials: ''});
+
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
     }, 1500);
+    let initialsCreator = initialsState;
+    if (Boolean(props.name)) {
+      /* Extracts initials from name */
+      initialsCreator = props.name.split(" ");
+      let initialsArray = initialsCreator.map(name => {
+        return name[0].toString().toUpperCase();
+      });
+      initialsArray.forEach(()=>{
+        if (initialsArray.length != 2) {
+          initialsArray.pop();
+        } else {
+          return initialsArray;
+        }
+      })
+      initialsCreator = initialsArray.join('');
+      setInitialsState({initials: initialsCreator});
+      console.log("initialsCreator", initialsCreator);
+    }
     return () => {
       clearTimeout(showCoinLoader);
     };
-  }, []);
+    // eslint-disable-next-line
+  }, [props.name]);
 
   const toggleDrawer = (open) => {
     setdrawerOpen(open);
@@ -102,7 +123,6 @@ function App(props) {
   const handleBottomBarChange = (event, newValue) => {
     setbottomBarSelect(newValue);
   };
-
 
   let loadingDom = (
     <div className="App">
@@ -133,9 +153,13 @@ function App(props) {
         <img src={loader} alt="loading..." />
       </div>
     );
-    props.profileLoaded && props.newUser === ""
-      ? (redirect = <Redirect to="/onboarding" />)
-      : (redirect = <Redirect to="/home" />);
+        
+    if (props.profileLoaded && props.newUser === "") {
+      redirect = <Redirect to="/onboarding" />;
+    } else {
+      redirect = <Redirect to="/home" />;
+    }
+
     routes = (
       <Switch>
         <Route path="/onboarding" component={asyncUsers} />
@@ -198,7 +222,7 @@ function App(props) {
           <AppBar>
             <Toolbar className={classes.topbar}>
               <Topbar
-                initials={props.initials}
+                initials={initialsState.initials}
                 logout={props.logout}
                 toggleDrawer={toggleDrawer}
                 drawerState={drawerOpen}
@@ -264,8 +288,7 @@ const mapStateToProps = state => {
       !state.auth.logout && 
       !state.auth.newUserGoogleLogin,
       profileLoaded: state.firebase.profile.isLoaded,
-      initials: (state.firebase.profile.initials)?state.firebase.profile.initials.replace(",", ""):null,
-      name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:' ',
+      name: (state.firebase.profile.isLoaded)?state.firebase.profile.displayName:false,
       newUser: (state.firebase.profile.isLoaded)?state.firebase.profile.role: false
   };
 };
