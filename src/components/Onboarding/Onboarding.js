@@ -90,7 +90,7 @@ const Onboarding = props => {
             <MenuBookOutlinedIcon />
           </Icon>
         </div>
-        <Typography>{errorMessage}</Typography>
+        {errorMessage}
         <form className={matClasses.container} onSubmit={props.submitHandler}>
           <TextField
             className={matClasses.textField}
