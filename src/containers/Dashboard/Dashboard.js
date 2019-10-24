@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 //App Imports
-import loader from "../../assets/loaders/educoin(B).gif";
+// import loader from "../../assets/loaders/educoin(B).gif";
 // import classes from "./Dashboard.module.scss";
 //MaterialUI Imports
 // import { makeStyles } from "@material-ui/core/styles";
@@ -22,15 +22,15 @@ import loader from "../../assets/loaders/educoin(B).gif";
 const Dashboard = props => {
   // const matClasses = useStyles();
 
-  const loadingGIF = (
-    <div className="App">
-      <img src={loader} alt="loading..." />
-    </div>
-  );
+  // const loadingGIF = (
+  //   <div className="App">
+  //     <img src={loader} alt="loading..." />
+  //   </div>
+  // );
   
   const dashboard = (
     <div>
-      <p>Loged In</p>
+      <p>Home</p>
     </div>
   );
 
