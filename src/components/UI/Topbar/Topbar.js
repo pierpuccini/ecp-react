@@ -82,8 +82,7 @@ const Topbar = props => {
   const viewAccount = () => {
     handleMenuClose();
     handleMobileMenuClose();
-    props.viewAccountHandler();
-
+    props.viewAccountHandler(null , 'my-account');
   }
 
   const logout = typeOfScreen => {

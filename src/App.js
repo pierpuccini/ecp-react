@@ -77,6 +77,7 @@ const useStyles = makeStyles(theme => ({
 
 function App(props) {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const { profileLoaded, newUser, onboardingSuccess, location } = props
 
   const classes = useStyles();
   //Checks if DOM is ready to un mount loading icon
@@ -84,35 +85,33 @@ function App(props) {
 
   const [drawerOpen, setdrawerOpen] = useState(false);
 
-  const [viewAccount, setViewAccount] = useState(false);
+  const [navRoute, setNavRoute] = useState("home");
 
+  /* Use efect handles time out for loader and conditional routes managed by state */
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
-    }, 1500);
+    }, 1500);      
+    //Conditional Routes 
+    if (location.pathname.match('onboarding') && (!profileLoaded && !(newUser === ""))) { setNavRoute("home") }    
+    if (profileLoaded && newUser === "") { setNavRoute("onboarding") }    
+    if (onboardingSuccess) { setNavRoute("home") }    
     return () => {
       clearTimeout(showCoinLoader);
     };
-  }, []);
+  }, [profileLoaded, newUser, onboardingSuccess, location, setNavRoute]);
 
   const toggleDrawer = open => {
     setdrawerOpen(open);
   };
 
-  const [bottomBarSelect, setbottomBarSelect] = useState("home");
-
-  const handleBottomBarChange = (event, newValue) => {
-    setbottomBarSelect(newValue);
-  };
-
-  const viewAccountHandler = () => {
-    setViewAccount(true);
+  const handleNavChange = (event, newValue) => {
+    setNavRoute(newValue);
   };
 
   const logoutHandler = () => {
     setDomReady(true);
     setdrawerOpen(false);
-    setViewAccount(false);
     props.logout();
   };
 
@@ -125,12 +124,8 @@ function App(props) {
   let routes, redirect, app;
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
-    /* Conditional routes section */
-    redirect = <Redirect to="/home" />;
-
-    if (props.profileLoaded && props.newUser === "") {redirect = <Redirect to="/onboarding" />}
-
-    if (viewAccount) {redirect = <Redirect to="/my-account" />}
+    /* Conditional routes section */ 
+    redirect = <Redirect to={`/${navRoute}`} />;   
 
     //Title Checker
     let title = null;
@@ -140,7 +135,7 @@ function App(props) {
         break;
 
       case "/onboarding":
-        title = `Welcome ${props.name.split(" ")[0]}`;
+        title = `Welcome ${props.name}`;
         break;
 
       default:
@@ -156,8 +151,8 @@ function App(props) {
     //Available routes or Guarded routes
     routes = (
       <Switch>
-        <Route path="/my-account" component={asyncUsers} />
-        <Route path="/onboarding" component={asyncUsers} />
+        <Route path="/my-account" key="my-account" component={asyncUsers} />
+        <Route path="/onboarding" key="onboarding" component={asyncUsers} />
         <Route path="/home" component={asyncDashboard} />
       </Switch>
     );
@@ -166,8 +161,8 @@ function App(props) {
       <BottomNavigation
         id="footer"
         className={classes.bottomNav}
-        value={bottomBarSelect}
-        onChange={handleBottomBarChange}
+        value={navRoute}
+        onChange={handleNavChange}
       >
         <BottomNavigationAction
           label="Home"
@@ -222,7 +217,7 @@ function App(props) {
                 drawerState={drawerOpen}
                 title={title}
                 newUser={props.newUser === ""}
-                viewAccountHandler={viewAccountHandler}
+                viewAccountHandler={handleNavChange}
               />
             </Toolbar>
           </AppBar>
@@ -292,7 +287,8 @@ const mapStateToProps = state => {
       : false,
     newUser: state.firebase.profile.isLoaded
       ? state.firebase.profile.role
-      : false
+      : false,
+    onboardingSuccess: state.onboarding.success
   };
 };
 
