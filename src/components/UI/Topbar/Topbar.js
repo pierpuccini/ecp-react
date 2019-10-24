@@ -74,13 +74,18 @@ const Topbar = props => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
-    props.viewAccountHandler();
   };
-
+  
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+  
+  const viewAccount = () => {
+    handleMenuClose();
+    handleMobileMenuClose();
+    props.viewAccountHandler();
+
+  }
 
   const logout = typeOfScreen => {
     typeOfScreen === "desktop" ? handleMenuClose() : handleMobileMenuClose();
@@ -99,7 +104,7 @@ const Topbar = props => {
       onClose={handleMenuClose}
       TransitionComponent={Fade}
     >
-      <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
+      <MenuItem className={classes.menuItem} onClick={viewAccount}>
         <AssignmentIndOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>
@@ -135,7 +140,7 @@ const Topbar = props => {
           <Typography>Notifications</Typography>
         </MenuItem>
       )}
-      <MenuItem className={classes.menuItem} onClick={handleMobileMenuClose}>
+      <MenuItem className={classes.menuItem} onClick={viewAccount}>
         <AssignmentIndOutlinedIcon />
         <Typography>My Account</Typography>
       </MenuItem>
