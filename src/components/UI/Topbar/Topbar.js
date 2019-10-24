@@ -69,7 +69,6 @@ const Topbar = props => {
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
-    props.viewAccountHandler();
   };
 
   const handleMenuClose = () => {
