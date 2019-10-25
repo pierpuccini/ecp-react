@@ -156,11 +156,16 @@ function App(props) {
     //Available routes or Guarded routes
     routes = (
       <Switch>
-      {routesArray.map(route =>{
-        return (
-          <Route path={`/${route.url}`} key={`/${route.url}`} component={route.comp} />
-        )
-      })}
+        {routesArray.map(route => {
+          return (
+            <Route
+              path={`/${route.url}`}
+              key={`/${route.url}`}
+              component={route.comp}
+            />
+          );
+        })}
+        <Redirect to="/home" />
       </Switch>
     );
 
