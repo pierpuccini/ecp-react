@@ -122,6 +122,11 @@ function App(props) {
   );
 
   let routes, redirect, app;
+  const routesArray = [
+    { url: "home", comp: asyncDashboard },
+    { url: "my-account", comp: asyncUsers },
+    { url: "onboarding", comp: asyncUsers }
+  ];
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
     /* Conditional routes section */ 
@@ -151,9 +156,11 @@ function App(props) {
     //Available routes or Guarded routes
     routes = (
       <Switch>
-        <Route path="/my-account" key="my-account" component={asyncUsers} />
-        <Route path="/onboarding" key="onboarding" component={asyncUsers} />
-        <Route path="/home" component={asyncDashboard} />
+      {routesArray.map(route =>{
+        return (
+          <Route path={`/${route.url}`} key={`/${route.url}`} component={route.comp} />
+        )
+      })}
       </Switch>
     );
 
