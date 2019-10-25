@@ -212,7 +212,7 @@ function App(props) {
           toggleDrawer(true);
         }}
       >
-        <SideList toggleDrawer={toggleDrawer} />
+        <SideList toggleDrawer={toggleDrawer} onChange={handleNavChange} />
       </SwipeableDrawer>
     );
 

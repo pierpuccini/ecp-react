@@ -6,12 +6,13 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 
 /* TODO: Use my own list */
 const SideList = (props) => {
-  const sideNavigationItems = ["Inbox", "Starred", "Send email", "Drafts"];
+  const sideNavigationItems = [{text: "Home", url: "home", icon: (<HomeOutlinedIcon/>) }];
   return (
     <div
       role="presentation"
@@ -23,12 +24,12 @@ const SideList = (props) => {
       }}
     >
       <List>
-        {sideNavigationItems.map((items, index) => (
-          <ListItem button key={items}>
+        {sideNavigationItems.map((item) => (
+          <ListItem button key={item.url} onClick={()=>{props.onChange(null, item.url)}}>
             <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              {item.icon}
             </ListItemIcon>
-            <ListItemText primary={items} />
+            <ListItemText primary={item.url} />
           </ListItem>
         ))}
       </List>
