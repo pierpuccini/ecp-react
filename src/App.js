@@ -121,6 +121,7 @@ function App(props) {
     </div>
   );
 
+  /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect, app;
   const routesArray = [
     { url: "home", comp: asyncDashboard },

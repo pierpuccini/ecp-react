@@ -102,10 +102,12 @@ const Topbar = props => {
       onClose={handleMenuClose}
       TransitionComponent={Fade}
     >
-      <MenuItem className={classes.menuItem} onClick={viewAccount}>
-        <AssignmentIndOutlinedIcon />
-        <Typography>My Account</Typography>
-      </MenuItem>
+      {props.newUser ? null : (
+        <MenuItem className={classes.menuItem} onClick={viewAccount}>
+          <AssignmentIndOutlinedIcon />
+          <Typography>My Account</Typography>
+        </MenuItem>
+      ) }
       <MenuItem
         className={classes.menuItem}
         onClick={() => {
@@ -138,10 +140,12 @@ const Topbar = props => {
           <Typography>Notifications</Typography>
         </MenuItem>
       )}
-      <MenuItem className={classes.menuItem} onClick={viewAccount}>
-        <AssignmentIndOutlinedIcon />
-        <Typography>My Account</Typography>
-      </MenuItem>
+      {props.newUser ? null : (
+        <MenuItem className={classes.menuItem} onClick={viewAccount}>
+          <AssignmentIndOutlinedIcon />
+          <Typography>My Account</Typography>
+        </MenuItem>
+      )}
       <MenuItem
         className={classes.menuItem}
         onClick={() => {
