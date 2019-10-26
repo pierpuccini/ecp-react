@@ -290,7 +290,8 @@ function App(props) {
           MuiInputBase: {
             input: {
               '&:-webkit-autofill': {
-                '-webkit-text-fill-color': 'green',
+                'border-radius': '4px',
+                '-webkit-box-shadow': '0 0 0px  #fff inset'
               },
             },
           },
