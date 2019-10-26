@@ -1,5 +1,5 @@
 import React from 'react'
-import loader from '../../assets/loaders/educoin(B).gif'
+import loader from '../../../assets/loaders/educoin(B).gif'
 import classes from './FloatingLoader.module.scss'
 
 const FloatingLoader = (props) => {

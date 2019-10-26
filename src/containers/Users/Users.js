@@ -8,7 +8,7 @@ import * as actions from "../../store/actions/index";
 import { useSelector } from 'react-redux'
 import { useFirestoreConnect, isLoaded } from 'react-redux-firebase'
 //App Imports
-import FloatingLoader from '../../components/Loader/FloatingLoader'
+import FloatingLoader from '../../components/Loader/FloatingLoader/FloatingLoader'
 import Onboarding from "../../components/Onboarding/Onboarding";
 import MyAccount from "../../components/MyAccount/MyAccount";
 import loader from "../../assets/loaders/educoin(B).gif";
