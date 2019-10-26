@@ -8,7 +8,7 @@ import { Redirect, withRouter } from "react-router-dom";
 //App Imports
 import Login from "../../components/Login/Login";
 import SignUp from "../../components/SignUp/SignUp";
-import loader from "../../assets/loaders/educoin(B).gif";
+import Loader from "../../components/Loader/PngLoader/PngLoader";
 //Personal Helpers
 import { updateObject, checkValidity } from "../../shared/utility";
 
@@ -151,7 +151,7 @@ const Auth = props => {
 
   const loadingGIF = (
     <div className="App">
-      <img src={loader} alt="loading..." />
+      <Loader/>
     </div>
   );
   

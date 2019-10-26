@@ -26,7 +26,7 @@ import { ThemeProvider } from '@material-ui/styles';
 /* component Imports */
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import "./App.css";
-import loader from "./assets/loaders/educoin(B).gif";
+import Loader from "./components/Loader/PngLoader/PngLoader";
 import Topbar from "./components/UI/Topbar/Topbar";
 import SideList from "./components/UI/SideList/SideList";
 
@@ -130,7 +130,7 @@ function App(props) {
 
   let loadingDom = (
     <div className="App">
-      <img src={loader} alt="loading..." />
+      <Loader/>
     </div>
   );
 
@@ -165,7 +165,7 @@ function App(props) {
     //Loader
     app = (
       <div className="App">
-        <img src={loader} alt="loading..." />
+        <Loader />
       </div>
     );
     //Available routes or Guarded routes

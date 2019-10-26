@@ -11,7 +11,7 @@ import { useFirestoreConnect, isLoaded } from 'react-redux-firebase'
 import FloatingLoader from '../../components/Loader/FloatingLoader/FloatingLoader'
 import Onboarding from "../../components/Onboarding/Onboarding";
 import MyAccount from "../../components/MyAccount/MyAccount";
-import loader from "../../assets/loaders/educoin(B).gif";
+import Loader from "../../components/Loader/PngLoader/PngLoader"
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const Users = props => {
@@ -98,7 +98,7 @@ const Users = props => {
   if (!isLoaded(clients)) {
     return (
       <div className="App">
-        <img src={loader} alt="loading..." />
+        <Loader/>
       </div>
     );
   }
