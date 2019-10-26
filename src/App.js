@@ -285,6 +285,13 @@ function App(props) {
       createMuiTheme({
         palette: {
           type: prefersDarkMode ? "dark" : "light"
+        },
+        overrides: {
+          MuiOutlinedInput: {
+            '& :-webkit-autofill': {
+              '-webkit-text-fill-color': 'green',
+            },
+          },
         }
       }),
     [prefersDarkMode]
