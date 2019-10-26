@@ -1,11 +1,11 @@
-//React Imports
-import React, { useState, useEffect } from "react";
+/* React Imports */
+import React, { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
-//Redux Imports
+/* Redux Imports */
 import { connect } from "react-redux";
 import * as actions from "./store/actions/index";
-//Material UI Imports
+/* Material UI Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -19,7 +19,11 @@ import FolderIcon from "@material-ui/icons/Folder";
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-//component Imports
+//For dark theme
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+/* component Imports */
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import "./App.css";
 import loader from "./assets/loaders/educoin(B).gif";
@@ -77,7 +81,7 @@ const useStyles = makeStyles(theme => ({
 
 function App(props) {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const { profileLoaded, newUser, onboardingSuccess, location } = props
+  const { profileLoaded, newUser, onboardingSuccess, location } = props;
 
   const classes = useStyles();
   //Checks if DOM is ready to un mount loading icon
@@ -91,11 +95,20 @@ function App(props) {
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
-    }, 1500);      
-    //Conditional Routes 
-    if (location.pathname.match('onboarding') && (!profileLoaded && !(newUser === ""))) { setNavRoute("home") }    
-    if (profileLoaded && newUser === "") { setNavRoute("onboarding") }    
-    if (onboardingSuccess) { setNavRoute("home") }    
+    }, 1500);
+    //Conditional Routes
+    if (
+      location.pathname.match("onboarding") &&
+      (!profileLoaded && !(newUser === ""))
+    ) {
+      setNavRoute("home");
+    }
+    if (profileLoaded && newUser === "") {
+      setNavRoute("onboarding");
+    }
+    if (onboardingSuccess) {
+      setNavRoute("home");
+    }
     return () => {
       clearTimeout(showCoinLoader);
     };
@@ -130,8 +143,9 @@ function App(props) {
   ];
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
-    /* Conditional routes section */ 
-    redirect = <Redirect to={`/${navRoute}`} />;   
+    /* Conditional routes section */
+
+    redirect = <Redirect to={`/${navRoute}`} />;
 
     //Title Checker
     let title = null;
@@ -264,9 +278,23 @@ function App(props) {
     );
   }
 
+  //In charge of handelind darkmode
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const theme = useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          type: prefersDarkMode ? "dark" : "light"
+        }
+      }),
+    [prefersDarkMode]
+  );
+
   return (
     <React.Fragment>
-      {domReady && props.profileLoaded ? app : loadingDom}
+      <ThemeProvider theme={theme}>
+        {domReady && props.profileLoaded ? app : loadingDom}
+      </ThemeProvider>
     </React.Fragment>
   );
 }

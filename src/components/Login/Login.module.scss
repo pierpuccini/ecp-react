@@ -1,4 +1,4 @@
-.loginContainer{
+.loginContainer {
     padding: unset !important;
 }
 
@@ -65,5 +65,18 @@
 
     .formContainer {
         margin: 0px 40px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .gLogin {
+        color: unset;
+        text-transform: capitalize;
+    }
+
+    .textDivider span {
+        background-color: #424242;
+        padding: 1em;
+        font-size: small
     }
 }

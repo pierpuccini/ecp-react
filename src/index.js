@@ -33,10 +33,7 @@ const enhancers = [
 //checks to see if redux is available in production or not
 // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const reduxDevToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-if (
-  (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "production") &&
-  typeof reduxDevToolsExtension === "function"
-) {
+if (process.env.NODE_ENV === "development" &&typeof reduxDevToolsExtension === "function") {
   enhancers.push(reduxDevToolsExtension());
 }
 
@@ -70,6 +67,7 @@ const rrfProps = {
   dispatch: store.dispatch,
   createFirestoreInstance
 };
+
 
 //CssBaseline is used to give the app a more material approach
 let app = (
