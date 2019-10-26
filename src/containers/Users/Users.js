@@ -90,8 +90,9 @@ const Users = props => {
   }
 
   /* Checks if code is verified */
+  let floatingLoader = null;
   if (props.codeVerifLoading) {
-    userView = <FloatingLoader>{userView}</FloatingLoader>;
+  floatingLoader = <FloatingLoader></FloatingLoader>;
   }
 
   /* Checks if data is loaded from firestore */
@@ -102,7 +103,7 @@ const Users = props => {
       </div>
     );
   }
-  return <React.Fragment>{userView}</React.Fragment>;
+  return <React.Fragment>{floatingLoader}{userView}</React.Fragment>;
 };
 
 const mapStateToProps = state => {

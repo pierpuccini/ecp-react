@@ -1,5 +1,5 @@
 .content{position: relative;}
-.overlay{position: absolute;left: 0; top: 0; right: 0; bottom: 0;z-index: 2;background-color: rgba(66, 66, 66, 1)}
+.overlay{position: fixed; left: 0; top: 0; right: 0; bottom: 0;z-index: 2;background-color: #fafafaab}
 .overlayContent {
     position: absolute;
     transform: translateY(-50%);
@@ -11,3 +11,6 @@
     text-align: center;
     color: #555;
 }
+@media (prefers-color-scheme: dark) {
+    .overlay{position: fixed; left: 0; top: 0; right: 0; bottom: 0;z-index: 2;background-color: rgba(66, 66, 66, 0)} 
+  }
