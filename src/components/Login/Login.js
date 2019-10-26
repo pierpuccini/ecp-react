@@ -140,7 +140,7 @@ const Login = props => {
         className={matClasses.paper}
         style={{ boxShadow: "unset", padding: "unset" }}
       >
-        <div className={classes.restoreLogin}>
+        <Typography className={classes.restoreLogin}>
           ¿Need an account?{" "}
           <Link
             component={SignUpLink}
@@ -149,7 +149,7 @@ const Login = props => {
           >
             Sign Up.
           </Link>
-        </div>
+        </Typography>
       </Paper>
     );
     bottomLink = (
@@ -238,7 +238,7 @@ const Login = props => {
       </form>
     );
     topLink = (
-      <div className={classes.restoreLogin}>
+      <Typography className={classes.restoreLogin}>
         ¿Forgot your Login Details?{" "}
         <Link
           component={forgotLoginDetailsLink}
@@ -247,16 +247,16 @@ const Login = props => {
         >
           Get Help Here.
         </Link>
-      </div>
+      </Typography>
     );
     bottomLink = (
       <Paper className={matClasses.paper}>
-        <div className={classes.restoreLogin}>
+        <Typography className={classes.restoreLogin}>
           ¿Need an account?{" "}
           <Link component={SignUpLink} to="/sign-up">
             Sign Up.
           </Link>
-        </div>
+        </Typography>
       </Paper>
     );
   }
