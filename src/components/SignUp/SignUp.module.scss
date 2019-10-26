@@ -63,6 +63,14 @@
     border-bottom: 1px solid #f7f7f7;
 }
 
+.sendSMSOff {
+    color: rgb(117, 117, 117) !important
+}
+
+.sendSMSOn {
+    color: rgb(63, 81, 181) !important
+}
+
 @media (min-width: 600px) {
     .Auth {
         width: 500px;
@@ -73,10 +81,16 @@
     }
 }
 
-.sendSMSOff {
-    color: rgb(117, 117, 117) !important
+@media (prefers-color-scheme: dark) {
+    .gLogin {
+        color: unset;
+        text-transform: capitalize;
+    }
+
+    .textDivider span {
+        background-color: #424242;
+        padding: 1em;
+        font-size: small
+    }
 }
 
-.sendSMSOn {
-    color: rgb(63, 81, 181) !important
-}
