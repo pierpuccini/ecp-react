@@ -96,6 +96,9 @@ function App(props) {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
     }, 1500);
+    if (location.pathname !== 'home') {
+      setNavRoute(location.pathname.replace('/',''));
+    }
     //Conditional Routes
     if (
       location.pathname.match("onboarding") &&
