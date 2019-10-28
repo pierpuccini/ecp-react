@@ -38,6 +38,28 @@ const Users = props => {
       touched: false
     }
   });
+  const [myAccountForm, setMyAccountForm] = useState({
+    displayName: {
+      value: props.profile.displayName,
+      validation: {
+        isName: true
+      },
+      valid: false,
+      touched: false
+    },
+    institution: {
+      value: props.profile.institution,
+      validation: {},
+      valid: false,
+      touched: false
+    },
+    studentId: {
+      value: props.profile.studentId,
+      validation: {},
+      valid: false,
+      touched: false
+    }
+  });
   /* Loads clients data from Firestore */
   useFirestoreConnect(() => [
     { collection: "clients", where: ["active", "==", true] }
@@ -68,6 +90,21 @@ const Users = props => {
     props.checkOnboarding(payload);
   };
 
+  /* My account logic */
+  const myAccountInputChangedHandler = (event, controlName) => {
+    const updatedControls = updateObject(myAccountForm, {
+      [controlName]: updateObject(myAccountForm[controlName], {
+        value: event.target.value,
+        valid: checkValidity(
+          event.target.value,
+          myAccountForm[controlName].validation,
+        ),
+        touched: true
+      })
+    });
+    setMyAccountForm(updatedControls);
+  };
+
   /* Onboarding view */
   let onboardingPage = (
     <Onboarding
@@ -79,7 +116,14 @@ const Users = props => {
     />
   );
   /* My Account view */
-  let myAccountPage = <MyAccount />;
+  let myAccountPage = (
+    <MyAccount
+      myProfileForm={myAccountForm}
+      myProfile={props.profile}
+      clients={clients}
+      inputChangedHandler={myAccountInputChangedHandler}
+    />
+  );
 
   /* URL Check to see if onboarding should be loaded or my account */
   const currentPath = props.location.pathname;
@@ -111,6 +155,7 @@ const mapStateToProps = state => {
     codeVerifLoading: state.onboarding.loading,
     codeVerifError: state.onboarding.error,
     codeVerifSucces: state.onboarding.success,
+    profile: state.firebase.profile
   };
 };
 
