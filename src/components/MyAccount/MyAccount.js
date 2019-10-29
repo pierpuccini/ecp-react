@@ -199,7 +199,7 @@ const MyAccount = (props) => {
                     variant="outlined"
                     className={classes.button}
                     style={{ width: "210px" }}
-                    onClick={() => props.linkWithGoogleHandler()}
+                    onClick={() => props.linkWithProvider('google')}
                   >
                     <Icon classes={{ root: classes.iconRoot }}>
                       <img
