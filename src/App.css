@@ -3,6 +3,7 @@
     top: 0;
     left: 0;
     right: 0;
+    height: 66px;
 }
 #footer {
     position: fixed;
@@ -13,8 +14,8 @@
 }
 #content {
     position: fixed;
-    top: 65px;
-    bottom: 100px;
+    top: 66px;
+    bottom: 76px;
     left: 0;
     right: 0;
     overflow: auto;

@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
       height: "64px"
     },
     [theme.breakpoints.down("md")]: {
-      height: "74px"
+      height: "66px"
     }
   },
   bottomNav: {
@@ -69,12 +69,8 @@ const useStyles = makeStyles(theme => ({
     }
   },
   container: {
-    height: "85%",
     [theme.breakpoints.up("sm")]: {
       marginBottom: "0px !important"
-    },
-    [theme.breakpoints.down("sm")]: {
-      marginBottom: "76px"
     }
   }
 }));
