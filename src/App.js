@@ -143,7 +143,6 @@ function App(props) {
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
     /* Conditional routes section */
-
     redirect = <Redirect to={`/${navRoute}`} />;
 
     //Title Checker

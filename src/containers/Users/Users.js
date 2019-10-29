@@ -58,6 +58,18 @@ const Users = props => {
       validation: {},
       valid: false,
       touched: false
+    },
+    email: {
+      value: props.profile.email,
+      validation: { isEmail: true },
+      valid: false,
+      touched: false
+    },
+    password: {
+      value: "*********",
+      validation: { minLength: 6 },
+      valid: false,
+      touched: false
     }
   });
   /* Loads clients data from Firestore */
