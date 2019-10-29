@@ -45,9 +45,12 @@ export const linkUser = provider => {
             firestore
               .collection("users")
               .doc(result.user.uid)
-              .set({
-                googleLink: true
-              });
+              .set(
+                {
+                  googleLink: true
+                },
+                { merge: true }
+              );
             dispatch(userUpdateSuccess());
           }).catch(function(error) {
             dispatch(userUpdateFailed(error))
