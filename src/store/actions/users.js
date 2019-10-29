@@ -41,7 +41,6 @@ export const linkUser = provider => {
     if(provider === "google"){
         const fbProvider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().currentUser.linkWithPopup(fbProvider).then(function(result) {
-            console.log('result',result);
             firestore
               .collection("users")
               .doc(result.user.uid)
