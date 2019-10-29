@@ -20,6 +20,7 @@ import "./index.css";
 //reducers
 import authReducer from "./store/reducers/auth";
 import onboardingReducer from "./store/reducers/onboarding";
+import usersReducer from "./store/reducers/users";
 
 // Initialize Firebase & firebase services
 firebase.initializeApp(firebaseConfig);
@@ -41,6 +42,7 @@ if (process.env.NODE_ENV === "development" &&typeof reduxDevToolsExtension === "
 const rootReducer = combineReducers({
   auth: authReducer,
   onboarding: onboardingReducer,
+  users: usersReducer,
   firebase: firebaseReducer,
   firestore: firestoreReducer
 });
