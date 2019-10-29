@@ -17,7 +17,6 @@ import { updateObject, checkValidity } from "../../shared/utility";
 const Users = props => {
   /* Inits user container view */
   let userView;
-
   /* Container States */
   const [OnboardingForm, setOnboardingForm] = useState({
     institution: {
@@ -117,6 +116,10 @@ const Users = props => {
     setMyAccountForm(updatedControls);
   };
 
+  const linkWithProvider = (provider) =>{
+    props.linkWithProvider(provider);
+  }
+
   /* Onboarding view */
   let onboardingPage = (
     <Onboarding
@@ -134,6 +137,7 @@ const Users = props => {
       myProfile={props.profile}
       clients={clients}
       inputChangedHandler={myAccountInputChangedHandler}
+      linkWithProvider={linkWithProvider}
     />
   );
 
@@ -173,7 +177,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    checkOnboarding: (payload) => dispatch(actions.checkOnboarding(payload))
+    checkOnboarding: (payload) => dispatch(actions.checkOnboarding(payload)),
+    linkWithProvider: (provider) => dispatch(actions.linkUser(provider))
   };
 };
 
