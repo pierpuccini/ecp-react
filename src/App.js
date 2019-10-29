@@ -183,7 +183,7 @@ function App(props) {
             />
           );
         })}
-        <Redirect to="/home" />
+        <Redirect to="home" />
       </Switch>
     );
 

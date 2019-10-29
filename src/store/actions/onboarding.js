@@ -19,6 +19,12 @@ export const onboardingSuccess = () => {
   };
 };
 
+export const onboardingReset = () => {
+  return {
+    type: actionTypes.ONBOARDING_RESET
+  };
+};
+
 export const checkOnboarding = data => {
   return (dispatch, getState, { getFirestore }) => {
     dispatch(onboardingStart());
@@ -58,7 +64,10 @@ export const checkOnboarding = data => {
                 role: "student"
               })
               .then(() => {
-                dispatch(onboardingSuccess());
+                dispatch(onboardingSuccess());                  
+                setTimeout(() => {
+                  dispatch(onboardingReset())
+                }, 500)
               })
               .catch(err => {
                 console.log("error: ", err);

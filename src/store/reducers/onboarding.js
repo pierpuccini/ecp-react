@@ -31,11 +31,18 @@ const onboardingSuccess = state => {
   });
 };
 
+const onboardingReset = state => {
+  return updateObject(state, {
+    success: false
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ONBOARDING_START: return onboardingStart(state, action);
     case actionTypes.ONBOARDING_FAILED: return onboardingFailed(state, action);
     case actionTypes.ONBOARDING_SUCCESS: return onboardingSuccess(state, action);
+    case actionTypes.ONBOARDING_RESET: return onboardingReset(state, action);
     default:
       return state;
   }

@@ -117,7 +117,8 @@ export const signUp = (data, typeOfSignUp) => {
                 studentId: "",
                 institution: "",
                 classrooms: [],
-                role: ""
+                role: "",
+                email: result.user.email
               });
             dispatch(signUpSuccess(false));
           })
@@ -136,7 +137,8 @@ export const signUp = (data, typeOfSignUp) => {
               studentId: "",
               institution: "",
               classrooms: [],
-              role: ""
+              role: "",
+              email: data.email
             }
           )
           .then(res => {
