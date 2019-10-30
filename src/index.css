@@ -1,7 +1,7 @@
 /* IMPORTANT FIX FOR CORRECTLY GETTING THE FULL SCREEN EXPERIENCE */
 @media (prefers-color-scheme: dark) {
   html{
-    background-color: #424242;
+    background-color: #303030;
   } 
 }
 html, 
