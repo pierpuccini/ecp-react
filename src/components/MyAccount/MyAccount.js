@@ -67,7 +67,12 @@ const useStyles = makeStyles(theme => ({
   submitActions: {
     display: "flex",
     flexWrap: "wrap",
-    justifyContent: "space-between"
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: "center"
+    },
+    [theme.breakpoints.up("sm")]: {
+      justifyContent: "space-between"
+    },
   }
 }));
 
