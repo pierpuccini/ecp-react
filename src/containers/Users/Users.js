@@ -92,9 +92,6 @@ const Users = props => {
     },
     email: {
       value: props.profile.email,
-    },
-    password: {
-      value: "",
     }
   });
   
@@ -106,7 +103,7 @@ const Users = props => {
     { collection: "clients", where: ["active", "==", true] }
   ]);
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
-
+  
   /* Onboarding Logic */
   const OnboardingFormHandler = (event, controlName) => {
     const updatedControls = updateObject(OnboardingForm, {
@@ -161,6 +158,27 @@ const Users = props => {
     return false
   }
 
+  const updateMyAccountInfo = (event) =>{
+    event.preventDefault();
+    //payload will send what must be updated
+    const payload = {toUpdate: [], data: {}}
+    let fieldsToUpdate = Object.keys(myAccountForm);
+    console.log('fieldsToUpdate',fieldsToUpdate);
+    // fieldsToUpdate.forEach((field)=>{
+    //   if (field === 'password' || field === 'confirmPassword') {
+    //     if (myAccountForm.confirmPassword.value) {
+    //       payload.toUpdate.push('password')
+    //       payload.data = {...payload.data, password: myAccountForm.password.value}
+    //     }
+    //   }else{
+    //       if (myAccountForm.field.value !== previousAccInfo.field.value) {
+    //         payload.toUpdate.push(`${field}`)
+    //         payload.data = {...payload.data, [`${field}`]: myAccountForm.field.value}
+    //       }
+    //   }
+    // })
+  }
+
   const linkWithProvider = (provider) =>{
     props.linkWithProvider(provider);
   }
@@ -191,6 +209,7 @@ const Users = props => {
       unlinkProvider={unlinkProvider}
       toogleViewPassword={showPassword}
       toggleViewPasswordHandler={toggleViewPasswordHandler}
+      submitHandler={updateMyAccountInfo}
     />
   );
 
