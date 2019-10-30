@@ -101,6 +101,7 @@ const MyAccount = (props) => {
                     ? "Separate First & Last name by space"
                     : null
                 }
+                inputProps={{style: {textTransform: 'capitalize'}}}
               />
               <TextField
                 className={classes.textField}
