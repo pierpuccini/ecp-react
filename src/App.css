@@ -12,10 +12,20 @@
     right: 0;
     height: 76px;
 }
-@media (max-width: 600px) {
+#content {
+    position: fixed;
+    top: 64px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+}
+@media (max-width: 599px) {
     #content {
         position: fixed;
-        top: 66px;
+        top: 48px;
         bottom: 76px;
         left: 0;
         right: 0;

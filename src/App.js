@@ -41,23 +41,6 @@ const asyncUsers = asyncComponent(() => {
 });
 
 const useStyles = makeStyles(theme => ({
-  topbar: {
-    [theme.breakpoints.up("md")]: {
-      margin: "unset"
-    },
-    [theme.breakpoints.down("md")]: {
-      marginTop: "5px",
-      marginBottom: "5px"
-    }
-  },
-  topbarSpace: {
-    [theme.breakpoints.up("md")]: {
-      height: "64px"
-    },
-    [theme.breakpoints.down("md")]: {
-      height: "66px"
-    }
-  },
   bottomNav: {
     [theme.breakpoints.up("sm")]: {
       display: "none"
