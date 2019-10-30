@@ -118,7 +118,7 @@ export const signUp = (data, typeOfSignUp) => {
                 institution: "",
                 classrooms: [],
                 role: "",
-                email: result.user.email
+                email: ""
               });
             dispatch(signUpSuccess(false));
           })

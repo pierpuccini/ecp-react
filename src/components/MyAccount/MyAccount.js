@@ -11,6 +11,8 @@ import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
+//Animations
+import Collapse from '@material-ui/core/Collapse';
 //Icons
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
@@ -111,7 +113,7 @@ const MyAccount = (props) => {
                     ? "Separate First & Last name by space"
                     : null
                 }
-                inputProps={{style: {textTransform: 'capitalize'}}}
+                inputProps={{ style: { textTransform: "capitalize" } }}
               />
               <TextField
                 className={classes.textField}
@@ -217,6 +219,32 @@ const MyAccount = (props) => {
                   )
                 }}
               />
+              <Collapse in={props.myProfileForm.password.valid &&
+                props.myProfileForm.password.touched}>
+                <TextField
+                  style={{width: "-webkit-fill-available"}}
+                  className={classes.textField}
+                  label="Confirm Password"
+                  placeholder="Confirm Password"
+                  type={props.toogleViewPassword ? "text" : "password"}
+                  value={props.myProfileForm.confirmPassword.value}
+                  onChange={event =>
+                    props.inputChangedHandler(event, "confirmPassword")
+                  }
+                  margin="normal"
+                  variant="outlined"
+                  error={
+                    !props.myProfileForm.confirmPassword.valid &&
+                    props.myProfileForm.confirmPassword.touched
+                  }
+                  helperText={
+                    !props.myProfileForm.confirmPassword.valid &&
+                    props.myProfileForm.confirmPassword.touched
+                      ? "Please Enter the same Password"
+                      : null
+                  }
+                />
+              </Collapse>
               <div className={classes.submitActions}>
                 <div>
                   <Button
@@ -236,7 +264,11 @@ const MyAccount = (props) => {
                         alt="google login"
                       />
                     </Icon>
-                    <span className={classes.gLogin}>{(props.myProfile.googleLink)?"Unlink from Google":"Link with Google"}</span>
+                    <span className={classes.gLogin}>
+                      {props.myProfile.googleLink
+                        ? "Unlink from Google"
+                        : "Link with Google"}
+                    </span>
                   </Button>
                 </div>
                 <Button

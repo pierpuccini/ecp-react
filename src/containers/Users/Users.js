@@ -37,6 +37,7 @@ const Users = props => {
       touched: false
     }
   });
+
   const [myAccountForm, setMyAccountForm] = useState({
     displayName: {
       value: props.profile.displayName,
@@ -65,10 +66,35 @@ const Users = props => {
       touched: false
     },
     password: {
-      value: "*********",
+      value: (props.profile.email)?"*********":"",
       validation: { minLength: 6 },
       valid: false,
       touched: false
+    },
+    confirmPassword: {
+      value: "",
+      validation: { minLength: 6 },
+      valid: false,
+      touched: false
+    }
+  });
+
+  //Old info, used in case an update occurss 
+  const [previousAccInfo] = useState({
+    displayName: {
+      value: props.profile.displayName,
+    },
+    institution: {
+      value: props.profile.institution,
+    },
+    studentId: {
+      value: props.profile.studentId,
+    },
+    email: {
+      value: props.profile.email,
+    },
+    password: {
+      value: "",
     }
   });
   
@@ -106,19 +132,34 @@ const Users = props => {
   };
 
   /* My account logic */
+  const toggleViewPasswordHandler = () => {
+    let showPasswordCopy = !showPassword;
+    setShowPassword(showPasswordCopy);
+  };
+
   const myAccountInputChangedHandler = (event, controlName) => {
     const updatedControls = updateObject(myAccountForm, {
       [controlName]: updateObject(myAccountForm[controlName], {
         value: event.target.value,
-        valid: checkValidity(
-          event.target.value,
-          myAccountForm[controlName].validation,
-        ),
+        valid:
+          controlName === "confirmPassword"
+            ? checkPasswordChange(event.target.value)
+            : checkValidity(
+                event.target.value,
+                myAccountForm[controlName].validation
+              ),
         touched: true
       })
     });
     setMyAccountForm(updatedControls);
   };
+
+  const checkPasswordChange = (confirmPassword) =>{
+    if(myAccountForm.password.value === confirmPassword){
+      return true
+    }
+    return false
+  }
 
   const linkWithProvider = (provider) =>{
     props.linkWithProvider(provider);
@@ -128,10 +169,6 @@ const Users = props => {
     props.unlinkProvider(provider);
   }
 
-  const toggleViewPasswordHandler = () => {
-    let showPasswordCopy = !showPassword;
-    setShowPassword(showPasswordCopy);
-  };
 
   /* Onboarding view */
   let onboardingPage = (
