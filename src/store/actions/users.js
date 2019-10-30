@@ -26,10 +26,22 @@ export const updateUser = (payload) => {
     const firestore = getFirestore();
 
     const user = firebase.auth().currentUser;
-
+    console.log('user',user);
     let {toUpdate, data} = payload
-    console.log(toUpdate);
-    console.log(data);
+    if (toUpdate.length === 0) {
+      dispatch(
+        userUpdateFailed({code: "no change made",message: "Please make a change or disregard."})
+      );
+    } else {
+      firestore
+        .collection("users")
+        .doc(user.uid)
+        .set(
+          data,
+          { merge: true }
+        );
+      dispatch(userUpdateSuccess());
+    }
   };
 };
 
@@ -38,7 +50,6 @@ export const linkUser = provider => {
     dispatch(userUpdateStart());
     const firebase = getFirebase();
     const firestore = getFirestore();
-    const currentState = getState();
 
     if (provider === "google") {
       const fbProvider = new firebase.auth.GoogleAuthProvider();

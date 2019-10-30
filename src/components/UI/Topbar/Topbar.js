@@ -134,7 +134,7 @@ const Topbar = props => {
     >
       {props.newUser ? null : (
         <MenuItem className={classes.menuItem}>
-          <Badge badgeContent={11} color="secondary">
+          <Badge variant="dot" color="secondary">
             <NotificationsNoneOutlinedIcon />
           </Badge>
           <Typography>Notifications</Typography>

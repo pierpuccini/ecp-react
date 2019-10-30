@@ -34,8 +34,8 @@ const userUpdateSuccess = state => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.USER_UPDATE_STARTED: return userUpdateStart(state, action);
-    case actionTypes.USER_UPDATE_SUCCESS: return userUpdateFailed(state, action);
-    case actionTypes.USER_UPDATE_FAILED: return userUpdateSuccess(state, action);
+    case actionTypes.USER_UPDATE_SUCCESS: return userUpdateSuccess(state, action);
+    case actionTypes.USER_UPDATE_FAILED: return userUpdateFailed(state, action);
     default:
       return state;
   }

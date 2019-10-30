@@ -256,6 +256,7 @@ const MyAccount = (props) => {
                         ? props.unlinkProvider("google")
                         : props.linkWithProvider("google");
                     }}
+                    disabled={(props.mainAccount === 'google.com')}
                   >
                     <Icon classes={{ root: classes.iconRoot }}>
                       <img

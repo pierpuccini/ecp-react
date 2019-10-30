@@ -212,6 +212,7 @@ const Users = props => {
       toogleViewPassword={showPassword}
       toggleViewPasswordHandler={toggleViewPasswordHandler}
       submitHandler={updateMyAccountInfo}
+      mainAccount={props.mainAccount}
     />
   );
 
@@ -245,7 +246,8 @@ const mapStateToProps = state => {
     codeVerifLoading: state.onboarding.loading,
     codeVerifError: state.onboarding.error,
     codeVerifSucces: state.onboarding.success,
-    profile: state.firebase.profile
+    profile: state.firebase.profile,
+    mainAccount: state.firebase.auth.providerData[0].providerId
   };
 };
 
