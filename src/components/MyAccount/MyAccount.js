@@ -252,11 +252,11 @@ const MyAccount = (props) => {
                     className={classes.button}
                     style={{ width: "210px" }}
                     onClick={() => {
-                      props.myProfile.googleLink
+                      (props.myProfile && (props.mainAccount === 'google.com') && !(props.myProfile.email.value === ""))
                         ? props.unlinkProvider("google")
                         : props.linkWithProvider("google");
                     }}
-                    disabled={(props.mainAccount === 'google.com')}
+                    disabled={(props.mainAccount === 'google.com') && (props.myProfile.email.value === "")}
                   >
                     <Icon classes={{ root: classes.iconRoot }}>
                       <img
@@ -266,7 +266,7 @@ const MyAccount = (props) => {
                       />
                     </Icon>
                     <span className={classes.gLogin}>
-                      {props.myProfile.googleLink
+                      {props.myProfile && (props.mainAccount === 'google.com') && !(props.myProfile.email.value === "")
                         ? "Unlink from Google"
                         : "Link with Google"}
                     </span>

@@ -32,7 +32,23 @@ export const updateUser = (payload) => {
       dispatch(
         userUpdateFailed({code: "no change made",message: "Please make a change or disregard."})
       );
-    } else {
+    } else if(toUpdate.includes('email') && toUpdate.includes('password')){
+      const credential = firebase.auth.EmailAuthProvider.credential(data.email, data.password);
+      user
+        .linkWithCredential(credential)
+        .then(usercred => {
+          const user = usercred.user;
+          firestore
+            .collection("users")
+            .doc(user.uid)
+            .set({ email: data.email }, { merge: true });
+          dispatch(userUpdateSuccess());
+        })
+        .catch(error => {
+          console.log("Account linking error", error);
+          dispatch(userUpdateFailed(error));
+        });
+    }else {
       firestore
         .collection("users")
         .doc(user.uid)
