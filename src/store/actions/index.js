@@ -1,3 +1,3 @@
 export { auth, authLogout, signUp, resetSuccess, resetErrors } from "./auth";
 export { checkOnboarding } from "./onboarding"
-export { updateUser, linkUser } from "./users"
+export { updateUser, linkUser, unlinkUser } from "./users"

@@ -197,8 +197,11 @@ const MyAccount = (props) => {
                     variant="outlined"
                     className={classes.button}
                     style={{ width: "210px" }}
-                    onClick={() => props.linkWithProvider('google')}
-                    disabled={props.myProfile.googleLink}
+                    onClick={() => {
+                      props.myProfile.googleLink
+                        ? props.unlinkProvider("google")
+                        : props.linkWithProvider("google");
+                    }}
                   >
                     <Icon classes={{ root: classes.iconRoot }}>
                       <img
@@ -207,7 +210,7 @@ const MyAccount = (props) => {
                         alt="google login"
                       />
                     </Icon>
-                    <span className={classes.gLogin}>Link with Google</span>
+                    <span className={classes.gLogin}>{(props.myProfile.googleLink)?"Unlink from Google":"Link with Google"}</span>
                   </Button>
                 </div>
                 <Button

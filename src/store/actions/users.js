@@ -38,23 +38,57 @@ export const linkUser = provider => {
     const firestore = getFirestore();
     const currentState = getState();
 
-    if(provider === "google"){
-        const fbProvider = new firebase.auth.GoogleAuthProvider();
-        firebase.auth().currentUser.linkWithPopup(fbProvider).then(function(result) {
-            firestore
-              .collection("users")
-              .doc(result.user.uid)
-              .set(
-                {
-                  googleLink: true
-                },
-                { merge: true }
-              );
-            dispatch(userUpdateSuccess());
-          }).catch(function(error) {
-            dispatch(userUpdateFailed(error))
-          });
+    if (provider === "google") {
+      const fbProvider = new firebase.auth.GoogleAuthProvider();
+      firebase
+        .auth()
+        .currentUser.linkWithPopup(fbProvider)
+        .then(function(result) {
+          firestore
+            .collection("users")
+            .doc(result.user.uid)
+            .set(
+              {
+                googleLink: true
+              },
+              { merge: true }
+            );
+          dispatch(userUpdateSuccess());
+        })
+        .catch(function(error) {
+          console.log('error',error);
+          dispatch(userUpdateFailed(error));
+        });
     }
+  };
+};
 
+export const unlinkUser = provider => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    dispatch(userUpdateStart());
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+
+    if (provider === "google") {
+      const user = firebase.auth().currentUser;
+
+      user.unlink('google.com')
+        .then(function(result) {
+          firestore
+            .collection("users")
+            .doc(result.uid)
+            .set(
+              {
+                googleLink: false
+              },
+              { merge: true }
+            );
+          dispatch(userUpdateSuccess());
+        })
+        .catch(function(error) {
+          console.log('error',error);
+          dispatch(userUpdateFailed(error));
+        });
+    }
   };
 };

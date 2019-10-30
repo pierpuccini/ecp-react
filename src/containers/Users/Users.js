@@ -119,6 +119,10 @@ const Users = props => {
   const linkWithProvider = (provider) =>{
     props.linkWithProvider(provider);
   }
+  
+  const unlinkProvider = (provider) =>{
+    props.unlinkProvider(provider);
+  }
 
   /* Onboarding view */
   let onboardingPage = (
@@ -138,6 +142,7 @@ const Users = props => {
       clients={clients}
       inputChangedHandler={myAccountInputChangedHandler}
       linkWithProvider={linkWithProvider}
+      unlinkProvider={unlinkProvider}
     />
   );
 
@@ -178,7 +183,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     checkOnboarding: (payload) => dispatch(actions.checkOnboarding(payload)),
-    linkWithProvider: (provider) => dispatch(actions.linkUser(provider))
+    linkWithProvider: (provider) => dispatch(actions.linkUser(provider)),
+    unlinkProvider: (provider) => dispatch(actions.unlinkUser(provider))
   };
 };
 
