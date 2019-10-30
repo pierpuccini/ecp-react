@@ -12,13 +12,15 @@
     right: 0;
     height: 76px;
 }
-#content {
-    position: fixed;
-    top: 66px;
-    bottom: 76px;
-    left: 0;
-    right: 0;
-    overflow: auto;
-    display: flex;
-    justify-content: center;
+@media (max-width: 600px) {
+    #content {
+        position: fixed;
+        top: 66px;
+        bottom: 76px;
+        left: 0;
+        right: 0;
+        overflow: auto;
+        display: flex;
+        justify-content: center;
+    }
 }
