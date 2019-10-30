@@ -71,6 +71,10 @@ const Users = props => {
       touched: false
     }
   });
+  
+  //Toggle for showing Password
+  const [showPassword, setShowPassword] = useState(false);
+
   /* Loads clients data from Firestore */
   useFirestoreConnect(() => [
     { collection: "clients", where: ["active", "==", true] }
@@ -124,6 +128,11 @@ const Users = props => {
     props.unlinkProvider(provider);
   }
 
+  const toggleViewPasswordHandler = () => {
+    let showPasswordCopy = !showPassword;
+    setShowPassword(showPasswordCopy);
+  };
+
   /* Onboarding view */
   let onboardingPage = (
     <Onboarding
@@ -143,6 +152,8 @@ const Users = props => {
       inputChangedHandler={myAccountInputChangedHandler}
       linkWithProvider={linkWithProvider}
       unlinkProvider={unlinkProvider}
+      toogleViewPassword={showPassword}
+      toggleViewPasswordHandler={toggleViewPasswordHandler}
     />
   );
 

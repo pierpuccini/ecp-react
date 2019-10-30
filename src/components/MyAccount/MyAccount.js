@@ -9,6 +9,11 @@ import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
+//Icons
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 //App Imports
 import gIcon from "../../assets/svg/search.svg";
 
@@ -174,9 +179,9 @@ const MyAccount = (props) => {
               />
               <TextField
                 className={classes.textField}
-                label="password"
+                label="Password"
                 placeholder="password"
-                type="text"
+                type={props.toogleViewPassword ? "text" : "password"}
                 value={props.myProfileForm.password.value}
                 onChange={event => props.inputChangedHandler(event, "password")}
                 margin="normal"
@@ -191,6 +196,21 @@ const MyAccount = (props) => {
                     ? "Please Enter a valid Password"
                     : null
                 }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment>
+                      <div onClick={() => props.toggleViewPasswordHandler()}>
+                        <IconButton>
+                          {props.toogleViewPassword ? (
+                            <VisibilityOffOutlinedIcon />
+                          ) : (
+                            <VisibilityOutlinedIcon />
+                          )}
+                        </IconButton>
+                      </div>
+                    </InputAdornment>
+                  )
+                }}
               />
               <div className={classes.submitActions}>
                 <div>
