@@ -19,15 +19,17 @@ export const userUpdateSuccess = () => {
   };
 };
 
-export const updateUser = (currentUser, newUser) => {
+export const updateUser = (payload) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(userUpdateStart());
     const firebase = getFirebase();
     const firestore = getFirestore();
-    const currentState = getState();
 
     const user = firebase.auth().currentUser;
 
+    let {toUpdate, data} = payload
+    console.log(toUpdate);
+    console.log(data);
   };
 };
 

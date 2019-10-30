@@ -163,20 +163,22 @@ const Users = props => {
     //payload will send what must be updated
     const payload = {toUpdate: [], data: {}}
     let fieldsToUpdate = Object.keys(myAccountForm);
-    console.log('fieldsToUpdate',fieldsToUpdate);
-    // fieldsToUpdate.forEach((field)=>{
-    //   if (field === 'password' || field === 'confirmPassword') {
-    //     if (myAccountForm.confirmPassword.value) {
-    //       payload.toUpdate.push('password')
-    //       payload.data = {...payload.data, password: myAccountForm.password.value}
-    //     }
-    //   }else{
-    //       if (myAccountForm.field.value !== previousAccInfo.field.value) {
-    //         payload.toUpdate.push(`${field}`)
-    //         payload.data = {...payload.data, [`${field}`]: myAccountForm.field.value}
-    //       }
-    //   }
-    // })
+
+    fieldsToUpdate.forEach((field)=>{
+      if (field === 'password' || field === 'confirmPassword') {
+        if (myAccountForm.confirmPassword.value) {
+          payload.toUpdate.push('password')
+          payload.data = {...payload.data, password: myAccountForm.password.value}
+        }
+      }else{
+          if (myAccountForm[field].value !== previousAccInfo[field].value) {
+            payload.toUpdate.push(`${field}`);
+            payload.data = {...payload.data, [`${field}`]: myAccountForm[field].value}
+          }
+      }
+    });
+    console.log('payload',payload)
+    props.updateUser(payload)
   }
 
   const linkWithProvider = (provider) =>{
@@ -251,7 +253,8 @@ const mapDispatchToProps = dispatch => {
   return {
     checkOnboarding: (payload) => dispatch(actions.checkOnboarding(payload)),
     linkWithProvider: (provider) => dispatch(actions.linkUser(provider)),
-    unlinkProvider: (provider) => dispatch(actions.unlinkUser(provider))
+    unlinkProvider: (provider) => dispatch(actions.unlinkUser(provider)),
+    updateUser: (payload) => dispatch(actions.updateUser(payload))
   };
 };
 
