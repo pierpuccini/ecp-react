@@ -1,7 +1,6 @@
 /* React Imports */
 import React from 'react'
 /* Material Imports */
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
@@ -58,7 +57,6 @@ const useStyles = makeStyles(theme => ({
     width: "auto !important"
   },
   gLogin: {
-    color: useMediaQuery("(prefers-color-scheme: dark)") ? "unset" : "#757575",
     textTransform: "capitalize"
   },
   submitActions: {
@@ -200,6 +198,7 @@ const MyAccount = (props) => {
                     className={classes.button}
                     style={{ width: "210px" }}
                     onClick={() => props.linkWithProvider('google')}
+                    disabled={props.myProfile.googleLink}
                   >
                     <Icon classes={{ root: classes.iconRoot }}>
                       <img

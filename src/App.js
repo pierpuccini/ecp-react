@@ -276,7 +276,7 @@ function App(props) {
     );
   }
 
-  //In charge of handelind darkmode
+  //In charge of handeling darkmode
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const theme = useMemo(
     () =>
