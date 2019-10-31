@@ -86,16 +86,12 @@ export const updateUser = payload => {
           .updatePassword(data.password)
           .then(() => {
             //The set flattens the array and removes al duplicates
-            toUpdate = [...new Set(toUpdate)];
-            console.log('toUpdate',toUpdate);
-            let passwordIndex = toUpdate.findIndex(item => item === "password");
-            console.log('passwordIndex',passwordIndex);
-            toUpdate.splice(passwordIndex);
-            console.log('toUpdate',toUpdate);
+            toUpdate = [...new Set(toUpdate)];            
+            let passwordIndex = toUpdate.findIndex(item => item === "password");            
+            toUpdate.splice(passwordIndex);            
             successfullChanges = { ...successfullChanges, password: true };
             dispatch(userUpdateSuccess(successfullChanges));
-            toUpdate.forEach(fieldToUpdate => {
-              console.log('field',fieldToUpdate);
+            toUpdate.forEach(fieldToUpdate => {              
               firestore
                 .collection("users")
                 .doc(user.uid)
@@ -123,7 +119,6 @@ export const updateUser = payload => {
       }
     } else {
       toUpdate.forEach(fieldToUpdate => {
-        console.log('field',fieldToUpdate);
         firestore
           .collection("users")
           .doc(user.uid)
@@ -171,8 +166,7 @@ export const linkUser = (provider, payload) => {
             );
           dispatch(userUpdateSuccess());
         })
-        .catch(function(error) {
-          console.log("error", error);
+        .catch(function(error) {          
           dispatch(userUpdateFailed(error));
         });
     } else {
@@ -190,8 +184,7 @@ export const linkUser = (provider, payload) => {
             .set({ email: payload.data.email }, { merge: true });
           dispatch(userUpdateSuccess());
         })
-        .catch(error => {
-          console.log("Account linking error", error);
+        .catch(error => {          
           dispatch(userUpdateFailed(error));
         });
     }
@@ -221,8 +214,7 @@ export const unlinkUser = provider => {
             );
           dispatch(userUpdateSuccess());
         })
-        .catch(function(error) {
-          console.log("error", error);
+        .catch(function(error) {          
           dispatch(userUpdateFailed(error));
         });
     }
