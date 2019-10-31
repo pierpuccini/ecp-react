@@ -87,37 +87,64 @@ export const updateUser = payload => {
           .then(() => {
             //The set flattens the array and removes al duplicates
             toUpdate = [...new Set(toUpdate)];
+            console.log('toUpdate',toUpdate);
             let passwordIndex = toUpdate.findIndex(item => item === "password");
+            console.log('passwordIndex',passwordIndex);
             toUpdate.splice(passwordIndex);
+            console.log('toUpdate',toUpdate);
             successfullChanges = { ...successfullChanges, password: true };
             dispatch(userUpdateSuccess(successfullChanges));
+            toUpdate.forEach(fieldToUpdate => {
+              console.log('field',fieldToUpdate);
+              firestore
+                .collection("users")
+                .doc(user.uid)
+                .set({ [fieldToUpdate]: data[fieldToUpdate] }, { merge: true })
+                .then(() => {
+                  successfullChanges = {
+                    ...successfullChanges,
+                    [fieldToUpdate]: true
+                  };
+                  dispatch(userUpdateSuccess(successfullChanges));
+                })
+                .catch(error => {
+                  successfullChanges = {
+                    ...successfullChanges,
+                    [fieldToUpdate]: false
+                  };
+                  dispatch(userUpdateFailed(error, successfullChanges));
+                });
+            });
           })
           .catch(error => {
             successfullChanges = { ...successfullChanges, password: false };
             dispatch(userUpdateFailed(error, successfullChanges));
           });
       }
+    } else {
+      toUpdate.forEach(fieldToUpdate => {
+        console.log('field',fieldToUpdate);
+        firestore
+          .collection("users")
+          .doc(user.uid)
+          .set({ [fieldToUpdate]: data[fieldToUpdate] }, { merge: true })
+          .then(() => {
+            successfullChanges = {
+              ...successfullChanges,
+              [fieldToUpdate]: true
+            };
+            dispatch(userUpdateSuccess(successfullChanges));
+          })
+          .catch(error => {
+            successfullChanges = {
+              ...successfullChanges,
+              [fieldToUpdate]: false
+            };
+            dispatch(userUpdateFailed(error, successfullChanges));
+          });
+      });
     }
-    toUpdate.forEach(fieldToUpdate => {
-      firestore
-        .collection("users")
-        .doc(user.uid)
-        .set({ [fieldToUpdate]: data[fieldToUpdate] }, { merge: true })
-        .then(() => {
-          successfullChanges = {
-            ...successfullChanges,
-            [fieldToUpdate]: true
-          };
-          dispatch(userUpdateSuccess(successfullChanges));
-        })
-        .catch(error => {
-          successfullChanges = {
-            ...successfullChanges,
-            [fieldToUpdate]: false
-          };
-          dispatch(userUpdateFailed(error, successfullChanges));
-        });
-    });
+
   };
 };
 
