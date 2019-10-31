@@ -196,7 +196,6 @@ const Users = props => {
           }
       }
     });
-    console.log('payload',payload)
     if (payload.toUpdate.includes("email") && payload.toUpdate.includes("password") && (props.mainAccount !== 'password')){
       props.linkWithProvider(null,payload)
     }else{

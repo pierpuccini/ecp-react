@@ -53,11 +53,19 @@ const userUpdateLogout = (state, action) => {
   return updateObject(state, null);
 };
 
+const userResetErrors = (state) => {
+  return updateObject(state, {
+    error: null,
+    persistentErr: null
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.USER_UPDATE_STARTED: return userUpdateStart(state, action);
     case actionTypes.USER_UPDATE_SUCCESS: return userUpdateSuccess(state, action);
     case actionTypes.USER_UPDATE_FAILED: return userUpdateFailed(state, action);
+    case actionTypes.USER_RESET_ERRORS: return userResetErrors(state, action);
     case actionTypes.AUTH_LOGOUT: return userUpdateLogout(state, action);
     default:
       return state;

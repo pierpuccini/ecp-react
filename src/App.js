@@ -101,6 +101,7 @@ function App(props) {
   };
 
   const handleNavChange = (event, newValue) => {
+    props.resetReduxErrors()
     setNavRoute(newValue);
   };
 
@@ -326,7 +327,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    logout: () => dispatch(actions.authLogout())
+    logout: () => dispatch(actions.authLogout()),
+    resetReduxErrors: () => {
+      dispatch(actions.resetErrors());
+      dispatch(actions.resetUserErrors());
+    }
   };
 };
 

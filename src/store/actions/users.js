@@ -22,6 +22,12 @@ export const userUpdateSuccess = successfullChanges => {
   };
 };
 
+export const userResetErrors = () => {
+  return {
+    type: actionTypes.USER_RESET_ERRORS,
+  };
+};
+
 export const updateUser = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(userUpdateStart());
@@ -93,7 +99,6 @@ export const updateUser = payload => {
       }
     }
     toUpdate.forEach(fieldToUpdate => {
-      console.log('fieldToUpdate',fieldToUpdate);
       firestore
         .collection("users")
         .doc(user.uid)
@@ -196,3 +201,9 @@ export const unlinkUser = provider => {
     }
   };
 };
+
+export const resetUserErrors = () => {
+  return(dispatch) => {
+    dispatch(userResetErrors());
+  }
+}
