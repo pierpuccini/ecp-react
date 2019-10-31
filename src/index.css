@@ -3,6 +3,11 @@
   html{
     background-color: #303030;
   } 
+  @media (max-width: 599px) {
+    html{
+      background-color: #424242;
+    } 
+}
 }
 html, 
 body {height:100%; padding:0; margin:0; width:100%;}
