@@ -118,7 +118,8 @@ export const signUp = (data, typeOfSignUp) => {
                 institution: "",
                 classrooms: [],
                 role: "",
-                email: ""
+                email: result.user.email,
+                googleLink: true
               });
             dispatch(signUpSuccess(false));
           })

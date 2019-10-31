@@ -1,5 +1,5 @@
 //React Imports
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 // import { Route, withRouter, Redirect } from "react-router-dom";
 //Redux
@@ -80,7 +80,7 @@ const Users = props => {
   });
 
   //Old info, used in case an update occurss 
-  const [previousAccInfo] = useState({
+  const [previousAccInfo, setPreviousAccInfo] = useState({
     displayName: {
       value: props.profile.displayName,
     },
@@ -97,6 +97,25 @@ const Users = props => {
   
   //Toggle for showing Password
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (props.myAccountSucces) {
+      setPreviousAccInfo({
+        displayName: {
+          value: props.profile.displayName,
+        },
+        institution: {
+          value: props.profile.institution,
+        },
+        studentId: {
+          value: props.profile.studentId,
+        },
+        email: {
+          value: props.profile.email,
+        }
+      })
+    }
+  }, [props.myAccountSucces, props.profile, setPreviousAccInfo])
 
   /* Loads clients data from Firestore */
   useFirestoreConnect(() => [
@@ -178,7 +197,11 @@ const Users = props => {
       }
     });
     console.log('payload',payload)
-    props.updateUser(payload)
+    if (payload.toUpdate.includes("email") && payload.toUpdate.includes("password") && (props.mainAccount !== 'password')){
+      props.linkWithProvider(null,payload)
+    }else{
+      props.updateUser(payload)
+    }
   }
 
   const linkWithProvider = (provider) =>{
@@ -188,7 +211,6 @@ const Users = props => {
   const unlinkProvider = (provider) =>{
     props.unlinkProvider(provider);
   }
-
 
   /* Onboarding view */
   let onboardingPage = (
@@ -213,6 +235,8 @@ const Users = props => {
       toggleViewPasswordHandler={toggleViewPasswordHandler}
       submitHandler={updateMyAccountInfo}
       mainAccount={props.mainAccount}
+      updateError={props.myAccountError}
+      updatePersistentError={props.myAccountPersistentError}
     />
   );
 
@@ -226,7 +250,7 @@ const Users = props => {
 
   /* Checks if code is verified */
   let floatingLoader = null;
-  if (props.codeVerifLoading) {
+  if (props.codeVerifLoading || props.myAccountLoading) {
   floatingLoader = <FloatingLoader></FloatingLoader>;
   }
 
@@ -247,14 +271,18 @@ const mapStateToProps = state => {
     codeVerifError: state.onboarding.error,
     codeVerifSucces: state.onboarding.success,
     profile: state.firebase.profile,
-    mainAccount: state.firebase.auth.providerData[0].providerId
+    mainAccount: state.firebase.auth.providerData[0].providerId,
+    myAccountLoading: state.users.loading,
+    myAccountError: state.users.error,
+    myAccountPersistentError: state.users.persistentErr,
+    myAccountSucces: state.users.success,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     checkOnboarding: (payload) => dispatch(actions.checkOnboarding(payload)),
-    linkWithProvider: (provider) => dispatch(actions.linkUser(provider)),
+    linkWithProvider: (provider, payload) => dispatch(actions.linkUser(provider, payload)),
     unlinkProvider: (provider) => dispatch(actions.unlinkUser(provider)),
     updateUser: (payload) => dispatch(actions.updateUser(payload))
   };
