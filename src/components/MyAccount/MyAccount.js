@@ -194,7 +194,7 @@ const MyAccount = props => {
             </TextField>
             <TextField
               className={classes.textField}
-              label="Student Id"
+              label={`${(props.myProfile.role === "teacher")?"Teacher":"Student"} Id`}
               placeholder="200040080"
               type="number"
               value={props.myProfileForm.studentId.value}
