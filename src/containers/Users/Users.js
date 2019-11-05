@@ -98,6 +98,9 @@ const Users = props => {
   //Toggle for showing Password
   const [showPassword, setShowPassword] = useState(false);
 
+  //Toggle for reseting input feedback items
+  const [removeSuccessCheck, setRemoveSuccessCheck] = useState(true);
+
   useEffect(() => {
     if (props.myAccountSucces) {
       setPreviousAccInfo({
@@ -168,6 +171,7 @@ const Users = props => {
       })
     });
     setMyAccountForm(updatedControls);
+    setRemoveSuccessCheck(true);
   };
 
   const checkPasswordChange = (confirmPassword) =>{
@@ -201,6 +205,7 @@ const Users = props => {
     }else{
       props.updateUser(payload)
     }
+    setRemoveSuccessCheck(false);
   }
 
   const linkWithProvider = (provider) =>{
@@ -236,6 +241,8 @@ const Users = props => {
       mainAccount={props.mainAccount}
       updateError={props.myAccountError}
       updatePersistentError={props.myAccountPersistentError}
+      succesfullFieldChange={props.myAccountChangedFields}
+      resetSuccessCheck={removeSuccessCheck}
     />
   );
 
@@ -275,6 +282,7 @@ const mapStateToProps = state => {
     myAccountError: state.users.error,
     myAccountPersistentError: state.users.persistentErr,
     myAccountSucces: state.users.success,
+    myAccountChangedFields: state.users.successfullChanges,
   };
 };
 

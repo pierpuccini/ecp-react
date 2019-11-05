@@ -16,6 +16,8 @@ import Collapse from "@material-ui/core/Collapse";
 //Icons
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
+import DoneOutlineOutlinedIcon from '@material-ui/icons/DoneOutlineOutlined';
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 //App Imports
 import gIcon from "../../assets/svg/search.svg";
 
@@ -135,6 +137,22 @@ const MyAccount = props => {
                   : null
               }
               inputProps={{ style: { textTransform: "capitalize" } }}
+              // eslint-disable-next-line
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment>
+                    <Icon style={{ margin: "12px"}}>
+                      {
+                        props.succesfullFieldChange.displayName === "no-change" || props.resetSuccessCheck ? 
+                          null :
+                          props.succesfullFieldChange.displayName ? 
+                          (<DoneOutlineOutlinedIcon style={{color: "#38a23d"}} />) :
+                          (<ClearOutlinedIcon color="error" />)
+                      }
+                    </Icon>
+                  </InputAdornment>
+                )
+              }}
             />
             <TextField
               className={classes.textField}
