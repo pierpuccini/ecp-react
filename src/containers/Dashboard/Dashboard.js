@@ -1,5 +1,5 @@
 //React Imports
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 // import { Route, withRouter, Redirect } from "react-router-dom";
 //Redux
@@ -7,20 +7,21 @@ import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 //App Imports
 import HomeCards from '../../components/Dashboard/HomeCards'
-// import classes from "./Dashboard.module.scss";
-//MaterialUI Imports
-// import { makeStyles } from "@material-ui/core/styles";
 //Personal Helpers
 // import { updateObject, checkValidity } from "../../shared/utility";
 
-// const useStyles = makeStyles(theme => ({
-//   button: {
-//     margin: theme.spacing(1)
-//   }
-// }));
-
 const Dashboard = props => {
-  // const matClasses = useStyles();
+  const [showSkeleton, setShowSkeleton] = useState(false);
+
+  useEffect(() => {
+    let showSkeletonLoader = setTimeout(() => {
+      setShowSkeleton(true);
+    }, 1500);
+    return () => {
+      clearTimeout(showSkeletonLoader);
+    };
+  }, [])
+
 
   const dashboardItems = [
     {
@@ -60,9 +61,15 @@ const Dashboard = props => {
       onClickLink: "/"
     },
   ];
-  
-  return (<HomeCards dashboardCards={dashboardItems} loaded={false}/>);
+
+  return (<HomeCards dashboardCards={dashboardItems} loaded={showSkeleton}/>);
 };
+
+const mapStateToProps = state =>{
+  return {
+    profileLoaded: state.firebase.profile.isLoaded
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -70,4 +77,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(connect(null,mapDispatchToProps)(Dashboard));
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Dashboard));
