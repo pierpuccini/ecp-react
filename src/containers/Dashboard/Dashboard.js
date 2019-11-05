@@ -25,49 +25,68 @@ const Dashboard = props => {
   /* TODO: implement mini components for dashboard tiles */
   const dashboardItems = [
     {
-      sm: 6,
+      sm: 12,
       xs: 12,
       content: "Send or Create Challenge!",
-      onClickLink: "/"
+      onClickLink: "/",
+      permision: 'student'
     },
     {
       sm: 6,
       xs: 6,
       content: "Active challenges",
-      onClickLink: "/"
+      onClickLink: "/",
+      permision: 'student'
     },
     {
       sm: false,
       xs: 6,
       content: 'Pending Challenges',
-      onClickLink: "/"
+      onClickLink: "/",
+      permision: 'student'
+    },
+    {
+      sm: 12,
+      xs: 12,
+      content: "Edit or Create Classroom!",
+      onClickLink: "/",
+      permision: 'teacher'
     },
     {
       sm: false,
       xs: 6,
       content: 'Current Classrooms',
-      onClickLink: "/"
+      onClickLink: "/",
+      permision: 'student'
     },
     {
       sm: false,
       xs: 6,
       content: 'Past Classrooms',
-      onClickLink: "/"
+      onClickLink: "/",
+      permision: 'student'
     },
     {
-      sm: 6,
+      sm: 12,
       xs: 12,
       content: 'My Transactions',
-      onClickLink: "/"
+      onClickLink: "/",
+      permision: 'student'
     },
   ];
+
+  if (props.role === "student") {
+    let index = dashboardItems.findIndex(item => item.permision === "teacher")
+    dashboardItems.splice(index, 1);      
+  }
 
   return (<HomeCards dashboardCards={dashboardItems} loaded={showSkeleton}/>);
 };
 
 const mapStateToProps = state =>{
   return {
-    profileLoaded: state.firebase.profile.isLoaded
+    profileLoaded: state.firebase.profile.isLoaded,
+    role: state.firebase.profile.role
   }
 }
 
