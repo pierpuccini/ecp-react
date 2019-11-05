@@ -141,14 +141,14 @@ const MyAccount = props => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment>
-                    <Icon style={{ margin: "12px"}}>
-                      {
-                        props.succesfullFieldChange.displayName === "no-change" || props.resetSuccessCheck ? 
-                          null :
-                          props.succesfullFieldChange.displayName ? 
-                          (<DoneOutlineOutlinedIcon style={{color: "#38a23d"}} />) :
-                          (<ClearOutlinedIcon color="error" />)
-                      }
+                    <Icon style={{ margin: "12px" }}>
+                      {props.succesfullFieldChange.displayName ===
+                        "no-change" || props.resetSuccessCheck ? null : props
+                          .succesfullFieldChange.displayName ? (
+                        <DoneOutlineOutlinedIcon style={{ color: "#38a23d" }} />
+                      ) : (
+                        <ClearOutlinedIcon color="error" />
+                      )}
                     </Icon>
                   </InputAdornment>
                 )
@@ -166,6 +166,21 @@ const MyAccount = props => {
               margin="normal"
               variant="outlined"
               disabled={props.myProfile.role === "student"}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment>
+                    <Icon style={{ margin: "12px" }}>
+                      {props.succesfullFieldChange.institution ===
+                        "no-change" || props.resetSuccessCheck ? null : props
+                          .succesfullFieldChange.institution ? (
+                        <DoneOutlineOutlinedIcon style={{ color: "#38a23d" }} />
+                      ) : (
+                        <ClearOutlinedIcon color="error" />
+                      )}
+                    </Icon>
+                  </InputAdornment>
+                )
+              }}
             >
               {props.clients.map(option => (
                 <MenuItem
@@ -197,6 +212,21 @@ const MyAccount = props => {
                   ? "Add a correct Student Id"
                   : null
               }
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment>
+                    <Icon style={{ margin: "12px" }}>
+                      {props.succesfullFieldChange.studentId === "no-change" ||
+                      props.resetSuccessCheck ? null : props
+                          .succesfullFieldChange.studentId ? (
+                        <DoneOutlineOutlinedIcon style={{ color: "#38a23d" }} />
+                      ) : (
+                        <ClearOutlinedIcon color="error" />
+                      )}
+                    </Icon>
+                  </InputAdornment>
+                )
+              }}
             />
           </div>
           <Typography>Login Info</Typography>
@@ -220,6 +250,21 @@ const MyAccount = props => {
                   ? "Please Enter a valid Email"
                   : null
               }
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment>
+                    <Icon style={{ margin: "12px" }}>
+                      {props.succesfullFieldChange.email === "no-change" ||
+                      props.resetSuccessCheck ? null : props
+                          .succesfullFieldChange.email ? (
+                        <DoneOutlineOutlinedIcon style={{ color: "#38a23d" }} />
+                      ) : (
+                        <ClearOutlinedIcon color="error" />
+                      )}
+                    </Icon>
+                  </InputAdornment>
+                )
+              }}
             />
             <TextField
               className={classes.textField}
@@ -243,15 +288,28 @@ const MyAccount = props => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment>
-                    <div onClick={() => props.toggleViewPasswordHandler()}>
-                      <IconButton>
-                        {props.toogleViewPassword ? (
-                          <VisibilityOffOutlinedIcon />
+                    {props.succesfullFieldChange.password === "no-change" ||
+                    props.resetSuccessCheck ? (
+                      <div onClick={() => props.toggleViewPasswordHandler()}>
+                        <IconButton>
+                          {props.toogleViewPassword ? (
+                            <VisibilityOffOutlinedIcon />
+                          ) : (
+                            <VisibilityOutlinedIcon />
+                          )}
+                        </IconButton>
+                      </div>
+                    ) : (
+                      <Icon style={{ margin: "12px" }}>
+                        {props.succesfullFieldChange.password ? (
+                          <DoneOutlineOutlinedIcon
+                            style={{ color: "#38a23d" }}
+                          />
                         ) : (
-                          <VisibilityOutlinedIcon />
+                          <ClearOutlinedIcon color="error" />
                         )}
-                      </IconButton>
-                    </div>
+                      </Icon>
+                    )}
                   </InputAdornment>
                 )
               }}
