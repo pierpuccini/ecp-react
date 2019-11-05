@@ -15,10 +15,9 @@ import Container from "@material-ui/core/Container";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
-import FolderIcon from "@material-ui/icons/Folder";
+import FolderOutlinedIcon from '@material-ui/icons/FolderOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
+import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 //For dark theme
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -172,6 +171,7 @@ function App(props) {
         className={classes.bottomNav}
         value={navRoute}
         onChange={handleNavChange}
+        showLabels
       >
         <BottomNavigationAction
           label="Home"
@@ -179,19 +179,14 @@ function App(props) {
           icon={<HomeOutlinedIcon />}
         />
         <BottomNavigationAction
-          label="Favorites"
-          value="favorites"
-          icon={<FavoriteIcon />}
+          label="Wallet"
+          value="balance"
+          icon={<AccountBalanceWalletOutlinedIcon />}
         />
         <BottomNavigationAction
-          label="Nearby"
-          value="nearby"
-          icon={<LocationOnIcon />}
-        />
-        <BottomNavigationAction
-          label="Folder"
-          value="folder"
-          icon={<FolderIcon />}
+          label="File Archive"
+          value="file-archive"
+          icon={<FolderOutlinedIcon />}
         />
       </BottomNavigation>
     );

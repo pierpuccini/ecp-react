@@ -6,13 +6,29 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
+import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
+import FolderOutlinedIcon from "@material-ui/icons/FolderOutlined";
+import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
 
 /* TODO: Use my own list */
-const SideList = (props) => {
-  const sideNavigationItems = [{text: "Home", url: "home", icon: (<HomeOutlinedIcon/>) }];
+const SideList = props => {
+  //Items above divider
+  const sideNavigationItems = [
+    { text: "Home", url: "home", icon: <HomeOutlinedIcon /> }
+  ];
+  //Items below diveider
+  const secondSideNavigationItems = [
+    {
+      text: "Wallet",
+      url: "",
+      icon: <AccountBalanceWalletOutlinedIcon />
+    },
+    {
+      text: "File Archive",
+      url: "file-archive",
+      icon: <FolderOutlinedIcon />
+    }
+  ];
   return (
     <div
       role="presentation"
@@ -24,23 +40,31 @@ const SideList = (props) => {
       }}
     >
       <List>
-        {sideNavigationItems.map((item) => (
-          <ListItem button key={item.url} onClick={()=>{props.onChange(null, item.url)}}>
-            <ListItemIcon>
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText primary={item.url} />
+        {sideNavigationItems.map(item => (
+          <ListItem
+            button
+            key={item.url}
+            onClick={() => {
+              props.onChange(null, item.url);
+            }}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
           </ListItem>
         ))}
       </List>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((items, index) => (
-          <ListItem button key={items}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={items} />
+        {secondSideNavigationItems.map((items) => (
+          <ListItem
+            button
+            key={items.url}
+            onClick={() => {
+              props.onChange(null, items.url);
+            }}
+          >
+            <ListItemIcon>{items.icon}</ListItemIcon>
+            <ListItemText primary={items.text} />
           </ListItem>
         ))}
       </List>
