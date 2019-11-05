@@ -22,7 +22,7 @@ const Dashboard = props => {
     };
   }, [])
 
-
+  /* TODO: implement mini components for dashboard tiles */
   const dashboardItems = [
     {
       sm: 6,

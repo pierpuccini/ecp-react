@@ -34,15 +34,7 @@ const HomeCards = (props) => {
           return (
             <Grid key={card.content} item sm={card.sm} xs={card.xs}>
               <Paper className={classes.paper}>
-                {loaded ? (
-                  card.content
-                ) : (
-                  <Skeleton
-                    variant="rect"
-                    height={6}
-                    className={classes.skeleton}
-                  />
-                )}
+                {loaded ? (card.content) : (<Skeleton variant="rect" height={6} className={classes.skeleton}/>)}
               </Paper>
             </Grid>
           );
