@@ -119,6 +119,25 @@ const Users = props => {
       })
     }
   }, [props.myAccountSucces, props.profile, setPreviousAccInfo])
+  /* This second use effect is incharge of live updating the component */
+  useEffect(() => {
+    const updatedAccForm = updateObject(myAccountForm, {
+      displayName: {
+        value: props.profile.displayName
+      },
+      institution: {
+        value: props.profile.institution
+      },
+      studentId: {
+        value: props.profile.studentId
+      },
+      email: {
+        value: props.profile.email
+      }
+    });
+    setMyAccountForm(updatedAccForm);
+    // eslint-disable-next-line
+  }, [props.profile]);
 
   /* Loads clients data from Firestore */
   useFirestoreConnect(() => [
