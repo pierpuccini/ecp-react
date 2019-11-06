@@ -41,10 +41,19 @@ export const updateUser = payload => {
 
     if (toUpdate.length === 0) {
       dispatch(
-        userUpdateFailed({
-          code: "no-change-made",
-          message: "In Order to save anything please make a change."
-        })
+        userUpdateFailed(
+          {
+            code: "no-change-made",
+            message: "In Order to save anything please make a change."
+          },
+          {
+            displayName: "no-change",
+            institution: "no-change",
+            studentId: "no-change",
+            email: "no-change",
+            password: "no-change"
+          }
+        )
       );
     }
     if (toUpdate.includes("email") && toUpdate.includes("password")) {
