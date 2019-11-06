@@ -32,21 +32,21 @@ const Dashboard = props => {
       permision: 'admin'
     },
     {
-      sm: 12,
+      sm: 6,
       xs: 12,
       content: "Send or Create Challenge!",
       onClickLink: "/",
       permision: 'student'
     },
     {
-      sm: 12,
+      sm: 6,
       xs: 12,
       content: "Get Power Ups!",
       onClickLink: "/",
       permision: 'student-only'
     },
     {
-      sm: 12,
+      sm: 6,
       xs: 12,
       content: "Power Up Manager",
       onClickLink: "/",
