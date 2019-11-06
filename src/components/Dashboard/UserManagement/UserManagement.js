@@ -5,6 +5,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+//icons
+import RedoOutlinedIcon from "@material-ui/icons/RedoOutlined";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -25,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     display: "flex",
-    justifyContent: "flex-start"
+    justifyContent: "space-between"
   },
   typographySubs: {
     fontSize: "0.9rem"
@@ -35,13 +38,20 @@ const useStyles = makeStyles(theme => ({
 const UserManagement = props => {
   const classes = useStyles();
   const { loaded } = props;
-    // const loaded = false;
+  // const loaded = false;
   return (
     <Paper className={classes.paper}>
       {loaded ? (
         <React.Fragment>
           <div className={classes.title}>
             <Typography>User Management</Typography>
+            <Button
+              variant="outlined"
+              size="small"
+              endIcon={<RedoOutlinedIcon />}
+            >
+              Manage Users
+            </Button>
           </div>
           <div className={classes.usersContainer}>
             <Typography className={classes.typographySubs}>
