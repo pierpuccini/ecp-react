@@ -25,15 +25,15 @@ const Dashboard = props => {
 
   /* TODO: implement mini components for dashboard tiles */
   const dashboardItems = [
-    {
+    { 
+      id: 1,
       sm: 12,
       xs: 12,
-      content: "User Management",
-      onClickLink: "/",
       permision: 'admin',
       customComp: <UserManagement loaded={showSkeleton}/>
     },
     {
+      id: 2,
       sm: 6,
       xs: 12,
       content: "Send or Create Challenge!",
@@ -41,6 +41,7 @@ const Dashboard = props => {
       permision: 'student'
     },
     {
+      id: 3,
       sm: 6,
       xs: 12,
       content: "Get Power Ups!",
@@ -48,6 +49,7 @@ const Dashboard = props => {
       permision: 'student-only'
     },
     {
+      id: 4,
       sm: 6,
       xs: 12,
       content: "Power Up Manager",
@@ -55,6 +57,7 @@ const Dashboard = props => {
       permision: 'teacher'
     },
     {
+      id: 5,
       sm: 6,
       xs: 6,
       content: "Active challenges",
@@ -62,6 +65,7 @@ const Dashboard = props => {
       permision: 'student'
     },
     {
+      id: 6,
       sm: false,
       xs: 6,
       content: 'Pending Challenges',
@@ -69,6 +73,7 @@ const Dashboard = props => {
       permision: 'student'
     },
     {
+      id: 7,
       sm: 12,
       xs: 12,
       content: "Edit or Create Classroom!",
@@ -76,6 +81,7 @@ const Dashboard = props => {
       permision: 'teacher'
     },
     {
+      id: 8,
       sm: false,
       xs: 6,
       content: 'Current Classrooms',
@@ -83,6 +89,7 @@ const Dashboard = props => {
       permision: 'student'
     },
     {
+      id: 9,
       sm: false,
       xs: 6,
       content: 'Past Classrooms',
@@ -90,6 +97,7 @@ const Dashboard = props => {
       permision: 'student'
     },
     {
+      id: 10,
       sm: 12,
       xs: 12,
       content: 'My Transactions',

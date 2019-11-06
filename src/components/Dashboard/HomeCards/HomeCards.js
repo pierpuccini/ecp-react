@@ -32,7 +32,7 @@ const HomeCards = (props) => {
       <Grid container spacing={3}>
         {dashboardCards.map(card => {
           return (
-            <Grid key={card.content} item sm={card.sm} xs={card.xs}>
+            <Grid key={card.id} item sm={card.sm} xs={card.xs}>
                 {(card.customComp)? card.customComp :
                 <Paper className={classes.paper}>
                   {loaded ? (<Typography>{card.content}</Typography>) : (<Skeleton variant="rect" height={6} className={classes.skeleton}/>)}

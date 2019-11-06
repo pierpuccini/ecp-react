@@ -13,19 +13,53 @@ const useStyles = makeStyles(theme => ({
   },
   skeleton: {
     borderRadius: theme.spacing(2)
+  },
+  skeletonType1: {
+    borderRadius: theme.spacing(1),
+    marginBottom: theme.spacing(0)
+  },
+  usersContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    paddingTop: theme.spacing(1)
+  },
+  title: {
+    display: "flex",
+    justifyContent: "flex-start"
+  },
+  typographySubs: {
+    fontSize: "0.9rem"
   }
 }));
 
 const UserManagement = props => {
   const classes = useStyles();
   const { loaded } = props;
-
+    // const loaded = false;
   return (
     <Paper className={classes.paper}>
       {loaded ? (
-        <Typography>active students... active teachers...</Typography>
+        <React.Fragment>
+          <div className={classes.title}>
+            <Typography>User Management</Typography>
+          </div>
+          <div className={classes.usersContainer}>
+            <Typography className={classes.typographySubs}>
+              Active Students
+            </Typography>
+            <Typography className={classes.typographySubs}>
+              Active Teachers
+            </Typography>
+            <Typography className={classes.typographySubs}>
+              Total Users
+            </Typography>
+          </div>
+        </React.Fragment>
       ) : (
-        <Skeleton variant="rect" height={6} className={classes.skeleton} />
+        <React.Fragment>
+          <Skeleton variant="rect" height={6} className={classes.skeleton} />
+          <Skeleton height={37} className={classes.skeletonType1} />
+        </React.Fragment>
       )}
     </Paper>
   );
