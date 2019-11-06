@@ -1,11 +1,9 @@
 //React Imports
 import React from "react";
 //MaterialUI Imports
-import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
-import Icon from "@material-ui/core/Icon";
 //Icons
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -16,32 +14,17 @@ import TrendingUpOutlinedIcon from "@material-ui/icons/TrendingUpOutlined";
 import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 import PlaceOutlinedIcon from "@material-ui/icons/PlaceOutlined";
 //App imports
-import coinIcon from '../../../assets/images/coin-logo.png'
-
-const useStyles = makeStyles(theme => ({
-  imageIcon: {
-    height: "100%"
-  },
-  iconRootCoin: {
-    textAlign: "center",
-    width: "32px",
-    height: "32px",
-    "font-size": "unset"
-  }
-}));
+import CoinIcon from '../../CoinIcon/CoinIcon'
 
 /* TODO: Use my own list */
 const SideList = props => {
-  const classes = useStyles();  
   //Items above divider
   const sideNavigationItems = [
     {
       text: "EduCoins",
       url: "home",
       icon: (
-        <Icon classes={{ root: classes.iconRootCoin }}>
-          <img className={classes.imageIcon} src={coinIcon} alt="coin icon" />
-        </Icon>
+        <CoinIcon width="32px" height="32px" />
       )
     }
   ];
