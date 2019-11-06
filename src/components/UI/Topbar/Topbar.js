@@ -12,6 +12,8 @@ import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined"
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
 import PowerSettingsNewOutlinedIcon from "@material-ui/icons/PowerSettingsNewOutlined";
 import AssignmentIndOutlinedIcon from "@material-ui/icons/AssignmentIndOutlined";
+//App Imports
+import CoinIcon from '../../CoinIcon/CoinIcon'
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -172,9 +174,14 @@ const Topbar = props => {
       >
         <MenuIcon />
       </IconButton>
-      <Typography className={classes.title} variant="h6" noWrap>
-        {props.title}
-      </Typography>
+      <div style={{ display: "flex" }}>
+        {props.title === "Edu Coins" ? (
+          <CoinIcon width="32px" height="32px" />
+        ) : null}
+        <Typography className={classes.title} variant="h6" noWrap>
+          {props.title}
+        </Typography>
+      </div>
       <div className={classes.grow} />
       <div className={classes.sectionDesktop}>
         {props.newUser ? null : (
