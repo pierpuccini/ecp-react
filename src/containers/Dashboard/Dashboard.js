@@ -31,7 +31,7 @@ const Dashboard = props => {
       content: "User Management",
       onClickLink: "/",
       permision: 'admin',
-      customComp: <UserManagement/>
+      customComp: <UserManagement loaded={showSkeleton}/>
     },
     {
       sm: 6,
