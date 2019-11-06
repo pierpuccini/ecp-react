@@ -6,6 +6,7 @@ import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Skeleton from '@material-ui/lab/Skeleton';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,8 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary
+    textAlign: "center"
   },
   skeleton: {
     borderRadius: theme.spacing(2)
@@ -33,9 +33,9 @@ const HomeCards = (props) => {
         {dashboardCards.map(card => {
           return (
             <Grid key={card.content} item sm={card.sm} xs={card.xs}>
-              <Paper className={classes.paper}>
-                {loaded ? (card.content) : (<Skeleton variant="rect" height={6} className={classes.skeleton}/>)}
-              </Paper>
+                <Paper className={classes.paper}>
+                  {loaded ? (<Typography>{card.content}</Typography>) : (<Skeleton variant="rect" height={6} className={classes.skeleton}/>)}
+                </Paper>
             </Grid>
           );
         })}

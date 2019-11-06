@@ -6,7 +6,8 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 //App Imports
-import HomeCards from '../../components/Dashboard/HomeCards'
+import HomeCards from '../../components/Dashboard/HomeCards/HomeCards'
+import UserManagement from '../../components/Dashboard/UserManagement/UserManagement'
 //Personal Helpers
 // import { updateObject, checkValidity } from "../../shared/utility";
 
@@ -29,7 +30,8 @@ const Dashboard = props => {
       xs: 12,
       content: "User Management",
       onClickLink: "/",
-      permision: 'admin'
+      permision: 'admin',
+      customComp: <UserManagement/>
     },
     {
       sm: 6,
