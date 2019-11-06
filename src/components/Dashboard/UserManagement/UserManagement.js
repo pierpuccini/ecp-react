@@ -6,6 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 //icons
 import RedoOutlinedIcon from "@material-ui/icons/RedoOutlined";
 
@@ -18,13 +19,24 @@ const useStyles = makeStyles(theme => ({
     borderRadius: theme.spacing(2)
   },
   skeletonType1: {
-    borderRadius: theme.spacing(1),
-    marginBottom: theme.spacing(0)
+    [theme.breakpoints.down("sm")]: {
+      display: "none"
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+      borderRadius: theme.spacing(1),
+      marginBottom: theme.spacing(0)
+    }
   },
   usersContainer: {
-    display: "flex",
-    justifyContent: "space-between",
-    paddingTop: theme.spacing(1)
+    [theme.breakpoints.down("sm")]: {
+      display: "none"
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "flex",
+      justifyContent: "space-between",
+      paddingTop: theme.spacing(1)
+    }
   },
   title: {
     display: "flex",
@@ -32,13 +44,29 @@ const useStyles = makeStyles(theme => ({
   },
   typographySubs: {
     fontSize: "0.9rem"
+  },
+  button: {
+    [theme.breakpoints.down("sm")]: {
+      display: "none"
+    },
+    [theme.breakpoints.up("sm")]: {
+      display: "flex"
+    }
+  },
+  iconButton: {
+    [theme.breakpoints.up("sm")]: {
+      display: "none"
+    },
+    [theme.breakpoints.down("sm")]: {
+      padding: "unset"
+    }
   }
 }));
 
 const UserManagement = props => {
   const classes = useStyles();
   const { loaded } = props;
-  // const loaded = false;
+  //   const loaded = false;
   return (
     <Paper className={classes.paper}>
       {loaded ? (
@@ -48,10 +76,14 @@ const UserManagement = props => {
             <Button
               variant="outlined"
               size="small"
+              className={classes.button}
               endIcon={<RedoOutlinedIcon />}
             >
               Manage Users
             </Button>
+            <IconButton className={classes.iconButton}>
+              <RedoOutlinedIcon />
+            </IconButton>
           </div>
           <div className={classes.usersContainer}>
             <Typography className={classes.typographySubs}>

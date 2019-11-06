@@ -60,7 +60,7 @@ const Dashboard = props => {
       id: 5,
       sm: 6,
       xs: 6,
-      content: "Active challenges",
+      content: "Active Challenges",
       onClickLink: "/",
       permision: 'student'
     },
