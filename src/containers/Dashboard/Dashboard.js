@@ -27,9 +27,30 @@ const Dashboard = props => {
     {
       sm: 12,
       xs: 12,
+      content: "User Management",
+      onClickLink: "/",
+      permision: 'admin'
+    },
+    {
+      sm: 12,
+      xs: 12,
       content: "Send or Create Challenge!",
       onClickLink: "/",
       permision: 'student'
+    },
+    {
+      sm: 12,
+      xs: 12,
+      content: "Get Power Ups!",
+      onClickLink: "/",
+      permision: 'student-only'
+    },
+    {
+      sm: 12,
+      xs: 12,
+      content: "Power Up Manager",
+      onClickLink: "/",
+      permision: 'teacher'
     },
     {
       sm: 6,
@@ -75,10 +96,15 @@ const Dashboard = props => {
     },
   ];
 
-  if (props.role === "student") {
-    let index = dashboardItems.findIndex(item => item.permision === "teacher")
-    dashboardItems.splice(index, 1);      
-  }
+  dashboardItems.forEach((item, index) => {
+    if (props.role === "student" && item.permision === "teacher") {
+      dashboardItems.splice(index, 1);
+    } else if (props.role !== "student" && item.permision === "student-only") {
+      dashboardItems.splice(index, 1);
+    } else if(props.role !== 'admin' && item.permision === 'admin'){
+      dashboardItems.splice(index, 1);
+    }
+  });
 
   return (<HomeCards dashboardCards={dashboardItems} loaded={showSkeleton}/>);
 };
