@@ -19,9 +19,6 @@ const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1
   },
-  menuButton: {
-    marginRight: theme.spacing(2)
-  },
   title: {
     display: "none",
     [theme.breakpoints.up("sm")]: {
@@ -164,7 +161,6 @@ const Topbar = props => {
     <React.Fragment>
       <IconButton
         edge="start"
-        className={classes.menuButton}
         color="inherit"
         aria-label="open drawer"
         disabled={props.newUser}
