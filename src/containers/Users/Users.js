@@ -48,7 +48,7 @@ const Users = props => {
       touched: false
     },
     institution: {
-      value: props.profile.institution,
+      value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0],
       validation: {},
       valid: false,
       touched: false
@@ -85,7 +85,7 @@ const Users = props => {
       value: props.profile.displayName,
     },
     institution: {
-      value: props.profile.institution,
+      value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0] ,
     },
     studentId: {
       value: props.profile.studentId,
@@ -108,7 +108,7 @@ const Users = props => {
           value: props.profile.displayName,
         },
         institution: {
-          value: props.profile.institution,
+          value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0]
         },
         studentId: {
           value: props.profile.studentId,
@@ -123,19 +123,47 @@ const Users = props => {
   useEffect(() => {
     const updatedAccForm = updateObject(myAccountForm, {
       displayName: {
-        value: props.profile.displayName
+        value: props.profile.displayName,
+        validation: {
+          isName: true
+        },
+        valid: false,
+        touched: false
       },
       institution: {
-        value: props.profile.institution
+        value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0],
+        validation: {},
+        valid: false,
+        touched: false
       },
       studentId: {
-        value: props.profile.studentId
+        value: props.profile.studentId,
+        validation: {},
+        valid: false,
+        touched: false
       },
       email: {
-        value: props.profile.email
-      }
+        value: props.profile.email,
+        validation: { isEmail: true },
+        valid: false,
+        touched: false
+      },
     });
     setMyAccountForm(updatedAccForm);
+    setPreviousAccInfo({
+      displayName: {
+        value: props.profile.displayName,
+      },
+      institution: {
+        value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0]
+      },
+      studentId: {
+        value: props.profile.studentId,
+      },
+      email: {
+        value: props.profile.email,
+      }
+    })
     // eslint-disable-next-line
   }, [props.profile]);
 
