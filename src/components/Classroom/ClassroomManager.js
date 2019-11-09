@@ -29,18 +29,21 @@ const useStyles = makeStyles(theme => ({
       justifyContent: "space-between"
     },
     [theme.breakpoints.down("xs")]: {
-    display: "flex",
-    flexDirection: "column"
+      display: "flex",
+      flexDirection: "column"
     }
   },
   classroomContainer: {
-    padding: "unset !important"
+    padding: "unset !important",
+    [theme.breakpoints.up("md")]: {
+      minWidth: "685px !important"
+    }
   },
   autocompleteTextField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     [theme.breakpoints.up("sm")]: {
-      minWidth: "210px"
+      minWidth: "150px"
     }
   },
   textField: {
@@ -97,6 +100,14 @@ const ClassroomManager = () => {
         <form>
           <Typography>Chose or Create Classroom</Typography>
           <div className={classes.codeAndNameContainer}>
+            <TextField
+              className={classes.textField}
+              label="Institution"
+              placeholder="Universidad del Norte"
+              type="text"
+              margin="normal"
+              variant="outlined"
+            />
             <Autocomplete
               className={classes.autocompleteTextField}
               freeSolo
