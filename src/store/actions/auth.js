@@ -115,7 +115,7 @@ export const signUp = (data, typeOfSignUp) => {
               .set({
                 displayName: result.user.displayName,
                 studentId: "",
-                institution: "",
+                institutions: [],
                 classrooms: [],
                 role: "",
                 email: result.user.email,
@@ -136,7 +136,7 @@ export const signUp = (data, typeOfSignUp) => {
             {
               displayName: data.fullName,
               studentId: "",
-              institution: "",
+              institutions: [],
               classrooms: [],
               role: "",
               email: data.email

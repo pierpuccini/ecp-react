@@ -87,7 +87,7 @@ function App(props) {
     ) {
       setNavRoute("home");
     }
-    if (profileLoaded && newUser === "") {
+    if (newUser === "") {
       setNavRoute("onboarding");
     }
     if (onboardingSuccess) {

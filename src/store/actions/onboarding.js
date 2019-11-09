@@ -46,6 +46,7 @@ export const checkOnboarding = data => {
         };
         /* expected response */
         let classrooms;
+        let institutions;
         firestore
           .collection("users")
           .doc(currentState.firebase.auth.uid)
@@ -53,12 +54,14 @@ export const checkOnboarding = data => {
           .then(user => {
             classrooms = [...user.data().classrooms];
             classrooms.push(res.classroom);
+            institutions = [...user.data().institutions];
+            institutions.push(res.institution);
             firestore
               .collection("users")
               .doc(currentState.firebase.auth.uid)
               .set({
                 ...user.data(),
-                institution: res.institution,
+                institutions: institutions,
                 classrooms: classrooms,
                 studentId: res.studentId,
                 role: "student"
