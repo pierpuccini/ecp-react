@@ -38,6 +38,9 @@ const asyncDashboard = asyncComponent(() => {
 const asyncUsers = asyncComponent(() => {
   return import("./containers/Users/Users");
 });
+const asyncClassroom = asyncComponent(() => {
+  return import("./containers/Classroom/Classroom");
+});
 
 const useStyles = makeStyles(theme => ({
   bottomNav: {
@@ -121,7 +124,8 @@ function App(props) {
   const routesArray = [
     { url: "home", comp: asyncDashboard },
     { url: "my-account", comp: asyncUsers },
-    { url: "onboarding", comp: asyncUsers }
+    { url: "onboarding", comp: asyncUsers },
+    { url: "classrooms", comp: asyncClassroom }
   ];
   /* Routes for authenticated users */
   if (props.isAuthenticated) {

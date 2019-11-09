@@ -34,9 +34,10 @@ const HomeCards = (props) => {
           return (
             <Grid key={card.id} item sm={card.sm} xs={card.xs}>
                 {(card.customComp)? card.customComp :
-                <Paper className={classes.paper}>
+                <Paper className={classes.paper} onClick={event =>{props.dashboardToRoute(event, card.onClickLink)}}>                  
                   {loaded ? (<Typography>{card.content}</Typography>) : (<Skeleton variant="rect" height={6} className={classes.skeleton}/>)}
-                </Paper>}
+                </Paper>
+              }
             </Grid>
           );
         })}
