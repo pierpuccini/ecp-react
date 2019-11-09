@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 //Redux
 import { connect } from "react-redux";
-import * as actions from "../../store/actions/index";
+// import * as actions from "../../store/actions/index";
 //App Imports
 import HomeCards from "../../components/Dashboard/HomeCards/HomeCards";
 import UserManagement from "../../components/Dashboard/UserManagement/UserManagement";
@@ -117,7 +117,6 @@ const Dashboard = props => {
 
   let redirect;
   const redirectDashboard = (event, redirectLink) => {
-    console.log('redirectLink',redirectLink);
     redirect = props.history.push(redirectLink)
   };
 
@@ -136,10 +135,4 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    logout: () => dispatch(actions.authLogout())
-  };
-};
-
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Dashboard));
+export default withRouter(connect(mapStateToProps)(Dashboard));
