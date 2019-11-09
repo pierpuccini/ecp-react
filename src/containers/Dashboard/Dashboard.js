@@ -36,7 +36,7 @@ const Dashboard = props => {
       sm: 6,
       xs: 12,
       content: "Send or Create Challenge!",
-      onClickLink: "/",
+      onClickLink: "/home",
       permision: "student"
     },
     {
@@ -44,7 +44,7 @@ const Dashboard = props => {
       sm: 6,
       xs: 12,
       content: "Get Power Ups!",
-      onClickLink: "/",
+      onClickLink: "/home",
       permision: "student-only"
     },
     {
@@ -52,7 +52,7 @@ const Dashboard = props => {
       sm: 6,
       xs: 12,
       content: "Power Up Manager",
-      onClickLink: "/",
+      onClickLink: "/home",
       permision: "teacher"
     },
     {
@@ -60,7 +60,7 @@ const Dashboard = props => {
       sm: 6,
       xs: 6,
       content: "Active Challenges",
-      onClickLink: "/",
+      onClickLink: "/home",
       permision: "student"
     },
     {
@@ -68,7 +68,7 @@ const Dashboard = props => {
       sm: false,
       xs: 6,
       content: "Pending Challenges",
-      onClickLink: "/",
+      onClickLink: "/home",
       permision: "student"
     },
     {
@@ -84,7 +84,7 @@ const Dashboard = props => {
       sm: false,
       xs: 6,
       content: "Current Classrooms",
-      onClickLink: "/",
+      onClickLink: "/home",
       permision: "student"
     },
     {
@@ -92,7 +92,7 @@ const Dashboard = props => {
       sm: false,
       xs: 6,
       content: "Past Classrooms",
-      onClickLink: "/",
+      onClickLink: "/home",
       permision: "student"
     },
     {
@@ -100,7 +100,7 @@ const Dashboard = props => {
       sm: 12,
       xs: 12,
       content: "My Transactions",
-      onClickLink: "/",
+      onClickLink: "/home",
       permision: "student"
     }
   ];
