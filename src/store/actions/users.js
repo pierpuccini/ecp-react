@@ -24,7 +24,7 @@ export const userUpdateSuccess = successfullChanges => {
 
 export const userResetErrors = () => {
   return {
-    type: actionTypes.USER_RESET_ERRORS,
+    type: actionTypes.USER_RESET_ERRORS
   };
 };
 
@@ -95,12 +95,12 @@ export const updateUser = payload => {
           .updatePassword(data.password)
           .then(() => {
             //The set flattens the array and removes al duplicates
-            toUpdate = [...new Set(toUpdate)];            
-            let passwordIndex = toUpdate.findIndex(item => item === "password");            
-            toUpdate.splice(passwordIndex);            
+            toUpdate = [...new Set(toUpdate)];
+            let passwordIndex = toUpdate.findIndex(item => item === "password");
+            toUpdate.splice(passwordIndex);
             successfullChanges = { ...successfullChanges, password: true };
             dispatch(userUpdateSuccess(successfullChanges));
-            toUpdate.forEach(fieldToUpdate => {              
+            toUpdate.forEach(fieldToUpdate => {
               firestore
                 .collection("users")
                 .doc(user.uid)
@@ -126,6 +126,39 @@ export const updateUser = payload => {
             dispatch(userUpdateFailed(error, successfullChanges));
           });
       }
+    }
+    if (toUpdate.includes("institution")) {
+      let institutions = [...currentState.firebase.profile.institutions];
+      console.log("institutions", institutions);
+      console.log("data", data);
+      if (institutions < 1) {
+        institutions.pop();
+      }
+      institutions.push(data.institution);
+
+      firestore
+        .collection("users")
+        .doc(user.uid)
+        .get()
+        .then(() => {
+          firestore
+            .collection("users")
+            .doc(currentState.firebase.auth.uid)
+            .set(
+              {
+                institutions: institutions
+              },
+              { merge: true }
+            )
+            .then(() => {
+              successfullChanges = {...successfullChanges, institution: true};
+              dispatch(userUpdateSuccess(successfullChanges));
+            })
+            .catch(error => {
+              successfullChanges = {...successfullChanges,institution: false};
+              dispatch(userUpdateFailed(error, successfullChanges));
+            });
+        });
     } else {
       toUpdate.forEach(fieldToUpdate => {
         firestore
@@ -148,7 +181,6 @@ export const updateUser = payload => {
           });
       });
     }
-
   };
 };
 
@@ -175,7 +207,7 @@ export const linkUser = (provider, payload) => {
             );
           dispatch(userUpdateSuccess());
         })
-        .catch(function(error) {          
+        .catch(function(error) {
           dispatch(userUpdateFailed(error));
         });
     } else {
@@ -193,7 +225,7 @@ export const linkUser = (provider, payload) => {
             .set({ email: payload.data.email }, { merge: true });
           dispatch(userUpdateSuccess());
         })
-        .catch(error => {          
+        .catch(error => {
           dispatch(userUpdateFailed(error));
         });
     }
@@ -223,7 +255,7 @@ export const unlinkUser = provider => {
             );
           dispatch(userUpdateSuccess());
         })
-        .catch(function(error) {          
+        .catch(function(error) {
           dispatch(userUpdateFailed(error));
         });
     }
@@ -231,7 +263,7 @@ export const unlinkUser = provider => {
 };
 
 export const resetUserErrors = () => {
-  return(dispatch) => {
+  return dispatch => {
     dispatch(userResetErrors());
-  }
-}
+  };
+};
