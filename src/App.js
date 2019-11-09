@@ -83,7 +83,7 @@ function App(props) {
     //Conditional Routes
     if (
       location.pathname.match("onboarding") &&
-      (!profileLoaded && !(newUser === ""))
+      !(newUser === "")
     ) {
       setNavRoute("home");
     }
