@@ -39,7 +39,7 @@ const asyncUsers = asyncComponent(() => {
   return import("./containers/Users/Users");
 });
 const asyncClassroom = asyncComponent(() => {
-  return import("./containers/Classroom/Classroom");
+  return import("./containers/Classrooms/ClassroomsContoller");
 });
 
 const useStyles = makeStyles(theme => ({

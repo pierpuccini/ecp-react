@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({ 
   imageIcon: {
     height: "100%"
   },
@@ -24,6 +24,16 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column"
   },
   codeAndNameContainer: {
+    [theme.breakpoints.up("xs")]: {
+      display: "flex",
+      justifyContent: "space-between"
+    },
+    [theme.breakpoints.down("xs")]: {
+      display: "flex",
+      flexDirection: "column"
+    }
+  },
+  AdditionalInfoContainer: {
     [theme.breakpoints.up("xs")]: {
       display: "flex",
       justifyContent: "space-between"
@@ -92,7 +102,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ClassroomManager = () => {
+const ClassroomCreator = () => {
   const classes = useStyles();
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>
@@ -107,6 +117,7 @@ const ClassroomManager = () => {
               type="text"
               margin="normal"
               variant="outlined"
+              required
             />
             <Autocomplete
               className={classes.autocompleteTextField}
@@ -118,11 +129,12 @@ const ClassroomManager = () => {
               renderInput={params => (
                 <TextField
                   {...params}
-                  label="Classroom Code"
+                  label="Class Code"
                   placeholder="3752"
                   margin="normal"
                   variant="outlined"
                   fullWidth
+                  required
                 />
               )}
             />
@@ -133,6 +145,47 @@ const ClassroomManager = () => {
               type="text"
               margin="normal"
               variant="outlined"
+              required
+            />
+          </div>
+          <Typography>Additional Classroom Info</Typography>
+          <div className={classes.AdditionalInfoContainer}>
+            <TextField
+              className={classes.textField}
+              label="Institution"
+              placeholder="Universidad del Norte"
+              type="text"
+              margin="normal"
+              variant="outlined"
+              required
+            />
+            <Autocomplete
+              className={classes.autocompleteTextField}
+              freeSolo
+              clearOnEscape
+              disableOpenOnFocus
+              autoHighlight
+              options={top100Films.map(option => option.title)}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="Class Code"
+                  placeholder="3752"
+                  margin="normal"
+                  variant="outlined"
+                  fullWidth
+                  required
+                />
+              )}
+            />
+            <TextField
+              className={classes.textField}
+              label="Classroom Name"
+              placeholder="Control"
+              type="text"
+              margin="normal"
+              variant="outlined"
+              required
             />
           </div>
         </form>
@@ -151,4 +204,4 @@ const top100Films = [
   { title: "Pulp Fiction", year: 1994 }
 ];
 
-export default ClassroomManager;
+export default ClassroomCreator;
