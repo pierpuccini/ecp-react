@@ -52,7 +52,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ClassroomController = props => {
-  console.log(props.location, props.history)
   const classes = useStyles();
   const [navRoute, setNavRoute] = useState("");
 

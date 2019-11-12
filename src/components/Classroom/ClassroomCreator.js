@@ -7,8 +7,12 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import Icon from "@material-ui/core/Icon";
+import IconButton from "@material-ui/core/IconButton";
+//Icons
+import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 
-const useStyles = makeStyles(theme => ({ 
+const useStyles = makeStyles(theme => ({
   imageIcon: {
     height: "100%"
   },
@@ -99,6 +103,9 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
     color: "#f44336",
     fontSize: "small"
+  },
+  formHeader: {
+    display: "flex"
   }
 }));
 
@@ -108,7 +115,12 @@ const ClassroomCreator = () => {
     <Container maxWidth="sm" className={classes.classroomContainer}>
       <Paper className={classes.paper}>
         <form>
-          <Typography>Chose or Create Classroom</Typography>
+          <div className={classes.formHeader}>
+            <IconButton size="small" style={{ marginRight: "5px" }}>
+              <ArrowBackIosOutlinedIcon />
+            </IconButton>
+            <Typography style={{alignSelf: "center"}}>Chose or Create Classroom</Typography>
+          </div>
           <div className={classes.codeAndNameContainer}>
             <TextField
               className={classes.textField}
