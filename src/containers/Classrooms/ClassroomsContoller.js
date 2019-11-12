@@ -52,8 +52,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ClassroomController = props => {
+  console.log(props.location, props.history)
   const classes = useStyles();
-  const [navRoute, setNavRoute] = useState("/classrooms");
+  const [navRoute, setNavRoute] = useState("");
 
   const handleNavChange = (event, newValue) => {
     setNavRoute(newValue);
@@ -65,7 +66,7 @@ const ClassroomController = props => {
   ];
 
   /* Conditional routes section */
-  redirect = <Redirect to={`/${navRoute}`} />;
+  redirect = <Redirect to={`/classrooms${navRoute}`} />;
 
   //Available routes or Guarded routes
   routes = (
@@ -82,13 +83,14 @@ const ClassroomController = props => {
         } else {
           return null;
         }
-      })}
-      {redirect}
+      })}  
+         
     </Switch>
   );
 
   return (
-    <React.Fragment>
+    <React.Fragment> 
+    {redirect}    
       {props.location.pathname === "/classrooms" ? (
         <Container maxWidth="sm" className={classes.container}>
           <Paper className={classes.paper}>
@@ -99,7 +101,7 @@ const ClassroomController = props => {
                 color="primary"
                 className={classes.button}
                 endIcon={<AddCircleOutlineOutlinedIcon />}
-                onClick={(event)=>{handleNavChange(event,'create')}}
+                onClick={(event)=>{handleNavChange(event,'/create')}}
               >
                 Create Classroom
               </Button>
@@ -108,7 +110,7 @@ const ClassroomController = props => {
                 color="primary"
                 className={classes.button}
                 endIcon={<EditOutlinedIcon />}
-                onClick={()=>{handleNavChange('edit')}}
+                onClick={(event)=>{handleNavChange(event,'/edit')}}
               >
                 Edit Classroom
               </Button>
