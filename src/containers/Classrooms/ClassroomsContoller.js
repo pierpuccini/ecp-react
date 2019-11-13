@@ -18,6 +18,7 @@ import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 import PermisionError from "../../components/Errors/PermisionError/PermisionError";
 import Loader from "../../components/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
+import customClasses from './ClassroomsContoller.module.scss'
 
 const createClassroom = asyncComponent(() => {
   return import("./Actions/CreateClassroom");
@@ -38,12 +39,10 @@ const useStyles = makeStyles(theme => ({
     }
   },
   button: {
-    margin: theme.spacing(1),
     [theme.breakpoints.down("xs")]: {
-      minWidth: "200px"
-    },
-    display: "flex",
-    justifyContent: "space-between"
+      minWidth: "200px",
+      width: "100%"
+    }
   },
   actionButtonsContainer: {
     display: "flex",
@@ -120,7 +119,7 @@ const ClassroomController = props => {
         <Button
           variant="contained"
           color="primary"
-          className={classes.button}
+          className={customClasses.button}
           endIcon={<AddCircleOutlineOutlinedIcon />}
           onClick={event => {
             handleNavChange(event, "classrooms/create");
@@ -131,7 +130,7 @@ const ClassroomController = props => {
         <Button
           variant="contained"
           color="primary"
-          className={classes.button}
+          className={customClasses.button}
           endIcon={<EditOutlinedIcon />}
           onClick={event => {
             handleNavChange(event, "classrooms/edit");
