@@ -108,14 +108,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ClassroomCreator = () => {
+const ClassroomCreator = (props) => {
   const classes = useStyles();
+  const { navActions } = props;
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>
       <Paper className={classes.paper}>
         <form>
           <div className={classes.formHeader}>
-            <IconButton size="small" style={{ marginRight: "5px" }}>
+            <IconButton size="small" style={{ marginRight: "5px" }} onClick={()=>{navActions()}}>
               <ArrowBackIosOutlinedIcon />
             </IconButton>
             <Typography style={{alignSelf: "center"}}>Chose or Create Classroom</Typography>

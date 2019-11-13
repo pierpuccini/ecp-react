@@ -15,7 +15,7 @@ import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOut
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 /* App imports */
-import PermisionError from '../../components/Errors/PermisionError/PermisionError'
+import PermisionError from "../../components/Errors/PermisionError/PermisionError";
 import Loader from "../../components/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 
@@ -67,15 +67,16 @@ const ClassroomController = props => {
     if (parsedPath.length > 1) {
       setNavRoute(`classrooms/${parsedPath[1]}`);
     }
-    //eslint-disable-next-line
-  }, []);
+    if(props.location.state) {
+      setNavRoute(`${props.location.state.overwriteLocalNavState}`);
+    }
+  }, [props.location]);
 
   /* Use efect handles time out for loader */
-
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
-    }, 1000);
+    }, 750);
     return () => {
       clearTimeout(showCoinLoader);
     };
@@ -106,7 +107,7 @@ const ClassroomController = props => {
             />
           );
         } else {
-          return <PermisionError key={index}/>;
+          return <PermisionError key={index} />;
         }
       })}
     </Switch>
@@ -147,7 +148,7 @@ const ClassroomController = props => {
       <Container maxWidth="sm" className={classes.container}>
         {redirect}
         <Paper className={classes.paper}>
-          {props.role === "student" ? null : (classroomManager)}
+          {props.role === "student" ? null : classroomManager}
           <div>
             <div className={classes.classroomListHeader}>
               <Icon style={{ marginRight: "5px" }}>

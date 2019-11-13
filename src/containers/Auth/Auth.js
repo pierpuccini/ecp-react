@@ -146,7 +146,7 @@ const Auth = props => {
     setTimeout(() => {
       props.resetSuccess()
       props.history.push("/login");      
-    }, 1500);
+    }, 750);
   }
 
   const loadingGIF = (

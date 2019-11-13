@@ -83,7 +83,7 @@ function App(props) {
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
-    }, 1500);
+    }, 750);
     //Conditional Routes
     if (
       location.pathname.match("onboarding") &&

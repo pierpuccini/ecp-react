@@ -243,7 +243,7 @@ export const auth = (data, typeOfLogin) => {
           .catch(err => {
             setTimeout(() => {
               dispatch(authFail(err));
-            }, 1500);
+            }, 750);
           });
         break;
     }

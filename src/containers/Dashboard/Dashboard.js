@@ -16,7 +16,7 @@ const Dashboard = props => {
   useEffect(() => {
     let showSkeletonLoader = setTimeout(() => {
       setShowSkeleton(true);
-    }, 1500);
+    }, 750);
     return () => {
       clearTimeout(showSkeletonLoader);
     };
