@@ -9,11 +9,14 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import IconButton from "@material-ui/core/IconButton";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 import Switch from "@material-ui/core/Switch";
 import Slider from "@material-ui/core/Slider";
-import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined";
+import Collapse from "@material-ui/core/Collapse";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 //Icons
+import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined";
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 /* App Imports */
@@ -49,7 +52,7 @@ const useStyles = makeStyles(theme => ({
       display: "flex",
       justifyContent: "space-between",
       padding: theme.spacing(0, 2),
-      flexWrap: "wrap"
+      flexDirection: "column-reverse"
     },
     [theme.breakpoints.down("xs")]: {
       display: "flex",
@@ -76,11 +79,11 @@ const useStyles = makeStyles(theme => ({
       flexDirection: "column-reverse"
     }
   },
-  positiveActions:{
+  positiveActions: {
     display: "flex",
     justifyContent: "space-between"
   },
-  negativeActions:{
+  negativeActions: {
     display: "flex",
     justifyContent: "flex-end"
   },
@@ -134,12 +137,14 @@ const useStyles = makeStyles(theme => ({
   switch: {
     display: "flex"
   },
+  switchContainer: {
+    display: "flex",
+    flexDirection: "column"
+  },
   switchFormLabel: {
-    [theme.breakpoints.down("xs")]: {
-      justifyContent: "space-between",
-      display: "flex",
-      width: "100%"
-    }
+    justifyContent: "space-between",
+    display: "flex",
+    width: "100%"
   },
   typographyAndIcon: {
     display: "flex"
@@ -152,7 +157,8 @@ const useStyles = makeStyles(theme => ({
   },
   coinInput: {
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    marginBottom: theme.spacing(1)
   }
 }));
 
@@ -169,6 +175,21 @@ const ClassroomCreator = props => {
       value: 60,
       label: "60 min"
     }
+  ];
+
+  const children = [
+    <ToggleButton key={2} value="2">
+      <Typography>2</Typography>
+    </ToggleButton>,
+    <ToggleButton key={3} value="3">
+      <Typography>3</Typography>
+    </ToggleButton>,
+    <ToggleButton key={4} value="4">
+      <Typography>4</Typography>
+    </ToggleButton>,
+    <ToggleButton key={5} value="5" disabled>
+      <Typography>5</Typography>
+    </ToggleButton>
   ];
 
   return (
@@ -266,14 +287,23 @@ const ClassroomCreator = props => {
                 />
               </div>
             </div>
-            <div className={classes.switch}>
-              <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
-              <FormControlLabel
-                className={classes.switchFormLabel}
-                control={<Switch value="checkedA" color="primary" />}
-                labelPlacement="start"
-                label="Student Groups"
-              />
+            <div className={classes.switchContainer}>
+              <div className={classes.switch}>
+                <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
+                <FormControlLabel
+                  className={classes.switchFormLabel}
+                  control={<Switch value="checkedA" color="primary" />}
+                  labelPlacement="start"
+                  label="Student Groups"
+                />
+              </div>
+              <Collapse
+                in={true}
+                style={{ justifyContent: "center", display: "flex" }}
+              >
+                <Typography gutterBottom>Group Size</Typography>
+                <ToggleButtonGroup exclusive>{children}</ToggleButtonGroup>
+              </Collapse>
             </div>
           </div>
           <div className={classes.formActions}>
@@ -282,7 +312,7 @@ const ClassroomCreator = props => {
                 variant="contained"
                 className={classes.button}
                 size="small"
-                style={{backgroundColor: "#f44336", color: "#ffffff"}}
+                style={{ backgroundColor: "#f44336", color: "#ffffff" }}
               >
                 Cancel
               </Button>
