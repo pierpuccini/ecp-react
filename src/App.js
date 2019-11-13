@@ -78,8 +78,7 @@ function App(props) {
       console.log('[App] pathname for reload', location.pathname);
       setNavRoute(location.pathname.replace('/',''));
     }
-    //eslint-disable-next-line
-  }, []);
+  }, [location]);
 
   /* Use efect handles time out for loader and conditional routes managed by state */  
   useEffect(() => {
