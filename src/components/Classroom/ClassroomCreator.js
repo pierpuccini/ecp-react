@@ -10,6 +10,9 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import IconButton from "@material-ui/core/IconButton";
 //Icons
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
+import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
+//App imports
+import CustomSwitch from "../UI/Switch/CustomSwitch";
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {
@@ -108,7 +111,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ClassroomCreator = (props) => {
+const ClassroomCreator = props => {
   const classes = useStyles();
   const { navActions } = props;
   return (
@@ -116,10 +119,18 @@ const ClassroomCreator = (props) => {
       <Paper className={classes.paper}>
         <form>
           <div className={classes.formHeader}>
-            <IconButton size="small" style={{ marginRight: "5px" }} onClick={()=>{navActions()}}>
+            <IconButton
+              size="small"
+              style={{ marginRight: "5px" }}
+              onClick={() => {
+                navActions();
+              }}
+            >
               <ArrowBackIosOutlinedIcon />
             </IconButton>
-            <Typography style={{alignSelf: "center"}}>Chose or Create Classroom</Typography>
+            <Typography style={{ alignSelf: "center" }}>
+              Chose or Create Classroom
+            </Typography>
           </div>
           <div className={classes.codeAndNameContainer}>
             <TextField
@@ -162,42 +173,10 @@ const ClassroomCreator = (props) => {
           </div>
           <Typography>Additional Classroom Info</Typography>
           <div className={classes.AdditionalInfoContainer}>
-            <TextField
-              className={classes.textField}
-              label="Institution"
-              placeholder="Universidad del Norte"
-              type="text"
-              margin="normal"
-              variant="outlined"
-              required
-            />
-            <Autocomplete
-              className={classes.autocompleteTextField}
-              freeSolo
-              clearOnEscape
-              disableOpenOnFocus
-              autoHighlight
-              options={top100Films.map(option => option.title)}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  label="Class Code"
-                  placeholder="3752"
-                  margin="normal"
-                  variant="outlined"
-                  fullWidth
-                  required
-                />
-              )}
-            />
-            <TextField
-              className={classes.textField}
-              label="Classroom Name"
-              placeholder="Control"
-              type="text"
-              margin="normal"
-              variant="outlined"
-              required
+            <CustomSwitch
+              label="Student Groups"
+              color="primary"
+              icon={<PeopleAltOutlinedIcon style={{ alignSelf: "center", marginLeft:"8px" }} />}
             />
           </div>
         </form>
