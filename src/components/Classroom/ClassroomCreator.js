@@ -15,6 +15,8 @@ import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined";
 //Icons
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
+/* App Imports */
+import Logo from "../Logo/Logo";
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {
@@ -45,7 +47,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("xs")]: {
       display: "flex",
       justifyContent: "space-between",
-      padding: theme.spacing(0, 2)
+      padding: theme.spacing(0, 2),
+      flexWrap: "wrap"
     },
     [theme.breakpoints.down("xs")]: {
       display: "flex",
@@ -130,6 +133,10 @@ const useStyles = makeStyles(theme => ({
   },
   sliderContainer: {
     margin: theme.spacing(2, 0)
+  },
+  coinInput: {
+    display: "flex",
+    justifyContent: "center"
   }
 }));
 
@@ -207,13 +214,19 @@ const ClassroomCreator = props => {
           </div>
           <Typography>Additional Classroom Info</Typography>
           <div className={classes.AdditionalInfoContainer}>
-            <div className={classes.switch}>
-              <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
-              <FormControlLabel
-                className={classes.switchFormLabel}
-                control={<Switch value="checkedA" color="primary" />}
-                labelPlacement="start"
-                label="Student Groups"
+            <div className={classes.coinInput}>
+              <TextField
+                className={classes.textField}
+                label="Initial Coins"
+                placeholder="5000"
+                type="number"
+                margin="normal"
+                variant="outlined"
+                required
+                style={{ width: "190px" }}
+                InputProps={{
+                  endAdornment: <Logo height="56px" />
+                }}
               />
             </div>
             <div className={classes.sliderContainer}>
@@ -236,6 +249,15 @@ const ClassroomCreator = props => {
                   max={60}
                 />
               </div>
+            </div>
+            <div className={classes.switch}>
+              <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
+              <FormControlLabel
+                className={classes.switchFormLabel}
+                control={<Switch value="checkedA" color="primary" />}
+                labelPlacement="start"
+                label="Student Groups"
+              />
             </div>
           </div>
         </form>
