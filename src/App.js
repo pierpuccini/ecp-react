@@ -72,14 +72,20 @@ function App(props) {
 
   const [navRoute, setNavRoute] = useState("home");
 
-  /* Use efect handles time out for loader and conditional routes managed by state */
+  //Handles same route refresh
+  useEffect(() => {
+    if (location.pathname !== '/home') {
+      console.log('[App] pathname for reload', location.pathname);
+      setNavRoute(location.pathname.replace('/',''));
+    }
+    //eslint-disable-next-line
+  }, []);
+
+  /* Use efect handles time out for loader and conditional routes managed by state */  
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
     }, 1500);
-    if (location.pathname !== '/home') {
-      setNavRoute(location.pathname.replace('/',''));
-    }
     //Conditional Routes
     if (
       location.pathname.match("onboarding") &&
@@ -130,6 +136,7 @@ function App(props) {
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
     /* Conditional routes section */
+    console.log('[App] ridir path', `/${navRoute}`);
     redirect = <Redirect to={`/${navRoute}`} />;
 
     //Title Checker

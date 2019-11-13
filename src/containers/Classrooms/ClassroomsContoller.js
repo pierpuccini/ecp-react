@@ -1,5 +1,5 @@
 /* React imports */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,6 +13,7 @@ import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOut
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 /* App imports */
+import Loader from "../../components/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 
 const createClassroom = asyncComponent(() => {
@@ -53,7 +54,32 @@ const useStyles = makeStyles(theme => ({
 
 const ClassroomController = props => {
   const classes = useStyles();
-  const [navRoute, setNavRoute] = useState("");
+
+  //Checks if DOM is ready to un mount loading icon
+  const [domReady, setDomReady] = useState(false);
+  const [navRoute, setNavRoute] = useState("classrooms");
+
+  useEffect(() => {
+    console.log("[classroom] Initial path", props.location.pathname);
+    const parsedPath = props.location.pathname.replace("/", "").split("/");
+    console.log("[classroom] parsedPath", parsedPath, parsedPath.length);
+    if (parsedPath.length > 1) {
+      console.log("[classroom] Redir to sublink", `/${parsedPath[1]}`);
+      setNavRoute(`classrooms/${parsedPath[1]}`);
+    }
+    //eslint-disable-next-line
+  }, []);
+
+  /* Use efect handles time out for loader */
+
+  useEffect(() => {
+    let showCoinLoader = setTimeout(() => {
+      setDomReady(true);
+    }, 1500);
+    return () => {
+      clearTimeout(showCoinLoader);
+    };
+  }, []);
 
   const handleNavChange = (event, newValue) => {
     setNavRoute(newValue);
@@ -65,7 +91,8 @@ const ClassroomController = props => {
   ];
 
   /* Conditional routes section */
-  redirect = <Redirect to={`/classrooms${navRoute}`} />;
+  console.log("[classroom] nav", `/${navRoute}`);
+  redirect = <Redirect to={`/${navRoute}`} />;
 
   //Available routes or Guarded routes
   routes = (
@@ -82,51 +109,66 @@ const ClassroomController = props => {
         } else {
           return null;
         }
-      })}  
-         
+      })}
     </Switch>
   );
 
+  const classrooomController =
+    props.location.pathname === "/classrooms" ? (
+      <Container maxWidth="sm" className={classes.container}>
+        {redirect}
+        <Paper className={classes.paper}>
+          <Typography>Classroom Manager</Typography>
+          <div className={classes.actionButtonsContainer}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              endIcon={<AddCircleOutlineOutlinedIcon />}
+              onClick={event => {
+                handleNavChange(event, "classrooms/create");
+              }}
+            >
+              Create Classroom
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              endIcon={<EditOutlinedIcon />}
+              onClick={event => {
+                handleNavChange(event, "classrooms/edit");
+              }}
+            >
+              Edit Classroom
+            </Button>
+          </div>
+          <div>
+            <div className={classes.classroomListHeader}>
+              <Icon style={{ marginRight: "5px" }}>
+                <ListOutlinedIcon />
+              </Icon>
+              <Typography>Classroom List</Typography>
+            </div>
+          </div>
+        </Paper>
+      </Container>
+    ) : (
+      <React.Fragment>
+        {redirect}
+        {routes}
+      </React.Fragment>
+    );
+
+  const loadingDom = (
+    <div style={{alignSelf: "center"}}>
+      <Loader />
+    </div>
+  );
+
   return (
-    <React.Fragment> 
-    {redirect}    
-      {props.location.pathname === "/classrooms" ? (
-        <Container maxWidth="sm" className={classes.container}>
-          <Paper className={classes.paper}>
-            <Typography>Classroom Manager</Typography>
-            <div className={classes.actionButtonsContainer}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                endIcon={<AddCircleOutlineOutlinedIcon />}
-                onClick={(event)=>{handleNavChange(event,'/create')}}
-              >
-                Create Classroom
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                endIcon={<EditOutlinedIcon />}
-                onClick={(event)=>{handleNavChange(event,'/edit')}}
-              >
-                Edit Classroom
-              </Button>
-            </div>
-            <div>
-              <div className={classes.classroomListHeader}>
-                <Icon style={{marginRight: "5px"}}>
-                  <ListOutlinedIcon />
-                </Icon>
-                <Typography>Classroom List</Typography>
-              </div>
-            </div>
-          </Paper>
-        </Container>
-      ) : (
-        routes
-      )}
+    <React.Fragment>
+      {domReady ? classrooomController : loadingDom}
     </React.Fragment>
   );
 };

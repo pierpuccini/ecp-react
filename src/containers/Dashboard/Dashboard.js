@@ -115,14 +115,12 @@ const Dashboard = props => {
     }
   });
 
-  let redirect;
   const redirectDashboard = (event, redirectLink) => {
-    redirect = props.history.push(redirectLink)
+    props.history.push(redirectLink)
   };
 
   return (
     <React.Fragment>
-      {redirect}
       <HomeCards dashboardCards={dashboardItems} loaded={showSkeleton} dashboardToRoute={redirectDashboard}/>
     </React.Fragment>
   );
