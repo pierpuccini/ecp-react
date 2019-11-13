@@ -1,6 +1,8 @@
 /* React imports */
 import React, { useState, useEffect } from "react";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
+//Redux
+import { connect } from "react-redux";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -61,7 +63,7 @@ const ClassroomController = props => {
 
   useEffect(() => {
     const parsedPath = props.location.pathname.replace("/", "").split("/");
-    if (parsedPath.length > 1) {  
+    if (parsedPath.length > 1) {
       setNavRoute(`classrooms/${parsedPath[1]}`);
     }
     //eslint-disable-next-line
@@ -87,7 +89,7 @@ const ClassroomController = props => {
     { url: "create", comp: createClassroom, restriction: "student" }
   ];
 
-/* Conditional routes section */
+  /* Conditional routes section */
   redirect = <Redirect to={`/${navRoute}`} />;
 
   //Available routes or Guarded routes
@@ -109,36 +111,42 @@ const ClassroomController = props => {
     </Switch>
   );
 
+  const classroomManager = (
+    <React.Fragment>
+      <Typography>Classroom Manager</Typography>
+      <div className={classes.actionButtonsContainer}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          endIcon={<AddCircleOutlineOutlinedIcon />}
+          onClick={event => {
+            handleNavChange(event, "classrooms/create");
+          }}
+        >
+          Create Classroom
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          endIcon={<EditOutlinedIcon />}
+          onClick={event => {
+            handleNavChange(event, "classrooms/edit");
+          }}
+        >
+          Edit Classroom
+        </Button>
+      </div>
+    </React.Fragment>
+  );
+
   const classrooomController =
     props.location.pathname === "/classrooms" ? (
       <Container maxWidth="sm" className={classes.container}>
         {redirect}
         <Paper className={classes.paper}>
-          <Typography>Classroom Manager</Typography>
-          <div className={classes.actionButtonsContainer}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              endIcon={<AddCircleOutlineOutlinedIcon />}
-              onClick={event => {
-                handleNavChange(event, "classrooms/create");
-              }}
-            >
-              Create Classroom
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              endIcon={<EditOutlinedIcon />}
-              onClick={event => {
-                handleNavChange(event, "classrooms/edit");
-              }}
-            >
-              Edit Classroom
-            </Button>
-          </div>
+          {props.role === "student" ? null : (classroomManager)}
           <div>
             <div className={classes.classroomListHeader}>
               <Icon style={{ marginRight: "5px" }}>
@@ -157,7 +165,7 @@ const ClassroomController = props => {
     );
 
   const loadingDom = (
-    <div style={{alignSelf: "center"}}>
+    <div style={{ alignSelf: "center" }}>
       <Loader />
     </div>
   );
@@ -169,4 +177,10 @@ const ClassroomController = props => {
   );
 };
 
-export default withRouter(ClassroomController);
+const mapStateToProps = state => {
+  return {
+    role: state.firebase.profile.role
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(ClassroomController));

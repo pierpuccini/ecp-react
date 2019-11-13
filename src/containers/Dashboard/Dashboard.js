@@ -76,7 +76,7 @@ const Dashboard = props => {
       sm: 12,
       xs: 12,
       content: "Edit or Create Classroom!",
-      onClickLink: "/classrooms",
+      onClickLink: "/classrooms/create",
       permision: "teacher"
     },
     {
@@ -84,7 +84,7 @@ const Dashboard = props => {
       sm: false,
       xs: 6,
       content: "Current Classrooms",
-      onClickLink: "/home",
+      onClickLink: "/classrooms",
       permision: "student"
     },
     {
@@ -92,7 +92,7 @@ const Dashboard = props => {
       sm: false,
       xs: 6,
       content: "Past Classrooms",
-      onClickLink: "/home",
+      onClickLink: "/classrooms",
       permision: "student"
     },
     {
