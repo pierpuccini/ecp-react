@@ -60,11 +60,8 @@ const ClassroomController = props => {
   const [navRoute, setNavRoute] = useState("classrooms");
 
   useEffect(() => {
-    console.log("[classroom] Initial path", props.location.pathname);
     const parsedPath = props.location.pathname.replace("/", "").split("/");
-    console.log("[classroom] parsedPath", parsedPath, parsedPath.length);
-    if (parsedPath.length > 1) {
-      console.log("[classroom] Redir to sublink", `/${parsedPath[1]}`);
+    if (parsedPath.length > 1) {  
       setNavRoute(`classrooms/${parsedPath[1]}`);
     }
     //eslint-disable-next-line
@@ -90,8 +87,7 @@ const ClassroomController = props => {
     { url: "create", comp: createClassroom, restriction: "student" }
   ];
 
-  /* Conditional routes section */
-  console.log("[classroom] nav", `/${navRoute}`);
+/* Conditional routes section */
   redirect = <Redirect to={`/${navRoute}`} />;
 
   //Available routes or Guarded routes

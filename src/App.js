@@ -75,7 +75,6 @@ function App(props) {
   //Handles same route refresh
   useEffect(() => {
     if (location.pathname !== '/home') {
-      console.log('[App] pathname for reload', location.pathname);
       setNavRoute(location.pathname.replace('/',''));
     }
   }, [location]);
@@ -135,7 +134,6 @@ function App(props) {
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
     /* Conditional routes section */
-    console.log('[App] ridir path', `/${navRoute}`);
     redirect = <Redirect to={`/${navRoute}`} />;
 
     //Title Checker
