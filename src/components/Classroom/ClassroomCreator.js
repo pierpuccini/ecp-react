@@ -9,6 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import IconButton from "@material-ui/core/IconButton";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Button from '@material-ui/core/Button';
 import Switch from "@material-ui/core/Switch";
 import Slider from "@material-ui/core/Slider";
 import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined";
@@ -67,6 +68,21 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("sm")]: {
       minWidth: "150px"
     }
+  },
+  formActions: {
+    display: "flex",
+    justifyContent: "space-between",
+    [theme.breakpoints.down("xs")]: {
+      flexDirection: "column-reverse"
+    }
+  },
+  positiveActions:{
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  negativeActions:{
+    display: "flex",
+    justifyContent: "flex-end"
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -258,6 +274,35 @@ const ClassroomCreator = props => {
                 labelPlacement="start"
                 label="Student Groups"
               />
+            </div>
+          </div>
+          <div className={classes.formActions}>
+            <div className={classes.negativeActions}>
+              <Button
+                variant="contained"
+                className={classes.button}
+                size="small"
+                style={{backgroundColor: "#f44336", color: "#ffffff"}}
+              >
+                Cancel
+              </Button>
+            </div>
+            <div className={classes.positiveActions}>
+              <Button
+                variant="outlined"
+                className={classes.button}
+                size="small"
+              >
+                Save For Later
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                size="small"
+              >
+                Create Classroom
+              </Button>
             </div>
           </div>
         </form>
