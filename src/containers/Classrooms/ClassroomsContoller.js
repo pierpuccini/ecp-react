@@ -75,7 +75,7 @@ const ClassroomController = props => {
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
-    }, 1500);
+    }, 1000);
     return () => {
       clearTimeout(showCoinLoader);
     };
