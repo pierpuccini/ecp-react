@@ -8,11 +8,13 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import IconButton from "@material-ui/core/IconButton";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+import Slider from "@material-ui/core/Slider";
+import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined";
 //Icons
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
-//App imports
-import CustomSwitch from "../UI/Switch/CustomSwitch";
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {
@@ -42,11 +44,12 @@ const useStyles = makeStyles(theme => ({
   AdditionalInfoContainer: {
     [theme.breakpoints.up("xs")]: {
       display: "flex",
-      justifyContent: "space-between"
+      justifyContent: "space-between",
+      padding: theme.spacing(0, 2)
     },
     [theme.breakpoints.down("xs")]: {
       display: "flex",
-      flexDirection: "column"
+      flexDirection: "column-reverse"
     }
   },
   classroomContainer: {
@@ -108,12 +111,43 @@ const useStyles = makeStyles(theme => ({
   },
   formHeader: {
     display: "flex"
+  },
+  switch: {
+    display: "flex"
+  },
+  switchFormLabel: {
+    [theme.breakpoints.down("xs")]: {
+      justifyContent: "space-between",
+      display: "flex",
+      width: "100%"
+    }
+  },
+  typographyAndIcon: {
+    display: "flex"
+  },
+  slider: {
+    padding: theme.spacing(1, 3)
+  },
+  sliderContainer: {
+    margin: theme.spacing(2, 0)
   }
 }));
 
 const ClassroomCreator = props => {
   const classes = useStyles();
   const { navActions } = props;
+
+  const marks = [
+    {
+      value: 10,
+      label: "10 min"
+    },
+    {
+      value: 60,
+      label: "60 min"
+    }
+  ];
+
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>
       <Paper className={classes.paper}>
@@ -173,11 +207,36 @@ const ClassroomCreator = props => {
           </div>
           <Typography>Additional Classroom Info</Typography>
           <div className={classes.AdditionalInfoContainer}>
-            <CustomSwitch
-              label="Student Groups"
-              color="primary"
-              icon={<PeopleAltOutlinedIcon style={{ alignSelf: "center", marginLeft:"8px" }} />}
-            />
+            <div className={classes.switch}>
+              <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
+              <FormControlLabel
+                className={classes.switchFormLabel}
+                control={<Switch value="checkedA" color="primary" />}
+                labelPlacement="start"
+                label="Student Groups"
+              />
+            </div>
+            <div className={classes.sliderContainer}>
+              <div className={classes.typographyAndIcon}>
+                <TimerOutlinedIcon />
+                <Typography
+                  style={{ alignSelf: "center", marginLeft: "16px" }}
+                  gutterBottom
+                >
+                  Default Time Per Challenge
+                </Typography>
+              </div>
+              <div className={classes.slider}>
+                <Slider
+                  defaultValue={15}
+                  valueLabelDisplay="auto"
+                  step={5}
+                  marks={marks}
+                  min={10}
+                  max={60}
+                />
+              </div>
+            </div>
           </div>
         </form>
       </Paper>
