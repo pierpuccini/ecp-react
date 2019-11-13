@@ -15,6 +15,7 @@ import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOut
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 /* App imports */
+import PermisionError from '../../components/Errors/PermisionError/PermisionError'
 import Loader from "../../components/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 
@@ -95,7 +96,7 @@ const ClassroomController = props => {
   //Available routes or Guarded routes
   routes = (
     <Switch>
-      {routesArray.map(route => {
+      {routesArray.map((route, index) => {
         if (route.restriction !== props.role) {
           return (
             <Route
@@ -105,7 +106,7 @@ const ClassroomController = props => {
             />
           );
         } else {
-          return null;
+          return <PermisionError key={index}/>;
         }
       })}
     </Switch>
