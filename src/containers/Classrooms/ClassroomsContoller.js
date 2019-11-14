@@ -61,7 +61,11 @@ const ClassroomController = props => {
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
 
+  /* Use efect handles time out for loader */
   useEffect(() => {
+    let showCoinLoader = setTimeout(() => {
+      setDomReady(true);
+    }, 750);
     const parsedPath = props.location.pathname.replace("/", "").split("/");
     if (parsedPath.length > 1) {
       setNavRoute(`classrooms/${parsedPath[1]}`);
@@ -69,17 +73,10 @@ const ClassroomController = props => {
     if(props.location.state) {
       setNavRoute(`${props.location.state.overwriteLocalNavState}`);
     }
-  }, [props.location]);
-
-  /* Use efect handles time out for loader */
-  useEffect(() => {
-    let showCoinLoader = setTimeout(() => {
-      setDomReady(true);
-    }, 750);
     return () => {
       clearTimeout(showCoinLoader);
-    };
-  }, []);
+    };    
+  }, [props.location]);
 
   const handleNavChange = (event, newValue) => {
     setNavRoute(newValue);

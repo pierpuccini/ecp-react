@@ -72,22 +72,18 @@ function App(props) {
 
   const [navRoute, setNavRoute] = useState("home");
 
-  //Handles same route refresh
-  useEffect(() => {
-    if (location.pathname !== '/home') {
-      setNavRoute(location.pathname.replace('/',''));
-    }
-    if(location.state) {
-      setNavRoute(`${location.state.overwriteLocalNavState}`);
-    }
-  }, [location]);
-
   /* Use efect handles time out for loader and conditional routes managed by state */  
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
     }, 750);
     //Conditional Routes
+    if (location.pathname !== '/home') {
+      setNavRoute(location.pathname.replace('/',''));
+    }
+    if(location.state) {
+      setNavRoute(`${location.state.overwriteLocalNavState}`);
+    }
     if (
       location.pathname.match("onboarding") &&
       !(newUser === "")
