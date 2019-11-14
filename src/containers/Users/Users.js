@@ -189,8 +189,15 @@ const Users = props => {
   };
 
   const submitOnboardingHandler = event => {
+    //Gets the proper institution to push into user profile
+    let selectedClient;
+    clients.forEach((client)=>{
+      if (client.id === OnboardingForm.institution.value) {
+        selectedClient = client
+      }
+    });
     let payload = {
-      institution: OnboardingForm.institution.value,
+      institution: selectedClient,
       linkCode: OnboardingForm.linkCode.value
     };
     event.preventDefault();

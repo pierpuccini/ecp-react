@@ -109,7 +109,7 @@ const Onboarding = props => {
               <MenuItem
                 className={matClasses.MuiMenuList}
                 key={option.id}
-                value={option.value}
+                value={option.id}
               >
                 {option.value}
               </MenuItem>
