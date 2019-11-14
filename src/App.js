@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 
 function App(props) {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const { profileLoaded, newUser, onboardingSuccess, location } = props;
+  const { profileLoaded, newUser, onboardingSuccess, location, history } = props;
 
   const classes = useStyles();
   //Checks if DOM is ready to un mount loading icon
@@ -76,6 +76,9 @@ function App(props) {
   useEffect(() => {
     if (location.pathname !== '/home') {
       setNavRoute(location.pathname.replace('/',''));
+    }
+    if(location.state) {
+      setNavRoute(`${location.state.overwriteLocalNavState}`);
     }
   }, [location]);
 
@@ -109,6 +112,11 @@ function App(props) {
   const handleNavChange = (event, newValue) => {
     props.resetReduxErrors()
     setNavRoute(newValue);
+  };
+
+  const sideListHandleNavChange = (event, newValue) => {
+    props.resetReduxErrors()
+    history.push({state: {overwriteLocalNavState: newValue}});
   };
 
   const logoutHandler = () => {
@@ -211,7 +219,7 @@ function App(props) {
           toggleDrawer(true);
         }}
       >
-        <SideList toggleDrawer={toggleDrawer} onChange={handleNavChange} />
+        <SideList toggleDrawer={toggleDrawer} onChange={sideListHandleNavChange} />
       </SwipeableDrawer>
     );
 
