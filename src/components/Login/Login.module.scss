@@ -75,8 +75,13 @@
     }
 
     .textDivider span {
-        background-color: #424242;
+        background-color: #303030;
         padding: 1em;
         font-size: small
+    }
+    @media (min-width: 960px) {
+        .textDivider span {
+            background-color: #424242;
+        }
     }
 }

@@ -63,6 +63,7 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(1, 1),
       margin: theme.spacing(1, 2),
       boxShadow: "unset",
+      backgroundColor: "#303030"
     }
   }
 }));
