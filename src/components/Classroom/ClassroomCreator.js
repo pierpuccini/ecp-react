@@ -74,10 +74,7 @@ const useStyles = makeStyles(theme => ({
   },
   formActions: {
     display: "flex",
-    justifyContent: "space-between",
-    [theme.breakpoints.down("xs")]: {
-      flexDirection: "column-reverse"
-    }
+    justifyContent: "space-between"
   },
   positiveActions: {
     display: "flex",
@@ -318,13 +315,6 @@ const ClassroomCreator = props => {
               </Button>
             </div>
             <div className={classes.positiveActions}>
-              <Button
-                variant="outlined"
-                className={classes.button}
-                size="small"
-              >
-                Save For Later
-              </Button>
               <Button
                 variant="contained"
                 color="primary"
