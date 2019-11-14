@@ -3,6 +3,7 @@ import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 //MaterialUI Imports
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Container from "@material-ui/core/Container";
@@ -70,6 +71,14 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: "#303030"
     }
   },
+  darkPaper: {
+    padding: theme.spacing(2, 2),
+    margin: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      "box-shadow": "unset",
+      backgroundColor:"#303030"
+    }
+  },
   badge: {
     margin: theme.spacing(2)
   },
@@ -79,10 +88,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SignUp = props => {
-  const matClasses = useStyles();  
+  const matClasses = useStyles(); 
+  const matches = useMediaQuery('(prefers-color-scheme: dark)');
+
   return (
     <Container maxWidth="sm" className={classes.signUpContainer}>
-      <Paper className={matClasses.paper}>
+      <Paper className={(matches)?matClasses.darkPaper:matClasses.paper}>
         <div className={classes.topActions}>
           <IconButton
             component={backToLogin}
