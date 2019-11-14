@@ -6,6 +6,7 @@ import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import IconButton from "@material-ui/core/IconButton";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -161,7 +162,7 @@ const useStyles = makeStyles(theme => ({
 
 const ClassroomCreator = props => {
   const classes = useStyles();
-  const { navActions } = props;
+  const { navActions, classroomsId, institutions } = props;
 
   const marks = [
     {
@@ -189,16 +190,6 @@ const ClassroomCreator = props => {
     </ToggleButton>
   ];
 
-  const top100Films = [
-    { title: "The Shawshank Redemption", year: 1994 },
-    { title: "The Godfather", year: 1972 },
-    { title: "The Godfather: Part II", year: 1974 },
-    { title: "The Dark Knight", year: 2008 },
-    { title: "12 Angry Men", year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: "Pulp Fiction", year: 1994 }
-  ];
-
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>
       <Paper className={classes.paper}>
@@ -221,19 +212,30 @@ const ClassroomCreator = props => {
             <TextField
               className={classes.textField}
               label="Institution"
-              placeholder="Universidad del Norte"
+              placeholder="Select Your Institution"
               type="text"
               margin="normal"
               variant="outlined"
+              select
               required
-            />
+            >
+              {institutions.map(option => (
+                <MenuItem
+                  className={classes.MuiMenuList}
+                  key={option.id}
+                  value={option.value}
+                >
+                  {option.value}
+                </MenuItem>
+              ))}
+            </TextField>
             <Autocomplete
               className={classes.autocompleteTextField}
               freeSolo
               clearOnEscape
               disableOpenOnFocus
               autoHighlight
-              options={top100Films.map(option => option.title)}
+              options={classroomsId}
               renderInput={params => (
                 <TextField
                   {...params}
@@ -340,6 +342,5 @@ const ClassroomCreator = props => {
     </Container>
   );
 };
-
 
 export default ClassroomCreator;

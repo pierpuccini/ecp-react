@@ -7,20 +7,20 @@ import { connect } from "react-redux";
 import ClassroomCreator from "../../../components/Classroom/ClassroomCreator";
 
 const CreateClassroom = (props) => {
-  const { classrooms } = props;
+  const { classrooms, myInstitutions } = props;
   
   //Action to push to the main classroom page /classrooms
   const handleNav = () => {
     props.history.push({state: {overwriteLocalNavState: 'classrooms'}});
   }
   
-  return <ClassroomCreator navActions={handleNav} classrooms={classrooms}/>;
+  return <ClassroomCreator navActions={handleNav} classroomsId={classrooms} institutions={myInstitutions}/>;
 };
 
 const mapStateToProps = state => {
   return {
     role: state.firebase.profile.role,
-    institutions: state.firebase.profile.institutions,
+    myInstitutions: state.firebase.profile.institutions,
     classrooms: state.firebase.profile.classrooms
   };
 };
