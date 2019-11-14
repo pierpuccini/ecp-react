@@ -92,5 +92,10 @@
         padding: 1em;
         font-size: small
     }
+    @media (max-width: 959px) {
+        .textDivider span {
+            background-color: #303030;
+        }
+    }
 }
 

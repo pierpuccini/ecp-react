@@ -3,6 +3,7 @@ import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 //MaterialUI Imports
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
@@ -14,7 +15,7 @@ import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 //App Imports
 import classes from "./Login.module.scss";
 import Logo from "../../components/Logo/Logo";
@@ -62,19 +63,34 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       padding: theme.spacing(1, 1),
       margin: theme.spacing(1, 2),
-      boxShadow: "unset",
+      boxShadow: "unset"
     }
-  }
+  },
+  darkPaper: {
+    padding: theme.spacing(2, 2),
+    margin: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      padding: theme.spacing(1, 1),
+      margin: theme.spacing(1, 2),
+      boxShadow: "unset",
+      backgroundColor:"#303030"
+    }
+  },
 }));
 
 const Login = props => {
   const matClasses = useStyles();
+   const matches = useMediaQuery("(prefers-color-scheme: dark)");
 
   //Error loader
   let errors = null;
-  (props.authError) ?
-    errors = <div className={classes.loginError}>{props.authError.customErrorMsg}</div> :
-    errors = null;
+  props.authError
+    ? (errors = (
+        <div className={classes.loginError}>
+          {props.authError.customErrorMsg}
+        </div>
+      ))
+    : (errors = null);
 
   //Form Loader for forgot form and login
   let form = null;
@@ -137,7 +153,7 @@ const Login = props => {
     );
     topLink = (
       <Paper
-        className={matClasses.paper}
+        className={(matches)?matClasses.darkPaper:matClasses.paper}
         style={{ boxShadow: "unset", padding: "unset" }}
       >
         <Typography className={classes.restoreLogin}>
@@ -153,7 +169,7 @@ const Login = props => {
       </Paper>
     );
     bottomLink = (
-      <Paper className={matClasses.paper}>
+      <Paper className={(matches)?matClasses.darkPaper:matClasses.paper}>
         <div className={classes.restoreLogin}>
           ¿Remember your login info?{" "}
           <Link component={SignUpLink} to="/login">
@@ -250,7 +266,7 @@ const Login = props => {
       </Typography>
     );
     bottomLink = (
-      <Paper className={matClasses.paper}>
+      <Paper className={(matches)?matClasses.darkPaper:matClasses.paper}>
         <Typography className={classes.restoreLogin}>
           ¿Need an account?{" "}
           <Link component={SignUpLink} to="/sign-up">
@@ -263,7 +279,7 @@ const Login = props => {
 
   return (
     <Container maxWidth="sm" className={classes.loginContainer}>
-      <Paper className={matClasses.paper}>
+      <Paper className={(matches)?matClasses.darkPaper:matClasses.paper}>
         <strong>Welcome To Edu Coins!</strong>
         <Logo height="85px" />
         {errors}
