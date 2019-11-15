@@ -50,6 +50,14 @@ const CreateClassroom = props => {
       valid: false,
       touched: false
     },
+    challengeTime: {
+      value: 15,
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
   });
 
   //Action to push to the main classroom page /classrooms
@@ -87,6 +95,21 @@ const CreateClassroom = props => {
     setcreateClassroomForm(updatedControls);
   };
 
+  /* Controls classroom time slider Logic */
+  const classroomSliderHandler = (event, value) => {
+    const updatedControls = updateObject(createClassroomForm, {
+      'challengeTime': updateObject(createClassroomForm.challengeTime, {
+        value: (value === null)?null:value,
+        valid: checkValidity(
+          value.toString(),
+          createClassroomForm.challengeTime.validation
+        ),
+        touched: true
+      })
+    });
+    setcreateClassroomForm(updatedControls);
+  };
+
   /* Controls classroom autocomplete Logic */
   const classroomAutocompleteHandler = (event, value) => {
     const updatedControls = updateObject(createClassroomForm, {
@@ -110,6 +133,7 @@ const CreateClassroom = props => {
       institutions={myInstitutions}
       inputChangedHandler={classroomInputHandler}
       toggleButtonChangedHandler={classroomToggleButtonHandler}
+      sliderChangedHandler={classroomSliderHandler}
       autocompleteHandler={classroomAutocompleteHandler}
     />
   );

@@ -169,7 +169,8 @@ const ClassroomCreator = props => {
     createClassroomForm,
     inputChangedHandler,
     autocompleteHandler,
-    toggleButtonChangedHandler
+    toggleButtonChangedHandler,
+    sliderChangedHandler
   } = props;
 
   const [switchToggle, setswitchToggle] = useState(false)
@@ -311,7 +312,9 @@ const ClassroomCreator = props => {
               <div className={classes.slider}>
                 <Slider
                   defaultValue={15}
+                  value={createClassroomForm.challengeTime.value}
                   valueLabelDisplay="auto"
+                  onChange={(event, value)=>{sliderChangedHandler(event, value)}}
                   step={5}
                   marks={marks}
                   min={10}
