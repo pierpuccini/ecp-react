@@ -162,7 +162,14 @@ const useStyles = makeStyles(theme => ({
 
 const ClassroomCreator = props => {
   const classes = useStyles();
-  const { navActions, classroomsId, institutions, createClassroomForm } = props;
+  const {
+    navActions,
+    classroomsId,
+    institutions,
+    createClassroomForm,
+    inputChangedHandler,
+    autocompleteHandler
+  } = props;
 
   const marks = [
     {
@@ -217,6 +224,7 @@ const ClassroomCreator = props => {
               margin="normal"
               variant="outlined"
               value={createClassroomForm.institutions.value}
+              onChange={event => inputChangedHandler(event, "institutions")}
               select
               required
             >
@@ -237,6 +245,7 @@ const ClassroomCreator = props => {
               clearOnEscape
               disableOpenOnFocus
               autoHighlight
+              onChange={autocompleteHandler}
               options={classroomsId}
               getOptionLabel={option => option.toString()}
               renderInput={params => (
@@ -246,6 +255,7 @@ const ClassroomCreator = props => {
                   placeholder="3752"
                   margin="normal"
                   variant="outlined"
+                  onChange={event => inputChangedHandler(event, "classCode")}
                   fullWidth
                   required
                 />
@@ -253,6 +263,8 @@ const ClassroomCreator = props => {
             />
             <TextField
               className={classes.textField}
+              value={createClassroomForm.className.value}
+              onChange={event => inputChangedHandler(event, "className")}
               label="Classroom Name"
               placeholder="Control"
               type="text"

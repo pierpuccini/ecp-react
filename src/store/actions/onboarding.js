@@ -41,7 +41,7 @@ export const checkOnboarding = data => {
         /* expected response */
         const res = {
           institution: payload.institution,
-          classroom: 123123,
+          classroom: "123123",
           studentId: 456456
         };
         /* expected response */

@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 //Redux
 import { connect } from "react-redux";
 //App imports
+import { updateObject, checkValidity } from "../../../shared/utility";
 import ClassroomCreator from "../../../components/Classroom/ClassroomCreator";
 
 const CreateClassroom = props => {
@@ -13,8 +14,8 @@ const CreateClassroom = props => {
   //Extracts institution id in case there is only one assinged to account
   let singleInstitution;
   if (myInstitutions.length <= 1) {
-    singleInstitution = myInstitutions[0].id
-  };
+    singleInstitution = myInstitutions[0].id;
+  }
 
   const [createClassroomForm, setcreateClassroomForm] = useState({
     institutions: {
@@ -41,12 +42,43 @@ const CreateClassroom = props => {
       },
       valid: false,
       touched: false
-    },
+    }
   });
 
   //Action to push to the main classroom page /classrooms
   const handleNav = () => {
     props.history.push({ state: { overwriteLocalNavState: "classrooms" } });
+  };
+
+  /* Controls classroom input Logic */
+  const classroomInputHandler = (event, controlName) => {
+    const updatedControls = updateObject(createClassroomForm, {
+      [controlName]: updateObject(createClassroomForm[controlName], {
+        value: event.target.value,
+        valid: checkValidity(
+          event.target.value,
+          createClassroomForm[controlName].validation
+        ),
+        touched: true
+      })
+    });
+    setcreateClassroomForm(updatedControls);
+  };
+
+  /* Controls classroom autocomplete Logic */
+  const classroomAutocompleteHandler = (event, value) => {
+    console.log('classCode',value);
+    const updatedControls = updateObject(createClassroomForm, {
+      'classCode' : updateObject(createClassroomForm.classCode, {
+        value: value,
+        valid: checkValidity(
+          value,
+          createClassroomForm.classCode.validation
+        ),
+        touched: true
+      })
+    });
+    setcreateClassroomForm(updatedControls);
   };
 
   return (
@@ -55,6 +87,8 @@ const CreateClassroom = props => {
       createClassroomForm={createClassroomForm}
       classroomsId={classrooms}
       institutions={myInstitutions}
+      inputChangedHandler={classroomInputHandler}
+      autocompleteHandler={classroomAutocompleteHandler}
     />
   );
 };
