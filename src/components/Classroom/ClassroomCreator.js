@@ -202,6 +202,21 @@ const ClassroomCreator = props => {
     </ToggleButton>
   ];
 
+  let createClassroomFormArr = Object.keys(createClassroomForm).map(
+    controlName => {
+      return {
+        controlName: controlName,
+        data: createClassroomForm[controlName]
+      };
+    }
+  );
+  let validFields = createClassroomFormArr.map(item => {
+    return {
+      [item.controlName]: item.data.valid && item.data.touched
+    };
+  });
+  validFields = Object.assign({}, ...validFields);
+
   const toggleSwitchHandler = event => {
     setswitchToggle(event.target.checked);
   };
@@ -385,6 +400,11 @@ const ClassroomCreator = props => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
+                disabled={
+                  !validFields.institutions ||
+                  !validFields.classCode ||
+                  !validFields.className
+                }
                 onClick={() => {
                   buttonClickHandler("create");
                 }}

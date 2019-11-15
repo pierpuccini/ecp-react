@@ -23,8 +23,8 @@ const CreateClassroom = props => {
       validation: {
         required: true
       },
-      valid: false,
-      touched: false
+      valid: true,
+      touched: true
     },
     classCode: {
       value: null,
