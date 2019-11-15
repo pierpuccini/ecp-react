@@ -254,8 +254,9 @@ const ClassroomCreator = props => {
                   label="Class Code"
                   placeholder="3752"
                   margin="normal"
-                  variant="outlined"
+                  type="text"
                   onChange={event => inputChangedHandler(event, "classCode")}
+                  variant="outlined"
                   fullWidth
                   required
                 />
