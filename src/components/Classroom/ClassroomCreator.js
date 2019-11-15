@@ -162,7 +162,7 @@ const useStyles = makeStyles(theme => ({
 
 const ClassroomCreator = props => {
   const classes = useStyles();
-  const { navActions, classroomsId, institutions } = props;
+  const { navActions, classroomsId, institutions, createClassroomForm } = props;
 
   const marks = [
     {
@@ -216,6 +216,7 @@ const ClassroomCreator = props => {
               type="text"
               margin="normal"
               variant="outlined"
+              value={createClassroomForm.institutions.value}
               select
               required
             >
@@ -223,7 +224,7 @@ const ClassroomCreator = props => {
                 <MenuItem
                   className={classes.MuiMenuList}
                   key={option.id}
-                  value={option.value}
+                  value={option.id}
                 >
                   {option.value}
                 </MenuItem>
@@ -231,11 +232,13 @@ const ClassroomCreator = props => {
             </TextField>
             <Autocomplete
               className={classes.autocompleteTextField}
+              value={createClassroomForm.classCode.value}
               freeSolo
               clearOnEscape
               disableOpenOnFocus
               autoHighlight
               options={classroomsId}
+              getOptionLabel={option => option.toString()}
               renderInput={params => (
                 <TextField
                   {...params}
