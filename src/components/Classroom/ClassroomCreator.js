@@ -1,5 +1,5 @@
 /* React Imports */
-import React from "react";
+import React, { useState } from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -171,6 +171,8 @@ const ClassroomCreator = props => {
     autocompleteHandler
   } = props;
 
+  const [switchToggle, setswitchToggle] = useState(false)
+
   const marks = [
     {
       value: 10,
@@ -196,6 +198,10 @@ const ClassroomCreator = props => {
       <Typography>5</Typography>
     </ToggleButton>
   ];
+
+  const toggleSwitchHandler = (event) => {
+    setswitchToggle(event.target.checked)
+  }
 
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>
@@ -317,13 +323,14 @@ const ClassroomCreator = props => {
                 <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
                 <FormControlLabel
                   className={classes.switchFormLabel}
-                  control={<Switch value="checkedA" color="primary" />}
+                  control={<Switch value={switchToggle} color="primary" onChange={(event)=>{toggleSwitchHandler(event)}}/>}
                   labelPlacement="start"
                   label="Student Groups"
                 />
               </div>
               <Collapse
-                in={true}
+                in={switchToggle}
+                timeout="auto"
                 style={{ justifyContent: "center", display: "flex" }}
               >
                 <Typography gutterBottom>Group Size</Typography>

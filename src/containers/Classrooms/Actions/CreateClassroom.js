@@ -67,8 +67,6 @@ const CreateClassroom = props => {
 
   /* Controls classroom autocomplete Logic */
   const classroomAutocompleteHandler = (event, value) => {
-    console.log('classCode',value);
-
     const updatedControls = updateObject(createClassroomForm, {
       'classCode' : updateObject(createClassroomForm.classCode, {
         value: value,
