@@ -16,10 +16,10 @@ import Collapse from "@material-ui/core/Collapse";
 //Icons
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
-import DoneOutlineOutlinedIcon from '@material-ui/icons/DoneOutlineOutlined';
-import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import DoneOutlineOutlinedIcon from "@material-ui/icons/DoneOutlineOutlined";
+import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 //App Imports
-import gIcon from "../../assets/svg/search.svg";
+import gIcon from "../../../assets/svg/search.svg";
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {
@@ -82,7 +82,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
     color: "#f44336",
     fontSize: "small"
-}
+  }
 }));
 
 const MyAccount = props => {
@@ -93,7 +93,7 @@ const MyAccount = props => {
     var textB = b.value.toUpperCase();
     return textA < textB ? -1 : textA > textB ? 1 : 0;
   });
-  
+
   //Error loader
   let errors = null;
   props.updatePersistentError
@@ -107,7 +107,7 @@ const MyAccount = props => {
         <div className={classes.loginError}>{props.updateError.message}</div>
       ))
     : (errors = null);
- 
+
   return (
     <Container maxWidth="sm" className={classes.myAccountContainer}>
       <Paper className={classes.paper}>
@@ -159,7 +159,7 @@ const MyAccount = props => {
               label="Institution"
               select
               placeholder="Select Your Institution"
-              value={props.myProfileForm.institution.value}
+              value={props.myProfileForm.institution.value.id}
               onChange={event => {
                 props.inputChangedHandler(event, "institution");
               }}
@@ -186,7 +186,7 @@ const MyAccount = props => {
                 <MenuItem
                   className={classes.MuiMenuList}
                   key={option.id}
-                  value={option.value}
+                  value={option.id}
                 >
                   {option.value}
                 </MenuItem>
@@ -194,7 +194,9 @@ const MyAccount = props => {
             </TextField>
             <TextField
               className={classes.textField}
-              label={`${(props.myProfile.role === "teacher")?"Teacher":"Student"} Id`}
+              label={`${
+                props.myProfile.role === "teacher" ? "Teacher" : "Student"
+              } Id`}
               placeholder="200040080"
               type="number"
               value={props.myProfileForm.studentId.value}

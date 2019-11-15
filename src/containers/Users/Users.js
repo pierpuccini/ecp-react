@@ -9,8 +9,8 @@ import { useSelector } from 'react-redux'
 import { useFirestoreConnect, isLoaded } from 'react-redux-firebase'
 //App Imports
 import FloatingLoader from '../../components/Loader/FloatingLoader/FloatingLoader'
-import Onboarding from "../../components/Onboarding/Onboarding";
-import MyAccount from "../../components/MyAccount/MyAccount";
+import Onboarding from "../../components/Users/Onboarding/Onboarding";
+import MyAccount from "../../components/Users/MyAccount/MyAccount";
 import Loader from "../../components/Loader/PngLoader/PngLoader"
 import { updateObject, checkValidity } from "../../shared/utility";
 
@@ -211,19 +211,42 @@ const Users = props => {
   };
 
   const myAccountInputChangedHandler = (event, controlName) => {
-    const updatedControls = updateObject(myAccountForm, {
-      [controlName]: updateObject(myAccountForm[controlName], {
-        value: event.target.value,
-        valid:
-          controlName === "confirmPassword"
-            ? checkPasswordChange(event.target.value)
-            : checkValidity(
-                event.target.value,
-                myAccountForm[controlName].validation
-              ),
-        touched: true
-      })
-    });
+    let updatedControls;
+    if (controlName === "institution") {
+
+      //Gets the proper institution to push into user profile
+      let selectedClient;
+      clients.forEach(client => {
+        if (client.id === event.target.value) {
+          selectedClient = client;
+        }
+      });
+
+      updatedControls = updateObject(myAccountForm, {
+        [controlName]: updateObject(myAccountForm[controlName], {
+          value: selectedClient,
+          valid: checkValidity(
+            event.target.value,
+            myAccountForm[controlName].validation
+          ),
+          touched: true
+        })
+      });
+    } else {
+      updatedControls = updateObject(myAccountForm, {
+        [controlName]: updateObject(myAccountForm[controlName], {
+          value: event.target.value,
+          valid:
+            controlName === "confirmPassword"
+              ? checkPasswordChange(event.target.value)
+              : checkValidity(
+                  event.target.value,
+                  myAccountForm[controlName].validation
+                ),
+          touched: true
+        })
+      });
+    }
     setMyAccountForm(updatedControls);
     setRemoveSuccessCheck(true);
   };
@@ -241,11 +264,24 @@ const Users = props => {
     const payload = {toUpdate: [], data: {}}
     let fieldsToUpdate = Object.keys(myAccountForm);
 
+    //Gets the proper institution to push into user profile
+    let selectedClient;
+    clients.forEach((client)=>{
+      if (client.id === myAccountForm.institution.value.id) {
+        selectedClient = client
+      }
+    });
+
     fieldsToUpdate.forEach((field)=>{
       if (field === 'password' || field === 'confirmPassword') {
         if (myAccountForm.confirmPassword.value) {
           payload.toUpdate.push('password')
           payload.data = {...payload.data, password: myAccountForm.password.value}
+        }
+      }else if(field === 'institution'){
+        if (selectedClient !== previousAccInfo.institution ) {
+          payload.toUpdate.push('institution');
+          payload.data = {...payload.data, 'institution': selectedClient}
         }
       }else{
           if (myAccountForm[field].value !== previousAccInfo[field].value) {
@@ -257,6 +293,7 @@ const Users = props => {
     if (payload.toUpdate.includes("email") && payload.toUpdate.includes("password") && (props.mainAccount !== 'password')){
       props.linkWithProvider(null,payload)
     }else{
+      console.log('payload',payload);
       props.updateUser(payload)
     }
     setRemoveSuccessCheck(false);
