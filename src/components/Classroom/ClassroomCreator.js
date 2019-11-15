@@ -248,7 +248,17 @@ const ClassroomCreator = props => {
               margin="normal"
               variant="outlined"
               value={createClassroomForm.institutions.value}
-              onChange={event => inputChangedHandler(event, "institutions")}
+              onChange={event => inputChangedHandler(event, "institutions")}              
+              helperText={
+                !createClassroomForm.institutions.valid &&
+                createClassroomForm.institutions.touched
+                  ? "*Please Select you Institution"
+                  : "Select you Institution"
+              }
+              error={
+                !createClassroomForm.institutions.valid &&
+                createClassroomForm.institutions.touched
+              }
               select
               required
             >
@@ -281,6 +291,16 @@ const ClassroomCreator = props => {
                   type="text"
                   onChange={event => inputChangedHandler(event, "classCode")}
                   variant="outlined"
+                  helperText={
+                    !createClassroomForm.classCode.valid &&
+                    createClassroomForm.classCode.touched
+                      ? "*Please Enter your internal classcode"
+                      : "Enter your internal classcode"
+                  }
+                  error={
+                    !createClassroomForm.classCode.valid &&
+                    createClassroomForm.classCode.touched
+                  }
                   fullWidth
                   required
                 />
@@ -294,6 +314,16 @@ const ClassroomCreator = props => {
               placeholder="Control"
               type="text"
               margin="normal"
+              helperText={
+                !createClassroomForm.className.valid &&
+                createClassroomForm.className.touched
+                  ? "*Please Enter your Classroom name"
+                  : null
+              }
+              error={
+                !createClassroomForm.className.valid &&
+                createClassroomForm.className.touched
+              }
               variant="outlined"
               required
             />
