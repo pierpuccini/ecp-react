@@ -37,12 +37,19 @@ const CreateClassroom = props => {
     className: {
       value: "",
       validation: {
-        required: true,
-        minLength: 6
+        required: true
       },
       valid: false,
       touched: false
-    }
+    },
+    studentGroups: {
+      value: "",
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
   });
 
   //Action to push to the main classroom page /classrooms
@@ -58,6 +65,21 @@ const CreateClassroom = props => {
         valid: checkValidity(
           (controlName === 'classCode' && event.target.value === "")?"":event.target.value,
           createClassroomForm[controlName].validation
+        ),
+        touched: true
+      })
+    });
+    setcreateClassroomForm(updatedControls);
+  };
+
+  /* Controls classroom toggle button Logic */
+  const classroomToggleButtonHandler = (event, value) => {
+    const updatedControls = updateObject(createClassroomForm, {
+      'studentGroups': updateObject(createClassroomForm.studentGroups, {
+        value: (value === null)?null:value,
+        valid: checkValidity(
+          value,
+          createClassroomForm.studentGroups.validation
         ),
         touched: true
       })
@@ -87,6 +109,7 @@ const CreateClassroom = props => {
       classroomsId={classrooms}
       institutions={myInstitutions}
       inputChangedHandler={classroomInputHandler}
+      toggleButtonChangedHandler={classroomToggleButtonHandler}
       autocompleteHandler={classroomAutocompleteHandler}
     />
   );

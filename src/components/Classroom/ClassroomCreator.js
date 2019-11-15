@@ -168,7 +168,8 @@ const ClassroomCreator = props => {
     institutions,
     createClassroomForm,
     inputChangedHandler,
-    autocompleteHandler
+    autocompleteHandler,
+    toggleButtonChangedHandler
   } = props;
 
   const [switchToggle, setswitchToggle] = useState(false)
@@ -334,7 +335,7 @@ const ClassroomCreator = props => {
                 style={{ justifyContent: "center", display: "flex" }}
               >
                 <Typography gutterBottom>Group Size</Typography>
-                <ToggleButtonGroup exclusive>{children}</ToggleButtonGroup>
+                <ToggleButtonGroup value={createClassroomForm.studentGroups.value} onChange={(event, value)=>{toggleButtonChangedHandler(event, value)}} exclusive>{children}</ToggleButtonGroup>
               </Collapse>
             </div>
           </div>
