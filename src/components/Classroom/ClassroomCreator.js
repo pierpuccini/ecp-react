@@ -170,10 +170,11 @@ const ClassroomCreator = props => {
     inputChangedHandler,
     autocompleteHandler,
     toggleButtonChangedHandler,
-    sliderChangedHandler
+    sliderChangedHandler,
+    buttonClickHandler
   } = props;
 
-  const [switchToggle, setswitchToggle] = useState(false)
+  const [switchToggle, setswitchToggle] = useState(false);
 
   const marks = [
     {
@@ -201,9 +202,9 @@ const ClassroomCreator = props => {
     </ToggleButton>
   ];
 
-  const toggleSwitchHandler = (event) => {
-    setswitchToggle(event.target.checked)
-  }
+  const toggleSwitchHandler = event => {
+    setswitchToggle(event.target.checked);
+  };
 
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>
@@ -291,7 +292,9 @@ const ClassroomCreator = props => {
                 placeholder="5000"
                 type="number"
                 value={createClassroomForm.coins.value}
-                onChange={(event)=>{inputChangedHandler(event, 'coins')}}
+                onChange={event => {
+                  inputChangedHandler(event, "coins");
+                }}
                 margin="normal"
                 variant="outlined"
                 required
@@ -317,7 +320,9 @@ const ClassroomCreator = props => {
                   defaultValue={15}
                   value={createClassroomForm.challengeTime.value}
                   valueLabelDisplay="auto"
-                  onChange={(event, value)=>{sliderChangedHandler(event, value)}}
+                  onChange={(event, value) => {
+                    sliderChangedHandler(event, value);
+                  }}
                   step={5}
                   marks={marks}
                   min={10}
@@ -330,7 +335,15 @@ const ClassroomCreator = props => {
                 <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
                 <FormControlLabel
                   className={classes.switchFormLabel}
-                  control={<Switch value={switchToggle} color="primary" onChange={(event)=>{toggleSwitchHandler(event)}}/>}
+                  control={
+                    <Switch
+                      value={switchToggle}
+                      color="primary"
+                      onChange={event => {
+                        toggleSwitchHandler(event);
+                      }}
+                    />
+                  }
                   labelPlacement="start"
                   label="Student Groups"
                 />
@@ -341,7 +354,15 @@ const ClassroomCreator = props => {
                 style={{ justifyContent: "center", display: "flex" }}
               >
                 <Typography gutterBottom>Group Size</Typography>
-                <ToggleButtonGroup value={createClassroomForm.studentGroups.value} onChange={(event, value)=>{toggleButtonChangedHandler(event, value)}} exclusive>{children}</ToggleButtonGroup>
+                <ToggleButtonGroup
+                  value={createClassroomForm.studentGroups.value}
+                  onChange={(event, value) => {
+                    toggleButtonChangedHandler(event, value);
+                  }}
+                  exclusive
+                >
+                  {children}
+                </ToggleButtonGroup>
               </Collapse>
             </div>
           </div>
@@ -350,6 +371,9 @@ const ClassroomCreator = props => {
               <Button
                 variant="contained"
                 className={classes.button}
+                onClick={() => {
+                  buttonClickHandler("cancel");
+                }}
                 size="small"
                 style={{ backgroundColor: "#f44336", color: "#ffffff" }}
               >
@@ -361,6 +385,9 @@ const ClassroomCreator = props => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
+                onClick={() => {
+                  buttonClickHandler("create");
+                }}
                 size="small"
               >
                 Create Classroom
