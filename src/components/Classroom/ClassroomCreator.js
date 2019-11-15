@@ -290,11 +290,14 @@ const ClassroomCreator = props => {
                 label="Initial Coins"
                 placeholder="5000"
                 type="number"
+                value={createClassroomForm.coins.value}
+                onChange={(event)=>{inputChangedHandler(event, 'coins')}}
                 margin="normal"
                 variant="outlined"
                 required
                 style={{ width: "190px" }}
                 InputProps={{
+                  inputProps: { min: 0 },
                   endAdornment: <Logo height="56px" />
                 }}
               />

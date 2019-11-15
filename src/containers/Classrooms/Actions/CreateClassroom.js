@@ -58,6 +58,14 @@ const CreateClassroom = props => {
       valid: false,
       touched: false
     },
+    coins: {
+      value: "",
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
   });
 
   //Action to push to the main classroom page /classrooms
