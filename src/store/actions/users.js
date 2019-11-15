@@ -131,7 +131,8 @@ export const updateUser = payload => {
       let institutions = [...currentState.firebase.profile.institutions];
       console.log("institutions", institutions);
       console.log("data", data);
-      if (institutions < 1) {
+      /* TODO: Remove this condition when implementing multiple institutions per teacher */
+      if (institutions.length <= 1) {
         institutions.pop();
       }
       institutions.push(data.institution);

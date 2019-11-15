@@ -279,7 +279,7 @@ const Users = props => {
           payload.data = {...payload.data, password: myAccountForm.password.value}
         }
       }else if(field === 'institution'){
-        if (selectedClient !== previousAccInfo.institution ) {
+        if (selectedClient.id !== previousAccInfo.institution.value.id ) {
           payload.toUpdate.push('institution');
           payload.data = {...payload.data, 'institution': selectedClient}
         }
@@ -293,7 +293,6 @@ const Users = props => {
     if (payload.toUpdate.includes("email") && payload.toUpdate.includes("password") && (props.mainAccount !== 'password')){
       props.linkWithProvider(null,payload)
     }else{
-      console.log('payload',payload);
       props.updateUser(payload)
     }
     setRemoveSuccessCheck(false);
