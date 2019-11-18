@@ -4,7 +4,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
 //App icons
-import coinIcon from "../../assets/images/coin-logo.png";
+import coinIcon from "../../../assets/images/coin-logo.png";
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {

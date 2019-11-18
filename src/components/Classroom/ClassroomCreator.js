@@ -21,7 +21,7 @@ import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined";
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 /* App Imports */
-import Logo from "../Logo/Logo";
+import Logo from "../UI/Logo/Logo";
 
 const useStyles = makeStyles(theme => ({
   imageIcon: {

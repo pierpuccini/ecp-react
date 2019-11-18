@@ -8,10 +8,10 @@ import * as actions from "../../store/actions/index";
 import { useSelector } from 'react-redux'
 import { useFirestoreConnect, isLoaded } from 'react-redux-firebase'
 //App Imports
-import FloatingLoader from '../../components/Loader/FloatingLoader/FloatingLoader'
+import FloatingLoader from '../../components/UI/Loader/FloatingLoader/FloatingLoader'
 import Onboarding from "../../components/Users/Onboarding/Onboarding";
 import MyAccount from "../../components/Users/MyAccount/MyAccount";
-import Loader from "../../components/Loader/PngLoader/PngLoader"
+import Loader from "../../components/UI/Loader/PngLoader/PngLoader"
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const Users = props => {

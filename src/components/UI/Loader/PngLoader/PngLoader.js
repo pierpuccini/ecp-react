@@ -1,7 +1,7 @@
 import React from "react";
-import coinLogo from '../../../assets/images/coin-logo.png'
+import coinLogo from '../../../../assets/images/coin-logo.png'
 import classes from './PngLoader.module.scss'
-import '../../../loading.css'
+import '../../../../loading.css'
 const PngLoader = () => {
   return (
     <div className="ld ld-breath" style={{animationDuration:"1.5s"}}>

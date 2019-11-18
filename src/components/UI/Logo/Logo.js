@@ -1,6 +1,6 @@
 import React from 'react';
 
-import coinLogo from '../../assets/images/coin-logo.png';
+import coinLogo from '../../../assets/images/coin-logo.png';
 import classes from './Logo.module.scss';
 
 const logo = (props) => (

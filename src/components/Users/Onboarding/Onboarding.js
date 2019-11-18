@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.up("lg")]: {
       width: "40%"
-    }
+    },
+    alignSelf: "center"
   },
   paper: {
     padding: theme.spacing(2, 2),

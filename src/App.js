@@ -25,7 +25,7 @@ import { ThemeProvider } from '@material-ui/styles';
 /* component Imports */
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import "./App.css";
-import Loader from "./components/Loader/PngLoader/PngLoader";
+import Loader from "./components/UI/Loader/PngLoader/PngLoader";
 import Topbar from "./components/UI/Topbar/Topbar";
 import SideList from "./components/UI/SideList/SideList";
 

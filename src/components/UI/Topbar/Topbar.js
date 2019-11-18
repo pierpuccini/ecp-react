@@ -13,7 +13,7 @@ import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneO
 import PowerSettingsNewOutlinedIcon from "@material-ui/icons/PowerSettingsNewOutlined";
 import AssignmentIndOutlinedIcon from "@material-ui/icons/AssignmentIndOutlined";
 //App Imports
-import CoinIcon from '../../CoinIcon/CoinIcon'
+import CoinIcon from '../CoinIcon/CoinIcon'
 
 const useStyles = makeStyles(theme => ({
   grow: {

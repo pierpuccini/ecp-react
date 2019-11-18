@@ -18,8 +18,8 @@ import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined"
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 //App Imports
 import classes from "./Login.module.scss";
-import Logo from "../../components/Logo/Logo";
-import gIcon from "../../assets/svg/search.svg";
+import Logo from "../../UI/Logo/Logo";
+import gIcon from "../../../assets/svg/search.svg";
 
 const SignUpLink = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />

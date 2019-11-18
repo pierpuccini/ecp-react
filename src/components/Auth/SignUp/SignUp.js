@@ -19,8 +19,8 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 //App Imports
 import classes from "./SignUp.module.scss";
-import gIcon from "../../assets/svg/search.svg";
-import coinIcon from "../../assets/icons/educoin.ico";
+import gIcon from "../../../assets/svg/search.svg";
+import coinIcon from "../../../assets/icons/educoin.ico";
 
 const backToLogin = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />

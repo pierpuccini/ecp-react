@@ -16,7 +16,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 /* App imports */
 import PermisionError from "../../components/Errors/PermisionError/PermisionError";
-import Loader from "../../components/Loader/PngLoader/PngLoader";
+import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 import customClasses from './ClassroomsContoller.module.scss'
 

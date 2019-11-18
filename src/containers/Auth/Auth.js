@@ -6,9 +6,9 @@ import * as actions from "../../store/actions/index";
 //React Router
 import { Redirect, withRouter } from "react-router-dom";
 //App Imports
-import Login from "../../components/Login/Login";
-import SignUp from "../../components/SignUp/SignUp";
-import Loader from "../../components/Loader/PngLoader/PngLoader";
+import Login from "../../components/Auth/Login/Login";
+import SignUp from "../../components/Auth/SignUp/SignUp";
+import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 //Personal Helpers
 import { updateObject, checkValidity } from "../../shared/utility";
 

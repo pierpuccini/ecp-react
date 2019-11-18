@@ -14,7 +14,7 @@ import TrendingUpOutlinedIcon from "@material-ui/icons/TrendingUpOutlined";
 import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 import PlaceOutlinedIcon from "@material-ui/icons/PlaceOutlined";
 //App imports
-import CoinIcon from '../../CoinIcon/CoinIcon'
+import CoinIcon from '../CoinIcon/CoinIcon'
 
 /* TODO: Use my own list */
 const SideList = props => {
