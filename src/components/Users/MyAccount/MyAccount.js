@@ -238,6 +238,7 @@ const MyAccount = props => {
               label="Email"
               placeholder="placeholder@mail.com"
               type="text"
+              disabled={props.mainAccount === 'google.com'}
               value={props.myProfileForm.email.value}
               onChange={event => props.inputChangedHandler(event, "email")}
               margin="normal"
@@ -272,6 +273,7 @@ const MyAccount = props => {
               className={classes.textField}
               label="Password"
               placeholder="password"
+              disabled={props.mainAccount === 'google.com'}
               type={props.toogleViewPassword ? "text" : "password"}
               value={props.myProfileForm.password.value}
               onChange={event => props.inputChangedHandler(event, "password")}
@@ -293,7 +295,7 @@ const MyAccount = props => {
                     {props.succesfullFieldChange.password === "no-change" ||
                     props.resetSuccessCheck ? (
                       <div onClick={() => props.toggleViewPasswordHandler()}>
-                        <IconButton>
+                        <IconButton disabled={props.mainAccount === 'google.com'}>
                           {props.toogleViewPassword ? (
                             <VisibilityOffOutlinedIcon />
                           ) : (
@@ -352,6 +354,7 @@ const MyAccount = props => {
                   variant="outlined"
                   className={classes.button}
                   style={{ width: "210px" }}
+                  disabled={props.mainAccount === 'google.com'}
                   onClick={() => {
                     props.myProfile.googleLink
                       ? props.unlinkProvider("google")
