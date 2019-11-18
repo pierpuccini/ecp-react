@@ -273,3 +273,17 @@ export const resetErrors = () => {
     type: actionTypes.RESET_ERRORS_ON_AUTH_LINK_CHANGE
   };
 };
+
+export const getIdToken = () => {
+  return (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase();
+    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
+      // Send token to your backend via HTTPS
+      // ...
+      console.log('[success] idtoken: ', idToken);
+    }).catch((error) => {
+      // Handle error
+      console.error('[error] idtoken: ',error);
+    });
+  };
+}

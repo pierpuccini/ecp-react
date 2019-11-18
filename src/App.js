@@ -137,6 +137,8 @@ function App(props) {
   ];
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
+    //TODO: REMOVE get id token when in real development
+    props.getIdToken()
     /* Conditional routes section */
     redirect = <Redirect to={`/${navRoute}`} />;
 
@@ -338,7 +340,8 @@ const mapDispatchToProps = dispatch => {
     resetReduxErrors: () => {
       dispatch(actions.resetErrors());
       dispatch(actions.resetUserErrors());
-    }
+    },
+    getIdToken: () => dispatch(actions.getIdToken())
   };
 };
 
