@@ -78,20 +78,19 @@ function App(props) {
       setDomReady(true);
     }, 750);
     //Conditional Routes
+    if (profileLoaded) {
+      if (newUser === "") {
+        setNavRoute("onboarding");
+      }  
+      if (location.pathname.match("onboarding") && !(newUser === "")) {
+        setNavRoute("home");
+    }
+    }
     if (location.pathname !== '/home') {
       setNavRoute(location.pathname.replace('/',''));
     }
     if(location.state) {
       setNavRoute(`${location.state.overwriteLocalNavState}`);
-    }
-    if (newUser === "") {
-      setNavRoute("onboarding");
-    }
-    if (
-      location.pathname.match("onboarding") &&
-      !(newUser === "")
-    ) {
-      setNavRoute("home");
     }
     if (onboardingSuccess) {
       setNavRoute("home");
