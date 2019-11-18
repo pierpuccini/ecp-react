@@ -138,7 +138,7 @@ function App(props) {
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
     //TODO: REMOVE get id token when in real development
-    props.getIdToken()
+    // props.getIdToken()
     /* Conditional routes section */
     redirect = <Redirect to={`/${navRoute}`} />;
 
