@@ -84,14 +84,14 @@ function App(props) {
     if(location.state) {
       setNavRoute(`${location.state.overwriteLocalNavState}`);
     }
+    if (newUser === "") {
+      setNavRoute("onboarding");
+    }
     if (
       location.pathname.match("onboarding") &&
       !(newUser === "")
     ) {
       setNavRoute("home");
-    }
-    if (newUser === "") {
-      setNavRoute("onboarding");
     }
     if (onboardingSuccess) {
       setNavRoute("home");
