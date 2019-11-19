@@ -20,6 +20,7 @@ import PermisionError from "../../components/Errors/PermisionError/PermisionErro
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 import customClasses from './ClassroomsContoller.module.scss'
+import AddClassroomModal from '../../components/Classroom/AddClassroomModal'
 
 const createClassroom = asyncComponent(() => {
   return import("./Actions/CreateClassroom");
@@ -66,6 +67,7 @@ const ClassroomController = props => {
   //Checks if DOM is ready to un mount loading icon
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
+  const [openAddClassModal, setopenAddClassModal] = useState(false);
 
   /* Use efect handles time out for loader */
   useEffect(() => {
@@ -87,6 +89,13 @@ const ClassroomController = props => {
   const handleNavChange = (event, newValue) => {
     setNavRoute(newValue);
   };
+
+  let openAddClassModalCopy
+  const handleAddClassStudent = () => {
+    openAddClassModalCopy = openAddClassModal
+    setopenAddClassModal(!openAddClassModalCopy)
+  }
+
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect;
   const routesArray = [
@@ -159,11 +168,12 @@ const ClassroomController = props => {
               <Typography>Classroom List</Typography>
             </div>
             {props.role === "student" ? (
-              <IconButton>
+              <IconButton onClick={handleAddClassStudent}>
                 <AddCircleOutlineOutlinedIcon />
               </IconButton>
             ) : null}
           </div>
+          <AddClassroomModal openModal={openAddClassModal} closeModal={handleAddClassStudent}/>          
         </Paper>
       </Container>
     ) : (
