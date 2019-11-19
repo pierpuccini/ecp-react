@@ -1,4 +1,5 @@
 import * as actionTypes from "./actionTypes";
+import axios from '../../axios/axios'
 
 export const authStart = () => {
   return {
@@ -274,13 +275,20 @@ export const resetErrors = () => {
   };
 };
 
-export const getIdToken = () => {
+export const sendIdToken = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
       // Send token to your backend via HTTPS
       // ...
       console.log('[success] idtoken: ', idToken);
+      axios.post(`/`, {token: idToken})
+      .then(resp =>{
+        console.log('Token sent',resp)
+      })
+      .catch(err => {
+        console.log('Token not sent',err)
+      })
     }).catch((error) => {
       // Handle error
       console.error('[error] idtoken: ',error);

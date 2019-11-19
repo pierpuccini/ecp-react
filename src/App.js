@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 
 function App(props) {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const { profileLoaded, newUser, onboardingSuccess, location, history } = props;
+  const { profileLoaded, newUser, onboardingSuccess, location, history, sendIdToken } = props;
 
   const classes = useStyles();
   //Checks if DOM is ready to un mount loading icon
@@ -100,6 +100,14 @@ function App(props) {
     };
   }, [profileLoaded, newUser, onboardingSuccess, location, setNavRoute]);
 
+  /* Sends the Id token on authentication only once */
+  useEffect(() => {
+    if (props.isAuthenticated) {
+      console.log('sending token');
+      sendIdToken()
+    }
+  }, [props.isAuthenticated])
+
   const toggleDrawer = open => {
     setdrawerOpen(open);
   };
@@ -136,8 +144,6 @@ function App(props) {
   ];
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
-    //TODO: REMOVE get id token when in real development
-    // props.getIdToken()
     /* Conditional routes section */
     redirect = <Redirect to={`/${navRoute}`} />;
 
@@ -340,7 +346,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(actions.resetErrors());
       dispatch(actions.resetUserErrors());
     },
-    getIdToken: () => dispatch(actions.getIdToken())
+    sendIdToken: () => {dispatch(actions.sendIdToken())}
   };
 };
 
