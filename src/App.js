@@ -106,6 +106,7 @@ function App(props) {
       console.log('sending token');
       sendIdToken()
     }
+    // eslint-disable-next-line
   }, [props.isAuthenticated])
 
   const toggleDrawer = open => {
