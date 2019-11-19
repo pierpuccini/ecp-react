@@ -282,7 +282,7 @@ export const sendIdToken = () => {
       // Send token to your backend via HTTPS
       // ...
       console.log('[success] idtoken: ', idToken);
-      axios.post(`/`, {token: idToken})
+      axios.post(`/token`, {token: idToken})
       .then(resp =>{
         console.log('Token sent',resp)
       })
