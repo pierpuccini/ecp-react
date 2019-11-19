@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
+import IconButton from "@material-ui/core/IconButton";
 //Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -50,7 +51,12 @@ const useStyles = makeStyles(theme => ({
     flexWrap: "wrap"
   },
   classroomListHeader: {
-    display: "flex"
+    display: "flex",
+    alignSelf: "center"
+  },
+  classroomListHeaderContainer: {
+    display: "flex",
+    justifyContent: "space-between"
   }
 }));
 
@@ -145,13 +151,18 @@ const ClassroomController = props => {
         {redirect}
         <Paper className={classes.paper}>
           {props.role === "student" ? null : classroomManager}
-          <div>
+          <div className={classes.classroomListHeaderContainer}>
             <div className={classes.classroomListHeader}>
               <Icon style={{ marginRight: "5px" }}>
                 <ListOutlinedIcon />
               </Icon>
               <Typography>Classroom List</Typography>
             </div>
+            {props.role === "student" ? (
+              <IconButton>
+                <AddCircleOutlineOutlinedIcon />
+              </IconButton>
+            ) : null}
           </div>
         </Paper>
       </Container>
