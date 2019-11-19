@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "edu-coins"
+  },
+  "targets": {
+    "edu-coins": {
+      "hosting": {
+        "test": [
+          "test-edu-coins"
+        ],
+        "production": [
+          "edu-coins"
+        ]
+      }
+    }
   }
 }

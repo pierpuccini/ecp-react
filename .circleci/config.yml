@@ -1,60 +1,69 @@
+version: 2.1
 
-version: 2.0
-jobs:
+executors:
+  node10:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/project
+
+commands:
   build:
-    working_directory: ~/repository
-    docker:
-      - image: circleci/node:10.16.3
+    description: "Builds the project"
     steps:
       - checkout
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          keys:
+            # Find a yarn.lock cache
+            - v1-npm-deps-{{ checksum "yarn.lock" }}
+            # Fallback cache to be used
+            - v1-npm-deps-
       - run:
-          name: install-npm
-          command: npm install
+          name: Install Dependencies
+          command: yarn install
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: v1-npm-deps-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
-      # - run:
-      #     name: test
-      #     command: npm run test-nowatch
-  deploy: # deploy script
-    working_directory: ~/repository
-    docker:
-      - image: circleci/node:10.16.3
+      - run:
+          name: Build for current environment.
+          command: yarn build
+          build:
+  deploy:
+    description: "Deploy project to the designated environment"
+    parameters:
+      env:
+        type: string
+        default: "test"
     steps:
-      - checkout
       - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: install-npm
-          command: npm install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
-      - run: # build react
-          name: react-build
-          command: CI=false npm run build
-      - run:
-          name: Deploy Firebase
-          command: ./node_modules/.bin/firebase deploy --token="$FIREBASE_TOKEN" --only hosting
+          name: Firebase Deploy
+          command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --non-interactive --only hosting:<< parameters.env >>
+
+jobs:
+  build-deploy-test:
+    executor: node10
+    steps:
+      - build
+      - deploy:
+          env: "test"
+  build-deploy-production:
+    executor: node10
+    steps:
+      - build
+      - deploy:
+          env: "production"
 
 workflows:
   version: 2
-  build-and-deploy:
+  test:
     jobs:
-      - build # perform this first
-      - deploy: # perform second
-          requires:
-            - build
-          filters: # only for the master branch
+      - build-deploy-test:
+          filters:
+            branches:
+              only: develop
+  production:
+    jobs:
+      - build-deploy-production:
+          filters:
             branches:
               only: master
