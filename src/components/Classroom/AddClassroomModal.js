@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 
 const Onboarding = props => {
   const matClasses = useStyles();
-  let { addClassroomForm, addClassroomFormChanged } = props;
+  let { addClassroomForm, addClassroomFormChanged, submitHandler } = props;
 
   let errorMessage = null;
   if (props.error) {
@@ -75,7 +75,7 @@ const Onboarding = props => {
       </div>
       <Typography className={matClasses.subHeader}>Enter the code provided by your teacher</Typography>
       {errorMessage}
-      <form className={matClasses.container} onSubmit={props.submitHandler}>
+      <form className={matClasses.container} onSubmit={submitHandler}>
         <TextField
           className={matClasses.textField}
           label="Classroom Code"
