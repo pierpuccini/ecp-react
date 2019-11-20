@@ -21,6 +21,7 @@ import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 import customClasses from './ClassroomsContoller.module.scss'
 import AddClassroomModal from '../../components/Classroom/AddClassroomModal'
+import Modal from '../../components/UI/Modal/Modal'
 
 const createClassroom = asyncComponent(() => {
   return import("./Actions/CreateClassroom");
@@ -173,7 +174,9 @@ const ClassroomController = props => {
               </IconButton>
             ) : null}
           </div>
-          <AddClassroomModal openModal={openAddClassModal} closeModal={handleAddClassStudent}/>          
+          <Modal openModal={openAddClassModal} closeModal={handleAddClassStudent}>
+            <AddClassroomModal/>
+          </Modal>         
         </Paper>
       </Container>
     ) : (
