@@ -19,7 +19,10 @@ import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 import PermisionError from "../../components/Errors/PermisionError/PermisionError";
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
-import customClasses from './ClassroomsContoller.module.scss'
+import customClasses from "./ClassroomsContoller.module.scss";
+import AddClassroomModal from "../../components/Classroom/AddClassroomModal";
+import Modal from "../../components/UI/Modal/Modal";
+import { updateObject, checkValidity } from "../../shared/utility";
 
 const createClassroom = asyncComponent(() => {
   return import("./Actions/CreateClassroom");
@@ -66,6 +69,18 @@ const ClassroomController = props => {
   //Checks if DOM is ready to un mount loading icon
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
+  const [openAddClassModal, setopenAddClassModal] = useState(false);
+  const [addClassroomForm, setaddClassroomForm] = useState({
+    linkCode: {
+      value: "",
+      validation: {
+        required: true,
+        minLength: 6
+      },
+      valid: false,
+      touched: false
+    }
+  });
 
   /* Use efect handles time out for loader */
   useEffect(() => {
@@ -76,17 +91,56 @@ const ClassroomController = props => {
     if (parsedPath.length > 1) {
       setNavRoute(`classrooms/${parsedPath[1]}`);
     }
-    if(props.location.state) {
+    if (props.location.state) {
       setNavRoute(`${props.location.state.overwriteLocalNavState}`);
     }
     return () => {
       clearTimeout(showCoinLoader);
-    };    
+    };
   }, [props.location]);
 
   const handleNavChange = (event, newValue) => {
     setNavRoute(newValue);
   };
+
+  let openAddClassModalCopy;
+  const handleAddClassStudent = () => {
+    openAddClassModalCopy = openAddClassModal;
+    if (!openAddClassModal) {
+      setaddClassroomForm({
+        linkCode: {
+          value: "",
+          validation: {
+            required: true,
+            minLength: 6
+          },
+          valid: false,
+          touched: false
+        }
+      })
+    }
+    setopenAddClassModal(!openAddClassModalCopy);
+  };
+
+  const addClassroomInputHandler = (event, controlName) => {
+    const updatedControls = updateObject(addClassroomForm, {
+      [controlName]: updateObject(addClassroomForm[controlName], {
+        value: event.target.value,
+        valid: checkValidity(
+          event.target.value,
+          addClassroomForm[controlName].validation
+        ),
+        touched: true
+      })
+    });
+    setaddClassroomForm(updatedControls);
+  };
+
+  const addClassroomHandler = (event) => {
+    event.preventDefault();
+    console.log('adding classroom');
+    setopenAddClassModal(false)
+  }
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect;
   const routesArray = [
@@ -159,11 +213,21 @@ const ClassroomController = props => {
               <Typography>Classroom List</Typography>
             </div>
             {props.role === "student" ? (
-              <IconButton>
+              <IconButton onClick={handleAddClassStudent}>
                 <AddCircleOutlineOutlinedIcon />
               </IconButton>
             ) : null}
           </div>
+          <Modal
+            openModal={openAddClassModal}
+            closeModal={handleAddClassStudent}
+          >
+            <AddClassroomModal
+              addClassroomForm={addClassroomForm}
+              addClassroomFormChanged={addClassroomInputHandler}
+              submitHandler={addClassroomHandler}
+            />
+          </Modal>
         </Paper>
       </Container>
     ) : (
