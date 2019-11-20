@@ -69,6 +69,17 @@ const ClassroomController = props => {
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
   const [openAddClassModal, setopenAddClassModal] = useState(false);
+  const [addClassroomForm, setaddClassroomForm] = useState({
+    linkCode: {
+      value: "",
+      validation: {
+        required: true,
+        minLength: 6
+      },
+      valid: false,
+      touched: false
+    }
+  });
 
   /* Use efect handles time out for loader */
   useEffect(() => {
@@ -175,7 +186,7 @@ const ClassroomController = props => {
             ) : null}
           </div>
           <Modal openModal={openAddClassModal} closeModal={handleAddClassStudent}>
-            <AddClassroomModal/>
+            <AddClassroomModal addClassroomForm={addClassroomForm}/>
           </Modal>         
         </Paper>
       </Container>

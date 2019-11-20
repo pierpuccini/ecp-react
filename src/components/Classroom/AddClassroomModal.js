@@ -5,10 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
 import Icon from "@material-ui/core/Icon";
 import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 
@@ -17,23 +15,9 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column"
   },
-  onboardingContainer: {
-    [theme.breakpoints.up("sm")]: {
-      width: "50%"
-    },
-    [theme.breakpoints.up("lg")]: {
-      width: "40%"
-    },
-    alignSelf: "center"
-  },
-  paper: {
-    padding: theme.spacing(2, 2),
-    margin: theme.spacing(2),
-    [theme.breakpoints.down("sm")]: {
-      padding: theme.spacing(1, 1),
-      margin: theme.spacing(1, 2),
-      boxShadow: "unset"
-    }
+  customTypography: {
+    fontWeight: "500",
+    fontSize: "1.2rem"
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -56,15 +40,20 @@ const useStyles = makeStyles(theme => ({
     color: "#f44336",
     fontSize: "small"
   },
-  customeHeader: {
+  customHeader: {
     display: "flex",
     justifyContent: "space-between"
+  },
+  subHeader: {
+    fontWeight: "100",
+    fontSize: "0.8rem",
+    marginTop: "8px"
   }
 }));
 
 const Onboarding = props => {
   const matClasses = useStyles();
-  let { clients, OnboardingForm, OnboardingFormChanged } = props;
+  let { addClassroomForm, addClassroomFormChanged } = props;
 
   let errorMessage = null;
   if (props.error) {
@@ -76,67 +65,39 @@ const Onboarding = props => {
   return (
     <Container className={matClasses.onboardingContainer}>
       <CssBaseline />
-      <Paper className={matClasses.paper}>
-        <div className={matClasses.customeHeader}>
-          <Typography>
-            <strong>Register your subject</strong>
-          </Typography>
-          <Icon>
-            <MenuBookOutlinedIcon />
-          </Icon>
-        </div>
-        {errorMessage}
-        <form className={matClasses.container} onSubmit={props.submitHandler}>
-          <TextField
-            className={matClasses.textField}
-            label="Institution"
-            select
-            placeholder="Select Your Institution"
-            value={OnboardingForm.institution.value}
-            onChange={event => {
-              OnboardingFormChanged(event, "institution");
-            }}
-            margin="normal"
-            variant="outlined"
-            required
-          >
-            {clients.map(option => (
-              <MenuItem
-                className={matClasses.MuiMenuList}
-                key={option.id}
-                value={option.id}
-              >
-                {option.value}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            className={matClasses.textField}
-            label="Unique Code"
-            placeholder="Provided by your teacher"
-            value={OnboardingForm.linkCode.value}
-            onChange={event => {
-              OnboardingFormChanged(event, "linkCode");
-            }}
-            type="text"
-            margin="normal"
-            variant="outlined"
-            required
-          />
-          <Button
-            className={matClasses.button}
-            variant="contained"
-            color="primary"
-            type="submit"
-            disabled={
-              !props.OnboardingForm.institution.valid ||
-              !props.OnboardingForm.linkCode.valid
-            }
-          >
-            Submit
-          </Button>
-        </form>
-      </Paper>
+      <div className={matClasses.customHeader}>
+        <Typography className={matClasses.customTypography}>
+          Register your subject
+        </Typography>
+        <Icon>
+          <MenuBookOutlinedIcon />
+        </Icon>
+      </div>
+      <Typography className={matClasses.subHeader}>Enter the code provided by your teacher</Typography>
+      {errorMessage}
+      <form className={matClasses.container} onSubmit={props.submitHandler}>
+        <TextField
+          className={matClasses.textField}
+          label="Classroom Code"
+          value={addClassroomForm.linkCode.value}
+          onChange={event => {
+            addClassroomFormChanged(event, "linkCode");
+          }}
+          type="text"
+          margin="normal"
+          variant="outlined"
+          required
+        />
+        <Button
+          className={matClasses.button}
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={!props.addClassroomForm.linkCode.valid}
+        >
+          Submit
+        </Button>
+      </form>
     </Container>
   );
 };

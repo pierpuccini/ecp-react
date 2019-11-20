@@ -41,8 +41,6 @@ const AddClassroomModal = (props) => {
     >
       <Fade in={props.openModal}>
         <div className={classes.paper}>
-          <h2 id="transition-modal-title">Transition modal</h2>
-          <p id="transition-modal-description">react-transition-group animates me.</p>
           {props.children}
         </div>
       </Fade>
