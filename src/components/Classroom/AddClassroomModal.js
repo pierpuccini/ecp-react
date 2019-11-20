@@ -53,12 +53,12 @@ const useStyles = makeStyles(theme => ({
 
 const Onboarding = props => {
   const matClasses = useStyles();
-  let { addClassroomForm, addClassroomFormChanged, submitHandler } = props;
+  let { addClassroomForm, addClassroomFormChanged, submitHandler, error } = props;
 
   let errorMessage = null;
-  if (props.error) {
+  if (error) {
     errorMessage = (
-      <div className={matClasses.codeVerifError}>{props.error.message}</div>
+      <div className={matClasses.codeVerifError}>{error.message}</div>
     );
   }
 
@@ -93,7 +93,7 @@ const Onboarding = props => {
           variant="contained"
           color="primary"
           type="submit"
-          disabled={!props.addClassroomForm.linkCode.valid}
+          disabled={!addClassroomForm.linkCode.valid}
         >
           Submit
         </Button>
