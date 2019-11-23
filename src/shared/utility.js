@@ -35,3 +35,17 @@ export const checkValidity = (value, rules) => {
 
   return isValid;
 };
+
+export const stateToPayload = (state) =>{
+  let payload, formFieldsArr = [];
+  Object.keys(state).forEach(formField => {
+    formFieldsArr.push(formField)
+  })
+  payload = formFieldsArr.map(formFields=>{
+    return {
+      ...payload,
+      [formFields]: state[formFields].value
+    };
+  })
+  return payload
+}
