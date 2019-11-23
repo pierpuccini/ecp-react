@@ -1,5 +1,5 @@
 /* React Imports */
-import React, { useState } from "react";
+import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -171,10 +171,10 @@ const ClassroomCreator = props => {
     autocompleteHandler,
     toggleButtonChangedHandler,
     sliderChangedHandler,
-    buttonClickHandler
+    buttonClickHandler,
+    switchToggle,
+    toggleSwitchHandler
   } = props;
-
-  const [switchToggle, setswitchToggle] = useState(false);
 
   const marks = [
     {
@@ -217,9 +217,7 @@ const ClassroomCreator = props => {
   });
   validFields = Object.assign({}, ...validFields);
 
-  const toggleSwitchHandler = event => {
-    setswitchToggle(event.target.checked);
-  };
+ 
 
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>

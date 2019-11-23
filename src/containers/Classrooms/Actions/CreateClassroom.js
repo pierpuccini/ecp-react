@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 //Redux
 import { connect } from "react-redux";
 //App imports
-import { updateObject, checkValidity } from "../../../shared/utility";
+import { updateObject, checkValidity, stateToPayload } from "../../../shared/utility";
 import ClassroomCreator from "../../../components/Classroom/ClassroomCreator";
 
 const CreateClassroom = props => {
@@ -67,6 +67,24 @@ const CreateClassroom = props => {
       touched: false
     }
   });
+
+  //Incharge of handeling the student groups toggle
+  const [switchToggle, setswitchToggle] = useState(false);
+
+  /* Handles the switch and if off resets the student groups counter */
+  const toggleSwitchHandler = event => {
+    if (!event.target.checked) {
+      const updatedControls = updateObject(createClassroomForm, {
+        studentGroups: updateObject(createClassroomForm.studentGroups, {
+          value: "",
+          valid: false,
+          touched: false
+        })
+      });
+      setcreateClassroomForm(updatedControls);
+    }
+    setswitchToggle(event.target.checked);
+  };
 
   //Action to push to the main classroom page /classrooms
   const handleNav = () => {
@@ -192,7 +210,8 @@ const CreateClassroom = props => {
         }
       });
     } else {
-      
+      const payload = stateToPayload(createClassroomForm)
+      console.log('payload',payload);
     }
   }
 
@@ -207,6 +226,8 @@ const CreateClassroom = props => {
       sliderChangedHandler={classroomSliderHandler}
       autocompleteHandler={classroomAutocompleteHandler}
       buttonClickHandler={createOrCancelHandler}
+      switchToggle={switchToggle}
+      toggleSwitchHandler={toggleSwitchHandler}
     />
   );
 };
