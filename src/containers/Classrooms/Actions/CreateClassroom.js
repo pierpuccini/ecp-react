@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 //Redux
 import { connect } from "react-redux";
+import * as actions from "../../../store/actions/index";
 //App imports
 import { updateObject, checkValidity, stateToPayload } from "../../../shared/utility";
 import ClassroomCreator from "../../../components/Classroom/ClassroomCreator";
@@ -211,7 +212,7 @@ const CreateClassroom = props => {
       });
     } else {
       const payload = stateToPayload(createClassroomForm)
-      console.log('payload',payload);
+      props.createClassroom(payload)
     }
   }
 
@@ -240,4 +241,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(CreateClassroom));
+const mapDispatchToProps = dispatch => {
+  return {
+    createClassroom: (payload) => dispatch(actions.createClassroom(payload))
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateClassroom));
