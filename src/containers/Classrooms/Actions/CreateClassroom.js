@@ -243,8 +243,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createClassroom: (payload) => dispatch(actions.createClassroom(payload)),
-    sendIdToken: () => {dispatch(actions.sendIdToken())}
+    createClassroom: (payload) => dispatch(actions.createClassroom(payload))
   }
 }
 

@@ -13,6 +13,8 @@ export const PASSWORD_RESET_FAIL = "PASSWORD_RESET_FAIL";
 export const RESET_SUCCESS = "RESET_SUCCESS";
 export const RESET_ERRORS_ON_AUTH_LINK_CHANGE = "RESET_ERRORS_ON_AUTH_LINK_CHANGE";
 
+export const GET_ID_TOKEN = "GET_ID_TOKEN"
+
 /* Deletes user if it has not been signed up */
 export const DELETE_NEW_USER = "DELETE_NEW_USER";
 
