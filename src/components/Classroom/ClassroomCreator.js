@@ -53,11 +53,11 @@ const useStyles = makeStyles(theme => ({
       display: "flex",
       justifyContent: "space-between",
       padding: theme.spacing(0, 2),
-      flexDirection: "column-reverse"
+      flexDirection: "column"
     },
     [theme.breakpoints.down("xs")]: {
       display: "flex",
-      flexDirection: "column-reverse"
+      flexDirection: "column"
     }
   },
   classroomContainer: {
@@ -217,8 +217,6 @@ const ClassroomCreator = props => {
   });
   validFields = Object.assign({}, ...validFields);
 
- 
-
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>
       <Paper className={classes.paper}>
@@ -246,7 +244,7 @@ const ClassroomCreator = props => {
               margin="normal"
               variant="outlined"
               value={createClassroomForm.institutions.value}
-              onChange={event => inputChangedHandler(event, "institutions")}              
+              onChange={event => inputChangedHandler(event, "institutions")}
               helperText={
                 !createClassroomForm.institutions.valid &&
                 createClassroomForm.institutions.touched
@@ -328,51 +326,6 @@ const ClassroomCreator = props => {
           </div>
           <Typography>Additional Classroom Info</Typography>
           <div className={classes.AdditionalInfoContainer}>
-            <div className={classes.coinInput}>
-              <TextField
-                className={classes.textField}
-                label="Initial Coins"
-                placeholder="5000"
-                type="number"
-                value={createClassroomForm.coins.value}
-                onChange={event => {
-                  inputChangedHandler(event, "coins");
-                }}
-                margin="normal"
-                variant="outlined"
-                required
-                style={{ width: "190px" }}
-                InputProps={{
-                  inputProps: { min: 0 },
-                  endAdornment: <Logo height="56px" />
-                }}
-              />
-            </div>
-            <div className={classes.sliderContainer}>
-              <div className={classes.typographyAndIcon}>
-                <TimerOutlinedIcon />
-                <Typography
-                  style={{ alignSelf: "center", marginLeft: "16px" }}
-                  gutterBottom
-                >
-                  Default Time Per Challenge
-                </Typography>
-              </div>
-              <div className={classes.slider}>
-                <Slider
-                  defaultValue={15}
-                  value={createClassroomForm.challengeTime.value}
-                  valueLabelDisplay="auto"
-                  onChange={(event, value) => {
-                    sliderChangedHandler(event, value);
-                  }}
-                  step={5}
-                  marks={marks}
-                  min={10}
-                  max={60}
-                />
-              </div>
-            </div>
             <div className={classes.switchContainer}>
               <div className={classes.switch}>
                 <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
@@ -407,6 +360,51 @@ const ClassroomCreator = props => {
                   {children}
                 </ToggleButtonGroup>
               </Collapse>
+            </div>
+            <div className={classes.sliderContainer}>
+              <div className={classes.typographyAndIcon}>
+                <TimerOutlinedIcon />
+                <Typography
+                  style={{ alignSelf: "center", marginLeft: "16px" }}
+                  gutterBottom
+                >
+                  Default Time Per Challenge
+                </Typography>
+              </div>
+              <div className={classes.slider}>
+                <Slider
+                  defaultValue={15}
+                  value={createClassroomForm.challengeTime.value}
+                  valueLabelDisplay="auto"
+                  onChange={(event, value) => {
+                    sliderChangedHandler(event, value);
+                  }}
+                  step={5}
+                  marks={marks}
+                  min={10}
+                  max={60}
+                />
+              </div>
+            </div>
+            <div className={classes.coinInput}>
+              <TextField
+                className={classes.textField}
+                label="Initial Coins"
+                placeholder="5000"
+                type="number"
+                value={createClassroomForm.coins.value}
+                onChange={event => {
+                  inputChangedHandler(event, "coins");
+                }}
+                margin="normal"
+                variant="outlined"
+                required
+                style={{ width: "190px" }}
+                InputProps={{
+                  inputProps: { min: 0 },
+                  endAdornment: <Logo height="56px" />
+                }}
+              />
             </div>
           </div>
           <div className={classes.formActions}>

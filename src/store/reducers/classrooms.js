@@ -3,7 +3,8 @@ import { updateObject } from "../../shared/utility";
 
 const initialState = {
   loading: false,
-  error: false
+  error: false,
+  missingFields: {}
 };
 
 const classroomStart = state => {

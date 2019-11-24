@@ -36,16 +36,21 @@ export const checkValidity = (value, rules) => {
   return isValid;
 };
 
-export const stateToPayload = (state) =>{
-  let payload, formFieldsArr = [];
+export const stateToPayload = state => {
+  let payload,
+    formFieldsArr = [];
+    //extracts the keys in order to be able to map the object
   Object.keys(state).forEach(formField => {
-    formFieldsArr.push(formField)
-  })
-  payload = formFieldsArr.map(formFields=>{
+    formFieldsArr.push(formField);
+  });
+  //Returns false for untouched fields, else returns the value
+  payload = formFieldsArr.map(formFields => {
     return {
       ...payload,
-      [formFields]: state[formFields].value
+      [formFields]: state[formFields].touched
+        ? state[formFields].value
+        : state[formFields].touched
     };
-  })
-  return payload
-}
+  });
+  return payload;
+};

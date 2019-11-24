@@ -17,6 +17,14 @@ export const createClassroom = (payload) =>{
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(classroomStart())
     console.log('payload',payload);
+    let extractMissingFields = {} 
+    payload.forEach(fields => {
+      // eslint-disable-next-line
+      Object.keys(fields).map(field =>{
+        extractMissingFields = {...extractMissingFields, [field]: !fields[field]}
+      })
+    })
+    console.log('extractMissingFields',extractMissingFields);
     dispatch(classroomSuccess())
   }
 }
