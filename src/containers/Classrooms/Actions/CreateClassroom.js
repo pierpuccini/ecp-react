@@ -212,7 +212,7 @@ const CreateClassroom = props => {
       });
     } else {
       const payload = stateToPayload(createClassroomForm)
-      props.createClassroom(payload, props.sendIdToken())
+      props.createClassroom(payload)
     }
   }
 

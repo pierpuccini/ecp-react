@@ -103,7 +103,6 @@ function App(props) {
   /* Sends the Id token on authentication only once */
   useEffect(() => {
     if (props.isAuthenticated) {
-      console.log('sending token');
       sendIdToken()
     }
     // eslint-disable-next-line

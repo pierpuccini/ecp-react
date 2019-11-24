@@ -4,7 +4,7 @@ import { updateObject } from "../../shared/utility";
 const initialState = {
   loading: false,
   error: false,
-  missingFields: {}
+  missingFields: null
 };
 
 const classroomStart = state => {
@@ -12,6 +12,14 @@ const classroomStart = state => {
     loading: true,
     error: null,
     success: null
+  });
+};
+
+const classroomFail = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: action.error,
+    success: false
   });
 };
 
@@ -25,6 +33,7 @@ const classroomSuccess = state => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.CLASSROOM_ACTIONS_START: return classroomStart(state, action);
+    case actionTypes.CLASSROOM_ACTIONS_FAILED: return classroomFail(state, action);
     case actionTypes.CLASSROOM_ACTIONS_SUCCESS: return classroomSuccess(state, action);
     default:
       return state;

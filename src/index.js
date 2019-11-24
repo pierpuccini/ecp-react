@@ -21,6 +21,7 @@ import "./index.css";
 import authReducer from "./store/reducers/auth";
 import onboardingReducer from "./store/reducers/onboarding";
 import usersReducer from "./store/reducers/users";
+import classroomsReducer from "./store/reducers/classrooms";
 
 // Initialize Firebase & firebase services
 firebase.initializeApp(firebaseConfig);
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   onboarding: onboardingReducer,
   users: usersReducer,
+  classrooms: classroomsReducer,
   firebase: firebaseReducer,
   firestore: firestoreReducer
 });
