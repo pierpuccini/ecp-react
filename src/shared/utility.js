@@ -38,7 +38,8 @@ export const checkValidity = (value, rules) => {
 
 export const stateToPayload = state => {
   let payload,
-    formFieldsArr = [];
+    formFieldsArr = [],
+    payloadArr2Obj = {};
     //extracts the keys in order to be able to map the object
   Object.keys(state).forEach(formField => {
     formFieldsArr.push(formField);
@@ -49,8 +50,15 @@ export const stateToPayload = state => {
       ...payload,
       [formFields]: state[formFields].touched
         ? state[formFields].value
-        : state[formFields].touched
+        : 'no-touch'
     };
   });
+  payload.forEach(fields => {
+    // eslint-disable-next-line
+    Object.keys(fields).map(field =>{      
+      payloadArr2Obj = {...payloadArr2Obj, [field]: fields[field]}
+    })
+  });
+  payload = payloadArr2Obj;
   return payload;
 };

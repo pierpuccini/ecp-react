@@ -212,7 +212,7 @@ const CreateClassroom = props => {
       });
     } else {
       const payload = stateToPayload(createClassroomForm)
-      props.createClassroom(payload)
+      props.createClassroom(payload, props.sendIdToken())
     }
   }
 
@@ -243,7 +243,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createClassroom: (payload) => dispatch(actions.createClassroom(payload))
+    createClassroom: (payload) => dispatch(actions.createClassroom(payload)),
+    sendIdToken: () => {dispatch(actions.sendIdToken())}
   }
 }
 
