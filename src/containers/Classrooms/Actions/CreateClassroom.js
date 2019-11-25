@@ -36,7 +36,8 @@ const CreateClassroom = props => {
     loading,
     success,
     missingFields,
-    registrationCode
+    registrationCode,
+    resetCreateClassroom
   } = props;
 
   /* TODO: Remove logic in future release for more than one institution per teacher */
@@ -130,6 +131,7 @@ const CreateClassroom = props => {
 
   //Action to push to the main classroom page /classrooms
   const handleNav = () => {
+    resetCreateClassroom()
     props.history.push({ state: { overwriteLocalNavState: "classrooms" } });
   };
 
@@ -341,7 +343,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createClassroom: payload => dispatch(actions.createClassroom(payload))
+    createClassroom: payload => dispatch(actions.createClassroom(payload)),
+    resetCreateClassroom: () => {dispatch(actions.resetCreateClassroom())}
   };
 };
 

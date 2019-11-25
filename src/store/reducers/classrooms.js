@@ -35,11 +35,23 @@ const classroomSuccess = (state, action) => {
   });
 };
 
+const resetCreateClassroom = state => {
+  return updateObject(state, {
+    loading: false,
+    error: false,
+    missingFields: {},
+    registrationCode: "",
+    success: false
+  });
+};
+
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.CLASSROOM_ACTIONS_START: return classroomStart(state, action);
     case actionTypes.CLASSROOM_ACTIONS_FAILED: return classroomFail(state, action);
     case actionTypes.CLASSROOM_ACTIONS_SUCCESS: return classroomSuccess(state, action);
+    case actionTypes.CLASSROOM_ACTIONS_CREATE_RESET: return resetCreateClassroom(state, action);
     default:
       return state;
   }

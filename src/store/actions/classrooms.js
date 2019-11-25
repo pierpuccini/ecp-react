@@ -118,3 +118,9 @@ export const createClassroom = payload => {
     }
   };
 };
+
+export const resetCreateClassroom = () => {
+  return {
+    type: actionTypes.CLASSROOM_ACTIONS_CREATE_RESET
+  }
+}
