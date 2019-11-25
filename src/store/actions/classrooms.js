@@ -39,17 +39,45 @@ export const createClassroom = payload => {
       console.log("headers", headers);
       console.log("payload", payload);
       let extractMissingFields = {};
+      // add the teachers id to payload
+      let newPayload = {'teacher_id': currentState.firebase.auth.uid}
       Object.keys(payload).forEach(fields => {
         // eslint-disable-next-line
+        //Incharge of mapping names to the ones expected by the backend
+        let backendFieldName;
+        switch (fields) {
+          case 'institutions':
+            backendFieldName = 'client_id'
+            break;
+          case 'classCode':
+            backendFieldName = 'subject_id'
+            break;
+          case 'className':
+            backendFieldName = 'subject_name'
+            break;
+          case 'studentGroups':
+            backendFieldName = 'group_size'
+            break;
+          case 'challengeTime':
+            backendFieldName = 'challenge_duration'
+            break;
+          case 'coins':
+            backendFieldName = 'initial_coins'
+            break;
+          default:
+            break;
+        }
+        //Retrieved the missing fields to return to the teacher on empty creation
         extractMissingFields = {
           ...extractMissingFields,
           [fields]: payload[fields] === "no-touch" ? true : false
         };
-        payload = {
-          ...payload,
-          [fields]: payload[fields] === "no-touch" ? null : payload[fields]
+        newPayload = {
+          ...newPayload,
+          [backendFieldName]: payload[fields] === "no-touch" ? null : payload[fields]
         };
       });
+      payload = newPayload
       console.log("extractMissingFields", extractMissingFields);
       console.log("payload", payload);
       axios
@@ -59,8 +87,7 @@ export const createClassroom = payload => {
           dispatch(classroomSuccess());
         })
         .catch(error => {
-          console.log("error", error);
-          dispatch(classroomFail(error))
+          dispatch(classroomFail(error.response.data))
         });
     }
   };
