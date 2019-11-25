@@ -23,6 +23,7 @@ import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 import customClasses from "./ClassroomsContoller.module.scss";
 import AddClassroomModal from "../../components/Classroom/AddClassroomModal";
 import Modal from "../../components/UI/Modal/Modal";
+import FloatingLoader from '../../components/UI/Loader/FloatingLoader/FloatingLoader'
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const createClassroom = asyncComponent(() => {
@@ -204,6 +205,11 @@ const ClassroomController = props => {
     </React.Fragment>
   );
 
+  let floatingLoader;
+  if (props.loading) {
+    floatingLoader = <FloatingLoader></FloatingLoader>
+  }
+
   const classrooomController =
     props.location.pathname === "/classrooms" ? (
       <Container maxWidth="sm" className={classes.container}>
@@ -223,6 +229,7 @@ const ClassroomController = props => {
               </IconButton>
             ) : null}
           </div>
+          {floatingLoader}
           <Modal
             openModal={openAddClassModal}
             closeModal={handleAddClassStudent}
@@ -257,7 +264,8 @@ const ClassroomController = props => {
 
 const mapStateToProps = state => {
   return {
-    role: state.firebase.profile.role
+    role: state.firebase.profile.role,
+    loading: state.classrooms.loading
   };
 };
 
