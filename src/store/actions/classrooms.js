@@ -34,7 +34,7 @@ export const createClassroom = payload => {
     } /* If token is all good proceed to sending information to API */ else {
       const headers = {
         "Content-Type": "application/json",
-        Authorization: currentState.auth.token.token
+        Authorization: `Bearer ${currentState.auth.token.token}`
       };
       console.log("headers", headers);
       console.log("payload", payload);
