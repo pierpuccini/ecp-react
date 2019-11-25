@@ -7,9 +7,10 @@ import * as actions from "../../../store/actions/index";
 //App imports
 import { updateObject, checkValidity, stateToPayload } from "../../../shared/utility";
 import ClassroomCreator from "../../../components/Classroom/ClassroomCreator";
+import FloatingLoader from '../../../components/UI/Loader/FloatingLoader/FloatingLoader'
 
 const CreateClassroom = props => {
-  const { classrooms, myInstitutions } = props;
+  const { classrooms, myInstitutions, loading } = props;
 
   /* TODO: Remove logic in future release for more than one institution per teacher */
   //Extracts institution id in case there is only one assinged to account
@@ -210,26 +211,35 @@ const CreateClassroom = props => {
           touched: false
         }
       });
+      handleNav();
     } else {
       const payload = stateToPayload(createClassroomForm)
       props.createClassroom(payload)
     }
   }
 
+  let floatingLoader;
+  if (loading) {
+    floatingLoader = <FloatingLoader/>
+  }
+
   return (
-    <ClassroomCreator
-      navActions={handleNav}
-      createClassroomForm={createClassroomForm}
-      classroomsId={classrooms}
-      institutions={myInstitutions}
-      inputChangedHandler={classroomInputHandler}
-      toggleButtonChangedHandler={classroomToggleButtonHandler}
-      sliderChangedHandler={classroomSliderHandler}
-      autocompleteHandler={classroomAutocompleteHandler}
-      buttonClickHandler={createOrCancelHandler}
-      switchToggle={switchToggle}
-      toggleSwitchHandler={toggleSwitchHandler}
-    />
+    <React.Fragment>
+      {floatingLoader}
+      <ClassroomCreator
+        navActions={handleNav}
+        createClassroomForm={createClassroomForm}
+        classroomsId={classrooms}
+        institutions={myInstitutions}
+        inputChangedHandler={classroomInputHandler}
+        toggleButtonChangedHandler={classroomToggleButtonHandler}
+        sliderChangedHandler={classroomSliderHandler}
+        autocompleteHandler={classroomAutocompleteHandler}
+        buttonClickHandler={createOrCancelHandler}
+        switchToggle={switchToggle}
+        toggleSwitchHandler={toggleSwitchHandler}
+      />
+    </React.Fragment>
   );
 };
 
@@ -237,13 +247,14 @@ const mapStateToProps = state => {
   return {
     role: state.firebase.profile.role,
     myInstitutions: state.firebase.profile.institutions,
-    classrooms: state.firebase.profile.classrooms
+    classrooms: state.firebase.profile.classrooms,
+    loading: state.classrooms.loading
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    createClassroom: (payload) => dispatch(actions.createClassroom(payload))
+    createClassroom: (payload) => dispatch(actions.createClassroom(payload)),
   }
 }
 
