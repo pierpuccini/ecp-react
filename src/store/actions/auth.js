@@ -1,5 +1,4 @@
 import * as actionTypes from "./actionTypes";
-import axios from '../../axios/axios'
 
 export const authStart = () => {
   return {
@@ -84,7 +83,7 @@ export const logout = (cleanErrors, cleanNewUser, errors, newUser, loading) => {
   };
 };
 
-export const deleteNewUser = (cleanErrors, cleanNewUser, errors, newUser, loading) => {
+export const deleteNewUser = (cleanErrors,cleanNewUser,errors,newUser,loading) => {
   return {
     type: actionTypes.DELETE_NEW_USER,
     cleanErrors: cleanErrors,
@@ -275,23 +274,29 @@ export const resetErrors = () => {
   };
 };
 
+export const getIdToken = (token) => {
+  return {
+    type: actionTypes.GET_ID_TOKEN,
+    token: token
+  };
+};
+
 export const sendIdToken = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
-    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
-      // Send token to your backend via HTTPS
-      // ...
-      console.log('[success] idtoken: ', idToken);
-      axios.post(`/token`, {token: idToken})
-      .then(resp =>{
-        console.log('Token sent',resp)
+    firebase
+      .auth()
+      .currentUser.getIdToken(/* forceRefresh */ true)
+      .then(idToken => {
+        // Send token to your backend via HTTPS
+        // ...
+        dispatch(getIdToken({type: "success", message: "", token: idToken}))
       })
-      .catch(err => {
-        console.log('Token not sent',err)
-      })
-    }).catch((error) => {
-      // Handle error
-      console.error('[error] idtoken: ',error);
-    });
+      .catch(error => {
+        // Handle error
+        console.error("[error] idtoken: ", error);
+        dispatch(getIdToken({type: "error", message: "Error getting token", token: error}))
+
+      });
   };
-}
+};
