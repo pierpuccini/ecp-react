@@ -5,7 +5,8 @@ const initialState = {
   loading: false,
   error: false,
   missingFields: null,
-  registrationCode: null
+  registrationCode: null,
+  success: true
 };
 
 const classroomStart = state => {
@@ -29,7 +30,8 @@ const classroomSuccess = (state, action) => {
     loading: false,
     error: null,
     missingFields: action.missingFields,
-    registrationCode: action.code
+    registrationCode: action.code,
+    success: true
   });
 };
 

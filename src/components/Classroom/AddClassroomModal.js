@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Onboarding = props => {
+const AddClassroomModal = props => {
   const matClasses = useStyles();
   let { addClassroomForm, addClassroomFormChanged, submitHandler, error } = props;
 
@@ -63,7 +63,7 @@ const Onboarding = props => {
   }
 
   return (
-    <Container className={matClasses.onboardingContainer}>
+    <Container className={matClasses.addClassroomModalContainer}>
       <CssBaseline />
       <div className={matClasses.customHeader}>
         <Typography className={matClasses.customTypography}>
@@ -102,4 +102,4 @@ const Onboarding = props => {
   );
 };
 
-export default Onboarding;
+export default AddClassroomModal;

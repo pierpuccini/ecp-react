@@ -1,16 +1,18 @@
 /* React Imports */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
-//Redux
+/* Redux */
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions/index";
-//App imports
+/* App imports */
 import { updateObject, checkValidity, stateToPayload } from "../../../shared/utility";
 import ClassroomCreator from "../../../components/Classroom/ClassroomCreator";
 import FloatingLoader from '../../../components/UI/Loader/FloatingLoader/FloatingLoader'
+import Modal from "../../../components/UI/Modal/Modal";
+import CodeCopy from '../../../components/UI/SpecialFields/CodeCopy'
 
 const CreateClassroom = props => {
-  const { classrooms, myInstitutions, loading } = props;
+  const { classrooms, myInstitutions, loading, success } = props;
 
   /* TODO: Remove logic in future release for more than one institution per teacher */
   //Extracts institution id in case there is only one assinged to account
@@ -19,6 +21,14 @@ const CreateClassroom = props => {
     singleInstitution = myInstitutions[0].id;
   }
 
+  //Opens modal on create classroom success
+  useEffect(() => {
+    if (success) {
+      handleModal(true)
+    }  
+  }, [success])
+
+  //Input form controlers
   const [createClassroomForm, setcreateClassroomForm] = useState({
     institutions: {
       value: singleInstitution,
@@ -72,6 +82,8 @@ const CreateClassroom = props => {
 
   //Incharge of handeling the student groups toggle
   const [switchToggle, setswitchToggle] = useState(false);
+  //Incharge of opening the code modal
+  const [openClassCodeModal, setopenClassCodeModal] = useState(false);
 
   /* Handles the switch and if off resets the student groups counter */
   const toggleSwitchHandler = event => {
@@ -158,6 +170,7 @@ const CreateClassroom = props => {
     setcreateClassroomForm(updatedControls);
   };
 
+  /* Handles create classroom actions */
   const createOrCancelHandler = (action) =>{
     console.log('action',action);
     if (action === 'cancel') {
@@ -218,14 +231,34 @@ const CreateClassroom = props => {
     }
   }
 
+  /* Handles modal on create succes */
+  const handleModal = (action) => {
+    setopenClassCodeModal(action)
+  }
+
+  //Controls the floating loader component
   let floatingLoader;
   if (loading) {
     floatingLoader = <FloatingLoader/>
   }
+  const modalTemplate = (
+    <div>
+      <h2>Classroom Created succesfully!</h2>
+      <p>Share the following code to register students</p>
+      <CodeCopy value="pier"/>
+      <h4>To active classroom, fill the following fields:</h4>
+      <ul>
+        <li>t1</li>
+        <li>t2</li>
+        <li>t3</li>
+      </ul>
+    </div>
+  )
 
   return (
     <React.Fragment>
       {floatingLoader}
+      <Modal openModal={openClassCodeModal} closeModal={() => handleModal(false)}>{modalTemplate}</Modal>
       <ClassroomCreator
         navActions={handleNav}
         createClassroomForm={createClassroomForm}
@@ -248,7 +281,8 @@ const mapStateToProps = state => {
     role: state.firebase.profile.role,
     myInstitutions: state.firebase.profile.institutions,
     classrooms: state.firebase.profile.classrooms,
-    loading: state.classrooms.loading
+    loading: state.classrooms.loading,
+    success: state.classrooms.success
   };
 };
 
