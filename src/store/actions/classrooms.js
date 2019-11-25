@@ -22,11 +22,11 @@ export const classroomSuccess = (missingFields, code) => {
   };
 };
 
-//TODO: missing adding the classroom ID to firebase
 export const createClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(classroomStart());
     const currentState = getState();
+    const firestore = getFirestore();
     let error;
     // Verifies that the token was properly recieved
     if (currentState.auth.token.type === "error") {
@@ -36,18 +36,22 @@ export const createClassroom = payload => {
       };
       dispatch(classroomFail(error));
     } /* If token is all good proceed to sending information to API */ else {
+      
       //Creates headers
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
+
       // In order to active the course, this missing fields must be empty
       let extractMissingFields = {};
       let noMissingFields = [];
+
       // add the teachers id to payload
       let newPayload = { teacher_id: currentState.firebase.auth.uid };
       Object.keys(payload).forEach(fields => {
         // eslint-disable-next-line
+
         //Incharge of mapping names to the ones expected by the backend
         let backendFieldName;
         switch (fields) {
@@ -72,11 +76,13 @@ export const createClassroom = payload => {
           default:
             break;
         }
+
         //Retrieved the missing fields to return to the teacher on empty creation
         extractMissingFields = {
           ...extractMissingFields,
           [fields]: payload[fields] === "no-touch" ? true : false
         };
+
         //logic to check how many empty fiels exist
         if (payload[fields] !== "no-touch") {
           noMissingFields.push("a");
@@ -87,27 +93,37 @@ export const createClassroom = payload => {
             payload[fields] === "no-touch" ? null : payload[fields]
         };
       });
+
       // if no missing fields exists this replaces the missing fields object
       if (noMissingFields.length === 6) {
         extractMissingFields = { noMissingFields: true };
       }
+
       //Replaces the payload for better code reading
       payload = newPayload;
+
       //Creating course in backend
       axios
         .post("/createclassroom", payload, { headers: headers })
         .then(response => {
-          console.log("resp", response);
-          if (
-            response.status === 201 &&
-            response.data.code_classroom !== null
-          ) {
-            dispatch(
-              classroomSuccess(
-                extractMissingFields,
-                response.data.code_classroom
-              )
-            );
+          if (response.status === 201 && response.data.code_classroom !== null) {
+            const classrooms = [
+              ...currentState.firebase.profile.classrooms,
+              {
+                code_classroom: response.data.code_classroom,
+                subject_id: response.data.id
+              }
+            ];
+            firestore
+              .collection("users")
+              .doc(currentState.firebase.auth.uid)
+              .set({ classrooms: classrooms }, { merge: true })
+              .then(() => {
+                dispatch(classroomSuccess(extractMissingFields,response.data.code_classroom));
+              })
+              .catch(err => {
+                dispatch(classroomFail(err));
+              });
           } else {
             const unknownError = {
               code: "create-classroom-error",
@@ -126,10 +142,10 @@ export const createClassroom = payload => {
 export const resetCreateClassroom = () => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_CREATE_RESET
-  }
-}
+  };
+};
 
-export const addClassroom = (payload) => {
+export const addClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(classroomStart());
     const currentState = getState();
@@ -146,28 +162,25 @@ export const addClassroom = (payload) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
-      payload = {...payload , student_id: currentState.firebase.auth.uid };
-      console.log('payload',payload);
+      payload = { ...payload, student_id: currentState.firebase.auth.uid };
+      console.log("payload", payload);
       axios
-      .post("/assingclassroom", payload, { headers: headers })
-      .then(response => {
-        console.log("resp", response);
-        if (
-          response.status === 201 &&
-          response.data.classroomId !== null
-        ) {
-          dispatch(classroomSuccess());
-        } else {
-          const unknownError = {
-            code: "add-classroom-error",
-            message: "Unkown error, Contact support"
-          };
-          dispatch(classroomFail(unknownError));
-        }
-      })
-      .catch(error => {
-        dispatch(classroomFail(error.response.data));
-      });
+        .post("/assingclassroom", payload, { headers: headers })
+        .then(response => {
+          console.log("resp", response);
+          if (response.status === 201 && response.data.classroomId !== null) {
+            dispatch(classroomSuccess());
+          } else {
+            const unknownError = {
+              code: "add-classroom-error",
+              message: "Unkown error, Contact support"
+            };
+            dispatch(classroomFail(unknownError));
+          }
+        })
+        .catch(error => {
+          dispatch(classroomFail(error.response.data));
+        });
     }
-  }
-}
+  };
+};
