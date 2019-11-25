@@ -27,6 +27,7 @@ export const createClassroom = payload => {
     dispatch(classroomStart());
     const currentState = getState();
     let error;
+    // Verifies that the token was properly recieved
     if (currentState.auth.token.type === "error") {
       error = {
         code: "token-error",
@@ -34,12 +35,12 @@ export const createClassroom = payload => {
       };
       dispatch(classroomFail(error));
     } /* If token is all good proceed to sending information to API */ else {
+      //Creates headers
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
-      console.log("headers", headers);
-      console.log("payload", payload);
+      // In order to active the course, this missing fields must be empty
       let extractMissingFields = {};
       let noMissingFields = [];
       // add the teachers id to payload
@@ -75,6 +76,7 @@ export const createClassroom = payload => {
           ...extractMissingFields,
           [fields]: payload[fields] === "no-touch" ? true : false
         };
+        //logic to check how many empty fiels exist
         if (payload[fields] !== "no-touch") {
           noMissingFields.push("a");
         }
@@ -84,12 +86,13 @@ export const createClassroom = payload => {
             payload[fields] === "no-touch" ? null : payload[fields]
         };
       });
+      // if no missing fields exists this replaces the missing fields object
       if (noMissingFields.length === 6) {
         extractMissingFields = { noMissingFields: true };
       }
+      //Replaces the payload for better code reading
       payload = newPayload;
-      console.log("extractMissingFields", extractMissingFields);
-      console.log("payload", payload);
+      //Creating course in backend
       axios
         .post("/createclassroom", payload, { headers: headers })
         .then(response => {
