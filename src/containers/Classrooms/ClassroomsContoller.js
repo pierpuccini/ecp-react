@@ -1,8 +1,9 @@
 /* React imports */
 import React, { useState, useEffect } from "react";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
-//Redux
+/* Redux */
 import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -140,6 +141,10 @@ const ClassroomController = props => {
     event.preventDefault();
     console.log('adding classroom');
     setopenAddClassModal(false)
+    const payload = {
+      code_classroom: addClassroomForm.linkCode.value
+    }
+    props.addClassroom(payload)
   }
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect;
@@ -256,4 +261,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(ClassroomController));
+const mapDispatchToProps = dispatch => {
+  return {
+    addClassroom: payload => dispatch(actions.addClassroom(payload))
+  };
+};
+
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(ClassroomController));

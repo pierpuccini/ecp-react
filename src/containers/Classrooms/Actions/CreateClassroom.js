@@ -202,7 +202,6 @@ const CreateClassroom = props => {
 
   /* Handles create classroom actions */
   const createOrCancelHandler = action => {
-    console.log("action", action);
     if (action === "cancel") {
       setcreateClassroomForm({
         institutions: {
@@ -276,7 +275,7 @@ const CreateClassroom = props => {
   }
   const modalTemplate = (
     <div>
-      <h2>Classroom Created succesfully!</h2>
+      <h2>Classroom created succesfully!</h2>
       <p>Share the following code to register students</p>
       <CodeCopy value={registrationCode} />
       {!missingFields.noMissingFields ? (
@@ -348,6 +347,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(CreateClassroom)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateClassroom));

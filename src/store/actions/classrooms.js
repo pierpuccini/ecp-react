@@ -22,6 +22,7 @@ export const classroomSuccess = (missingFields, code) => {
   };
 };
 
+//TODO: missing adding the classroom ID to firebase
 export const createClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(classroomStart());
@@ -125,5 +126,48 @@ export const createClassroom = payload => {
 export const resetCreateClassroom = () => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_CREATE_RESET
+  }
+}
+
+export const addClassroom = (payload) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    dispatch(classroomStart());
+    const currentState = getState();
+    let error;
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(classroomFail(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentState.auth.token.token}`
+      };
+      payload = {...payload , student_id: currentState.firebase.auth.uid };
+      console.log('payload',payload);
+      axios
+      .post("/assingclassroom", payload, { headers: headers })
+      .then(response => {
+        console.log("resp", response);
+        if (
+          response.status === 201 &&
+          response.data.classroomId !== null
+        ) {
+          dispatch(classroomSuccess());
+        } else {
+          const unknownError = {
+            code: "add-classroom-error",
+            message: "Unkown error, Contact support"
+          };
+          dispatch(classroomFail(unknownError));
+        }
+      })
+      .catch(error => {
+        dispatch(classroomFail(error.response.data));
+      });
+    }
   }
 }
