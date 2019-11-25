@@ -14,9 +14,11 @@ export const classroomFail = error => {
   };
 };
 
-export const classroomSuccess = () => {
+export const classroomSuccess = (missingFields, code) => {
   return {
-    type: actionTypes.CLASSROOM_ACTIONS_SUCCESS
+    type: actionTypes.CLASSROOM_ACTIONS_SUCCESS,
+    missingFields: missingFields,
+    code: code
   };
 };
 
@@ -84,7 +86,12 @@ export const createClassroom = payload => {
         .post("/createclassroom", payload, { headers: headers })
         .then(response => {
           console.log("resp", response);
-          dispatch(classroomSuccess());
+          if (response.status === 201 && response.data.code_classroom !== null) {
+            dispatch(classroomSuccess(extractMissingFields, response.data.code_classroom));
+          } else {
+            const unknownError = {code: "create-classroom-error", message: "Unkown error, Contact support"}
+            dispatch(classroomFail(unknownError))
+          }
         })
         .catch(error => {
           dispatch(classroomFail(error.response.data))

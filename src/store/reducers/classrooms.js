@@ -4,7 +4,8 @@ import { updateObject } from "../../shared/utility";
 const initialState = {
   loading: false,
   error: false,
-  missingFields: null
+  missingFields: null,
+  registrationCode: null
 };
 
 const classroomStart = state => {
@@ -23,10 +24,12 @@ const classroomFail = (state, action) => {
   });
 };
 
-const classroomSuccess = state => {
+const classroomSuccess = (state, action) => {
   return updateObject(state, {
     loading: false,
-    error: null
+    error: null,
+    missingFields: action.missingFields,
+    registrationCode: action.code
   });
 };
 
