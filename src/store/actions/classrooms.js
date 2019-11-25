@@ -41,30 +41,31 @@ export const createClassroom = payload => {
       console.log("headers", headers);
       console.log("payload", payload);
       let extractMissingFields = {};
+      let noMissingFields = [];
       // add the teachers id to payload
-      let newPayload = {'teacher_id': currentState.firebase.auth.uid}
+      let newPayload = { teacher_id: currentState.firebase.auth.uid };
       Object.keys(payload).forEach(fields => {
         // eslint-disable-next-line
         //Incharge of mapping names to the ones expected by the backend
         let backendFieldName;
         switch (fields) {
-          case 'institutions':
-            backendFieldName = 'client_id'
+          case "institutions":
+            backendFieldName = "client_id";
             break;
-          case 'classCode':
-            backendFieldName = 'subject_id'
+          case "classCode":
+            backendFieldName = "subject_id";
             break;
-          case 'className':
-            backendFieldName = 'subject_name'
+          case "className":
+            backendFieldName = "subject_name";
             break;
-          case 'studentGroups':
-            backendFieldName = 'group_size'
+          case "studentGroups":
+            backendFieldName = "group_size";
             break;
-          case 'challengeTime':
-            backendFieldName = 'challenge_duration'
+          case "challengeTime":
+            backendFieldName = "challenge_duration";
             break;
-          case 'coins':
-            backendFieldName = 'initial_coins'
+          case "coins":
+            backendFieldName = "initial_coins";
             break;
           default:
             break;
@@ -74,27 +75,45 @@ export const createClassroom = payload => {
           ...extractMissingFields,
           [fields]: payload[fields] === "no-touch" ? true : false
         };
+        if (payload[fields] !== "no-touch") {
+          noMissingFields.push("a");
+        }
         newPayload = {
           ...newPayload,
-          [backendFieldName]: payload[fields] === "no-touch" ? null : payload[fields]
+          [backendFieldName]:
+            payload[fields] === "no-touch" ? null : payload[fields]
         };
       });
-      payload = newPayload
+      if (noMissingFields.length === 6) {
+        extractMissingFields = { noMissingFields: true };
+      }
+      payload = newPayload;
       console.log("extractMissingFields", extractMissingFields);
       console.log("payload", payload);
       axios
         .post("/createclassroom", payload, { headers: headers })
         .then(response => {
           console.log("resp", response);
-          if (response.status === 201 && response.data.code_classroom !== null) {
-            dispatch(classroomSuccess(extractMissingFields, response.data.code_classroom));
+          if (
+            response.status === 201 &&
+            response.data.code_classroom !== null
+          ) {
+            dispatch(
+              classroomSuccess(
+                extractMissingFields,
+                response.data.code_classroom
+              )
+            );
           } else {
-            const unknownError = {code: "create-classroom-error", message: "Unkown error, Contact support"}
-            dispatch(classroomFail(unknownError))
+            const unknownError = {
+              code: "create-classroom-error",
+              message: "Unkown error, Contact support"
+            };
+            dispatch(classroomFail(unknownError));
           }
         })
         .catch(error => {
-          dispatch(classroomFail(error.response.data))
+          dispatch(classroomFail(error.response.data));
         });
     }
   };

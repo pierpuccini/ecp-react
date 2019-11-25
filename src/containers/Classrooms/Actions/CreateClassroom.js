@@ -4,15 +4,40 @@ import { withRouter } from "react-router-dom";
 /* Redux */
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions/index";
+/* Material Imports */
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 /* App imports */
-import { updateObject, checkValidity, stateToPayload } from "../../../shared/utility";
+import {
+  updateObject,
+  checkValidity,
+  stateToPayload
+} from "../../../shared/utility";
 import ClassroomCreator from "../../../components/Classroom/ClassroomCreator";
-import FloatingLoader from '../../../components/UI/Loader/FloatingLoader/FloatingLoader'
+import FloatingLoader from "../../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import Modal from "../../../components/UI/Modal/Modal";
-import CodeCopy from '../../../components/UI/SpecialFields/CodeCopy'
+import CodeCopy from "../../../components/UI/SpecialFields/CodeCopy";
+
+const useStyles = makeStyles(theme => ({
+  succesfullCreateActions: {
+    display: "flex",
+    justifyContent: "center"
+  },
+  button: {
+    margin: theme.spacing(1)
+  }
+}));
 
 const CreateClassroom = props => {
-  const { classrooms, myInstitutions, loading, success } = props;
+  const matClasses = useStyles();
+  const {
+    classrooms,
+    myInstitutions,
+    loading,
+    success,
+    missingFields,
+    registrationCode
+  } = props;
 
   /* TODO: Remove logic in future release for more than one institution per teacher */
   //Extracts institution id in case there is only one assinged to account
@@ -23,10 +48,13 @@ const CreateClassroom = props => {
 
   //Opens modal on create classroom success
   useEffect(() => {
+    /* IF NEW CASE IS ADDED PLEASE REDO IN AN OTHER USE EFFECT */
     if (success) {
-      handleModal(true)
-    }  
-  }, [success])
+      handleModal(true);
+    }
+    /* IF NEW CASE IS ADDED PLEASE REDO IN AN OTHER USE EFFECT */
+    // eslint-disable-next-line
+  }, [success]);
 
   //Input form controlers
   const [createClassroomForm, setcreateClassroomForm] = useState({
@@ -171,9 +199,9 @@ const CreateClassroom = props => {
   };
 
   /* Handles create classroom actions */
-  const createOrCancelHandler = (action) =>{
-    console.log('action',action);
-    if (action === 'cancel') {
+  const createOrCancelHandler = action => {
+    console.log("action", action);
+    if (action === "cancel") {
       setcreateClassroomForm({
         institutions: {
           value: singleInstitution,
@@ -226,39 +254,62 @@ const CreateClassroom = props => {
       });
       handleNav();
     } else {
-      const payload = stateToPayload(createClassroomForm)
-      props.createClassroom(payload)
+      const payload = stateToPayload(createClassroomForm);
+      props.createClassroom(payload);
     }
-  }
+  };
 
   /* Handles modal on create succes */
-  const handleModal = (action) => {
-    setopenClassCodeModal(action)
-  }
+  const handleModal = action => {
+    setopenClassCodeModal(action);
+    if (!action) {
+      handleNav();
+    }
+  };
 
   //Controls the floating loader component
   let floatingLoader;
   if (loading) {
-    floatingLoader = <FloatingLoader/>
+    floatingLoader = <FloatingLoader />;
   }
   const modalTemplate = (
     <div>
       <h2>Classroom Created succesfully!</h2>
       <p>Share the following code to register students</p>
-      <CodeCopy value="pier"/>
-      <h4>To active classroom, fill the following fields:</h4>
-      <ul>
-        <li>t1</li>
-        <li>t2</li>
-        <li>t3</li>
-      </ul>
+      <CodeCopy value={registrationCode} />
+      {!missingFields.noMissingFields ? (
+        <React.Fragment>
+          <h4>To active classroom, fill the following fields:</h4>
+          <ul>
+            {Object.keys(missingFields).map(field => {
+              return missingFields[field] ? <li key={field}>{field}</li> : null;
+            })}
+          </ul>
+        </React.Fragment>
+      ) : null}
+      <div className={matClasses.succesfullCreateActions}>
+        <Button
+          className={matClasses.button}
+          variant="contained"
+          color="primary"
+          type="submit"
+          disabled={!missingFields.noMissingFields}
+        >
+          Activate Classroom
+        </Button>
+      </div>
     </div>
-  )
+  );
 
   return (
     <React.Fragment>
       {floatingLoader}
-      <Modal openModal={openClassCodeModal} closeModal={() => handleModal(false)}>{modalTemplate}</Modal>
+      <Modal
+        openModal={openClassCodeModal}
+        closeModal={() => handleModal(false)}
+      >
+        {modalTemplate}
+      </Modal>
       <ClassroomCreator
         navActions={handleNav}
         createClassroomForm={createClassroomForm}
@@ -282,14 +333,18 @@ const mapStateToProps = state => {
     myInstitutions: state.firebase.profile.institutions,
     classrooms: state.firebase.profile.classrooms,
     loading: state.classrooms.loading,
-    success: state.classrooms.success
+    success: state.classrooms.success,
+    missingFields: state.classrooms.missingFields,
+    registrationCode: state.classrooms.registrationCode
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    createClassroom: (payload) => dispatch(actions.createClassroom(payload)),
-  }
-}
+    createClassroom: payload => dispatch(actions.createClassroom(payload))
+  };
+};
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateClassroom));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(CreateClassroom)
+);

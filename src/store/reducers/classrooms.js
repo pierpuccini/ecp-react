@@ -4,9 +4,9 @@ import { updateObject } from "../../shared/utility";
 const initialState = {
   loading: false,
   error: false,
-  missingFields: null,
+  missingFields: {},
   registrationCode: null,
-  success: true
+  success: false
 };
 
 const classroomStart = state => {

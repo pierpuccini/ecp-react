@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column"
   },
   success: {
-      color: "#38a23d"
+    color: "#38a23d"
   }
 }));
 
@@ -30,18 +30,11 @@ const CodeCopy = props => {
   const copyToClipboard = event => {
     textAreaRef.current.select();
     document.execCommand("copy");
-    // This is just personal preference.
-    // I prefer to not show the the whole text area selected.
-    console.log('event',event.target);
-    event.target.blur();
     setCopySuccess("Copied!");
   };
 
   return (
     <div className={matClasses.textContainer}>
-      <p className={matClasses.success}>
-          {copySuccess}
-      </p>
       <TextField
         inputRef={textAreaRef}
         className={matClasses.textField}
@@ -53,13 +46,18 @@ const CodeCopy = props => {
           readOnly: true,
           endAdornment: (
             <InputAdornment>
-              <IconButton onClick={(event)=>{copyToClipboard(event)}}>
+              <IconButton
+                onClick={event => {
+                  copyToClipboard(event);
+                }}
+              >
                 <FileCopyOutlinedIcon />
               </IconButton>
             </InputAdornment>
           )
         }}
       />
+      <div className={matClasses.success}>{copySuccess}</div>
     </div>
   );
 };
