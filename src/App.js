@@ -29,6 +29,7 @@ import Loader from "./components/UI/Loader/PngLoader/PngLoader";
 import Topbar from "./components/UI/Topbar/Topbar";
 import SideList from "./components/UI/SideList/SideList";
 import Snackbar from "./components/UI/Snackbar/Snackbar";
+import PermisionError from './components/Errors/PermisionError/PermisionError'
 
 const asyncAuth = asyncComponent(() => {
   return import("./containers/Auth/Auth");
@@ -49,7 +50,7 @@ const asyncClassroom = asyncComponent(() => {
 const useStyles = makeStyles(theme => ({
   bottomNav: {
     [theme.breakpoints.up("sm")]: {
-      display: "none"
+      display: ["all"]
     },
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -72,7 +73,8 @@ function App(props) {
     onboardingSuccess,
     location,
     history,
-    sendIdToken
+    sendIdToken, 
+    role
   } = props;
 
   const classes = useStyles();
@@ -149,11 +151,11 @@ function App(props) {
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect, app;
   const routesArray = [
-    { url: "home", comp: asyncDashboard },
-    { url: "my-account", comp: asyncUsers },
-    { url: "onboarding", comp: asyncUsers },
-    { url: "classrooms", comp: asyncClassroom },
-    { url: "user-manager", comp: asyncUserManangment }
+    { url: "home", comp: asyncDashboard, availableTo: ["all"] },
+    { url: "my-account", comp: asyncUsers, availableTo: ["all"] },
+    { url: "onboarding", comp: asyncUsers, availableTo: ["all"] },
+    { url: "classrooms", comp: asyncClassroom, availableTo: ["all"] },
+    { url: "user-manager", comp: asyncUserManangment, availableTo: ["admin"] }
   ];
   /* Routes for authenticated users */
   if (props.isAuthenticated) {
@@ -163,14 +165,26 @@ function App(props) {
     //Available routes or Guarded routes
     routes = (
       <Switch>
-        {routesArray.map(route => {
-          return (
-            <Route
-              path={`/${route.url}`}
-              key={`/${route.url}`}
-              component={route.comp}
-            />
-          );
+        {routesArray.map((route, index) => {
+          if (route.availableTo.includes('all')) {
+            return (
+              <Route
+                path={`/${route.url}`}
+                key={`/${route.url}`}
+                component={route.comp}
+              />
+            );
+          } else if (route.availableTo.includes(role)) {
+            return (
+              <Route
+                path={`/${route.url}`}
+                key={`/${route.url}`}
+                component={route.comp}
+              />
+            );
+          } else {
+            return <PermisionError key={index} />;
+          }
         })}
         <Redirect to="home" />
       </Switch>
@@ -382,6 +396,7 @@ const mapStateToProps = state => {
     onboardingError: state.onboarding.error,
     usersError: state.users.error,
     myAccountSucces: state.users.success,
+    role: state.firebase.profile.role
   };
 };
 
