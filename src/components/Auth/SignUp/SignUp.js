@@ -21,6 +21,7 @@ import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined"
 import classes from "./SignUp.module.scss";
 import gIcon from "../../../assets/svg/search.svg";
 import coinIcon from "../../../assets/icons/educoin.ico";
+import Snackbar from '../../UI/Snackbar/Snackbar';
 
 const backToLogin = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
@@ -142,7 +143,7 @@ const SignUp = props => {
           <span>OR</span>
         </div>
         {props.authError ? (
-          <div className={classes.loginError}>{props.authError.message}</div>
+          <Snackbar payload={{type: "error", info: props.authError}}/>
         ) : null}
         <div className={classes.formContainer}>
           <form className={matClasses.container} onSubmit={props.submitHandler}>

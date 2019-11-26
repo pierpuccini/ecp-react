@@ -313,7 +313,6 @@ const Users = props => {
       OnboardingForm={OnboardingForm}
       OnboardingFormChanged={OnboardingFormHandler}
       submitHandler={submitOnboardingHandler}
-      error={props.codeVerifError}
     />
   );
   /* My Account view */
@@ -364,7 +363,6 @@ const Users = props => {
 const mapStateToProps = state => {
   return {
     codeVerifLoading: state.onboarding.loading,
-    codeVerifError: state.onboarding.error,
     codeVerifSucces: state.onboarding.success,
     profile: state.firebase.profile,
     mainAccount: state.firebase.auth.providerData[0].providerId,
