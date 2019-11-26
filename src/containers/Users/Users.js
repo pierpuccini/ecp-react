@@ -35,6 +35,15 @@ const Users = props => {
       },
       valid: false,
       touched: false
+    },
+    studentCode: {
+      value: "",
+      validation: {
+        required: true,
+        minLength: 6
+      },
+      valid: false,
+      touched: false
     }
   });
 
@@ -198,7 +207,8 @@ const Users = props => {
     });
     let payload = {
       institution: selectedClient,
-      linkCode: OnboardingForm.linkCode.value
+      linkCode: OnboardingForm.linkCode.value,
+      studentCode: OnboardingForm.studentCode.value
     };
     event.preventDefault();
     props.checkOnboarding(payload);

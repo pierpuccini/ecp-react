@@ -110,6 +110,19 @@ const Onboarding = props => {
           </TextField>
           <TextField
             className={matClasses.textField}
+            label="Student Code"
+            placeholder="Institutions student code"
+            value={OnboardingForm.studentCode.value}
+            onChange={event => {
+              OnboardingFormChanged(event, "studentCode");
+            }}
+            type="text"
+            margin="normal"
+            variant="outlined"
+            required
+          />
+          <TextField
+            className={matClasses.textField}
             label="Unique Code"
             placeholder="Provided by your teacher"
             value={OnboardingForm.linkCode.value}
@@ -128,7 +141,8 @@ const Onboarding = props => {
             type="submit"
             disabled={
               !props.OnboardingForm.institution.valid ||
-              !props.OnboardingForm.linkCode.valid
+              !props.OnboardingForm.linkCode.valid ||
+              !props.OnboardingForm.studentCode.valid
             }
           >
             Submit

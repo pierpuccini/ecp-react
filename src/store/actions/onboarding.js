@@ -70,7 +70,7 @@ export const checkOnboarding = data => {
                       subject_id: response.data.classroomId
                     }
                   ],
-                  studentId: "43214321",
+                  studentId: data.studentCode,
                   role: "student"
                 },
                 { merge: true }

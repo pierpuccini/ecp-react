@@ -109,9 +109,8 @@ export const createClassroom = payload => {
             response.status === 200 &&
             response.data.code_classroom !== null
           ) {
-            
-            // Prevents classroom from being added to admin acc
-            console.log("current", currentState.firebase.profile);
+
+            // Prevents classroom from being added to admin acc            
             if (currentState.firebase.profile.role !== "admin") {
               const classrooms = [
                     ...currentState.firebase.profile.classrooms,
