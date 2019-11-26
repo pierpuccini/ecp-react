@@ -157,6 +157,7 @@ export const addClassroom = payload => {
     dispatch(classroomStart());
     const currentState = getState();
     const firestore = getFirestore();
+
     let error;
     // Verifies that the token was properly recieved
     if (currentState.auth.token.type === "error") {
@@ -170,11 +171,13 @@ export const addClassroom = payload => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
+
       payload = { ...payload, student_id: currentState.firebase.auth.uid };
       axios
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
+            //Spreading classroom to prevent mutating array
             const classrooms = [
               ...currentState.firebase.profile.classrooms,
               {
