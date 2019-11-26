@@ -36,7 +36,6 @@ export const createClassroom = payload => {
       };
       dispatch(classroomFail(error));
     } /* If token is all good proceed to sending information to API */ else {
-      
       //Creates headers
       const headers = {
         "Content-Type": "application/json",
@@ -106,7 +105,10 @@ export const createClassroom = payload => {
       axios
         .post("/createclassroom", payload, { headers: headers })
         .then(response => {
-          if (response.status === 201 && response.data.code_classroom !== null) {
+          if (
+            response.status === 200 &&
+            response.data.code_classroom !== null
+          ) {
             const classrooms = [
               ...currentState.firebase.profile.classrooms,
               {
@@ -119,7 +121,12 @@ export const createClassroom = payload => {
               .doc(currentState.firebase.auth.uid)
               .set({ classrooms: classrooms }, { merge: true })
               .then(() => {
-                dispatch(classroomSuccess(extractMissingFields,response.data.code_classroom));
+                dispatch(
+                  classroomSuccess(
+                    extractMissingFields,
+                    response.data.code_classroom
+                  )
+                );
               })
               .catch(err => {
                 dispatch(classroomFail(err));
@@ -149,6 +156,7 @@ export const addClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(classroomStart());
     const currentState = getState();
+    const firestore = getFirestore();
     let error;
     // Verifies that the token was properly recieved
     if (currentState.auth.token.type === "error") {
@@ -165,11 +173,31 @@ export const addClassroom = payload => {
       payload = { ...payload, student_id: currentState.firebase.auth.uid };
       console.log("payload", payload);
       axios
-        .post("/assingclassroom", payload, { headers: headers })
+        .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
           console.log("resp", response);
-          if (response.status === 201 && response.data.classroomId !== null) {
-            dispatch(classroomSuccess());
+          if (response.status === 200) {
+            firestore
+              .collection("users")
+              .doc(currentState.firebase.auth.uid)
+              .set(
+                {
+                  classrooms: [
+                    {
+                      code_classroom: payload.code_classroom,
+                      subject_id: response.data.classroomId
+                    }
+                  ]
+                },
+                { merge: true }
+              )
+              .then(() => {
+                dispatch(classroomSuccess());
+              })
+              .catch(err => {
+                console.log("error: ", err);
+                dispatch(classroomFail(err));
+              });
           } else {
             const unknownError = {
               code: "add-classroom-error",
