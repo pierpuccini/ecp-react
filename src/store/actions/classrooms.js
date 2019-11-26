@@ -175,17 +175,19 @@ export const addClassroom = payload => {
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
+            const classrooms = [
+              ...currentState.firebase.profile.classrooms,
+              {
+                code_classroom: payload.code_classroom,
+                subject_id: response.data.classroomId
+              }
+            ];
             firestore
               .collection("users")
               .doc(currentState.firebase.auth.uid)
               .set(
                 {
-                  classrooms: [
-                    {
-                      code_classroom: payload.code_classroom,
-                      subject_id: response.data.classroomId
-                    }
-                  ]
+                  classrooms: classrooms
                 },
                 { merge: true }
               )
