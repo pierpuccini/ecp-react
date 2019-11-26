@@ -15,20 +15,20 @@ import Container from "@material-ui/core/Container";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
-import FolderOutlinedIcon from '@material-ui/icons/FolderOutlined';
-import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
+import FolderOutlinedIcon from "@material-ui/icons/FolderOutlined";
+import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
+import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceWalletOutlined";
 //For dark theme
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
 /* component Imports */
 import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import "./App.css";
 import Loader from "./components/UI/Loader/PngLoader/PngLoader";
 import Topbar from "./components/UI/Topbar/Topbar";
 import SideList from "./components/UI/SideList/SideList";
-import Snackbar from './components/UI/Snackbar/Snackbar';
+import Snackbar from "./components/UI/Snackbar/Snackbar";
 
 const asyncAuth = asyncComponent(() => {
   return import("./containers/Auth/Auth");
@@ -63,7 +63,14 @@ const useStyles = makeStyles(theme => ({
 
 function App(props) {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const { profileLoaded, newUser, onboardingSuccess, location, history, sendIdToken } = props;
+  const {
+    profileLoaded,
+    newUser,
+    onboardingSuccess,
+    location,
+    history,
+    sendIdToken
+  } = props;
 
   const classes = useStyles();
   //Checks if DOM is ready to un mount loading icon
@@ -73,7 +80,8 @@ function App(props) {
 
   const [navRoute, setNavRoute] = useState("home");
 
-  /* Use efect handles time out for loader and conditional routes managed by state */  
+  /* Use efect handles time out for loader and conditional routes managed by state */
+
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
@@ -82,15 +90,15 @@ function App(props) {
     if (profileLoaded) {
       if (newUser === "") {
         setNavRoute("onboarding");
-      }  
-      if (location.pathname.match("onboarding") && (newUser !== "")) {
+      }
+      if (location.pathname.match("onboarding") && newUser !== "") {
         setNavRoute("home");
+      }
     }
+    if (location.pathname !== "/home") {
+      setNavRoute(location.pathname.replace("/", ""));
     }
-    if (location.pathname !== '/home') {
-      setNavRoute(location.pathname.replace('/',''));
-    }
-    if(location.state) {
+    if (location.state) {
       setNavRoute(`${location.state.overwriteLocalNavState}`);
     }
     if (onboardingSuccess) {
@@ -104,23 +112,23 @@ function App(props) {
   /* Sends the Id token on authentication only once */
   useEffect(() => {
     if (props.isAuthenticated) {
-      sendIdToken()
+      sendIdToken();
     }
     // eslint-disable-next-line
-  }, [props.isAuthenticated])
+  }, [props.isAuthenticated]);
 
   const toggleDrawer = open => {
     setdrawerOpen(open);
   };
 
   const handleNavChange = (event, newValue) => {
-    props.resetReduxErrors()
+    props.resetReduxErrors();
     setNavRoute(newValue);
   };
 
   const sideListHandleNavChange = (event, newValue) => {
-    props.resetReduxErrors()
-    history.push({state: {overwriteLocalNavState: newValue}});
+    props.resetReduxErrors();
+    history.push({ state: { overwriteLocalNavState: newValue } });
   };
 
   const logoutHandler = () => {
@@ -131,7 +139,7 @@ function App(props) {
 
   let loadingDom = (
     <div className="App">
-      <Loader/>
+      <Loader />
     </div>
   );
 
@@ -148,27 +156,6 @@ function App(props) {
     /* Conditional routes section */
     redirect = <Redirect to={`/${navRoute}`} />;
 
-    //Title Checker
-    let title = null;
-    switch (props.location.pathname) {
-      case "/home":
-        title = `Welcome Back, ${props.name}`;
-        break;
-
-      case "/onboarding":
-        title = `Welcome ${props.name}`;
-        break;
-
-      default:
-        title = "Edu Coins";
-        break;
-    }
-    //Loader
-    app = (
-      <div className="App">
-        <Loader />
-      </div>
-    );
     //Available routes or Guarded routes
     routes = (
       <Switch>
@@ -184,18 +171,53 @@ function App(props) {
         <Redirect to="home" />
       </Switch>
     );
-    //error handler
-    let errors;
-    if (props.classroomError) {
-      errors = <Snackbar payload={{type: "error", info: props.classroomError}}/>
-    }
-    if (props.onboardingError) {
-      errors = <Snackbar payload={{type: "error", info: props.onboardingError}}/>
-    }
-    if (props.usersError) {
-      errors = <Snackbar payload={{type: "error", info: props.usersError}}/>
+
+    //Title Checker
+    let title = null;
+    switch (props.location.pathname) {
+      case "/home":
+        title = `Welcome Back, ${props.name}`;
+        break;
+
+      case "/onboarding":
+        title = `Welcome ${props.name}`;
+        break;
+
+      default:
+        title = "Edu Coins";
+        break;
     }
 
+    //Loader
+    app = (
+      <div className="App">
+        <Loader />
+      </div>
+    );
+
+    //error handler
+    let snackbar;
+    if (props.classroomError) {
+      snackbar = (
+        <Snackbar payload={{ type: "error", info: props.classroomError }} />
+      );
+    }
+    if (props.onboardingError) {
+      snackbar = (
+        <Snackbar payload={{ type: "error", info: props.onboardingError }} />
+      );
+    }
+    if (props.usersError) {
+      snackbar = <Snackbar payload={{ type: "error", info: props.usersError }} />;
+    }
+    //success handler
+    if (props.myAccountSucces) {
+      snackbar = (
+        <Snackbar payload={{ type: "success", info: { message: 'Fields succesfully changed!' } }} />
+      );
+    }
+
+    //navigation
     const bottomNavigation = (
       <BottomNavigation
         id="footer"
@@ -234,7 +256,10 @@ function App(props) {
           toggleDrawer(true);
         }}
       >
-        <SideList toggleDrawer={toggleDrawer} onChange={sideListHandleNavChange} />
+        <SideList
+          toggleDrawer={toggleDrawer}
+          onChange={sideListHandleNavChange}
+        />
       </SwipeableDrawer>
     );
 
@@ -242,7 +267,7 @@ function App(props) {
     app = (
       <React.Fragment>
         {redirect}
-        {errors}
+        {snackbar}
         <CssBaseline />
         <ElevationScroll id="header" {...props}>
           <AppBar>
@@ -298,12 +323,12 @@ function App(props) {
         overrides: {
           MuiInputBase: {
             input: {
-              '&:-webkit-autofill': {
-                'border-radius': '4px',
-                '-webkit-box-shadow': '0 0 0px  #fff inset'
-              },
-            },
-          },
+              "&:-webkit-autofill": {
+                "border-radius": "4px",
+                "-webkit-box-shadow": "0 0 0px  #fff inset"
+              }
+            }
+          }
         }
       }),
     [prefersDarkMode]
@@ -351,7 +376,8 @@ const mapStateToProps = state => {
     onboardingSuccess: state.onboarding.success,
     classroomError: state.classrooms.error,
     onboardingError: state.onboarding.error,
-    usersError: state.users.error
+    usersError: state.users.error,
+    myAccountSucces: state.users.success,
   };
 };
 
@@ -362,8 +388,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(actions.resetErrors());
       dispatch(actions.resetUserErrors());
     },
-    sendIdToken: () => {dispatch(actions.sendIdToken())}
+    sendIdToken: () => {
+      dispatch(actions.sendIdToken());
+    }
   };
 };
 
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
