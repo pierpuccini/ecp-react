@@ -47,6 +47,17 @@ const Users = props => {
     }
   });
 
+  let institutionsArr;
+  const whichInstitutions = () => {
+    institutionsArr =
+      props.profile.institutions.length === 0
+        ? { id: "no-id", value: "" }
+        : props.profile.institutions.length === 1
+        ? props.profile.institutions[0]
+        : props.profile.institutions;
+    return institutionsArr;
+  };
+
   const [myAccountForm, setMyAccountForm] = useState({
     displayName: {
       value: props.profile.displayName,
@@ -57,7 +68,7 @@ const Users = props => {
       touched: false
     },
     institution: {
-      value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0],
+      value: whichInstitutions(),
       validation: {},
       valid: false,
       touched: false
@@ -75,7 +86,7 @@ const Users = props => {
       touched: false
     },
     password: {
-      value: (props.profile.email)?"*********":"",
+      value: props.profile.email ? "*********" : "",
       validation: { minLength: 6 },
       valid: false,
       touched: false
@@ -94,7 +105,7 @@ const Users = props => {
       value: props.profile.displayName,
     },
     institution: {
-      value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0] ,
+      value: whichInstitutions()
     },
     studentId: {
       value: props.profile.studentId,
@@ -117,7 +128,7 @@ const Users = props => {
           value: props.profile.displayName,
         },
         institution: {
-          value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0]
+          value: whichInstitutions()
         },
         studentId: {
           value: props.profile.studentId,
@@ -127,7 +138,9 @@ const Users = props => {
         }
       })
     }
+    // eslint-disable-next-line
   }, [props.myAccountSucces, props.profile, setPreviousAccInfo])
+
   /* This second use effect is incharge of live updating the component */
   useEffect(() => {
     const updatedAccForm = updateObject(myAccountForm, {
@@ -140,7 +153,7 @@ const Users = props => {
         touched: false
       },
       institution: {
-        value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0],
+        value: whichInstitutions(),
         validation: {},
         valid: false,
         touched: false
@@ -158,13 +171,14 @@ const Users = props => {
         touched: false
       },
     });
+
     setMyAccountForm(updatedAccForm);
     setPreviousAccInfo({
       displayName: {
         value: props.profile.displayName,
       },
       institution: {
-        value: (props.profile.institutions.length > 1) ? props.profile.institutions : props.profile.institutions[0]
+        value: whichInstitutions(),
       },
       studentId: {
         value: props.profile.studentId,

@@ -83,7 +83,7 @@ function App(props) {
       if (newUser === "") {
         setNavRoute("onboarding");
       }  
-      if (location.pathname.match("onboarding") && !(newUser === "")) {
+      if (location.pathname.match("onboarding") && (newUser !== "")) {
         setNavRoute("home");
     }
     }
