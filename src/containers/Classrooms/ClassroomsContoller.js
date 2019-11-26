@@ -140,7 +140,6 @@ const ClassroomController = props => {
 
   const addClassroomHandler = (event) => {
     event.preventDefault();
-    console.log('adding classroom');
     setopenAddClassModal(false)
     const payload = {
       code_classroom: addClassroomForm.linkCode.value
