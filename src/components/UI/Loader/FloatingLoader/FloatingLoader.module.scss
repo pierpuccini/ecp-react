@@ -12,5 +12,5 @@
     color: #555;
 }
 @media (prefers-color-scheme: dark) {
-    .overlay{position: fixed; left: 0; top: 0; right: 0; bottom: 0;z-index: 2;background-color: rgba(66, 66, 66, 0)} 
+    .overlay{position: fixed; left: 0; top: 0; right: 0; bottom: 0;z-index: 2;background-color: rgba(66, 66, 66, 0.85)} 
   }

@@ -8,7 +8,8 @@ const initialState = {
   success: false,
   newUser: false,
   logout: false,
-  newUserGoogleLogin: false
+  newUserGoogleLogin: false,
+  token: null
 }
 
 const signUpStart = (state, action) => {
@@ -74,9 +75,7 @@ const authLogout = (state, action) => {
 
   return updateObject(state, {
     error: error,
-    smsSent: false,
     success: false,
-    resetCaptcha: false,
     newUser: newUser,
     loading: action.loading,
     logout: true
@@ -92,20 +91,22 @@ const deleteNewUser = (state, action) => {
 
   return updateObject(state, {
     error: error,
-    smsSent: false,
     success: false,
-    resetCaptcha: false,
     newUser: newUser,
     loading: action.loading,
   });
 };
 
 const resetSuccess = state => {
-  return updateObject(state, { success: false, smsSent: false });
+  return updateObject(state, { success: false});
 };
 
 const resetErrors = state => {
-  return updateObject(state, { error: null, smsSent: false, resetCaptcha: false });
+  return updateObject(state, { error: null});
+};
+
+const getIdToken = (state, action) => {
+  return updateObject(state, { error: null, token: action.token});
 };
 
 const reducer = (state = initialState, action) => {
@@ -122,6 +123,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.DELETE_NEW_USER: return deleteNewUser(state, action);
     case actionTypes.RESET_SUCCESS: return resetSuccess(state, action);
     case actionTypes.RESET_ERRORS_ON_AUTH_LINK_CHANGE: return resetErrors(state, action);
+    case actionTypes.GET_ID_TOKEN: return getIdToken(state, action);
     default:
       return state;
   }

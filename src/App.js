@@ -28,6 +28,7 @@ import "./App.css";
 import Loader from "./components/UI/Loader/PngLoader/PngLoader";
 import Topbar from "./components/UI/Topbar/Topbar";
 import SideList from "./components/UI/SideList/SideList";
+import Snackbar from './components/UI/Snackbar/Snackbar';
 
 const asyncAuth = asyncComponent(() => {
   return import("./containers/Auth/Auth");
@@ -103,7 +104,6 @@ function App(props) {
   /* Sends the Id token on authentication only once */
   useEffect(() => {
     if (props.isAuthenticated) {
-      console.log('sending token');
       sendIdToken()
     }
     // eslint-disable-next-line
@@ -184,6 +184,17 @@ function App(props) {
         <Redirect to="home" />
       </Switch>
     );
+    //error handler
+    let errors;
+    if (props.classroomError) {
+      errors = <Snackbar payload={{type: "error", info: props.classroomError}}/>
+    }
+    if (props.onboardingError) {
+      errors = <Snackbar payload={{type: "error", info: props.onboardingError}}/>
+    }
+    if (props.usersError) {
+      errors = <Snackbar payload={{type: "error", info: props.usersError}}/>
+    }
 
     const bottomNavigation = (
       <BottomNavigation
@@ -231,6 +242,7 @@ function App(props) {
     app = (
       <React.Fragment>
         {redirect}
+        {errors}
         <CssBaseline />
         <ElevationScroll id="header" {...props}>
           <AppBar>
@@ -336,7 +348,10 @@ const mapStateToProps = state => {
     newUser: state.firebase.profile.isLoaded
       ? state.firebase.profile.role
       : false,
-    onboardingSuccess: state.onboarding.success
+    onboardingSuccess: state.onboarding.success,
+    classroomError: state.classrooms.error,
+    onboardingError: state.onboarding.error,
+    usersError: state.users.error
   };
 };
 

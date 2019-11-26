@@ -1,8 +1,9 @@
 /* React imports */
 import React, { useState, useEffect } from "react";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
-//Redux
+/* Redux */
 import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -10,6 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
+import IconButton from "@material-ui/core/IconButton";
 //Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -18,7 +20,11 @@ import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 import PermisionError from "../../components/Errors/PermisionError/PermisionError";
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
-import customClasses from './ClassroomsContoller.module.scss'
+import customClasses from "./ClassroomsContoller.module.scss";
+import AddClassroomModal from "../../components/Classroom/AddClassroomModal";
+import Modal from "../../components/UI/Modal/Modal";
+import FloatingLoader from '../../components/UI/Loader/FloatingLoader/FloatingLoader'
+import { updateObject, checkValidity } from "../../shared/utility";
 
 const createClassroom = asyncComponent(() => {
   return import("./Actions/CreateClassroom");
@@ -50,7 +56,12 @@ const useStyles = makeStyles(theme => ({
     flexWrap: "wrap"
   },
   classroomListHeader: {
-    display: "flex"
+    display: "flex",
+    alignSelf: "center"
+  },
+  classroomListHeaderContainer: {
+    display: "flex",
+    justifyContent: "space-between"
   }
 }));
 
@@ -60,6 +71,18 @@ const ClassroomController = props => {
   //Checks if DOM is ready to un mount loading icon
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
+  const [openAddClassModal, setopenAddClassModal] = useState(false);
+  const [addClassroomForm, setaddClassroomForm] = useState({
+    linkCode: {
+      value: "",
+      validation: {
+        required: true,
+        minLength: 6
+      },
+      valid: false,
+      touched: false
+    }
+  });
 
   /* Use efect handles time out for loader */
   useEffect(() => {
@@ -70,17 +93,59 @@ const ClassroomController = props => {
     if (parsedPath.length > 1) {
       setNavRoute(`classrooms/${parsedPath[1]}`);
     }
-    if(props.location.state) {
+    if (props.location.state) {
       setNavRoute(`${props.location.state.overwriteLocalNavState}`);
     }
     return () => {
       clearTimeout(showCoinLoader);
-    };    
+    };
   }, [props.location]);
 
   const handleNavChange = (event, newValue) => {
     setNavRoute(newValue);
   };
+
+  let openAddClassModalCopy;
+  const handleAddClassStudent = () => {
+    openAddClassModalCopy = openAddClassModal;
+    if (!openAddClassModal) {
+      setaddClassroomForm({
+        linkCode: {
+          value: "",
+          validation: {
+            required: true,
+            minLength: 6
+          },
+          valid: false,
+          touched: false
+        }
+      })
+    }
+    setopenAddClassModal(!openAddClassModalCopy);
+  };
+
+  const addClassroomInputHandler = (event, controlName) => {
+    const updatedControls = updateObject(addClassroomForm, {
+      [controlName]: updateObject(addClassroomForm[controlName], {
+        value: event.target.value,
+        valid: checkValidity(
+          event.target.value,
+          addClassroomForm[controlName].validation
+        ),
+        touched: true
+      })
+    });
+    setaddClassroomForm(updatedControls);
+  };
+
+  const addClassroomHandler = (event) => {
+    event.preventDefault();
+    setopenAddClassModal(false)
+    const payload = {
+      code_classroom: addClassroomForm.linkCode.value
+    }
+    props.addClassroom(payload)
+  }
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect;
   const routesArray = [
@@ -139,20 +204,41 @@ const ClassroomController = props => {
     </React.Fragment>
   );
 
+  let floatingLoader;
+  if (props.loading) {
+    floatingLoader = <FloatingLoader></FloatingLoader>
+  }
+
   const classrooomController =
     props.location.pathname === "/classrooms" ? (
       <Container maxWidth="sm" className={classes.container}>
         {redirect}
         <Paper className={classes.paper}>
           {props.role === "student" ? null : classroomManager}
-          <div>
+          <div className={classes.classroomListHeaderContainer}>
             <div className={classes.classroomListHeader}>
               <Icon style={{ marginRight: "5px" }}>
                 <ListOutlinedIcon />
               </Icon>
               <Typography>Classroom List</Typography>
             </div>
+            {props.role === "student" ? (
+              <IconButton onClick={handleAddClassStudent}>
+                <AddCircleOutlineOutlinedIcon />
+              </IconButton>
+            ) : null}
           </div>
+          {floatingLoader}
+          <Modal
+            openModal={openAddClassModal}
+            closeModal={handleAddClassStudent}
+          >
+            <AddClassroomModal
+              addClassroomForm={addClassroomForm}
+              addClassroomFormChanged={addClassroomInputHandler}
+              submitHandler={addClassroomHandler}
+            />
+          </Modal>
         </Paper>
       </Container>
     ) : (
@@ -177,8 +263,15 @@ const ClassroomController = props => {
 
 const mapStateToProps = state => {
   return {
-    role: state.firebase.profile.role
+    role: state.firebase.profile.role,
+    loading: state.classrooms.loading
   };
 };
 
-export default withRouter(connect(mapStateToProps)(ClassroomController));
+const mapDispatchToProps = dispatch => {
+  return {
+    addClassroom: payload => dispatch(actions.addClassroom(payload))
+  };
+};
+
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(ClassroomController));
