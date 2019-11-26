@@ -51,7 +51,7 @@ const Users = props => {
   const whichInstitutions = () => {
     institutionsArr =
       props.profile.institutions.length === 0
-        ? { id: "no-id", value: "" }
+        ? { id: "", value: "" }
         : props.profile.institutions.length === 1
         ? props.profile.institutions[0]
         : props.profile.institutions;
@@ -295,6 +295,11 @@ const Users = props => {
         selectedClient = client
       }
     });
+    
+    //if user has no client then default the selected client
+    if (!selectedClient) {
+      selectedClient = { id: "", value: "" }
+    }
 
     fieldsToUpdate.forEach((field)=>{
       if (field === 'password' || field === 'confirmPassword') {
@@ -303,6 +308,8 @@ const Users = props => {
           payload.data = {...payload.data, password: myAccountForm.password.value}
         }
       }else if(field === 'institution'){
+        console.log('selectedClient',selectedClient);
+        console.log('previousAccInfo',previousAccInfo);
         if (selectedClient.id !== previousAccInfo.institution.value.id ) {
           payload.toUpdate.push('institution');
           payload.data = {...payload.data, 'institution': selectedClient}
