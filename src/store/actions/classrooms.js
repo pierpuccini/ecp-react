@@ -171,11 +171,9 @@ export const addClassroom = payload => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
       payload = { ...payload, student_id: currentState.firebase.auth.uid };
-      console.log("payload", payload);
       axios
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
-          console.log("resp", response);
           if (response.status === 200) {
             firestore
               .collection("users")
@@ -195,7 +193,6 @@ export const addClassroom = payload => {
                 dispatch(classroomSuccess());
               })
               .catch(err => {
-                console.log("error: ", err);
                 dispatch(classroomFail(err));
               });
           } else {

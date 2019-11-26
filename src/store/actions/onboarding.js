@@ -32,11 +32,13 @@ export const checkOnboarding = data => {
     const firestore = getFirestore();
     const currentState = getState();
     //TODO: add student internal code for clients
+
     // Payload to sent to backend
     const payload = {
-      student_id: currentState.firebase.profile.uid,
+      student_id: currentState.firebase.auth.uid,
       code_classroom: data.linkCode
     };
+
     let error;
     // Verifies that the token was properly recieved
     if (currentState.auth.token.type === "error") {
@@ -50,25 +52,26 @@ export const checkOnboarding = data => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
+
       //TODO: add student ID field
       axios
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
-          console.log("resp", response);
-          if (response.status === 200 && response.data.classroomId !== null) {
+          if (response.status === 200) {
             firestore
               .collection("users")
               .doc(currentState.firebase.auth.uid)
               .set(
                 {
-                  institutions: data.institutions,
+                  institutions: [data.institution],
                   classrooms: [
                     {
                       code_classroom: data.linkCode,
-                      subject_id: response.data.id
+                      subject_id: response.data.classroomId
                     }
                   ],
-                  studentId: "43214321"
+                  studentId: "43214321",
+                  role: "student"
                 },
                 { merge: true }
               )
@@ -79,10 +82,8 @@ export const checkOnboarding = data => {
                 }, 250);
               })
               .catch(err => {
-                console.log("error: ", err);
                 dispatch(onboardingFailed(err));
               });
-            dispatch(onboardingSuccess());
           } else {
             const unknownError = {
               code: "add-classroom-error",
