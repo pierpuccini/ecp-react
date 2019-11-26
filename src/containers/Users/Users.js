@@ -295,7 +295,7 @@ const Users = props => {
         selectedClient = client
       }
     });
-    
+
     //if user has no client then default the selected client
     if (!selectedClient) {
       selectedClient = { id: "", value: "" }
@@ -398,7 +398,6 @@ const mapStateToProps = state => {
     profile: state.firebase.profile,
     mainAccount: state.firebase.auth.providerData[0].providerId,
     myAccountLoading: state.users.loading,
-    myAccountError: state.users.error,
     myAccountPersistentError: state.users.persistentErr,
     myAccountSucces: state.users.success,
     myAccountChangedFields: state.users.successfullChanges,

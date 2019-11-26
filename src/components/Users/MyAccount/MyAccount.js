@@ -102,10 +102,6 @@ const MyAccount = props => {
           {props.updatePersistentError.message}
         </div>
       ))
-    : props.updateError
-    ? (errors = (
-        <div className={classes.loginError}>{props.updateError.message}</div>
-      ))
     : (errors = null);
 
   return (
