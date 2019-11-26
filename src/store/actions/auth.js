@@ -250,6 +250,25 @@ export const auth = (data, typeOfLogin) => {
   };
 };
 
+//other actions reset on logout
+export const onboardingReset = () => {
+  return {
+    type: actionTypes.ONBOARDING_RESET
+  };
+};
+
+export const resetCreateClassroom = () => {
+  return {
+    type: actionTypes.CLASSROOM_ACTIONS_CREATE_RESET
+  };
+};
+
+export const userResetErrors = () => {
+  return {
+    type: actionTypes.USER_RESET_ERRORS
+  };
+};
+
 export const authLogout = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
@@ -259,9 +278,13 @@ export const authLogout = () => {
     const cleanNewUser = true;
     firebase.logout();
     dispatch(logout(cleanErrors, cleanNewUser, errors, newUser));
+    dispatch(onboardingReset());
+    dispatch(resetCreateClassroom());
+    dispatch(userResetErrors());
   };
 };
 
+//auth reset
 export const resetSuccess = () => {
   return {
     type: actionTypes.RESET_SUCCESS
@@ -274,13 +297,14 @@ export const resetErrors = () => {
   };
 };
 
+//Id action 
 export const getIdToken = (token) => {
   return {
     type: actionTypes.GET_ID_TOKEN,
     token: token
   };
 };
-
+//Id dispatcher
 export const sendIdToken = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
