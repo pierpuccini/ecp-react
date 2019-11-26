@@ -31,7 +31,6 @@ export const checkOnboarding = data => {
     dispatch(onboardingStart());
     const firestore = getFirestore();
     const currentState = getState();
-    //TODO: add student internal code for clients
 
     // Payload to sent to backend
     const payload = {
@@ -53,7 +52,6 @@ export const checkOnboarding = data => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
 
-      //TODO: add student ID field
       axios
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {

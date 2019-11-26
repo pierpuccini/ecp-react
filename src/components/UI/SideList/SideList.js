@@ -16,7 +16,6 @@ import PlaceOutlinedIcon from "@material-ui/icons/PlaceOutlined";
 //App imports
 import CoinIcon from '../CoinIcon/CoinIcon'
 
-/* TODO: Use my own list */
 const SideList = props => {
   //Items above divider
   const sideNavigationItems = [
