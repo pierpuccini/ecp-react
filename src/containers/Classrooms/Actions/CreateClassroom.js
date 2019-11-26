@@ -43,7 +43,9 @@ const CreateClassroom = props => {
   /* TODO: Remove logic in future release for more than one institution per teacher */
   //Extracts institution id in case there is only one assinged to account
   let singleInstitution;
-  if (myInstitutions.length <= 1) {
+  if (myInstitutions.length === 0) {
+    singleInstitution = ""
+  } else if (myInstitutions.length <= 1) {
     singleInstitution = myInstitutions[0].id;
   }
 

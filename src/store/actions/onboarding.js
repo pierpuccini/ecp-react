@@ -1,4 +1,5 @@
 import * as actionTypes from "./actionTypes";
+import axios from "../../axios/axios";
 
 export const onboardingStart = () => {
   return {
@@ -30,65 +31,69 @@ export const checkOnboarding = data => {
     dispatch(onboardingStart());
     const firestore = getFirestore();
     const currentState = getState();
-    /* TODO: Call backend API to verify if user exisist in class */
+    //TODO: add student internal code for clients
     // Payload to sent to backend
     const payload = {
-      institution: data.institution,
-      code: data.linkCode
+      student_id: currentState.firebase.profile.uid,
+      code_classroom: data.linkCode
     };
-    setTimeout(() => {
-      if (payload.code === "111222") {
-        /* expected response */
-        const res = {
-          institution: payload.institution,
-          classroom: "123123",
-          studentId: 456456
-        };
-        /* expected response */
-        let classrooms;
-        let institutions;
-        firestore
-          .collection("users")
-          .doc(currentState.firebase.auth.uid)
-          .get()
-          .then(user => {
-            classrooms = [...user.data().classrooms];
-            classrooms.push(res.classroom);
-            institutions = [...user.data().institutions];
-            institutions.push(res.institution);
+    let error;
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(onboardingFailed(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentState.auth.token.token}`
+      };
+      //TODO: add student ID field
+      axios
+        .post("/assignclassroom", payload, { headers: headers })
+        .then(response => {
+          console.log("resp", response);
+          if (response.status === 200 && response.data.classroomId !== null) {
             firestore
               .collection("users")
               .doc(currentState.firebase.auth.uid)
-              .set({
-                ...user.data(),
-                institutions: institutions,
-                classrooms: classrooms,
-                studentId: res.studentId,
-                role: "student"
-              })
+              .set(
+                {
+                  institutions: data.institutions,
+                  classrooms: [
+                    {
+                      code_classroom: data.linkCode,
+                      subject_id: response.data.id
+                    }
+                  ],
+                  studentId: "43214321"
+                },
+                { merge: true }
+              )
               .then(() => {
-                dispatch(onboardingSuccess());                  
+                dispatch(onboardingSuccess());
                 setTimeout(() => {
-                  dispatch(onboardingReset())
-                }, 500)
+                  dispatch(onboardingReset());
+                }, 250);
               })
               .catch(err => {
                 console.log("error: ", err);
                 dispatch(onboardingFailed(err));
               });
-          })
-          .catch(err => {
-            console.log("error: ", err);
-            dispatch(onboardingFailed(err));
-          });
-      } else {
-        /* Error if classroom code is incorrect */
-        const error = {
-          code: "wrong code",
-          message: "Please provide the correct code"
-        };
-        dispatch(onboardingFailed(error));
-      }
-    }, 4213);
+            dispatch(onboardingSuccess());
+          } else {
+            const unknownError = {
+              code: "add-classroom-error",
+              message: "Unkown error, Contact support"
+            };
+            dispatch(onboardingFailed(unknownError));
+          }
+        })
+        .catch(error => {
+          dispatch(onboardingFailed(error.response.data));
+        });
+    }
   };
 };

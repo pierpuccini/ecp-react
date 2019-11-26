@@ -72,13 +72,6 @@ const Onboarding = props => {
     return textA < textB ? -1 : textA > textB ? 1 : 0;
   });
 
-  let errorMessage = null;
-  if (props.error) {
-    errorMessage = (
-      <div className={matClasses.codeVerifError}>{props.error.message}</div>
-    );
-  }
-
   return (
     <Container className={matClasses.onboardingContainer}>
       <CssBaseline />
@@ -91,7 +84,6 @@ const Onboarding = props => {
             <MenuBookOutlinedIcon />
           </Icon>
         </div>
-        {errorMessage}
         <form className={matClasses.container} onSubmit={props.submitHandler}>
           <TextField
             className={matClasses.textField}
