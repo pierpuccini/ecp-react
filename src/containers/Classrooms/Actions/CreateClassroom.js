@@ -4,6 +4,8 @@ import { withRouter } from "react-router-dom";
 /* Redux */
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions/index";
+import { useSelector } from 'react-redux'
+import { useFirestoreConnect, isLoaded } from 'react-redux-firebase'
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -16,6 +18,8 @@ import {
 import ClassroomCreator from "../../../components/Classroom/ClassroomCreator";
 import FloatingLoader from "../../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import Modal from "../../../components/UI/Modal/Modal";
+import Loader from "../../../components/UI/Loader/PngLoader/PngLoader"
+
 import CodeCopy from "../../../components/UI/SpecialFields/CodeCopy";
 
 const useStyles = makeStyles(theme => ({
@@ -37,8 +41,15 @@ const CreateClassroom = props => {
     success,
     missingFields,
     registrationCode,
-    resetCreateClassroom
+    resetCreateClassroom,
+    role
   } = props;
+
+  /* Loads clients data from Firestore */
+  useFirestoreConnect(() => [
+    { collection: "clients", where: ["active", "==", true] }
+  ]);
+  const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
   /* TODO: Remove logic in future release for more than one institution per teacher */
   //Extracts institution id in case there is only one assinged to account
@@ -304,6 +315,15 @@ const CreateClassroom = props => {
     </div>
   );
 
+  /* Checks if data is loaded from firestore */
+  if (!isLoaded(clients)) {
+    return (
+      <div className="App">
+        <Loader/>
+      </div>
+    );
+  }
+
   return (
     <React.Fragment>
       {floatingLoader}
@@ -317,7 +337,7 @@ const CreateClassroom = props => {
         navActions={handleNav}
         createClassroomForm={createClassroomForm}
         classroomsId={classrooms}
-        institutions={myInstitutions}
+        institutions={role === "admin" ? clients : myInstitutions}
         inputChangedHandler={classroomInputHandler}
         toggleButtonChangedHandler={classroomToggleButtonHandler}
         sliderChangedHandler={classroomSliderHandler}

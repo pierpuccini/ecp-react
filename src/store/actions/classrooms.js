@@ -109,28 +109,30 @@ export const createClassroom = payload => {
             response.status === 200 &&
             response.data.code_classroom !== null
           ) {
-            const classrooms = [
-              ...currentState.firebase.profile.classrooms,
-              {
-                code_classroom: response.data.code_classroom,
-                subject_id: response.data.id
-              }
-            ];
-            firestore
-              .collection("users")
-              .doc(currentState.firebase.auth.uid)
-              .set({ classrooms: classrooms }, { merge: true })
-              .then(() => {
-                dispatch(
-                  classroomSuccess(
-                    extractMissingFields,
-                    response.data.code_classroom
-                  )
-                );
-              })
-              .catch(err => {
-                dispatch(classroomFail(err));
-              });
+            
+            // Prevents classroom from being added to admin acc
+            console.log("current", currentState.firebase.profile);
+            if (currentState.firebase.profile.role !== "admin") {
+              const classrooms = [
+                    ...currentState.firebase.profile.classrooms,
+                    {
+                      code_classroom: response.data.code_classroom,
+                      subject_id: response.data.id
+                    }
+              ];
+              firestore
+                .collection("users")
+                .doc(currentState.firebase.auth.uid)
+                .set({ classrooms: classrooms }, { merge: true })
+                .then(() => {
+                  dispatch(classroomSuccess(extractMissingFields,response.data.code_classroom));
+                })
+                .catch(err => {
+                  dispatch(classroomFail(err));
+                });
+            }else{
+              dispatch(classroomSuccess(extractMissingFields,response.data.code_classroom));
+            }
           } else {
             const unknownError = {
               code: "create-classroom-error",
