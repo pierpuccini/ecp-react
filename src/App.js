@@ -39,6 +39,9 @@ const asyncDashboard = asyncComponent(() => {
 const asyncUsers = asyncComponent(() => {
   return import("./containers/Users/Users");
 });
+const asyncUserManangment = asyncComponent(() => {
+  return import("./containers/Users/UserManagment");
+});
 const asyncClassroom = asyncComponent(() => {
   return import("./containers/Classrooms/ClassroomsContoller");
 });
@@ -149,7 +152,8 @@ function App(props) {
     { url: "home", comp: asyncDashboard },
     { url: "my-account", comp: asyncUsers },
     { url: "onboarding", comp: asyncUsers },
-    { url: "classrooms", comp: asyncClassroom }
+    { url: "classrooms", comp: asyncClassroom },
+    { url: "user-manager", comp: asyncUserManangment }
   ];
   /* Routes for authenticated users */
   if (props.isAuthenticated) {

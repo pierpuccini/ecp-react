@@ -22,6 +22,11 @@ const Dashboard = props => {
     };
   }, []);
 
+  const redirectDashboard = (event, redirectLink) => {
+    console.log('redirectLink',redirectLink);
+    props.history.push(redirectLink);
+  };
+
   /* TODO: implement mini components for dashboard tiles */
   const dashboardItems = [
     {
@@ -29,7 +34,12 @@ const Dashboard = props => {
       sm: 12,
       xs: 12,
       permision: "admin",
-      customComp: <UserManagement loaded={showSkeleton} />
+      customComp: (
+        <UserManagement
+          loaded={showSkeleton}
+          redirectDashboard={redirectDashboard}
+        />
+      )
     },
     {
       id: 2,
@@ -115,13 +125,13 @@ const Dashboard = props => {
     }
   });
 
-  const redirectDashboard = (event, redirectLink) => {
-    props.history.push(redirectLink)
-  };
-
   return (
     <React.Fragment>
-      <HomeCards dashboardCards={dashboardItems} loaded={showSkeleton} dashboardToRoute={redirectDashboard}/>
+      <HomeCards
+        dashboardCards={dashboardItems}
+        loaded={showSkeleton}
+        dashboardToRoute={redirectDashboard}
+      />
     </React.Fragment>
   );
 };

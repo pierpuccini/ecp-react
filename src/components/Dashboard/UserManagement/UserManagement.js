@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
 
 const UserManagement = props => {
   const classes = useStyles();
-  const { loaded } = props;
+  const { loaded, redirectDashboard } = props;
   //   const loaded = false;
   return (
     <Paper className={classes.paper}>
@@ -78,10 +78,11 @@ const UserManagement = props => {
               size="small"
               className={classes.button}
               endIcon={<RedoOutlinedIcon />}
+              onClick={(event)=>{redirectDashboard(event, "/user-manager")}}
             >
               Manage Users
             </Button>
-            <IconButton className={classes.iconButton}>
+            <IconButton className={classes.iconButton} onClick={(event)=>{redirectDashboard(event, "/user-manager")}}>
               <RedoOutlinedIcon />
             </IconButton>
           </div>
