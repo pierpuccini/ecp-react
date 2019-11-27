@@ -56,7 +56,6 @@ export const checkOnboarding = data => {
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            console.log("res", response);
             firestore
               .collection("clients")
               .doc(response.data.client_id)
@@ -69,7 +68,6 @@ export const checkOnboarding = data => {
                   };
                   dispatch(onboardingFailed(nonExistingClient));
                 } else {
-                  console.log("Document data:", doc.data());
                   firestore
                     .collection("users")
                     .doc(currentState.firebase.auth.uid)

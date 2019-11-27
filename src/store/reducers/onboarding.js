@@ -4,14 +4,16 @@ import { updateObject } from "../../shared/utility";
 const initialState = {
   loading: false,
   error: false,
-  success: false
+  success: false,
+  showSuccess: false
 };
 
 const onboardingStart = state => {
   return updateObject(state, {
     loading: true,
     error: null,
-    success: null
+    success: null,
+    showSuccess: null
   });
 };
 
@@ -19,7 +21,8 @@ const onboardingFailed = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: action.error,
-    success: false
+    success: false,
+    showSuccess: false    
   });
 };
 
@@ -27,7 +30,8 @@ const onboardingSuccess = state => {
   return updateObject(state, {
     loading: false,
     error: false,
-    success: true
+    success: true,
+    showSuccess: true
   });
 };
 

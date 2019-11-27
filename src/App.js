@@ -61,7 +61,7 @@ function App(props) {
     onboardingError,
     usersError,
     classroomError,
-    myAccountSucces,
+    myAccountSuccess,
     onboardingSuccess,
     sendIdToken,
     resetReduxErrors,
@@ -189,12 +189,22 @@ function App(props) {
       snackbar = <Snackbar payload={{ type: "error", info: classroomError }} />;
     }
     //success handler
-    if (myAccountSucces) {
+    if (myAccountSuccess) {
       snackbar = (
         <Snackbar
           payload={{
             type: "success",
             info: { message: "Fields succesfully changed!" }
+          }}
+        />
+      );
+    }
+    if (onboardingSuccess) {
+      snackbar = (
+        <Snackbar
+          payload={{
+            type: "success",
+            info: { message: "Classroom Succesfully added!" }
           }}
         />
       );
@@ -338,8 +348,8 @@ const mapStateToProps = state => {
     onboardingError: state.onboarding.error,
     usersError: state.users.error,
     classroomError: state.classrooms.error,
-    onboardingSuccess: state.onboarding.success,
-    myAccountSucces: state.users.success,
+    onboardingSuccess: state.onboarding.showSuccess,
+    myAccountSuccess: state.users.success,
     role: state.firebase.profile.role
   };
 };
