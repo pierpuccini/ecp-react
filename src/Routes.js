@@ -22,7 +22,6 @@ const asyncAuth = asyncComponent(() => {
 
 const Routes = (props) => {
     const { authenticated, navRoute, pathname, role } = props;
-    console.log('props',props);
 
     let routes, redirect;
     const routesArray = [
