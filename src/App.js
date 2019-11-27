@@ -58,9 +58,9 @@ function App(props) {
     history,
     role,
     name,
-    classroomError,
     onboardingError,
     usersError,
+    classroomError,
     myAccountSucces,
     onboardingSuccess,
     sendIdToken,
@@ -141,10 +141,15 @@ function App(props) {
    /* Routes for non-authenticated users */
   let app = (
     <div className="App">
-      <Routes authenticated={isAuthenticated} navRoute={navRoute} pathname={location.pathname} role={role}/>
+      <Routes
+        authenticated={isAuthenticated}
+        navRoute={navRoute}
+        pathname={location.pathname}
+        role={role}
+      />
     </div>
   );
-  
+
   /* Routes for authenticated users */
   if (isAuthenticated) {
 
@@ -173,11 +178,6 @@ function App(props) {
 
     //error handler
     let snackbar;
-    if (classroomError) {
-      snackbar = (
-        <Snackbar payload={{ type: "error", info: classroomError }} />
-      );
-    }
     if (onboardingError) {
       snackbar = (
         <Snackbar payload={{ type: "error", info: onboardingError }} />
@@ -186,10 +186,18 @@ function App(props) {
     if (usersError) {
       snackbar = <Snackbar payload={{ type: "error", info: usersError }} />;
     }
+    if (classroomError) {
+      snackbar = <Snackbar payload={{ type: "error", info: classroomError }} />;
+    }
     //success handler
     if (myAccountSucces) {
       snackbar = (
-        <Snackbar payload={{ type: "success", info: { message: 'Fields succesfully changed!' } }} />
+        <Snackbar
+          payload={{
+            type: "success",
+            info: { message: "Fields succesfully changed!" }
+          }}
+        />
       );
     }
 
@@ -328,10 +336,10 @@ const mapStateToProps = state => {
     newUser: state.firebase.profile.isLoaded
       ? state.firebase.profile.role
       : false,
-    onboardingSuccess: state.onboarding.success,
-    classroomError: state.classrooms.error,
     onboardingError: state.onboarding.error,
     usersError: state.users.error,
+    classroomError: state.classrooms.error,
+    onboardingSuccess: state.onboarding.success,
     myAccountSucces: state.users.success,
     role: state.firebase.profile.role
   };
