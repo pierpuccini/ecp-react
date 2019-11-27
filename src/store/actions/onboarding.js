@@ -56,6 +56,7 @@ export const checkOnboarding = data => {
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
+            console.log('res',response);
             firestore
               .collection("users")
               .doc(currentState.firebase.auth.uid)
@@ -63,9 +64,10 @@ export const checkOnboarding = data => {
                 {
                   institutions: [data.institution],
                   classrooms: [
-                    {
+                    { 
+                      id: response.data.id,
                       code_classroom: data.linkCode,
-                      subject_id: response.data.classroomId
+                      subject_id: response.data.subject_id
                     }
                   ],
                   studentId: data.studentCode,

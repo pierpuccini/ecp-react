@@ -95,13 +95,11 @@ function App(props) {
     if (profileLoaded) {
       if (newUser === "") {
         setNavRoute("onboarding");
-      }
-      if (location.pathname.match("onboarding") && newUser !== "") {
+      } else if (location.pathname.match("onboarding") && newUser !== "") {
         setNavRoute("home");
+      } else if (location.pathname !== "/home") {
+        setNavRoute(location.pathname.replace("/", ""));
       }
-    }
-    if (location.pathname !== "/home") {
-      setNavRoute(location.pathname.replace("/", ""));
     }
     if (location.state) {
       setNavRoute(`${location.state.overwriteLocalNavState}`);
@@ -316,7 +314,6 @@ function App(props) {
     urlPath !== "/forgot-login"
       ? (redirect = <Redirect to="/login" />)
       : (redirect = null);
-
     app = (
       <div className="App">
         <Switch>
