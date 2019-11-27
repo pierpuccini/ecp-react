@@ -58,6 +58,7 @@ function App(props) {
     history,
     role,
     name,
+    onboardingSuccessLogic,
     onboardingError,
     usersError,
     classroomError,
@@ -95,13 +96,13 @@ function App(props) {
     if (location.state) {
       setNavRoute(`${location.state.overwriteLocalNavState}`);
     }
-    if (onboardingSuccess) {
+    if (onboardingSuccessLogic) {
       setNavRoute("home");
     }
     return () => {
       clearTimeout(showCoinLoader);
     };
-  }, [profileLoaded, newUser, onboardingSuccess, location, setNavRoute]);
+  }, [profileLoaded, newUser, onboardingSuccessLogic, location, setNavRoute]);
 
   /* Sends the Id token on authentication only once */
   useEffect(() => {
@@ -345,6 +346,7 @@ const mapStateToProps = state => {
     newUser: state.firebase.profile.isLoaded
       ? state.firebase.profile.role
       : false,
+    onboardingSuccessLogic: state.onboarding.success,
     onboardingError: state.onboarding.error,
     usersError: state.users.error,
     classroomError: state.classrooms.error,
