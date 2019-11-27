@@ -20,6 +20,7 @@ import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import classes from "./Login.module.scss";
 import Logo from "../../UI/Logo/Logo";
 import gIcon from "../../../assets/svg/search.svg";
+import Snackbar from '../../UI/Snackbar/Snackbar'
 
 const SignUpLink = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
@@ -85,13 +86,9 @@ const Login = props => {
   //Error loader
   let errors = null;
   props.authError
-    ? (errors = (
-        <div className={classes.loginError}>
-          {props.authError.customErrorMsg}
-        </div>
-      ))
+    ? (errors = <Snackbar payload={{ type: "error", info: props.authError }} />)
     : (errors = null);
-
+        
   //Form Loader for forgot form and login
   let form = null;
   let topLink = null;
