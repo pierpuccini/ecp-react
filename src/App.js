@@ -138,8 +138,13 @@ function App(props) {
     </div>
   );
 
-  /* Define new routes in routes array with their url and corresponding component */
-  let app;
+   /* Routes for non-authenticated users */
+  let app = (
+    <div className="App">
+      <Routes authenticated={isAuthenticated} navRoute={navRoute} pathname={location.pathname} role={role}/>
+    </div>
+  );
+  
   /* Routes for authenticated users */
   if (isAuthenticated) {
 
@@ -259,12 +264,6 @@ function App(props) {
         </Container>
         {newUser === "" ? null : bottomNavigation}
       </React.Fragment>
-    );
-  } /* Routes for non-authenticated users */ else {
-    app = (
-      <div className="App">
-        <Routes authenticated={isAuthenticated} navRoute={navRoute} pathname={location.pathname} role={role}/>
-      </div>
     );
   }
 
