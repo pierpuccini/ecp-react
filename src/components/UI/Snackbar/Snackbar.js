@@ -88,12 +88,9 @@ MySnackbarContentWrapper.propTypes = {
 
 const Snackbars = props => {
   const { payload } = props;
-  const [open, setOpen] = useState(false);
+  console.log('payload',payload);
+  const [open, setOpen] = useState();
   const matches = useMediaQuery('(min-width: 600px)');
-
-  const handleClick = () => {
-    setOpen(true);
-  };
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -123,7 +120,7 @@ const Snackbars = props => {
 
   useEffect(() => {
     if (payload !== null) {
-      handleClick();
+      setOpen(true);
     }
     // eslint-disable-next-line
   }, []);
