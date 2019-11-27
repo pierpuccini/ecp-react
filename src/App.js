@@ -1,7 +1,7 @@
 /* React Imports */
 import React, { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import { Route, Switch, withRouter, Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 /* Redux Imports */
 import { connect } from "react-redux";
 import * as actions from "./store/actions/index";
@@ -23,29 +23,12 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 /* component Imports */
-import asyncComponent from "./hoc/asyncComponent/asyncComponent";
 import "./App.css";
 import Loader from "./components/UI/Loader/PngLoader/PngLoader";
 import Topbar from "./components/UI/Topbar/Topbar";
 import SideList from "./components/UI/SideList/SideList";
 import Snackbar from "./components/UI/Snackbar/Snackbar";
-import PermisionError from './components/Errors/PermisionError/PermisionError'
-
-const asyncAuth = asyncComponent(() => {
-  return import("./containers/Auth/Auth");
-});
-const asyncDashboard = asyncComponent(() => {
-  return import("./containers/Dashboard/Dashboard");
-});
-const asyncUsers = asyncComponent(() => {
-  return import("./containers/Users/Users");
-});
-const asyncUserManangment = asyncComponent(() => {
-  return import("./containers/Users/UserManagment");
-});
-const asyncClassroom = asyncComponent(() => {
-  return import("./containers/Classrooms/ClassroomsContoller");
-});
+import Routes from "./Routes";
 
 const useStyles = makeStyles(theme => ({
   bottomNav: {
@@ -69,12 +52,20 @@ function App(props) {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
   const {
     profileLoaded,
+    isAuthenticated,
     newUser,
-    onboardingSuccess,
     location,
     history,
-    sendIdToken, 
-    role
+    role,
+    name,
+    classroomError,
+    onboardingError,
+    usersError,
+    myAccountSucces,
+    onboardingSuccess,
+    sendIdToken,
+    resetReduxErrors,
+    logout,
   } = props;
 
   const classes = useStyles();
@@ -98,8 +89,9 @@ function App(props) {
       } else if (location.pathname.match("onboarding") && newUser !== "") {
         setNavRoute("home");
       } else if (location.pathname !== "/home") {
+        console.log('location.pathname',location.pathname);
         setNavRoute(location.pathname.replace("/", ""));
-      }
+      } 
     }
     if (location.state) {
       setNavRoute(`${location.state.overwriteLocalNavState}`);
@@ -114,30 +106,30 @@ function App(props) {
 
   /* Sends the Id token on authentication only once */
   useEffect(() => {
-    if (props.isAuthenticated) {
+    if (isAuthenticated) {
       sendIdToken();
     }
     // eslint-disable-next-line
-  }, [props.isAuthenticated]);
+  }, [isAuthenticated]);
 
   const toggleDrawer = open => {
     setdrawerOpen(open);
   };
 
   const handleNavChange = (event, newValue) => {
-    props.resetReduxErrors();
+    resetReduxErrors();
     setNavRoute(newValue);
   };
 
   const sideListHandleNavChange = (event, newValue) => {
-    props.resetReduxErrors();
+    resetReduxErrors();
     history.push({ state: { overwriteLocalNavState: newValue } });
   };
 
   const logoutHandler = () => {
     setDomReady(true);
     setdrawerOpen(false);
-    props.logout();
+    logout();
   };
 
   let loadingDom = (
@@ -147,56 +139,19 @@ function App(props) {
   );
 
   /* Define new routes in routes array with their url and corresponding component */
-  let routes, redirect, app;
-  const routesArray = [
-    { url: "home", comp: asyncDashboard, availableTo: ["all"] },
-    { url: "my-account", comp: asyncUsers, availableTo: ["all"] },
-    { url: "onboarding", comp: asyncUsers, availableTo: ["all"] },
-    { url: "classrooms", comp: asyncClassroom, availableTo: ["all"] },
-    { url: "user-manager", comp: asyncUserManangment, availableTo: ["admin"] }
-  ];
+  let app;
   /* Routes for authenticated users */
-  if (props.isAuthenticated) {
-    /* Conditional routes section */
-    redirect = <Redirect to={`/${navRoute}`} />;
-
-    //Available routes or Guarded routes
-    routes = (
-      <Switch>
-        {routesArray.map((route, index) => {
-          if (route.availableTo.includes('all')) {
-            return (
-              <Route
-                path={`/${route.url}`}
-                key={`/${route.url}`}
-                component={route.comp}
-              />
-            );
-          } else if (route.availableTo.includes(role)) {
-            return (
-              <Route
-                path={`/${route.url}`}
-                key={`/${route.url}`}
-                component={route.comp}
-              />
-            );
-          } else {
-            return <PermisionError key={index} />;
-          }
-        })}
-        <Redirect to="home" />
-      </Switch>
-    );
+  if (isAuthenticated) {
 
     //Title Checker
     let title = null;
-    switch (props.location.pathname) {
+    switch (location.pathname) {
       case "/home":
-        title = `Welcome Back, ${props.name}`;
+        title = `Welcome Back, ${name}`;
         break;
 
       case "/onboarding":
-        title = `Welcome ${props.name}`;
+        title = `Welcome ${name}`;
         break;
 
       default:
@@ -213,21 +168,21 @@ function App(props) {
 
     //error handler
     let snackbar;
-    if (props.classroomError) {
+    if (classroomError) {
       snackbar = (
-        <Snackbar payload={{ type: "error", info: props.classroomError }} />
+        <Snackbar payload={{ type: "error", info: classroomError }} />
       );
     }
-    if (props.onboardingError) {
+    if (onboardingError) {
       snackbar = (
-        <Snackbar payload={{ type: "error", info: props.onboardingError }} />
+        <Snackbar payload={{ type: "error", info: onboardingError }} />
       );
     }
-    if (props.usersError) {
-      snackbar = <Snackbar payload={{ type: "error", info: props.usersError }} />;
+    if (usersError) {
+      snackbar = <Snackbar payload={{ type: "error", info: usersError }} />;
     }
     //success handler
-    if (props.myAccountSucces) {
+    if (myAccountSucces) {
       snackbar = (
         <Snackbar payload={{ type: "success", info: { message: 'Fields succesfully changed!' } }} />
       );
@@ -279,10 +234,8 @@ function App(props) {
       </SwipeableDrawer>
     );
 
-    /* Top bar title is handled in switch statment above */
     app = (
       <React.Fragment>
-        {redirect}
         {snackbar}
         <CssBaseline />
         <ElevationScroll id="header" {...props}>
@@ -293,36 +246,24 @@ function App(props) {
                 toggleDrawer={toggleDrawer}
                 drawerState={drawerOpen}
                 title={title}
-                newUser={props.newUser === ""}
+                newUser={newUser === ""}
                 viewAccountHandler={handleNavChange}
               />
             </Toolbar>
           </AppBar>
         </ElevationScroll>
-        {props.newUser === "" ? null : swipeDrawer}
+        {newUser === "" ? null : swipeDrawer}
         <Toolbar id="header" className={classes.topbarSpace} />
         <Container id="content" className={classes.container}>
-          {routes}
+          <Routes authenticated={isAuthenticated} navRoute={navRoute} pathname={location.pathname} role={role}/>
         </Container>
-        {props.newUser === "" ? null : bottomNavigation}
+        {newUser === "" ? null : bottomNavigation}
       </React.Fragment>
     );
   } /* Routes for non-authenticated users */ else {
-    let urlPath = props.location.pathname;
-    urlPath !== "/login" &&
-    urlPath !== "/sign-up" &&
-    urlPath !== "/forgot-login"
-      ? (redirect = <Redirect to="/login" />)
-      : (redirect = null);
     app = (
       <div className="App">
-        <Switch>
-          {redirect}
-          <Route path="/login" component={asyncAuth} />
-          <Route path="/sign-up" component={asyncAuth} />
-          <Route path="/forgot-login" component={asyncAuth} />
-          <Redirect to="/login" />
-        </Switch>
+        <Routes authenticated={isAuthenticated} navRoute={navRoute} pathname={location.pathname} role={role}/>
       </div>
     );
   }
@@ -352,7 +293,7 @@ function App(props) {
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
-        {domReady && props.profileLoaded ? app : loadingDom}
+        {domReady && profileLoaded ? app : loadingDom}
       </ThemeProvider>
     </React.Fragment>
   );
