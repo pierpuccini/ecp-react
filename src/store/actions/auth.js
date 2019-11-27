@@ -269,6 +269,12 @@ export const userResetErrors = () => {
   };
 };
 
+export const userReset = () => {
+  return {
+    type: actionTypes.USER_RESET
+  };
+};
+
 export const authLogout = () => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
@@ -280,6 +286,7 @@ export const authLogout = () => {
     dispatch(logout(cleanErrors, cleanNewUser, errors, newUser));
     dispatch(onboardingReset());
     dispatch(resetCreateClassroom());
+    dispatch(userReset());
     dispatch(userResetErrors());
   };
 };

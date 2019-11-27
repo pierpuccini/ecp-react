@@ -50,13 +50,14 @@ const userUpdateSuccess = (state, action) => {
 };
 
 const userUpdateLogout = (state, action) => {
-  return updateObject(state, null);
+  return updateObject(state, initialState);
 };
 
 const userResetErrors = (state) => {
   return updateObject(state, {
     error: null,
-    persistentErr: null
+    persistentErr: null,
+    success: null
   });
 };
 
@@ -66,7 +67,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.USER_UPDATE_SUCCESS: return userUpdateSuccess(state, action);
     case actionTypes.USER_UPDATE_FAILED: return userUpdateFailed(state, action);
     case actionTypes.USER_RESET_ERRORS: return userResetErrors(state, action);
-    case actionTypes.AUTH_LOGOUT: return userUpdateLogout(state, action);
+    case actionTypes.USER_RESET: return userUpdateLogout(state, action);
     default:
       return state;
   }
