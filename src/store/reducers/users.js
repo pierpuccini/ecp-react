@@ -31,6 +31,7 @@ const userUpdateStart = state => {
 };
 
 const userUpdateFailed = (state, action) => {
+  console.log('action',action);
   return updateObject(state, {
     loading: false,
     error: action.error,

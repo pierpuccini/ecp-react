@@ -69,8 +69,14 @@ export const updateUser = payload => {
         message:
           "Error! can only change password or email, not both at the same time."
       };
-
-      dispatch(userUpdateFailed(null, null, persistentErr));
+      const successfullChanges = {
+        displayName: "no-change",
+        institution: "no-change",
+        studentId: "no-change",
+        email: "no-change",
+        password: "no-change"
+      }
+      dispatch(userUpdateFailed(persistentErr, successfullChanges, persistentErr));
     }
     if (toUpdate.includes("email") || toUpdate.includes("password")) {
       if (toUpdate.includes("email")) {
