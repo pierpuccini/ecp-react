@@ -56,33 +56,56 @@ export const checkOnboarding = data => {
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            console.log('res',response);
+            console.log("res", response);
             firestore
-              .collection("users")
-              .doc(currentState.firebase.auth.uid)
-              .set(
-                {
-                  institutions: [data.institution],
-                  classrooms: [
-                    { 
-                      id: response.data.id,
-                      code_classroom: data.linkCode,
-                      subject_id: response.data.subject_id
-                    }
-                  ],
-                  studentId: data.studentCode,
-                  role: "student"
-                },
-                { merge: true }
-              )
-              .then(() => {
-                dispatch(onboardingSuccess());
-                setTimeout(() => {
-                  dispatch(onboardingReset());
-                }, 250);
+              .collection("clients")
+              .doc(response.data.client_id)
+              .get()
+              .then(doc => {
+                if (!doc.exists) {
+                  const nonExistingClient = {
+                    code: "client-not-exisit",
+                    message: "Institution does not exisit, Contact support!"
+                  };
+                  dispatch(onboardingFailed(nonExistingClient));
+                } else {
+                  console.log("Document data:", doc.data());
+                  firestore
+                    .collection("users")
+                    .doc(currentState.firebase.auth.uid)
+                    .set(
+                      {
+                        institutions: [{...doc.data(), id: response.data.client_id }],
+                        classrooms: [
+                          {
+                            id: response.data.id,
+                            code_classroom: data.linkCode,
+                            subject_id: response.data.subject_id
+                          }
+                        ],
+                        studentId: data.studentCode,
+                        role: "student"
+                      },
+                      { merge: true }
+                    )
+                    .then(() => {
+                      dispatch(onboardingSuccess());
+                      setTimeout(() => {
+                        dispatch(onboardingReset());
+                      }, 250);
+                    })
+                    .catch(err => {
+                      dispatch(onboardingFailed(err));
+                    });
+                }
               })
               .catch(err => {
-                dispatch(onboardingFailed(err));
+                console.log("Error getting document", err);
+                const errorGettingInstitution = {
+                  code: "Error-getting-institution",
+                  message: "Error getting institution, Please try again."
+                };
+                dispatch(onboardingFailed(errorGettingInstitution));
               });
           } else {
             const unknownError = {

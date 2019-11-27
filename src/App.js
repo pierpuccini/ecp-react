@@ -89,7 +89,6 @@ function App(props) {
       } else if (location.pathname.match("onboarding") && newUser !== "") {
         setNavRoute("home");
       } else if (location.pathname !== "/home") {
-        console.log('location.pathname',location.pathname);
         setNavRoute(location.pathname.replace("/", ""));
       } 
     }
