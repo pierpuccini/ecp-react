@@ -125,7 +125,8 @@ const Snackbars = props => {
     if (payload !== null) {
       handleClick();
     }
-  }, [payload]);
+    // eslint-disable-next-line
+  }, []);
 
   return (
       <Snackbar
