@@ -8,7 +8,6 @@ import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
 import Icon from "@material-ui/core/Icon";
 import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 
@@ -64,13 +63,7 @@ const useStyles = makeStyles(theme => ({
 
 const Onboarding = props => {
   const matClasses = useStyles();
-  let { clients, OnboardingForm, OnboardingFormChanged } = props;
-
-  clients.sort((a, b) => {
-    var textA = a.value.toUpperCase();
-    var textB = b.value.toUpperCase();
-    return textA < textB ? -1 : textA > textB ? 1 : 0;
-  });
+  let { OnboardingForm, OnboardingFormChanged } = props;
 
   return (
     <Container className={matClasses.onboardingContainer}>
@@ -85,29 +78,6 @@ const Onboarding = props => {
           </Icon>
         </div>
         <form className={matClasses.container} onSubmit={props.submitHandler}>
-          <TextField
-            className={matClasses.textField}
-            label="Institution"
-            select
-            placeholder="Select Your Institution"
-            value={OnboardingForm.institution.value}
-            onChange={event => {
-              OnboardingFormChanged(event, "institution");
-            }}
-            margin="normal"
-            variant="outlined"
-            required
-          >
-            {clients.map(option => (
-              <MenuItem
-                className={matClasses.MuiMenuList}
-                key={option.id}
-                value={option.id}
-              >
-                {option.value}
-              </MenuItem>
-            ))}
-          </TextField>
           <TextField
             className={matClasses.textField}
             label="Student Code"
@@ -140,7 +110,6 @@ const Onboarding = props => {
             color="primary"
             type="submit"
             disabled={
-              !props.OnboardingForm.institution.valid ||
               !props.OnboardingForm.linkCode.valid ||
               !props.OnboardingForm.studentCode.valid
             }

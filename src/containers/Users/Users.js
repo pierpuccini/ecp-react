@@ -19,14 +19,6 @@ const Users = props => {
   let userView;
   /* Container States */
   const [OnboardingForm, setOnboardingForm] = useState({
-    institution: {
-      value: "",
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
-    },
     linkCode: {
       value: "",
       validation: {
@@ -212,15 +204,7 @@ const Users = props => {
   };
 
   const submitOnboardingHandler = event => {
-    //Gets the proper institution to push into user profile
-    let selectedClient;
-    clients.forEach((client)=>{
-      if (client.id === OnboardingForm.institution.value) {
-        selectedClient = client
-      }
-    });
     let payload = {
-      institution: selectedClient,
       linkCode: OnboardingForm.linkCode.value,
       studentCode: OnboardingForm.studentCode.value
     };
@@ -340,7 +324,6 @@ const Users = props => {
   /* Onboarding view */
   let onboardingPage = (
     <Onboarding
-      clients={clients}
       OnboardingForm={OnboardingForm}
       OnboardingFormChanged={OnboardingFormHandler}
       submitHandler={submitOnboardingHandler}
