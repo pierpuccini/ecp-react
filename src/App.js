@@ -50,7 +50,7 @@ const asyncClassroom = asyncComponent(() => {
 const useStyles = makeStyles(theme => ({
   bottomNav: {
     [theme.breakpoints.up("sm")]: {
-      display: ["all"]
+      display: "none"
     },
     [theme.breakpoints.down("sm")]: {
       width: "100%",
