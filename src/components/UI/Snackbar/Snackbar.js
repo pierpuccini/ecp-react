@@ -5,7 +5,7 @@ import clsx from "clsx";
 /* Material UI imports */
 import { makeStyles } from "@material-ui/core/styles";
 import { amber, green } from "@material-ui/core/colors";
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
@@ -88,9 +88,8 @@ MySnackbarContentWrapper.propTypes = {
 
 const Snackbars = props => {
   const { payload } = props;
-  console.log('payload',payload);
   const [open, setOpen] = useState();
-  const matches = useMediaQuery('(min-width: 600px)');
+  const matches = useMediaQuery("(min-width: 600px)");
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -100,22 +99,14 @@ const Snackbars = props => {
   };
 
   let anchorOrigin = {
-    vertical: 'bottom',
-    horizontal: 'center',
-  }
+    vertical: "bottom",
+    horizontal: "center"
+  };
   if (matches) {
     anchorOrigin = {
       vertical: "top",
       horizontal: "right"
-    }
-  }
-
-  let variant, message;
-  if (payload !== null) {
-    variant = payload.type;
-    message = payload.info.customErrorMsg
-      ? payload.info.customErrorMsg
-      : payload.info.message;
+    };
   }
 
   useEffect(() => {
@@ -123,21 +114,31 @@ const Snackbars = props => {
       setOpen(true);
     }
     // eslint-disable-next-line
-  }, []);
+  }, [payload]);
+
+  let variant, message;
+  if (payload.type === "none") {
+    return null;
+  } else {
+    variant = payload.type;
+    message = payload.info.customErrorMsg
+      ? payload.info.customErrorMsg
+      : payload.info.message;
+  }
 
   return (
-      <Snackbar
-        anchorOrigin={anchorOrigin}
-        open={open}
-        autoHideDuration={6000}
+    <Snackbar
+      anchorOrigin={anchorOrigin}
+      open={open}
+      autoHideDuration={6000}
+      onClose={handleClose}
+    >
+      <MySnackbarContentWrapper
         onClose={handleClose}
-      >
-        <MySnackbarContentWrapper
-          onClose={handleClose}
-          variant={variant}
-          message={message}
-        />
-      </Snackbar>
+        variant={variant}
+        message={message}
+      />
+    </Snackbar>
   );
 };
 

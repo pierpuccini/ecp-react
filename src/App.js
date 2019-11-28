@@ -66,7 +66,7 @@ function App(props) {
     onboardingSuccess,
     sendIdToken,
     resetReduxErrors,
-    logout,
+    logout
   } = props;
 
   const classes = useStyles();
@@ -91,7 +91,7 @@ function App(props) {
         setNavRoute("home");
       } else if (location.pathname !== "/home") {
         setNavRoute(location.pathname.replace("/", ""));
-      } 
+      }
     }
     if (location.state) {
       setNavRoute(`${location.state.overwriteLocalNavState}`);
@@ -138,7 +138,7 @@ function App(props) {
     </div>
   );
 
-   /* Routes for non-authenticated users */
+  /* Routes for non-authenticated users */
   let app = (
     <div className="App">
       <Routes
@@ -149,10 +149,45 @@ function App(props) {
       />
     </div>
   );
+  const [snackbarPayload, setsnackbarPayload] = useState({
+    type: "none",
+    info: "none"
+  });
+  useEffect(() => {
+    let payload = snackbarPayload;
+    //error handler
+    if (usersError) {
+      payload = { type: "error", info: usersError };
+    }
+    if (onboardingError) {
+      payload = { type: "error", info: onboardingError };
+    }
+    if (usersError) {
+      payload = { type: "error", info: usersError };
+    }
+    if (classroomError) {
+      payload = { type: "error", info: classroomError };
+    }
+    //success handler
+    if (myAccountSuccess) {
+      payload = {
+        type: "success",
+        info: { message: "Fields succesfully changed!" }
+      };
+    }
+    if (onboardingSuccess) {
+      payload = {
+        type: "success",
+        info: { message: "Classroom Succesfully added!" }
+      };
+    }
+    setsnackbarPayload(payload);
+    //missing dep: snackbarPayload
+    // eslint-disable-next-line
+  }, [ usersError, onboardingError, usersError, classroomError, myAccountSuccess, onboardingSuccess]);
 
   /* Routes for authenticated users */
   if (isAuthenticated) {
-
     //Title Checker
     let title = null;
     switch (location.pathname) {
@@ -176,40 +211,8 @@ function App(props) {
       </div>
     );
 
-    //error handler
-    let snackbar;
-    if (onboardingError) {
-      snackbar = (
-        <Snackbar payload={{ type: "error", info: onboardingError }} />
-      );
-    }
-    if (usersError) {
-      snackbar = <Snackbar payload={{ type: "error", info: usersError }} />;
-    }
-    if (classroomError) {
-      snackbar = <Snackbar payload={{ type: "error", info: classroomError }} />;
-    }
-    //success handler
-    if (myAccountSuccess) {
-      snackbar = (
-        <Snackbar
-          payload={{
-            type: "success",
-            info: { message: "Fields succesfully changed!" }
-          }}
-        />
-      );
-    }
-    if (onboardingSuccess) {
-      snackbar = (
-        <Snackbar
-          payload={{
-            type: "success",
-            info: { message: "Classroom Succesfully added!" }
-          }}
-        />
-      );
-    }
+    // //error handler
+    // let snackbarPayload = { type: "none", info: "none"};
 
     //navigation
     const bottomNavigation = (
@@ -259,7 +262,7 @@ function App(props) {
 
     app = (
       <React.Fragment>
-        {snackbar}
+        <Snackbar payload={snackbarPayload} />
         <CssBaseline />
         <ElevationScroll id="header" {...props}>
           <AppBar>
@@ -278,7 +281,12 @@ function App(props) {
         {newUser === "" ? null : swipeDrawer}
         <Toolbar id="header" className={classes.topbarSpace} />
         <Container id="content" className={classes.container}>
-          <Routes authenticated={isAuthenticated} navRoute={navRoute} pathname={location.pathname} role={role}/>
+          <Routes
+            authenticated={isAuthenticated}
+            navRoute={navRoute}
+            pathname={location.pathname}
+            role={role}
+          />
         </Container>
         {newUser === "" ? null : bottomNavigation}
       </React.Fragment>
