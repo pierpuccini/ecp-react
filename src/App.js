@@ -77,6 +77,11 @@ function App(props) {
 
   const [navRoute, setNavRoute] = useState("home");
 
+  const [snackbarPayload, setsnackbarPayload] = useState({
+    type: "none",
+    info: "none"
+  });
+
   /* Use efect handles time out for loader and conditional routes managed by state */
 
   useEffect(() => {
@@ -92,12 +97,24 @@ function App(props) {
       } else if (location.pathname !== "/home") {
         setNavRoute(location.pathname.replace("/", ""));
       }
+      setsnackbarPayload({
+        type: "none",
+        info: "none"
+      });
     }
     if (location.state) {
       setNavRoute(`${location.state.overwriteLocalNavState}`);
+      setsnackbarPayload({
+        type: "none",
+        info: "none"
+      });
     }
     if (onboardingSuccessLogic) {
       setNavRoute("home");
+      setsnackbarPayload({
+        type: "none",
+        info: "none"
+      });
     }
     return () => {
       clearTimeout(showCoinLoader);
@@ -112,6 +129,48 @@ function App(props) {
     // eslint-disable-next-line
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    let payload = snackbarPayload;
+    //error handler
+    if (usersError) {
+      payload = { type: "error", info: usersError };
+    }
+    if (onboardingError) {
+      payload = { type: "error", info: onboardingError };
+    }
+    if (usersError) {
+      payload = { type: "error", info: usersError };
+    }
+    if (classroomError) {
+      payload = { type: "error", info: classroomError };
+    }
+    //success handler
+    if (myAccountSuccess) {
+      payload = {
+        type: "success",
+        info: { message: "Fields succesfully changed!" }
+      };
+    }
+    if (onboardingSuccess) {
+      payload = {
+        type: "success",
+        info: { message: "Classroom Succesfully added!" }
+      };
+    }
+    console.log("payload [app]", payload);
+    setsnackbarPayload(payload);
+    //missing dep: snackbarPayload
+    // eslint-disable-next-line
+  }, [
+    isAuthenticated,
+    usersError,
+    onboardingError,
+    usersError,
+    classroomError,
+    myAccountSuccess,
+    onboardingSuccess
+  ]);
+
   const toggleDrawer = open => {
     setdrawerOpen(open);
   };
@@ -119,6 +178,10 @@ function App(props) {
   const handleNavChange = (event, newValue) => {
     resetReduxErrors();
     setNavRoute(newValue);
+    setsnackbarPayload({
+      type: "none",
+      info: "none"
+    });
   };
 
   const sideListHandleNavChange = (event, newValue) => {
@@ -149,42 +212,6 @@ function App(props) {
       />
     </div>
   );
-  const [snackbarPayload, setsnackbarPayload] = useState({
-    type: "none",
-    info: "none"
-  });
-  useEffect(() => {
-    let payload = snackbarPayload;
-    //error handler
-    if (usersError) {
-      payload = { type: "error", info: usersError };
-    }
-    if (onboardingError) {
-      payload = { type: "error", info: onboardingError };
-    }
-    if (usersError) {
-      payload = { type: "error", info: usersError };
-    }
-    if (classroomError) {
-      payload = { type: "error", info: classroomError };
-    }
-    //success handler
-    if (myAccountSuccess) {
-      payload = {
-        type: "success",
-        info: { message: "Fields succesfully changed!" }
-      };
-    }
-    if (onboardingSuccess) {
-      payload = {
-        type: "success",
-        info: { message: "Classroom Succesfully added!" }
-      };
-    }
-    setsnackbarPayload(payload);
-    //missing dep: snackbarPayload
-    // eslint-disable-next-line
-  }, [ usersError, onboardingError, usersError, classroomError, myAccountSuccess, onboardingSuccess]);
 
   /* Routes for authenticated users */
   if (isAuthenticated) {
