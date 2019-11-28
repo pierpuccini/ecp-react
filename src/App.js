@@ -157,7 +157,7 @@ function App(props) {
         info: { message: "Classroom Succesfully added!" }
       };
     }
-    console.log("payload [app]", payload);
+    // console.log("payload [app]", payload);
     setsnackbarPayload(payload);
     //missing dep: snackbarPayload
     // eslint-disable-next-line
