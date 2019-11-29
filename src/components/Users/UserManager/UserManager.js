@@ -1,11 +1,13 @@
 /* React Imports */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import TextField from "@material-ui/core/TextField";
 // import MenuItem from "@material-ui/core/MenuItem";
 // import Button from "@material-ui/core/Button";
@@ -58,19 +60,49 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "space-evenly"
   },
-  userCard: { display: "flex", justifyContent: "space-between" },
-  userActions: { display: "flex" },
-  userNameAndRole: { textTransform: "capitalize" },
-  nameAndRole: { display: "flex", flexDirection: "column", alignSelf: "center" }
+  userCard: {
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  userActions: {
+    display: "flex"
+  },
+  userNameAndRole: {
+    textTransform: "capitalize"
+  },
+  nameAndRole: {
+    display: "flex",
+    flexDirection: "column",
+    alignSelf: "center"
+  }
 }));
 
 const UserManager = props => {
   const classes = useStyles();
-  const { teachers, students } = props;
-  const [userType, setuserType] = useState(["all"]);
+  const { teachers, students, checkboxState, handleCheckboxChange } = props;
 
-  let userDisplayArray = [...teachers, ...students];
-  console.log("userDisplayArray", userDisplayArray);
+  const [userType, setuserType] = useState(["all"]);
+  const [userDisplayArray, setuserDisplayArray] = useState([
+    ...teachers,
+    ...students
+  ]);
+  
+  /* This use effect is in charge of filtering the users */
+  useEffect(() => {
+    if (checkboxState.students && checkboxState.teachers) {
+      setuserType(["all"]);
+      setuserDisplayArray([...teachers,...students])
+    } else if (checkboxState.students) {
+      setuserType(["students"]);
+      setuserDisplayArray([...students])
+    } else if (checkboxState.teachers) {
+      setuserType(["teachers"]);
+      setuserDisplayArray([...teachers])
+    }
+    /* MISSING DEPENDENCIES: teachers, students */
+    // eslint-disable-next-line
+  }, [checkboxState]);
+  
   return (
     <Container maxWidth="sm" className={classes.myAccountContainer}>
       <Paper className={classes.paper}>
@@ -78,8 +110,28 @@ const UserManager = props => {
         <div className={classes.filterDiv}>
           <Typography>Filter by: </Typography>
           <div className={classes.specificFiltersDiv}>
-            <span>Students</span>
-            <span>Teachers</span>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={checkboxState.students}
+                  onChange={handleCheckboxChange("students")}
+                />
+              }
+              label="Students"
+              labelPlacement="start"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={checkboxState.teachers}
+                  onChange={handleCheckboxChange("teachers")}
+                />
+              }
+              label="Teachers"
+              labelPlacement="start"
+            />
           </div>
         </div>
       </Paper>
