@@ -1,5 +1,8 @@
 /* React Imports */
 import React from "react";
+/* Redux Imports */
+import { useSelector } from "react-redux";
+import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* Material UI Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -66,10 +69,29 @@ const useStyles = makeStyles(theme => ({
 const UserManagement = props => {
   const classes = useStyles();
   const { loaded, redirectDashboard } = props;
-  //   const loaded = false;
+  /* Loads teachers and studets data from Firestore */
+  useFirestoreConnect(() => [
+    {
+      collection: "users",
+      storeAs: "students",
+      where: ["role", "==", "student"]
+    },
+    {
+      collection: "users",
+      storeAs: "teachers",
+      where: ["role", "==", "teacher"]
+    }
+  ]);
+  const students = useSelector(
+    ({ firestore: { ordered } }) => ordered.students
+  );
+  const teachers = useSelector(
+    ({ firestore: { ordered } }) => ordered.teachers
+  );
+
   return (
     <Paper className={classes.paper}>
-      {loaded ? (
+      {loaded && isLoaded(teachers) ? (
         <React.Fragment>
           <div className={classes.title}>
             <Typography>User Management</Typography>
@@ -78,23 +100,30 @@ const UserManagement = props => {
               size="small"
               className={classes.button}
               endIcon={<RedoOutlinedIcon />}
-              onClick={(event)=>{redirectDashboard(event, "/user-manager")}}
+              onClick={event => {
+                redirectDashboard(event, "/user-manager");
+              }}
             >
               Manage Users
             </Button>
-            <IconButton className={classes.iconButton} onClick={(event)=>{redirectDashboard(event, "/user-manager")}}>
+            <IconButton
+              className={classes.iconButton}
+              onClick={event => {
+                redirectDashboard(event, "/user-manager");
+              }}
+            >
               <RedoOutlinedIcon />
             </IconButton>
           </div>
           <div className={classes.usersContainer}>
             <Typography className={classes.typographySubs}>
-              Active Students
+              Active Students: {students.length}
             </Typography>
             <Typography className={classes.typographySubs}>
-              Active Teachers
+              Active Teachers: {teachers.length}
             </Typography>
             <Typography className={classes.typographySubs}>
-              Total Users
+              Total Users: {students.length + teachers.length}
             </Typography>
           </div>
         </React.Fragment>
