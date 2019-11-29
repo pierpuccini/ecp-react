@@ -1,8 +1,8 @@
 /* React imports */
 import React from "react";
 /* Redux Imports */
-import { connect } from "react-redux";
-import * as actions from "../../store/actions/index";
+// import { connect } from "react-redux";
+// import * as actions from "../../store/actions/index";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* App imports */
@@ -40,7 +40,7 @@ const UserManagment = () => {
     );
   }
 
-  return <UserManager />;
+  return <UserManager students={students} teachers={teachers}/>;
 };
 
 export default UserManagment;
