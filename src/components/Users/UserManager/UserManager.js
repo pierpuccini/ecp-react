@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import TextField from "@material-ui/core/TextField";
@@ -13,13 +13,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Button from "@material-ui/core/Button";
 // import Icon from "@material-ui/core/Icon";
 // import InputAdornment from "@material-ui/core/InputAdornment";
-//Animations
-// import Collapse from "@material-ui/core/Collapse";
-//Icons
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined"; // import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
-import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined"; // import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
-import PowerSettingsNewOutlinedIcon from "@material-ui/icons/PowerSettingsNewOutlined";
 /* App Imports */
+import UserCard from './UserCard';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -74,35 +69,47 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignSelf: "center"
+  },
+  deleteButton: {
+    color: theme.palette.error.dark
+  },
+  editUsersPanel: {
+    margin: theme.spacing(2, 0)
   }
 }));
 
 const UserManager = props => {
   const classes = useStyles();
-  const { teachers, students, checkboxState, handleCheckboxChange } = props;
+  const isMobile = useMediaQuery("(max-width: 600px)");
+  const {
+    teachers,
+    students,
+    checkboxState,
+    handleCheckboxChange
+  } = props;
 
   const [userType, setuserType] = useState(["all"]);
   const [userDisplayArray, setuserDisplayArray] = useState([
     ...teachers,
     ...students
   ]);
-  
+
   /* This use effect is in charge of filtering the users */
   useEffect(() => {
     if (checkboxState.students && checkboxState.teachers) {
       setuserType(["all"]);
-      setuserDisplayArray([...teachers,...students])
+      setuserDisplayArray([...teachers, ...students]);
     } else if (checkboxState.students) {
       setuserType(["students"]);
-      setuserDisplayArray([...students])
+      setuserDisplayArray([...students]);
     } else if (checkboxState.teachers) {
       setuserType(["teachers"]);
-      setuserDisplayArray([...teachers])
+      setuserDisplayArray([...teachers]);
     }
     /* MISSING DEPENDENCIES: teachers, students */
     // eslint-disable-next-line
   }, [checkboxState]);
-  
+
   return (
     <Container maxWidth="sm" className={classes.myAccountContainer}>
       <Paper className={classes.paper}>
@@ -144,32 +151,7 @@ const UserManager = props => {
       </Typography>
       {userDisplayArray.map(user => {
         return (
-          <Paper className={classes.paper} key={user.id}>
-            <div className={classes.userCard}>
-              <div className={classes.nameAndRole}>
-                <Typography className={classes.userNameAndRole}>
-                  {user.displayName}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  className={classes.userNameAndRole}
-                >
-                  {user.role}
-                </Typography>
-              </div>
-              <div className={classes.userActions}>
-                <IconButton aria-label="edit" color="primary">
-                  <EditOutlinedIcon />
-                </IconButton>
-                <IconButton aria-label="inactivate">
-                  <PowerSettingsNewOutlinedIcon />
-                </IconButton>
-                <IconButton aria-label="delete" style={{ color: "#d32f2f" }}>
-                  <DeleteOutlineOutlinedIcon />
-                </IconButton>
-              </div>
-            </div>
-          </Paper>
+          <UserCard key={user.id} user={user} isMobile={isMobile}/>
         );
       })}
     </Container>
