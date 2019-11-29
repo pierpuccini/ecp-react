@@ -55,12 +55,13 @@ const useStyles = makeStyles(theme => ({
 
 const UserCard = props => {
   const classes = useStyles();
-  const { user, isMobile } = props;
+  const { user, isMobile, isChanging } = props;
 
   const [editToggle, seteditToggle] = useState(false);
 
   let editToggleCopy;
   const userActionsHandler = action => {
+    isChanging(action, user)
     if (action === "edit") {
       editToggleCopy = editToggle;
       seteditToggle(!editToggleCopy);

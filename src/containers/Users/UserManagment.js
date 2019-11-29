@@ -15,6 +15,9 @@ const UserManagment = () => {
     teachers: true
   });
 
+  const [selectedUser, setselectedUser] = useState(null);
+  const [openCard, setopenCard] = useState(false);
+
   /* Loads teachers and studets data from Firestore */
   useFirestoreConnect(() => [
     {
@@ -48,12 +51,31 @@ const UserManagment = () => {
     setcheckboxState({ ...checkboxState, [name]: event.target.checked });
   };
 
+  let openCardCopy;
+  const openCardHandler = () => {
+    openCardCopy = !openCard;
+    setopenCard(openCardCopy);
+  };
+
+  const cardChangedHandler = (action, user) => {
+    console.log("action", action);
+    console.log("user", user);
+    setselectedUser(user);
+    if (action === "edit") {
+      openCardHandler();
+    }
+  };
+
   return (
     <UserManager
       students={students}
       teachers={teachers}
       checkboxState={checkboxState}
       handleCheckboxChange={handleCheckboxChange}
+      cardChangedHandler={cardChangedHandler}
+      selectedUser={selectedUser}
+      openCard={openCard}
+      openCardHandler={openCardHandler}
     />
   );
 };

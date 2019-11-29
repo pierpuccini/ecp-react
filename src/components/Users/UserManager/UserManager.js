@@ -14,7 +14,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Icon from "@material-ui/core/Icon";
 // import InputAdornment from "@material-ui/core/InputAdornment";
 /* App Imports */
-import UserCard from './UserCard';
+import UserCard from "./UserCard";
+import SideCollapseCard from "../../UI/SideCollapseCard/SideCollapseCard";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -85,7 +86,11 @@ const UserManager = props => {
     teachers,
     students,
     checkboxState,
-    handleCheckboxChange
+    handleCheckboxChange,
+    cardChangedHandler,
+    selectedUser,
+    openCard,
+    openCardHandler
   } = props;
 
   const [userType, setuserType] = useState(["all"]);
@@ -111,54 +116,76 @@ const UserManager = props => {
   }, [checkboxState]);
 
   return (
-    <Container maxWidth="sm" className={classes.myAccountContainer}>
-      <Paper className={classes.paper}>
-        <Typography>User Accounts</Typography>
-        <div className={classes.filterDiv}>
-          <Typography>Filter by: </Typography>
-          <div className={classes.specificFiltersDiv}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={checkboxState.students}
-                  onChange={handleCheckboxChange("students")}
-                />
-              }
-              label="Students"
-              labelPlacement="start"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={checkboxState.teachers}
-                  onChange={handleCheckboxChange("teachers")}
-                />
-              }
-              label="Teachers"
-              labelPlacement="start"
-            />
+    <React.Fragment>
+      <Container maxWidth="sm">
+        <Paper className={classes.paper}>
+          <Typography>User Accounts</Typography>
+          <div className={classes.filterDiv}>
+            <Typography>Filter by: </Typography>
+            <div className={classes.specificFiltersDiv}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    color="primary"
+                    checked={checkboxState.students}
+                    onChange={handleCheckboxChange("students")}
+                  />
+                }
+                label="Students"
+                labelPlacement="start"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    color="primary"
+                    checked={checkboxState.teachers}
+                    onChange={handleCheckboxChange("teachers")}
+                  />
+                }
+                label="Teachers"
+                labelPlacement="start"
+              />
+            </div>
           </div>
-        </div>
-      </Paper>
-      <Typography>
-        {userType.includes("all")
-          ? "All Users"
-          : userType.includes("students")
-          ? "Students"
-          : "Teachers"}
-      </Typography>
-      {userDisplayArray.map(user => {
-        return (
-          <UserCard key={user.id} user={user} isMobile={isMobile}/>
-        );
-      })}
-    </Container>
+        </Paper>
+        <Typography>
+          {userType.includes("all")
+            ? "All Users"
+            : userType.includes("students")
+            ? "Students"
+            : "Teachers"}
+        </Typography>
+        {userDisplayArray.map(user => {
+          return (
+            <UserCard
+              key={user.id}
+              user={user}
+              isMobile={isMobile}
+              isChanging={cardChangedHandler}
+            />
+          );
+        })}
+      </Container>
+      {!isMobile && openCard ? (
+        <SideCollapseCard
+          isMobile={isMobile}
+          user={selectedUser}
+          openCard={openCard}
+          openCardHandler={openCardHandler}
+        />
+      ) : null}
+    </React.Fragment>
   );
 };
 
 export default UserManager;
+
+// className={classes.sideEditorContainer}
+// sideEditorContainer: {
+//   [theme.breakpoints.up("sm")]: {
+//     display: "none"
+//   }
+// },
 
 // <form onSubmit={props.submitHandler}>
 //           <div className={classes.container}>
