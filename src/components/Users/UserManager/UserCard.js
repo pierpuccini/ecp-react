@@ -60,13 +60,20 @@ const useStyles = makeStyles(theme => ({
 
 const UserCard = props => {
   const classes = useStyles();
-  const { user, isMobile, isChanging } = props;
+  const {
+    user,
+    isMobile,
+    isChanging,
+    clients,
+    userManagerEditor,
+    inputChangedHandler
+  } = props;
 
   const [editToggle, seteditToggle] = useState(false);
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   let editToggleCopy;
-  const userActionsHandler = (action) => {
+  const userActionsHandler = action => {
     if (action === "edit") {
       editToggleCopy = editToggle;
       isChanging(action, user);
@@ -112,7 +119,13 @@ const UserCard = props => {
       </div>
       <Collapse in={editToggle && isMobile} timeout="auto">
         <div className={classes.editUsersPanel}>
-          <EditUsersCard user={user} openCardHandler={userActionsHandler} />
+          <EditUsersCard
+            user={user}
+            openCardHandler={userActionsHandler}
+            clients={clients}
+            userManagerEditor={userManagerEditor}
+            inputChangedHandler={inputChangedHandler}
+          />
         </div>
       </Collapse>
     </Paper>

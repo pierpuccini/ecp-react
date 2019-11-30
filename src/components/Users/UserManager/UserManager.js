@@ -99,6 +99,9 @@ const UserManager = props => {
   const {
     teachers,
     students,
+    clients,
+    userManagerEditor,
+    inputChangedHandler,
     checkboxState,
     handleCheckboxChange,
     cardChangedHandler,
@@ -180,15 +183,22 @@ const UserManager = props => {
                 user={user}
                 isMobile={isMobile}
                 isChanging={cardChangedHandler}
+                clients={clients}
+                userManagerEditor={userManagerEditor}
+                inputChangedHandler={inputChangedHandler}
               />
             );
           })}
         </div>
         {!isMobile && openCard ? (
-          <SideCollapseCard
-            openCard={openCard}
-          >
-            <EditUsersCard openCardHandler={openCardHandler} user={selectedUser} />
+          <SideCollapseCard openCard={openCard}>
+            <EditUsersCard
+              openCardHandler={openCardHandler}
+              user={selectedUser}
+              clients={clients}
+              userManagerEditor={userManagerEditor}
+              inputChangedHandler={inputChangedHandler}
+            />
           </SideCollapseCard>
         ) : null}
       </div>

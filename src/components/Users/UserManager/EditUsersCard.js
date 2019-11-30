@@ -4,6 +4,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -13,12 +14,27 @@ const useStyles = makeStyles(theme => ({
   inputsContainer: {
     display: "flex",
     flexDirection: "column"
+  },
+  MuiMenuList: {
+    width: "auto !important"
   }
 }));
 
 const EditUsersCard = props => {
   const classes = useStyles();
-  const { user, openCardHandler } = props;
+  const {
+    user,
+    openCardHandler,
+    clients,
+    userManagerEditor,
+    inputChangedHandler
+  } = props;
+
+  clients.sort((a, b) => {
+    var textA = a.value.toUpperCase();
+    var textB = b.value.toUpperCase();
+    return textA < textB ? -1 : textA > textB ? 1 : 0;
+  });
 
   return (
     <div>
@@ -28,20 +44,32 @@ const EditUsersCard = props => {
         <TextField
           className={classes.textField}
           label="Institution"
-          placeholder="Universidad"
-          type="text"
-          value
-          onChange={event => props.inputChangedHandler(event, "displayName")}
+          select
+          placeholder="Select Your Institution"
+          value={userManagerEditor.institution.value.id}
+          onChange={event => {
+            inputChangedHandler(event, "institution");
+          }}
           margin="normal"
           variant="outlined"
-        />
+        >
+          {clients.map(option => (
+            <MenuItem
+              className={classes.MuiMenuList}
+              key={option.id}
+              value={option.id}
+            >
+              {option.value}
+            </MenuItem>
+          ))}
+        </TextField>
         <TextField
           className={classes.textField}
           label="Role"
           placeholder="Admin"
           type="text"
-          value
-          onChange={event => props.inputChangedHandler(event, "displayName")}
+          value={userManagerEditor.role.value}
+          onChange={event => inputChangedHandler(event, "role")}
           margin="normal"
           variant="outlined"
         />
