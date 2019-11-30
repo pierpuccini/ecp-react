@@ -17,6 +17,9 @@ const useStyles = makeStyles(theme => ({
   },
   MuiMenuList: {
     width: "auto !important"
+  },
+  userDisplayName: {
+    textTransform: "capitalize"
   }
 }));
 
@@ -54,7 +57,9 @@ const EditUsersCard = props => {
   return (
     <div>
       <Typography>Editing user</Typography>
-      {user.displayName}
+      <div className={classes.userDisplayName}>
+        {user.displayName}
+      </div>
       <div className={classes.inputsContainer}>
         <TextField
           className={classes.textField}
