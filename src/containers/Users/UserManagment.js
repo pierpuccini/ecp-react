@@ -51,18 +51,21 @@ const UserManagment = () => {
     setcheckboxState({ ...checkboxState, [name]: event.target.checked });
   };
 
-  let openCardCopy;
-  const openCardHandler = () => {
-    openCardCopy = !openCard;
-    setopenCard(openCardCopy);
+  const openCardHandler = action => {
+    if (action === "open") {
+      setopenCard(true);
+    } else {
+      setopenCard(false);
+    }
   };
 
   const cardChangedHandler = (action, user) => {
     console.log("action", action);
     console.log("user", user);
     setselectedUser(user);
-    if (action === "edit") {
-      openCardHandler();
+    //Opens the card if the edit button is triggerd and card is closed
+    if (action === "edit" && !openCard) {
+      openCardHandler("open");
     }
   };
 

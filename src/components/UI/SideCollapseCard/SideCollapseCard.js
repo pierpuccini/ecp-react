@@ -30,7 +30,7 @@ const SideCollapseCard = props => {
     return (
       <Grow in={openCard}>
         <Paper className={classes.paper}>
-          <button onClick={openCardHandler}>Close card</button>
+          <button onClick={() => {openCardHandler('close')}}>Close card</button>
           <Typography>Editing user</Typography>
           {user.displayName}
         </Paper>
