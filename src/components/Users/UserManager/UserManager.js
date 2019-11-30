@@ -93,6 +93,8 @@ const useStyles = makeStyles(theme => ({
 const UserManager = props => {
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width: 600px)");
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
   const {
     teachers,
     students,
@@ -128,7 +130,7 @@ const UserManager = props => {
 
   return (
     <Container>
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} style={(prefersDarkMode)?{border: "unset"}:null}>
         <Typography>User Accounts</Typography>
         <div className={classes.filterDiv}>
           <Typography>Filter by: </Typography>
