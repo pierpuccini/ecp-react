@@ -14,8 +14,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import Icon from "@material-ui/core/Icon";
 // import InputAdornment from "@material-ui/core/InputAdornment";
 /* App Imports */
-import UserCard from "./UserCard";
 import SideCollapseCard from "../../UI/SideCollapseCard/SideCollapseCard";
+import UserCard from "./UserCard";
+import EditUsersCard from "./EditUsersCard";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -130,7 +131,10 @@ const UserManager = props => {
 
   return (
     <Container>
-      <Paper className={classes.paper} style={(prefersDarkMode)?{border: "unset"}:null}>
+      <Paper
+        className={classes.paper}
+        style={prefersDarkMode ? { border: "unset" } : null}
+      >
         <Typography>User Accounts</Typography>
         <div className={classes.filterDiv}>
           <Typography>Filter by: </Typography>
@@ -171,7 +175,7 @@ const UserManager = props => {
         <div className={classes.userCardSection}>
           {userDisplayArray.map(user => {
             return (
-              <UserCard 
+              <UserCard
                 key={user.id}
                 user={user}
                 isMobile={isMobile}
@@ -182,11 +186,10 @@ const UserManager = props => {
         </div>
         {!isMobile && openCard ? (
           <SideCollapseCard
-            isMobile={isMobile}
-            user={selectedUser}
             openCard={openCard}
-            openCardHandler={openCardHandler}
-          />
+          >
+            <EditUsersCard openCardHandler={openCardHandler} user={selectedUser} />
+          </SideCollapseCard>
         ) : null}
       </div>
     </Container>
@@ -194,27 +197,3 @@ const UserManager = props => {
 };
 
 export default UserManager;
-
-// className={classes.sideEditorContainer}
-// sideEditorContainer: {
-//   [theme.breakpoints.up("sm")]: {
-//     display: "none"
-//   }
-// },
-
-// <form onSubmit={props.submitHandler}>
-//           <div className={classes.container}>
-//             <TextField
-//               className={classes.textField}
-//               label="Full Name"
-//               placeholder="John Doe"
-//               type="text"
-//               value
-//               onChange={event =>
-//                 props.inputChangedHandler(event, "displayName")
-//               }
-//               margin="normal"
-//               variant="outlined"
-//             />
-//           </div>
-//         </form>

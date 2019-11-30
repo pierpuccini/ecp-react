@@ -12,6 +12,8 @@ import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined"
 import PowerSettingsNewOutlinedIcon from "@material-ui/icons/PowerSettingsNewOutlined";
 //Animations
 import Collapse from "@material-ui/core/Collapse";
+/* App Imports */
+import EditUsersCard from "./EditUsersCard";
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -64,16 +66,23 @@ const UserCard = props => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   let editToggleCopy;
-  const userActionsHandler = action => {
-    isChanging(action, user)
+  const userActionsHandler = (action) => {
     if (action === "edit") {
       editToggleCopy = editToggle;
+      isChanging(action, user);
       seteditToggle(!editToggleCopy);
+    }
+    if (action === "close") {
+      editToggleCopy = false;
+      seteditToggle(false);
     }
   };
 
   return (
-    <Paper className={classes.paper} style={(prefersDarkMode)?{border: "unset"}:null}>
+    <Paper
+      className={classes.paper}
+      style={prefersDarkMode ? { border: "unset" } : null}
+    >
       <div className={classes.userCard}>
         <div className={classes.nameAndRole}>
           <Typography className={classes.userNameAndRole}>
@@ -103,7 +112,7 @@ const UserCard = props => {
       </div>
       <Collapse in={editToggle && isMobile} timeout="auto">
         <div className={classes.editUsersPanel}>
-          <Typography>Editing users</Typography>
+          <EditUsersCard user={user} openCardHandler={userActionsHandler} />
         </div>
       </Collapse>
     </Paper>
