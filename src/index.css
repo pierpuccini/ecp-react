@@ -71,3 +71,7 @@ input[type=number] {
 .MuiSnackbarContent-root{
   flex-wrap: unset !important;
 }
+
+.MuiSnackbar-anchorOriginBottomCenter{
+  bottom: 20px !important;
+}
