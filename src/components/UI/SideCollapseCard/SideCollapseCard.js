@@ -2,7 +2,6 @@
 import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 //Animations
@@ -30,15 +29,11 @@ const SideCollapseCard = props => {
   } else {
     return (
       <Grow in={openCard}>
-        <Container maxWidth="sm">
-          <Paper className={classes.paper}>
-            <button onClick={openCardHandler}>
-              Close card
-            </button>
-            <Typography>Editing user</Typography>
-            {user.displayName}
-          </Paper>
-        </Container>
+        <Paper className={classes.paper}>
+          <button onClick={openCardHandler}>Close card</button>
+          <Typography>Editing user</Typography>
+          {user.displayName}
+        </Paper>
       </Grow>
     );
   }

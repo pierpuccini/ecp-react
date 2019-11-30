@@ -76,6 +76,15 @@ const useStyles = makeStyles(theme => ({
   },
   editUsersPanel: {
     margin: theme.spacing(2, 0)
+  },
+  userEditSection: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  userCardSection: {
+    flexDirection: "column",
+    display: "flex",
+    flexGrow: 1
   }
 }));
 
@@ -116,65 +125,67 @@ const UserManager = props => {
   }, [checkboxState]);
 
   return (
-    <React.Fragment>
-      <Container maxWidth="sm">
-        <Paper className={classes.paper}>
-          <Typography>User Accounts</Typography>
-          <div className={classes.filterDiv}>
-            <Typography>Filter by: </Typography>
-            <div className={classes.specificFiltersDiv}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="primary"
-                    checked={checkboxState.students}
-                    onChange={handleCheckboxChange("students")}
-                  />
-                }
-                label="Students"
-                labelPlacement="start"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="primary"
-                    checked={checkboxState.teachers}
-                    onChange={handleCheckboxChange("teachers")}
-                  />
-                }
-                label="Teachers"
-                labelPlacement="start"
-              />
-            </div>
-          </div>
-        </Paper>
-        <Typography>
-          {userType.includes("all")
-            ? "All Users"
-            : userType.includes("students")
-            ? "Students"
-            : "Teachers"}
-        </Typography>
-        {userDisplayArray.map(user => {
-          return (
-            <UserCard
-              key={user.id}
-              user={user}
-              isMobile={isMobile}
-              isChanging={cardChangedHandler}
+    <Container>
+      <Paper className={classes.paper}>
+        <Typography>User Accounts</Typography>
+        <div className={classes.filterDiv}>
+          <Typography>Filter by: </Typography>
+          <div className={classes.specificFiltersDiv}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={checkboxState.students}
+                  onChange={handleCheckboxChange("students")}
+                />
+              }
+              label="Students"
+              labelPlacement="start"
             />
-          );
-        })}
-      </Container>
-      {!isMobile && openCard ? (
-        <SideCollapseCard
-          isMobile={isMobile}
-          user={selectedUser}
-          openCard={openCard}
-          openCardHandler={openCardHandler}
-        />
-      ) : null}
-    </React.Fragment>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={checkboxState.teachers}
+                  onChange={handleCheckboxChange("teachers")}
+                />
+              }
+              label="Teachers"
+              labelPlacement="start"
+            />
+          </div>
+        </div>
+      </Paper>
+      <Typography>
+        {userType.includes("all")
+          ? "All Users"
+          : userType.includes("students")
+          ? "Students"
+          : "Teachers"}
+      </Typography>
+      <div className={classes.userEditSection}>
+        <div className={classes.userCardSection}>
+          {userDisplayArray.map(user => {
+            return (
+              <UserCard
+                key={user.id}
+                user={user}
+                isMobile={isMobile}
+                isChanging={cardChangedHandler}
+              />
+            );
+          })}
+        </div>
+        {!isMobile && openCard ? (
+          <SideCollapseCard
+            isMobile={isMobile}
+            user={selectedUser}
+            openCard={openCard}
+            openCardHandler={openCardHandler}
+          />
+        ) : null}
+      </div>
+    </Container>
   );
 };
 
