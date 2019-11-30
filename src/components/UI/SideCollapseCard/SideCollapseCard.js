@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
     [theme.breakpoints.down("sm")]: {
-      "box-shadow": "unset"
+      boxShadow: "unset"
     }
   }
 }));

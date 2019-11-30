@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
@@ -26,8 +27,10 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
+    border: "unset",
     [theme.breakpoints.down("sm")]: {
-      "box-shadow": "unset"
+      boxShadow: "unset",
+      border: "2px solid"
     }
   },
   userCard: {
@@ -58,6 +61,7 @@ const UserCard = props => {
   const { user, isMobile, isChanging } = props;
 
   const [editToggle, seteditToggle] = useState(false);
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   let editToggleCopy;
   const userActionsHandler = action => {
@@ -69,7 +73,7 @@ const UserCard = props => {
   };
 
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} style={(prefersDarkMode)?{border: "unset"}:null}>
       <div className={classes.userCard}>
         <div className={classes.nameAndRole}>
           <Typography className={classes.userNameAndRole}>

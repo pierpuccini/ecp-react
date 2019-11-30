@@ -167,7 +167,7 @@ const UserManager = props => {
         <div className={classes.userCardSection}>
           {userDisplayArray.map(user => {
             return (
-              <UserCard
+              <UserCard 
                 key={user.id}
                 user={user}
                 isMobile={isMobile}
