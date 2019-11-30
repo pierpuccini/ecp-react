@@ -12,18 +12,11 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
     border: "unset",
+    minWidth: "255px",
     [theme.breakpoints.down("sm")]: {
       boxShadow: "unset",
       border: "2px solid"
     }
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
-  },
-  inputsContainer: {
-    display: "flex",
-    flexDirection: "column"
   }
 }));
 

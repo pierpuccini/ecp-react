@@ -36,6 +36,21 @@ const EditUsersCard = props => {
     return textA < textB ? -1 : textA > textB ? 1 : 0;
   });
 
+  const roles = [
+    {
+      id: 1,
+      value: "admin"
+    },
+    {
+      id: 2,
+      value: "teacher"
+    },
+    {
+      id: 3,
+      value: "student"
+    }
+  ];
+
   return (
     <div>
       <Typography>Editing user</Typography>
@@ -72,7 +87,18 @@ const EditUsersCard = props => {
           onChange={event => inputChangedHandler(event, "role")}
           margin="normal"
           variant="outlined"
-        />
+          select
+        >
+          {roles.map(option => (
+            <MenuItem
+              className={classes.MuiMenuList}
+              key={option.id}
+              value={option.value}
+            >
+              {option.value}
+            </MenuItem>
+          ))}
+        </TextField>
       </div>
       <button
         onClick={() => {

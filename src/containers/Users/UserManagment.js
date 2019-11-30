@@ -83,8 +83,8 @@ const UserManagment = () => {
   };
 
   //TODO: Remove when accepting more than 1 institution
-  //Incharge of assigning an institution the the state
-  const whichInstitutions = institutions => {
+  //Incharge of assigning an institution the the state and users role on user selection
+  const updateEditorInputs = (institutions, role) => {
     let institutionsArr, updatedControls;
     institutionsArr =
       institutions.length === 0 || institutions == null
@@ -97,6 +97,11 @@ const UserManagment = () => {
         value: { id: institutionsArr.id, value: institutionsArr.value },
         valid: false,
         touched: false
+      }),
+      role: updateObject(userManagerEditor.role, {
+        value: role,
+        valid: false,
+        touched: false
       })
     });
     setuserManagerEditor(updatedControls);
@@ -104,7 +109,7 @@ const UserManagment = () => {
 
   //Incharge of relying the changed information
   const cardChangedHandler = (action, user) => {
-    whichInstitutions(user.institutions);
+    updateEditorInputs(user.institutions, user.role);
     setselectedUser(user);
     //Opens the card if the edit button is triggerd and card is closed
     if (action === "edit" && !openCard) {
