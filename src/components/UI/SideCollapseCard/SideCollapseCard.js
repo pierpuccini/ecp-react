@@ -11,10 +11,12 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
+    border: "unset",
     [theme.breakpoints.down("sm")]: {
-      boxShadow: "unset"
+      boxShadow: "unset",
+      border: "2px solid"
     }
-  }
+  },
 }));
 
 const SideCollapseCard = props => {

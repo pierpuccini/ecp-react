@@ -41,8 +41,10 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
+    border: "unset",
     [theme.breakpoints.down("sm")]: {
-      "box-shadow": "unset"
+      boxShadow: "unset",
+      border: "2px solid"
     }
   },
   MuiMenuList: {
