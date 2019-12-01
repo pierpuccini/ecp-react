@@ -5,12 +5,35 @@ import React, { useState } from "react";
 // import * as actions from "../../store/actions/index";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
+/* Material Imports */
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import { amber } from "@material-ui/core/colors";
+//Icons
+import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
 /* App imports */
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import UserManager from "../../components/Users/UserManager/UserManager";
-// import { updateObject, checkValidity } from "../../shared/utility";
+import Modal from "../../components/UI/Modal/Modal";
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1)
+  },
+  modalHeader: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  modalActions: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
+  }
+}));
 
 const UserManagment = () => {
+  const classes = useStyles();
+
   const [checkboxState, setcheckboxState] = useState({
     students: true,
     teachers: true
@@ -18,6 +41,8 @@ const UserManagment = () => {
 
   const [selectedUser, setselectedUser] = useState(null);
   const [openCard, setopenCard] = useState(false);
+  const [openAdminChangeModal, setopenAdminChangeModal] = useState(false);
+  const [localTemp, setlocalTemp] = useState(null);
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
@@ -71,27 +96,99 @@ const UserManagment = () => {
     if (action === "edit" && !openCard) {
       openCardHandler("open");
     }
-    if (action === 'save') {
+    if (action === "save") {
+      if (changedFields.role.value === "admin") {
+        setlocalTemp({
+          user: user,
+          changedFields: changedFields
+        });
+        setopenAdminChangeModal(true);
+      } else {
+        console.log("saved", changedFields, user);
         openCardHandler(action);
-        if (changedFields.role.value === 'admin') {
-            console.log('are you sure you want to make this user an admin?');
-        }
-        console.log('saving');
+      }
+    }
+    if (action === "confirmAdminChange") {
+      openCardHandler(false);
+      handleModal("cancel");
+      console.log("saved", changedFields, user);
     }
   };
 
+  /* Handles modal on create succes */
+  const handleModal = action => {
+    if (action === "continue") {
+      openCardHandler("confirmAdminChange");
+      setopenAdminChangeModal(false);
+    } else {
+      setopenAdminChangeModal(false);
+    }
+  };
+
+  const modalTemplate = (
+    <div>
+      <div className={classes.modalHeader}>
+        <ReportProblemOutlinedIcon
+          style={{ alignSelf: "center", marginRight: "8px", color: amber[700] }}
+        />
+        <h2 style={{ color: amber[700] }}>Warning!!</h2>
+      </div>
+      <p>Are you sure you want to convert this user to admin?</p>
+      <p style={{ textAlign: "center" }}>THIS CHANGE IS NOT REVERSIBLE</p>
+      <div className={classes.modalActions}>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          type="submit"
+          style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+          onClick={() => {
+            handleModal("cancel");
+          }}
+        >
+          cancel
+        </Button>
+        <Button
+          className={classes.button}
+          variant="contained"
+          style={{ backgroundColor: amber[700] }}
+          type="submit"
+          onClick={() => {
+            cardChangedHandler(
+              "confirmAdminChange",
+              localTemp.user,
+              localTemp.changedFields
+            );
+          }}
+        >
+          Proceed at your own risk
+        </Button>
+      </div>
+    </div>
+  );
+
   return (
-    <UserManager
-      students={students}
-      teachers={teachers}
-      clients={clients}
-      checkboxState={checkboxState}
-      handleCheckboxChange={handleCheckboxChange}
-      cardChangedHandler={cardChangedHandler}
-      selectedUser={selectedUser}
-      openCard={openCard}
-      openCardHandler={openCardHandler}
-    />
+    <React.Fragment>
+      <Modal
+        openModal={openAdminChangeModal}
+        closeModal={() => {
+          handleModal();
+        }}
+      >
+        {modalTemplate}
+      </Modal>
+      <UserManager
+        students={students}
+        teachers={teachers}
+        clients={clients}
+        checkboxState={checkboxState}
+        handleCheckboxChange={handleCheckboxChange}
+        cardChangedHandler={cardChangedHandler}
+        selectedUser={selectedUser}
+        openCard={openCard}
+        openCardHandler={openCardHandler}
+      />
+    </React.Fragment>
   );
 };
 

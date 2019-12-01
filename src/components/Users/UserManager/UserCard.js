@@ -140,6 +140,7 @@ const UserCard = props => {
     if (openCard) {
       updateEditorInputs(user.institutions, user.role);
     }
+    // eslint-disable-next-line
   }, [user]);
 
   //Incharge of changing the state for the editor inputs
