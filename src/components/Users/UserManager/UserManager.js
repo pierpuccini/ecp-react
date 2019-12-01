@@ -167,7 +167,7 @@ const UserManager = props => {
           </div>
         </div>
       </Paper>
-      <Typography>
+      <Typography style={{margin: "0px 16px"}}>
         {userType.includes("all")
           ? "All Users"
           : userType.includes("students")

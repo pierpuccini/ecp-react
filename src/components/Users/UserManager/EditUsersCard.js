@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -20,6 +21,20 @@ const useStyles = makeStyles(theme => ({
   },
   userDisplayName: {
     textTransform: "capitalize"
+  },
+  button: {
+    margin: theme.spacing(1)
+  },
+  editCardContainer: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between"
+  },
+  editActions: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
   }
 }));
 
@@ -30,7 +45,8 @@ const EditUsersCard = props => {
     openCardHandler,
     clients,
     userManagerEditor,
-    inputChangedHandler
+    inputChangedHandler,
+    isMobile
   } = props;
 
   clients.sort((a, b) => {
@@ -55,11 +71,13 @@ const EditUsersCard = props => {
   ];
 
   return (
-    <div>
-      <Typography>Editing user</Typography>
-      <div className={classes.userDisplayName}>
-        {user.displayName}
-      </div>
+    <div className={classes.editCardContainer}>
+      {isMobile ? null : (
+        <div className={classes.editCardHeader}>
+          <Typography>Editing user</Typography>
+          <div className={classes.userDisplayName}>{user.displayName}</div>
+        </div>
+      )}
       <div className={classes.inputsContainer}>
         <TextField
           className={classes.textField}
@@ -105,13 +123,27 @@ const EditUsersCard = props => {
           ))}
         </TextField>
       </div>
-      <button
-        onClick={() => {
-          openCardHandler("close");
-        }}
-      >
-        Close card
-      </button>
+      <div className={classes.editActions}>
+        <Button
+          variant="contained"
+          className={classes.button}
+          onClick={() => {
+            openCardHandler("close");
+          }}
+          size="small"
+          style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+        >
+          Cancel
+        </Button>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          size="small"
+        >
+          Save
+        </Button>
+      </div>
     </div>
   );
 };

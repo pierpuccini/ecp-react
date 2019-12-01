@@ -120,6 +120,7 @@ const UserCard = props => {
       <Collapse in={editToggle && isMobile} timeout="auto">
         <div className={classes.editUsersPanel}>
           <EditUsersCard
+            isMobile
             user={user}
             openCardHandler={userActionsHandler}
             clients={clients}
