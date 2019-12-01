@@ -22,7 +22,8 @@ const useStyles = makeStyles(theme => ({
   },
   modalHeader: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    justifyContent: "center"
   },
   modalActions: {
     display: "flex",
@@ -131,7 +132,7 @@ const UserManagment = () => {
         <ReportProblemOutlinedIcon
           style={{ alignSelf: "center", marginRight: "8px", color: amber[700] }}
         />
-        <h2 style={{ color: amber[700] }}>Warning!!</h2>
+        <h2 style={{ color: amber[700] }}>Warning!</h2>
       </div>
       <p>Are you sure you want to convert this user to admin?</p>
       <p style={{ textAlign: "center" }}>THIS CHANGE IS NOT REVERSIBLE</p>
@@ -140,7 +141,7 @@ const UserManagment = () => {
           className={classes.button}
           variant="contained"
           color="primary"
-          type="submit"
+          size="small"
           style={{ backgroundColor: "#f44336", color: "#ffffff" }}
           onClick={() => {
             handleModal("cancel");
@@ -152,7 +153,7 @@ const UserManagment = () => {
           className={classes.button}
           variant="contained"
           style={{ backgroundColor: amber[700] }}
-          type="submit"
+          size="small"
           onClick={() => {
             cardChangedHandler(
               "confirmAdminChange",
