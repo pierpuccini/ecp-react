@@ -8,7 +8,7 @@ import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* App imports */
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import UserManager from "../../components/Users/UserManager/UserManager";
-import { updateObject, checkValidity } from "../../shared/utility";
+// import { updateObject, checkValidity } from "../../shared/utility";
 
 const UserManagment = () => {
   const [checkboxState, setcheckboxState] = useState({
@@ -19,22 +19,22 @@ const UserManagment = () => {
   const [selectedUser, setselectedUser] = useState(null);
   const [openCard, setopenCard] = useState(false);
 
-  const [userManagerEditor, setuserManagerEditor] = useState({
-    role: {
-      value: "",
-      validation: {
-        isName: true
-      },
-      valid: false,
-      touched: false
-    },
-    institution: {
-      value: { id: "", value: "" },
-      validation: {},
-      valid: false,
-      touched: false
-    }
-  });
+//   const [userManagerEditor, setuserManagerEditor] = useState({
+//     role: {
+//       value: "",
+//       validation: {
+//         isName: true
+//       },
+//       valid: false,
+//       touched: false
+//     },
+//     institution: {
+//       value: { id: "", value: "" },
+//       validation: {},
+//       valid: false,
+//       touched: false
+//     }
+//   });
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
@@ -82,85 +82,94 @@ const UserManagment = () => {
     }
   };
 
-  //TODO: Remove when accepting more than 1 institution
-  //Incharge of assigning an institution the the state and users role on user selection
-  const updateEditorInputs = (institutions, role) => {
-    let institutionsArr, updatedControls;
-    institutionsArr =
-      institutions.length === 0 || institutions == null
-        ? { id: "", value: "" }
-        : institutions.length === 1
-        ? institutions[0]
-        : institutions;
-    updatedControls = updateObject(userManagerEditor, {
-      institution: updateObject(userManagerEditor.institution, {
-        value: { id: institutionsArr.id, value: institutionsArr.value },
-        valid: false,
-        touched: false
-      }),
-      role: updateObject(userManagerEditor.role, {
-        value: role,
-        valid: false,
-        touched: false
-      })
-    });
-    setuserManagerEditor(updatedControls);
-  };
+//   //TODO: Remove when accepting more than 1 institution
+//   //Incharge of assigning an institution the the state and users role on user selection
+//   const updateEditorInputs = (institutions, role) => {
+//     let institutionsArr, updatedControls;
+//     institutionsArr =
+//       institutions.length === 0 || institutions == null
+//         ? { id: "", value: "" }
+//         : institutions.length === 1
+//         ? institutions[0]
+//         : institutions;
+//     updatedControls = updateObject(userManagerEditor, {
+//       institution: updateObject(userManagerEditor.institution, {
+//         value: { id: institutionsArr.id, value: institutionsArr.value },
+//         valid: false,
+//         touched: false
+//       }),
+//       role: updateObject(userManagerEditor.role, {
+//         value: role,
+//         valid: false,
+//         touched: false
+//       })
+//     });
+//     setuserManagerEditor(updatedControls);
+//   };
 
   //Incharge of relying the changed information
   const cardChangedHandler = (action, user) => {
-    updateEditorInputs(user.institutions, user.role);
+    // updateEditorInputs(user.institutions, user.role);
     setselectedUser(user);
     //Opens the card if the edit button is triggerd and card is closed
     if (action === "edit" && !openCard) {
       openCardHandler("open");
     }
-  };
-
-  //Incharge of changing the state for the editor inputs
-  const userManagerEditorInputChangedHandler = (event, controlName) => {
-    let updatedControls;
-    if (controlName === "institution") {
-      //Gets the proper institution to push into user profile
-      let selectedClient;
-      clients.forEach(client => {
-        if (client.id === event.target.value) {
-          selectedClient = client;
-        }
-      });
-
-      updatedControls = updateObject(userManagerEditor, {
-        [controlName]: updateObject(userManagerEditor[controlName], {
-          value: selectedClient,
-          valid: checkValidity(
-            event.target.value,
-            userManagerEditor[controlName].validation
-          ),
-          touched: true
-        })
-      });
-    } else {
-      updatedControls = updateObject(userManagerEditor, {
-        [controlName]: updateObject(userManagerEditor[controlName], {
-          value: event.target.value,
-          valid: checkValidity(
-            event.target.value,
-            userManagerEditor[controlName].validation
-          ),
-          touched: true
-        })
-      });
+    if (action === 'save') {
+        openCardHandler(action);
+        // if (userManagerEditor.role.value === 'admin') {
+        //     console.log('user',user);
+        //     console.log('userManagerEditor',userManagerEditor);
+        //     console.log('are you sure you want to change to admin');
+        // }
+        console.log('saving');
     }
-    setuserManagerEditor(updatedControls);
   };
+
+//   //Incharge of changing the state for the editor inputs
+//   const userManagerEditorInputChangedHandler = (event, controlName) => {
+//     let updatedControls;
+//     if (controlName === "institution") {
+//       //Gets the proper institution to push into user profile
+//       let selectedClient;
+//       clients.forEach(client => {
+//         if (client.id === event.target.value) {
+//           selectedClient = client;
+//         }
+//       });
+
+//       updatedControls = updateObject(userManagerEditor, {
+//         [controlName]: updateObject(userManagerEditor[controlName], {
+//           value: selectedClient,
+//           valid: checkValidity(
+//             event.target.value,
+//             userManagerEditor[controlName].validation
+//           ),
+//           touched: true
+//         })
+//       });
+//     } else {
+//       updatedControls = updateObject(userManagerEditor, {
+//         [controlName]: updateObject(userManagerEditor[controlName], {
+//           value: event.target.value,
+//           valid: checkValidity(
+//             event.target.value,
+//             userManagerEditor[controlName].validation
+//           ),
+//           touched: true
+//         })
+//       });
+//     }
+//     setuserManagerEditor(updatedControls);
+//   };
 
   return (
     <UserManager
       students={students}
       teachers={teachers}
       clients={clients}
-      userManagerEditor={userManagerEditor}
-      inputChangedHandler={userManagerEditorInputChangedHandler}
+      /* userManagerEditor={userManagerEditor} */
+      /* inputChangedHandler={userManagerEditorInputChangedHandler} */
       checkboxState={checkboxState}
       handleCheckboxChange={handleCheckboxChange}
       cardChangedHandler={cardChangedHandler}

@@ -16,7 +16,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 /* App Imports */
 import SideCollapseCard from "../../UI/SideCollapseCard/SideCollapseCard";
 import UserCard from "./UserCard";
-import EditUsersCard from "./EditUsersCard";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -100,8 +99,6 @@ const UserManager = props => {
     teachers,
     students,
     clients,
-    userManagerEditor,
-    inputChangedHandler,
     checkboxState,
     handleCheckboxChange,
     cardChangedHandler,
@@ -132,6 +129,7 @@ const UserManager = props => {
     // eslint-disable-next-line
   }, [checkboxState]);
 
+  /* USER CARD IS A SMART COMPONENT IN CASE ERROR ARRISES FROM THERE */
   return (
     <Container>
       <Paper
@@ -167,7 +165,7 @@ const UserManager = props => {
           </div>
         </div>
       </Paper>
-      <Typography style={{margin: "0px 16px"}}>
+      <Typography style={{ margin: "0px 16px" }}>
         {userType.includes("all")
           ? "All Users"
           : userType.includes("students")
@@ -184,20 +182,21 @@ const UserManager = props => {
                 isMobile={isMobile}
                 isChanging={cardChangedHandler}
                 clients={clients}
-                userManagerEditor={userManagerEditor}
-                inputChangedHandler={inputChangedHandler}
+                cardChangedHandler={cardChangedHandler}
               />
             );
           })}
         </div>
         {!isMobile && openCard ? (
           <SideCollapseCard openCard={openCard}>
-            <EditUsersCard
-              openCardHandler={openCardHandler}
+            <UserCard
+              onlyEditUsersCard
+              openCard={openCard}
               user={selectedUser}
+              isChanging={cardChangedHandler}
               clients={clients}
-              userManagerEditor={userManagerEditor}
-              inputChangedHandler={inputChangedHandler}
+              cardChangedHandler={cardChangedHandler}
+              openCardHandler={openCardHandler}
             />
           </SideCollapseCard>
         ) : null}
