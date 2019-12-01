@@ -68,7 +68,6 @@ const UserCard = props => {
     isMobile,
     isChanging,
     clients,
-    cardChangedHandler,
     onlyEditUsersCard,
     openCardHandler,
     openCard
@@ -119,15 +118,21 @@ const UserCard = props => {
 
   let editToggleCopy;
   const userActionsHandler = action => {
-    if (action === "edit") {
-      editToggleCopy = editToggle;
-      isChanging(action, user);
-      updateEditorInputs(user.institutions, user.role);
-      seteditToggle(!editToggleCopy);
-    }
-    if (action === "close") {
-      editToggleCopy = false;
-      seteditToggle(false);
+    switch (action) {
+      case "edit":
+        editToggleCopy = editToggle;
+        isChanging(action, user);
+        updateEditorInputs(user.institutions, user.role);
+        seteditToggle(!editToggleCopy);
+        break;
+      case "save":
+        isChanging(action, user, userManagerEditor);
+        break;
+      case "close":
+        seteditToggle(false);
+        break;
+      default:
+        break;
     }
   };
 
@@ -179,7 +184,7 @@ const UserCard = props => {
         openCardHandler={openCardHandler}
         user={user}
         clients={clients}
-        cardChangedHandler={cardChangedHandler}
+        isChanging={userActionsHandler}
         userManagerEditor={userManagerEditor}
         inputChangedHandler={userManagerEditorInputChangedHandler}
       />
@@ -226,7 +231,7 @@ const UserCard = props => {
               clients={clients}
               userManagerEditor={userManagerEditor}
               inputChangedHandler={userManagerEditorInputChangedHandler}
-              cardChangedHandler={cardChangedHandler}
+              isChanging={userActionsHandler}
             />
           </div>
         </Collapse>

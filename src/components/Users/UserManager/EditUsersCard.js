@@ -47,7 +47,7 @@ const EditUsersCard = props => {
     userManagerEditor,
     inputChangedHandler,
     isMobile,
-    cardChangedHandler
+    isChanging
   } = props;
 
   clients.sort((a, b) => {
@@ -142,7 +142,7 @@ const EditUsersCard = props => {
           color="primary"
           size="small"
           onClick={() => {
-            cardChangedHandler("save", user);
+            isChanging("save", user);
           }}
         >
           Save

@@ -182,7 +182,6 @@ const UserManager = props => {
                 isMobile={isMobile}
                 isChanging={cardChangedHandler}
                 clients={clients}
-                cardChangedHandler={cardChangedHandler}
               />
             );
           })}
@@ -195,7 +194,6 @@ const UserManager = props => {
               user={selectedUser}
               isChanging={cardChangedHandler}
               clients={clients}
-              cardChangedHandler={cardChangedHandler}
               openCardHandler={openCardHandler}
             />
           </SideCollapseCard>
