@@ -1,15 +1,17 @@
 /* React Imports */
-import React from "react";
+import React, { useState } from "react";
 /* Redux Imports */
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* Material UI Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Paper from "@material-ui/core/Paper";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
+import Collapse from "@material-ui/core/Collapse";
 //icons
 import RedoOutlinedIcon from "@material-ui/icons/RedoOutlined";
 
@@ -32,14 +34,9 @@ const useStyles = makeStyles(theme => ({
     }
   },
   usersContainer: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none"
-    },
-    [theme.breakpoints.up("sm")]: {
-      display: "flex",
-      justifyContent: "space-between",
-      paddingTop: theme.spacing(1)
-    }
+    display: "flex",
+    justifyContent: "space-between",
+    paddingTop: theme.spacing(1)
   },
   title: {
     display: "flex",
@@ -69,6 +66,10 @@ const useStyles = makeStyles(theme => ({
 const UserManagement = props => {
   const classes = useStyles();
   const { loaded, redirectDashboard } = props;
+  const isMobile = useMediaQuery("(max-width: 600px)");
+
+  const [checked, setChecked] = useState(false);
+
   /* Loads teachers and studets data from Firestore */
   useFirestoreConnect(() => [
     {
@@ -89,8 +90,17 @@ const UserManagement = props => {
     ({ firestore: { ordered } }) => ordered.teachers
   );
 
+  const handleChange = () => {
+    setChecked(prev => !prev);
+  };
+
   return (
-    <Paper className={classes.paper}>
+    <Paper
+      className={classes.paper}
+      onClick={() => {
+        handleChange();
+      }}
+    >
       {loaded && isLoaded(teachers) ? (
         <React.Fragment>
           <div className={classes.title}>
@@ -115,17 +125,33 @@ const UserManagement = props => {
               <RedoOutlinedIcon />
             </IconButton>
           </div>
-          <div className={classes.usersContainer}>
-            <Typography className={classes.typographySubs}>
-              Active Students: {students.length}
-            </Typography>
-            <Typography className={classes.typographySubs}>
-              Active Teachers: {teachers.length}
-            </Typography>
-            <Typography className={classes.typographySubs}>
-              Total Users: {students.length + teachers.length}
-            </Typography>
-          </div>
+          {isMobile ? (
+            <Collapse in={checked}>
+              <div className={classes.usersContainer}>
+                <Typography className={classes.typographySubs}>
+                  Active Students: {students.length}
+                </Typography>
+                <Typography className={classes.typographySubs}>
+                  Active Teachers: {teachers.length}
+                </Typography>
+                <Typography className={classes.typographySubs}>
+                  Total Users: {students.length + teachers.length}
+                </Typography>
+              </div>
+            </Collapse>
+          ) : (
+            <div className={classes.usersContainer}>
+              <Typography className={classes.typographySubs}>
+                Active Students: {students.length}
+              </Typography>
+              <Typography className={classes.typographySubs}>
+                Active Teachers: {teachers.length}
+              </Typography>
+              <Typography className={classes.typographySubs}>
+                Total Users: {students.length + teachers.length}
+              </Typography>
+            </div>
+          )}
         </React.Fragment>
       ) : (
         <React.Fragment>
