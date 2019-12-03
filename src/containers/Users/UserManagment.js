@@ -1,8 +1,8 @@
 /* React imports */
 import React, { useState } from "react";
 /* Redux Imports */
-// import { connect } from "react-redux";
-// import * as actions from "../../store/actions/index";
+import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* Material Imports */
@@ -12,6 +12,7 @@ import { amber } from "@material-ui/core/colors";
 //Icons
 import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
 /* App imports */
+import { stateToPayload } from "../../shared/utility";
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import UserManager from "../../components/Users/UserManager/UserManager";
 import Modal from "../../components/UI/Modal/Modal";
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserManagment = () => {
+const UserManagment = (props) => {
   const classes = useStyles();
 
   const [checkboxState, setcheckboxState] = useState({
@@ -105,7 +106,9 @@ const UserManagment = () => {
         });
         setopenAdminChangeModal(true);
       } else {
-        console.log("saved", changedFields, user);
+        const payload = {userId: user.id,...stateToPayload(changedFields)}
+        console.log("saved payload", payload);
+        props.userManager(payload)
         openCardHandler(action);
       }
     }
@@ -193,4 +196,16 @@ const UserManagment = () => {
   );
 };
 
-export default UserManagment;
+const mapStateToProps = state => {
+  return {
+
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    userManager: payload => dispatch(actions.userManager(payload))
+  };
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(UserManagment);

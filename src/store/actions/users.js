@@ -44,7 +44,7 @@ export const updateUser = payload => {
         userUpdateFailed(
           {
             code: "no-change-made",
-            message: "In Order to save anything please make a change."
+            message: "In order to save anything please make a change."
           },
           {
             displayName: "no-change",
@@ -75,8 +75,10 @@ export const updateUser = payload => {
         studentId: "no-change",
         email: "no-change",
         password: "no-change"
-      }
-      dispatch(userUpdateFailed(persistentErr, successfullChanges, persistentErr));
+      };
+      dispatch(
+        userUpdateFailed(persistentErr, successfullChanges, persistentErr)
+      );
     }
     if (toUpdate.includes("email") || toUpdate.includes("password")) {
       if (toUpdate.includes("email")) {
@@ -158,11 +160,14 @@ export const updateUser = payload => {
               { merge: true }
             )
             .then(() => {
-              successfullChanges = {...successfullChanges, institution: true};
+              successfullChanges = { ...successfullChanges, institution: true };
               dispatch(userUpdateSuccess(successfullChanges));
             })
             .catch(error => {
-              successfullChanges = {...successfullChanges,institution: false};
+              successfullChanges = {
+                ...successfullChanges,
+                institution: false
+              };
               dispatch(userUpdateFailed(error, successfullChanges));
             });
         });
@@ -272,5 +277,79 @@ export const unlinkUser = provider => {
 export const resetUserErrors = () => {
   return dispatch => {
     dispatch(userResetErrors());
+  };
+};
+
+/* Admin options */
+
+export const userManager = payload => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    dispatch(userUpdateStart());
+    console.log("payload", payload);
+    const firestore = getFirestore();
+
+    const userId = payload.userId;
+
+    /* Converts they payload to an array */
+    // disabeling lint because if block normal array function return
+    // eslint-disable-next-line
+    let payloadArr = Object.keys(payload).map(field => {
+      if (field !== "userId") {
+        return {
+          [field]: payload[field]
+        };
+      }
+    });
+
+    /* Removes the null asociated with the payload */
+    payloadArr = payloadArr.filter(el => {
+      return el != null;
+    });
+
+    /* Since user fields may change this code will future proof that */
+    let noTouchArr = [];
+    payloadArr.forEach(field => {
+      if (Object.values(field)[0] === "no-touch") {
+        noTouchArr = [...noTouchArr, Object.keys(field)[0]];
+      }
+    });
+    /* Dispatches error if no fields have been changed */
+    if (noTouchArr.length === payloadArr.length) {
+      dispatch(
+        userUpdateFailed(
+          {
+            code: "no-change-made",
+            message: "In order to save anything please make a change."
+          },
+          {
+            role: "no-change",
+            institution: "no-change"
+          }
+        )
+      );
+    } else {
+      delete payload.userId;
+      noTouchArr.forEach(field => {
+        delete payload[field];
+      });
+      console.log("payload", payload);
+
+      // maps institutions as named in DB
+      if (payload.institution) {
+        payload.institutions = payload.institution;
+        delete payload.institution;
+      }
+      console.log("payload", payload);
+      firestore
+        .collection("users")
+        .doc(userId)
+        .set(payload, { merge: true })
+        .then(() => {
+          dispatch(userUpdateSuccess());
+        })
+        .catch(error => {
+          dispatch(userUpdateFailed(error));
+        });
+    }
   };
 };
