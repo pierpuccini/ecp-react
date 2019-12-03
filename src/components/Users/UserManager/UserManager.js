@@ -127,7 +127,7 @@ const UserManager = props => {
     }
     /* MISSING DEPENDENCIES: teachers, students */
     // eslint-disable-next-line
-  }, [checkboxState]);
+  }, [checkboxState, teachers, students]);
 
   /* USER CARD IS A SMART COMPONENT IN CASE ERROR ARRISES FROM THERE */
   return (
@@ -177,7 +177,7 @@ const UserManager = props => {
           {userDisplayArray.map(user => {
             return (
               <UserCard
-                key={user.id}
+                key={`${user.id}${user.role}`}
                 user={user}
                 isMobile={isMobile}
                 isChanging={cardChangedHandler}
