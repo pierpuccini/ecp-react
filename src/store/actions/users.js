@@ -290,8 +290,8 @@ export const userManagerAuthActions = payload => {
     console.log("payload", payload);
     const firestore = getFirestore();
     const currentState = getState();
-    
-    let error
+
+    let error;
     // Verifies that the token was properly recieved
     if (currentState.auth.token.type === "error") {
       error = {
@@ -306,14 +306,37 @@ export const userManagerAuthActions = payload => {
       };
       if (payload.action === "disbaled") {
         axios
-          .get(
-            `/manageuser?action=${payload.action}&uid=${payload.userId}`,
-            { headers: headers }
-          )
-          .then(res=>{
+          .get(`/manageuser?action=${payload.action}&uid=${payload.userId}`, {
+            headers: headers
+          })
+          .then(res => {
             console.log(res);
           })
-          .catch(error=>{
+          .catch(error => {
+            console.log(error.response.data);
+            dispatch(userUpdateFailed(error.response.data));
+          });
+      } else if (payload.action === "delete") {
+        axios
+          .get(`/manageuser?action=${payload.action}&uid=${payload.userId}`, {
+            headers: headers
+          })
+          .then(res => {
+            console.log(res);
+            //deletes user from firestore
+            firestore
+              .collection("users")
+              .doc(payload.userId)
+              .delete()
+              .then(res => {
+                console.log("res", res);
+              })
+              .catch(error => {
+                console.log(error.response.data);
+                dispatch(userUpdateFailed(error.response.data));
+              });
+          })
+          .catch(error => {
             console.log(error.response.data);
             dispatch(userUpdateFailed(error.response.data));
           });
