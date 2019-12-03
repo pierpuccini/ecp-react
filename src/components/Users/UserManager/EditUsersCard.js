@@ -71,7 +71,6 @@ const EditUsersCard = props => {
     }
   ];
 
-  console.log(user);
   return (
     <div className={classes.editCardContainer}>
       {isMobile ? null : (
