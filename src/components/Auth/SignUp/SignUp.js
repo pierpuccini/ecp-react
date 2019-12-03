@@ -69,7 +69,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2),
     [theme.breakpoints.down("sm")]: {
       "box-shadow": "unset",
-      backgroundColor: "#303030"
+      backgroundColor: "#ffffff"
     }
   },
   darkPaper: {
