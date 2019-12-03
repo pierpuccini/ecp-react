@@ -40,7 +40,8 @@ const UserManagment = props => {
   const [checkboxState, setcheckboxState] = useState({
     all: true,
     students: true,
-    teachers: true
+    teachers: true,
+    admins: true
   });
 
   const [selectedUser, setselectedUser] = useState(null);
@@ -65,7 +66,16 @@ const UserManagment = props => {
       storeAs: "pendingUsers",
       where: ["role", "==", ""]
     },
-    { collection: "clients", storeAs: "clients", where: ["active", "==", true] }
+    {
+      collection: "users",
+      storeAs: "admins",
+      where: ["role", "==", "admin"]
+    },
+    {
+      collection: "clients",
+      storeAs: "clients",
+      where: ["active", "==", true]
+    }
   ]);
   const students = useSelector(
     ({ firestore: { ordered } }) => ordered.students
@@ -76,6 +86,7 @@ const UserManagment = props => {
   const pendingUsers = useSelector(
     ({ firestore: { ordered } }) => ordered.pendingUsers
   );
+  let admins = useSelector(({ firestore: { ordered } }) => ordered.admins);
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
   /* Checks if data is loaded from firestore */
@@ -87,16 +98,36 @@ const UserManagment = props => {
     );
   }
 
+  //shows admins to only super admin accounts
+  if (props.myRole === 'super-admin') {
+    let myAccIndex;
+    admins.forEach((adminAccounts, index) => {
+      if (adminAccounts.id === props.myAccountId) {
+        return (myAccIndex = index);
+      }
+    });
+    if (myAccIndex != null) {
+      admins.splice(myAccIndex, 1);
+    }
+  } else {
+    admins = [];
+  }
+
   //Incharge of the checkbox filters
   const handleCheckboxChange = name => event => {
     if (name === "all" && event.target.checked) {
       setcheckboxState({
         all: true,
         students: true,
-        teachers: true
+        teachers: true,
+        admins: true
       });
     } else {
-      setcheckboxState({ ...checkboxState,all: false, [name]: event.target.checked });
+      setcheckboxState({
+        ...checkboxState,
+        all: false,
+        [name]: event.target.checked
+      });
     }
   };
 
@@ -124,7 +155,10 @@ const UserManagment = props => {
         });
         setopenAdminChangeModal(true);
       } else {
-        const payload = { userId: user.id, ...stateToPayload(changedFields) };
+        const payload = {
+          userId: user.id,
+          ...stateToPayload(changedFields)
+        };
         props.userManager(payload);
         openCardHandler(action);
       }
@@ -132,7 +166,11 @@ const UserManagment = props => {
     if (action === "confirmAdminChange") {
       openCardHandler(false);
       handleModal("cancel");
-      const payload = { userId: user.id, adminBy: "get-user", ...stateToPayload(changedFields) };
+      const payload = {
+        userId: user.id,
+        adminBy: "get-user",
+        ...stateToPayload(changedFields)
+      };
       console.log("saved payload", payload);
       props.userManager(payload);
       openCardHandler(action);
@@ -153,13 +191,23 @@ const UserManagment = props => {
     <div>
       <div className={classes.modalHeader}>
         <ReportProblemOutlinedIcon
-          style={{ alignSelf: "center", marginRight: "8px", color: amber[700] }}
+          style={{
+            alignSelf: "center",
+            marginRight: "8px",
+            color: amber[700]
+          }}
         />
         <Typography variant="h5" style={{ color: amber[700] }}>
           Warning!
         </Typography>
       </div>
-      <Typography variant="body2" style={{ textAlign: "center", margin: "8px 0px" }}>
+      <Typography
+        variant="body2"
+        style={{
+          textAlign: "center",
+          margin: "8px 0px"
+        }}
+      >
         Are you sure you want to convert this user to <strong>Admin</strong>?
       </Typography>
       <Typography variant="body2" style={{ textAlign: "center" }}>
@@ -171,7 +219,10 @@ const UserManagment = props => {
           variant="contained"
           color="primary"
           size="small"
-          style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+          style={{
+            backgroundColor: "#f44336",
+            color: "#ffffff"
+          }}
           onClick={() => {
             handleModal("cancel");
           }}
@@ -194,12 +245,19 @@ const UserManagment = props => {
           Proceed at your own risk
         </Button>
       </div>
-      <Typography variant="caption" style={{ textAlign: "center", margin: "8px 0px" }}>
-      *This user will not appear in the user list anymore.
-    </Typography>
+      <Typography
+        variant="caption"
+        style={{
+          textAlign: "center",
+          margin: "8px 0px"
+        }}
+      >
+        *This user will not appear in the user list anymore.
+      </Typography>
     </div>
   );
 
+  // the (pendingUsers == null)?[]:pendingUsers makes the code iterrable
   return (
     <React.Fragment>
       <Modal
@@ -213,7 +271,8 @@ const UserManagment = props => {
       <UserManager
         students={students}
         teachers={teachers}
-        pendingUsers={pendingUsers}
+        pendingUsers={pendingUsers == null ? [] : pendingUsers}
+        admins={admins}
         clients={clients}
         checkboxState={checkboxState}
         handleCheckboxChange={handleCheckboxChange}
@@ -227,7 +286,10 @@ const UserManagment = props => {
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    myAccountId: state.firebase.auth.uid,
+    myRole: state.firebase.profile.role
+  };
 };
 
 const mapDispatchToProps = dispatch => {

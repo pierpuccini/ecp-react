@@ -99,6 +99,7 @@ const UserManager = props => {
     teachers,
     students,
     pendingUsers,
+    admins,
     clients,
     checkboxState,
     handleCheckboxChange,
@@ -110,16 +111,31 @@ const UserManager = props => {
 
   const [userType, setuserType] = useState(["all"]);
   const [userDisplayArray, setuserDisplayArray] = useState(
-    [].concat([...teachers, ...students, ...pendingUsers])
+    [].concat([...teachers, ...students, ...pendingUsers, ...admins])
   );
 
   /* This use effect is in charge of filtering the users */
   useEffect(() => {
-    if (checkboxState.all) {
+    if (
+      checkboxState.all ||
+      (checkboxState.students && checkboxState.teachers && checkboxState.admins)
+    ) {
       setuserType(["all"]);
       setuserDisplayArray(
-        [].concat([...teachers, ...students, ...pendingUsers])
+        [].concat([...teachers, ...students, ...pendingUsers, ...admins])
       );
+    } else if (checkboxState.students && checkboxState.teachers) {
+      setuserType(["students", "teachers"]);
+      setuserDisplayArray([...students, ...teachers]);
+    } else if (checkboxState.admins && checkboxState.students) {
+      setuserType(["admins", "students"]);
+      setuserDisplayArray([...admins, ...students]);
+    } else if (checkboxState.admins && checkboxState.teachers) {
+      setuserType(["admins", "teachers"]);
+      setuserDisplayArray([...admins, ...teachers]);
+    } else if (checkboxState.admins) {
+      setuserType(["admins"]);
+      setuserDisplayArray([...admins]);
     } else if (checkboxState.students) {
       setuserType(["students"]);
       setuserDisplayArray([...students]);
@@ -130,7 +146,7 @@ const UserManager = props => {
       setuserType([]);
       setuserDisplayArray([...pendingUsers]);
     }
-  }, [checkboxState, teachers, students, pendingUsers]);
+  }, [checkboxState, teachers, students, pendingUsers, admins]);
 
   /* USER CARD IS A SMART COMPONENT IN CASE ERROR ARRISES FROM THERE */
   return (
@@ -176,6 +192,19 @@ const UserManager = props => {
               label="Teachers"
               labelPlacement="start"
             />
+            {admins.length !== 0 ? (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    color="primary"
+                    checked={checkboxState.admins}
+                    onChange={handleCheckboxChange("admins")}
+                  />
+                }
+                label="Admins"
+                labelPlacement="start"
+              />
+            ) : null}
           </div>
         </div>
       </Paper>
@@ -186,6 +215,8 @@ const UserManager = props => {
           ? "Students"
           : userType.includes("teachers")
           ? "Teachers"
+          : userType.includes("admins")
+          ? "Admins"
           : "Pending Users"}
       </Typography>
       <div className={classes.userEditSection}>
