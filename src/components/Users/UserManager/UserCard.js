@@ -125,6 +125,12 @@ const UserCard = props => {
         updateEditorInputs(user.institutions, user.role);
         seteditToggle(!editToggleCopy);
         break;
+      case "inactivate":
+        isChanging(action, user);
+        break;
+      case "delete":
+        isChanging(action, user);
+        break;
       case "save":
         isChanging(action, user, userManagerEditor);
         break;
@@ -215,10 +221,21 @@ const UserCard = props => {
             >
               <EditOutlinedIcon />
             </IconButton>
-            <IconButton aria-label="inactivate">
+            <IconButton
+              aria-label="inactivate"
+              onClick={() => {
+                userActionsHandler("inactivate");
+              }}
+            >
               <PowerSettingsNewOutlinedIcon />
             </IconButton>
-            <IconButton aria-label="delete" className={classes.deleteButton}>
+            <IconButton
+              aria-label="delete"
+              className={classes.deleteButton}
+              onClick={() => {
+                userActionsHandler("delete");
+              }}
+            >
               <DeleteOutlineOutlinedIcon />
             </IconButton>
           </div>

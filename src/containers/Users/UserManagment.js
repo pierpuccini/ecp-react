@@ -99,7 +99,7 @@ const UserManagment = props => {
   }
 
   //shows admins to only super admin accounts
-  if (props.myRole === 'super-admin') {
+  if (props.myRole === "super-admin") {
     let myAccIndex;
     admins.forEach((adminAccounts, index) => {
       if (adminAccounts.id === props.myAccountId) {
@@ -174,6 +174,20 @@ const UserManagment = props => {
       console.log("saved payload", payload);
       props.userManager(payload);
       openCardHandler(action);
+    }
+    if (action === "inactivate") {
+      const payload = {
+        userId: user.id,
+        action: "disbaled"
+      };
+      props.userManagerAuthActions(payload);
+    }
+    if (action === "delete") {
+      const payload = {
+        userId: user.id,
+        action: "delete"
+      };
+      props.userManagerAuthActions(payload);
     }
   };
 
@@ -294,7 +308,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    userManager: payload => dispatch(actions.userManager(payload))
+    userManager: payload => dispatch(actions.userManager(payload)),
+    userManagerAuthActions: payload =>
+      dispatch(actions.userManagerAuthActions(payload))
   };
 };
 

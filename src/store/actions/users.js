@@ -1,4 +1,5 @@
 import * as actionTypes from "./actionTypes";
+import axios from "../../axios/axios";
 
 export const userUpdateStart = () => {
   return {
@@ -282,6 +283,46 @@ export const resetUserErrors = () => {
 
 /* Admin options */
 
+//Handles user in custom backend such as delete and deactivate
+export const userManagerAuthActions = payload => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    dispatch(userUpdateStart());
+    console.log("payload", payload);
+    const firestore = getFirestore();
+    const currentState = getState();
+    
+    let error
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(userUpdateFailed(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      //Creates headers
+      const headers = {
+        Authorization: `Bearer ${currentState.auth.token.token}`
+      };
+      if (payload.action === "disbaled") {
+        axios
+          .get(
+            `/manageuser?action=${payload.action}&uid=${payload.userId}`,
+            { headers: headers }
+          )
+          .then(res=>{
+            console.log(res);
+          })
+          .catch(error=>{
+            console.log(error.response.data);
+            dispatch(userUpdateFailed(error.response.data));
+          });
+      }
+    }
+  };
+};
+
+//Handles user in firestore
 export const userManager = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(userUpdateStart());
