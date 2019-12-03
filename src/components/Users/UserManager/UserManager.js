@@ -127,7 +127,7 @@ const UserManager = props => {
     }
     /* MISSING DEPENDENCIES: teachers, students */
     // eslint-disable-next-line
-  }, [checkboxState]);
+  }, [checkboxState, teachers, students]);
 
   /* USER CARD IS A SMART COMPONENT IN CASE ERROR ARRISES FROM THERE */
   return (
