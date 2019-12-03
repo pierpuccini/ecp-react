@@ -207,7 +207,7 @@ const UserCard = props => {
             <Typography className={classes.userNameAndRole}>
               {user.displayName}
             </Typography>
-            <Typography variant="caption" className={classes.userNameAndRole}>
+            <Typography variant="caption" className={classes.userNameAndRole}>              
               {user.role}
             </Typography>
           </div>

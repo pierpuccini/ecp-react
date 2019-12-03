@@ -71,6 +71,7 @@ const EditUsersCard = props => {
     }
   ];
 
+  console.log(user);
   return (
     <div className={classes.editCardContainer}>
       {isMobile ? null : (
@@ -80,6 +81,14 @@ const EditUsersCard = props => {
         </div>
       )}
       <div className={classes.inputsContainer}>
+        <TextField
+          className={classes.textField}
+          label="Email"
+          readOnly
+          value={user.email}
+          margin="normal"
+          variant="outlined"
+        />
         <TextField
           className={classes.textField}
           label="Institution"
@@ -124,6 +133,11 @@ const EditUsersCard = props => {
           ))}
         </TextField>
       </div>
+      {user.role === 'admin' ? (
+        <Typography variant="caption" style={{textAlign: "center"}}>
+          Made Admin By: {user.adminBy.displayName}
+        </Typography>
+      ) : null}
       <div className={classes.editActions}>
         <Button
           variant="contained"
