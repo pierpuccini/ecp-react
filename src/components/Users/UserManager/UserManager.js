@@ -87,12 +87,17 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     display: "flex",
     flexGrow: 1
+  },
+  checkboxPhoneGp:{
+    display: "flex",
+    flexDirection: "column"
   }
 }));
 
 const UserManager = props => {
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width: 600px)");
+  const isPhone = useMediaQuery("(max-width: 549px)");
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const {
@@ -148,6 +153,115 @@ const UserManager = props => {
     }
   }, [checkboxState, teachers, students, pendingUsers, admins]);
 
+  let checboxLayout = (
+    <React.Fragment>
+      <FormControlLabel
+        control={
+          <Checkbox
+            color="primary"
+            checked={checkboxState.all}
+            onChange={handleCheckboxChange("all")}
+          />
+        }
+        label="All"
+        labelPlacement="start"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            color="primary"
+            checked={checkboxState.students}
+            onChange={handleCheckboxChange("students")}
+          />
+        }
+        label="Students"
+        labelPlacement="start"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            color="primary"
+            checked={checkboxState.teachers}
+            onChange={handleCheckboxChange("teachers")}
+          />
+        }
+        label="Teachers"
+        labelPlacement="start"
+      />
+      {admins.length !== 0 ? (
+        <FormControlLabel
+          control={
+            <Checkbox
+              color="primary"
+              checked={checkboxState.admins}
+              onChange={handleCheckboxChange("admins")}
+            />
+          }
+          label="Admins"
+          labelPlacement="start"
+        />
+      ) : null}
+    </React.Fragment>
+  );
+
+  //Changes checkbox layout for phones
+  if (isPhone) {
+    checboxLayout = (
+    <React.Fragment>
+      <div className={classes.checkboxPhoneGp}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              color="primary"
+              checked={checkboxState.all}
+              onChange={handleCheckboxChange("all")}
+            />
+          }
+          label="All"
+          labelPlacement="start"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              color="primary"
+              checked={checkboxState.students}
+              onChange={handleCheckboxChange("students")}
+            />
+          }
+          label="Students"
+          labelPlacement="start"
+        />
+      </div>
+      <div className={classes.checkboxPhoneGp}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              color="primary"
+              checked={checkboxState.teachers}
+              onChange={handleCheckboxChange("teachers")}
+            />
+          }
+          label="Teachers"
+          labelPlacement="start"
+        />
+        {admins.length !== 0 ? (
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={checkboxState.admins}
+                onChange={handleCheckboxChange("admins")}
+              />
+            }
+            label="Admins"
+            labelPlacement="start"
+          />
+        ) : null}
+      </div>
+    </React.Fragment>
+  );
+  }
+
   /* USER CARD IS A SMART COMPONENT IN CASE ERROR ARRISES FROM THERE */
   return (
     <Container>
@@ -158,54 +272,7 @@ const UserManager = props => {
         <Typography>User Accounts</Typography>
         <div className={classes.filterDiv}>
           <Typography>Filter by: </Typography>
-          <div className={classes.specificFiltersDiv}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={checkboxState.all}
-                  onChange={handleCheckboxChange("all")}
-                />
-              }
-              label="All"
-              labelPlacement="start"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={checkboxState.students}
-                  onChange={handleCheckboxChange("students")}
-                />
-              }
-              label="Students"
-              labelPlacement="start"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={checkboxState.teachers}
-                  onChange={handleCheckboxChange("teachers")}
-                />
-              }
-              label="Teachers"
-              labelPlacement="start"
-            />
-            {admins.length !== 0 ? (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="primary"
-                    checked={checkboxState.admins}
-                    onChange={handleCheckboxChange("admins")}
-                  />
-                }
-                label="Admins"
-                labelPlacement="start"
-              />
-            ) : null}
-          </div>
+          <div className={classes.specificFiltersDiv}>{checboxLayout}</div>
         </div>
       </Paper>
       <Typography style={{ margin: "0px 16px" }}>
