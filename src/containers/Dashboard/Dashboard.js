@@ -120,7 +120,7 @@ const Dashboard = props => {
       dashboardItems.splice(index, 1);
     } else if (props.role !== "student" && item.permision === "student-only") {
       dashboardItems.splice(index, 1);
-    } else if (props.role !== "admin" && item.permision === "admin") {
+    } else if (!props.role.includes("admin") && item.permision === "admin") {
       dashboardItems.splice(index, 1);
     }
   });

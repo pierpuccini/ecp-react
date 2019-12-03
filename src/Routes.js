@@ -29,7 +29,7 @@ const Routes = (props) => {
       { url: "my-account", comp: asyncUsers, availableTo: ["protected","all"] },
       { url: "onboarding", comp: asyncUsers, availableTo: ["protected","all"] },
       { url: "classrooms", comp: asyncClassroom, availableTo: ["protected","all"] },
-      { url: "user-manager", comp: asyncUserManangment, availableTo: ["protected","admin"] },
+      { url: "user-manager", comp: asyncUserManangment, availableTo: ["protected","admin","super-admin"] },
       { url: "login", comp: asyncAuth, availableTo: ["un-protected","all"] },
       { url: "sign-up", comp: asyncAuth, availableTo: ["un-protected","all"] },
       { url: "forgot-login", comp: asyncAuth, availableTo: ["un-protected","all"] }

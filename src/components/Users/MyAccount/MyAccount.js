@@ -199,7 +199,7 @@ const MyAccount = props => {
               onChange={event => props.inputChangedHandler(event, "studentId")}
               margin="normal"
               variant="outlined"
-              disabled={props.myProfile.role !== "admin"}
+              disabled={!props.myProfile.role.includes("admin")}
               error={
                 !props.myProfileForm.studentId.valid &&
                 props.myProfileForm.studentId.touched

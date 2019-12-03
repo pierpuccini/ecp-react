@@ -337,7 +337,7 @@ const CreateClassroom = props => {
         navActions={handleNav}
         createClassroomForm={createClassroomForm}
         classroomsId={classrooms}
-        institutions={role === "admin" ? clients : myInstitutions}
+        institutions={role.includes("admin") ? clients : myInstitutions}
         inputChangedHandler={classroomInputHandler}
         toggleButtonChangedHandler={classroomToggleButtonHandler}
         sliderChangedHandler={classroomSliderHandler}
