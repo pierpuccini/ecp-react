@@ -16,6 +16,7 @@ import { stateToPayload } from "../../shared/utility";
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import UserManager from "../../components/Users/UserManager/UserManager";
 import Modal from "../../components/UI/Modal/Modal";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -88,7 +89,6 @@ const UserManagment = props => {
 
   //Incharge of the checkbox filters
   const handleCheckboxChange = name => event => {
-      console.log('name',name);
     if (name === "all" && event.target.checked) {
       setcheckboxState({
         all: true,
@@ -125,7 +125,6 @@ const UserManagment = props => {
         setopenAdminChangeModal(true);
       } else {
         const payload = { userId: user.id, ...stateToPayload(changedFields) };
-        console.log("saved payload", payload);
         props.userManager(payload);
         openCardHandler(action);
       }
@@ -133,7 +132,10 @@ const UserManagment = props => {
     if (action === "confirmAdminChange") {
       openCardHandler(false);
       handleModal("cancel");
-      console.log("saved", changedFields, user);
+      const payload = { userId: user.id, adminBy: "get-user", ...stateToPayload(changedFields) };
+      console.log("saved payload", payload);
+      props.userManager(payload);
+      openCardHandler(action);
     }
   };
 
@@ -153,10 +155,16 @@ const UserManagment = props => {
         <ReportProblemOutlinedIcon
           style={{ alignSelf: "center", marginRight: "8px", color: amber[700] }}
         />
-        <h2 style={{ color: amber[700] }}>Warning!</h2>
+        <Typography variant="h5" style={{ color: amber[700] }}>
+          Warning!
+        </Typography>
       </div>
-      <p>Are you sure you want to convert this user to admin?</p>
-      <p style={{ textAlign: "center" }}>THIS CHANGE IS NOT REVERSIBLE</p>
+      <Typography variant="body2" style={{ textAlign: "center", margin: "8px 0px" }}>
+        Are you sure you want to convert this user to <strong>Admin</strong>?
+      </Typography>
+      <Typography variant="body2" style={{ textAlign: "center" }}>
+        THIS CHANGE IS NOT REVERSIBLE
+      </Typography>
       <div className={classes.modalActions}>
         <Button
           className={classes.button}
@@ -186,6 +194,9 @@ const UserManagment = props => {
           Proceed at your own risk
         </Button>
       </div>
+      <Typography variant="caption" style={{ textAlign: "center", margin: "8px 0px" }}>
+      *This user will not appear in the user list anymore.
+    </Typography>
     </div>
   );
 

@@ -132,7 +132,6 @@ const UserManager = props => {
     }
   }, [checkboxState, teachers, students, pendingUsers]);
 
-  console.log("userDisplayArray", userDisplayArray);
   /* USER CARD IS A SMART COMPONENT IN CASE ERROR ARRISES FROM THERE */
   return (
     <Container>

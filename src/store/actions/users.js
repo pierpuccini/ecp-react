@@ -287,7 +287,9 @@ export const userManager = payload => {
     dispatch(userUpdateStart());
     console.log("payload", payload);
     const firestore = getFirestore();
+    const currentState = getState();
 
+    //Gets user is from payload
     const userId = payload.userId;
 
     /* Converts they payload to an array */
@@ -332,7 +334,15 @@ export const userManager = payload => {
       noTouchArr.forEach(field => {
         delete payload[field];
       });
-      console.log("payload", payload);
+
+      //Creates payload for user to adminCreate
+      if (payload.adminBy === "get-user") {
+        payload.adminBy = {
+          id: currentState.firebase.auth.uid,
+          displayName: currentState.firebase.profile.displayName,
+          email: currentState.firebase.profile.email
+        };
+      }
 
       // maps institutions as named in DB
       //TODO: must implement a get from state when implementing more than 1 institution per teacher
@@ -340,7 +350,6 @@ export const userManager = payload => {
         payload.institutions = [payload.institution];
         delete payload.institution;
       }
-      console.log("payload", payload);
       firestore
         .collection("users")
         .doc(userId)
