@@ -335,8 +335,9 @@ export const userManager = payload => {
       console.log("payload", payload);
 
       // maps institutions as named in DB
+      //TODO: must implement a get from state when implementing more than 1 institution per teacher
       if (payload.institution) {
-        payload.institutions = payload.institution;
+        payload.institutions = [payload.institution];
         delete payload.institution;
       }
       console.log("payload", payload);

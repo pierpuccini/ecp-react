@@ -98,6 +98,7 @@ const UserManager = props => {
   const {
     teachers,
     students,
+    pendingUsers,
     clients,
     checkboxState,
     handleCheckboxChange,
@@ -108,27 +109,30 @@ const UserManager = props => {
   } = props;
 
   const [userType, setuserType] = useState(["all"]);
-  const [userDisplayArray, setuserDisplayArray] = useState([
-    ...teachers,
-    ...students
-  ]);
+  const [userDisplayArray, setuserDisplayArray] = useState(
+    [].concat([...teachers, ...students, ...pendingUsers])
+  );
 
   /* This use effect is in charge of filtering the users */
   useEffect(() => {
-    if (checkboxState.students && checkboxState.teachers) {
+    if (checkboxState.all) {
       setuserType(["all"]);
-      setuserDisplayArray([...teachers, ...students]);
+      setuserDisplayArray(
+        [].concat([...teachers, ...students, ...pendingUsers])
+      );
     } else if (checkboxState.students) {
       setuserType(["students"]);
       setuserDisplayArray([...students]);
     } else if (checkboxState.teachers) {
       setuserType(["teachers"]);
       setuserDisplayArray([...teachers]);
+    } else {
+      setuserType([]);
+      setuserDisplayArray([...pendingUsers]);
     }
-    /* MISSING DEPENDENCIES: teachers, students */
-    // eslint-disable-next-line
-  }, [checkboxState, teachers, students]);
+  }, [checkboxState, teachers, students, pendingUsers]);
 
+  console.log("userDisplayArray", userDisplayArray);
   /* USER CARD IS A SMART COMPONENT IN CASE ERROR ARRISES FROM THERE */
   return (
     <Container>
@@ -140,6 +144,17 @@ const UserManager = props => {
         <div className={classes.filterDiv}>
           <Typography>Filter by: </Typography>
           <div className={classes.specificFiltersDiv}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={checkboxState.all}
+                  onChange={handleCheckboxChange("all")}
+                />
+              }
+              label="All"
+              labelPlacement="start"
+            />
             <FormControlLabel
               control={
                 <Checkbox
@@ -170,7 +185,9 @@ const UserManager = props => {
           ? "All Users"
           : userType.includes("students")
           ? "Students"
-          : "Teachers"}
+          : userType.includes("teachers")
+          ? "Teachers"
+          : "Pending Users"}
       </Typography>
       <div className={classes.userEditSection}>
         <div className={classes.userCardSection}>

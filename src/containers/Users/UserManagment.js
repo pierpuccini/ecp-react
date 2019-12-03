@@ -33,10 +33,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserManagment = (props) => {
+const UserManagment = props => {
   const classes = useStyles();
 
   const [checkboxState, setcheckboxState] = useState({
+    all: true,
     students: true,
     teachers: true
   });
@@ -58,6 +59,11 @@ const UserManagment = (props) => {
       storeAs: "teachers",
       where: ["role", "==", "teacher"]
     },
+    {
+      collection: "users",
+      storeAs: "pendingUsers",
+      where: ["role", "==", ""]
+    },
     { collection: "clients", storeAs: "clients", where: ["active", "==", true] }
   ]);
   const students = useSelector(
@@ -65,6 +71,9 @@ const UserManagment = (props) => {
   );
   const teachers = useSelector(
     ({ firestore: { ordered } }) => ordered.teachers
+  );
+  const pendingUsers = useSelector(
+    ({ firestore: { ordered } }) => ordered.pendingUsers
   );
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
@@ -79,7 +88,16 @@ const UserManagment = (props) => {
 
   //Incharge of the checkbox filters
   const handleCheckboxChange = name => event => {
-    setcheckboxState({ ...checkboxState, [name]: event.target.checked });
+      console.log('name',name);
+    if (name === "all" && event.target.checked) {
+      setcheckboxState({
+        all: true,
+        students: true,
+        teachers: true
+      });
+    } else {
+      setcheckboxState({ ...checkboxState,all: false, [name]: event.target.checked });
+    }
   };
 
   //Incharge of openeing the side card
@@ -106,9 +124,9 @@ const UserManagment = (props) => {
         });
         setopenAdminChangeModal(true);
       } else {
-        const payload = {userId: user.id,...stateToPayload(changedFields)}
+        const payload = { userId: user.id, ...stateToPayload(changedFields) };
         console.log("saved payload", payload);
-        props.userManager(payload)
+        props.userManager(payload);
         openCardHandler(action);
       }
     }
@@ -184,6 +202,7 @@ const UserManagment = (props) => {
       <UserManager
         students={students}
         teachers={teachers}
+        pendingUsers={pendingUsers}
         clients={clients}
         checkboxState={checkboxState}
         handleCheckboxChange={handleCheckboxChange}
@@ -197,9 +216,7 @@ const UserManagment = (props) => {
 };
 
 const mapStateToProps = state => {
-  return {
-
-  };
+  return {};
 };
 
 const mapDispatchToProps = dispatch => {
@@ -208,4 +225,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(UserManagment);
+export default connect(mapStateToProps, mapDispatchToProps)(UserManagment);
