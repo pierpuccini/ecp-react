@@ -283,7 +283,7 @@ export const resetUserErrors = () => {
 
 /* Admin options */
 
-//Handles user in custom backend such as delete and deactivate
+//Handles user in custom backend such as delete
 export const userManagerAuthActions = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(userUpdateStart());

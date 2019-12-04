@@ -178,7 +178,7 @@ const UserManagment = props => {
     }
     if (action === "delete") {
       const payload = {
-        userId: user.id,
+        uid: user.id,
         action: "delete"
       };
       props.userManagerAuthActions(payload);
