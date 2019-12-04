@@ -176,6 +176,14 @@ const UserManagment = props => {
       props.userManager(payload);
       openCardHandler(action);
     }
+    if (action === "inactivate") {
+      const payload = {
+        uid: user.id,
+        action: "disabled",
+        disabled: !user.disabled
+      };
+      props.userManagerAuthActions(payload);
+    }
     if (action === "delete") {
       const payload = {
         uid: user.id,

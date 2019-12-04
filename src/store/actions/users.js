@@ -328,6 +328,29 @@ export const userManagerAuthActions = payload => {
             console.log(error.response.data);
             dispatch(userUpdateFailed(error.response.data));
           });
+      } else if (payload.action === "disabled") {
+        axios
+          .post("/manageuser", payload, { headers: headers })
+          .then(res => {
+            console.log(res);
+            //deletes user from firestore
+            firestore
+              .collection("users")
+              .doc(payload.uid)
+              .set({disabled: payload.disabled}, { merge: true })
+              .then(res => {
+                console.log("res", res);
+                dispatch(userUpdateSuccess());
+              })
+              .catch(error => {
+                console.log(error);
+                dispatch(userUpdateFailed(error));
+              });
+          })
+          .catch(error => {
+            console.log(error.response.data);
+            dispatch(userUpdateFailed(error.response.data));
+          });
       }
     }
   };

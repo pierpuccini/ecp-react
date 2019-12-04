@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 //Icons
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
+import PowerSettingsNewOutlinedIcon from '@material-ui/icons/PowerSettingsNewOutlined';
 //Animations
 import Collapse from "@material-ui/core/Collapse";
 /* App Imports */
@@ -124,6 +125,9 @@ const UserCard = props => {
         updateEditorInputs(user.institutions, user.role);
         seteditToggle(!editToggleCopy);
         break;
+      case "inactivate":
+        isChanging(action, user);
+        break;
       case "delete":
         isChanging(action, user);
         break;
@@ -216,6 +220,14 @@ const UserCard = props => {
               }}
             >
               <EditOutlinedIcon />
+            </IconButton>
+            <IconButton
+              aria-label="edit"
+              onClick={() => {
+                userActionsHandler("inactivate");
+              }}
+            >
+              <PowerSettingsNewOutlinedIcon />
             </IconButton>
             <IconButton
               aria-label="delete"
