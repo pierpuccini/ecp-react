@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import { amber, green } from "@material-ui/core/colors";
+import Tooltip from "@material-ui/core/Tooltip";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -9,7 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 //Icons
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
-import PowerSettingsNewOutlinedIcon from '@material-ui/icons/PowerSettingsNewOutlined';
+import PowerSettingsNewOutlinedIcon from "@material-ui/icons/PowerSettingsNewOutlined";
 //Animations
 import Collapse from "@material-ui/core/Collapse";
 /* App Imports */
@@ -204,40 +206,68 @@ const UserCard = props => {
       >
         <div className={classes.userCard}>
           <div className={classes.nameAndRole}>
-            <Typography className={classes.userNameAndRole}>
+            {user.disabled ? (
+              <Typography variant="caption" className={classes.userNameAndRole}>
+                Disabled User
+              </Typography>
+            ) : null}
+            <Typography
+              className={classes.userNameAndRole}
+              style={user.disabled ? { color: "#777777" } : null}
+            >
               {user.displayName}
             </Typography>
-            <Typography variant="caption" className={classes.userNameAndRole}>              
+            <Typography
+              variant="caption"
+              className={classes.userNameAndRole}
+              style={user.disabled ? { color: "#777777" } : null}
+            >
               {user.role}
             </Typography>
           </div>
           <div className={classes.userActions}>
-            <IconButton
-              aria-label="edit"
-              color="primary"
-              onClick={() => {
-                userActionsHandler("edit");
-              }}
-            >
-              <EditOutlinedIcon />
-            </IconButton>
-            <IconButton
-              aria-label="edit"
-              onClick={() => {
-                userActionsHandler("inactivate");
-              }}
-            >
-              <PowerSettingsNewOutlinedIcon />
-            </IconButton>
-            <IconButton
-              aria-label="delete"
-              className={classes.deleteButton}
-              onClick={() => {
-                userActionsHandler("delete");
-              }}
-            >
-              <DeleteOutlineOutlinedIcon />
-            </IconButton>
+            <Tooltip title="Edit">
+              <span style={{ alignSelf: "center" }}>
+                <IconButton
+                  aria-label="edit"
+                  color="primary"
+                  onClick={() => {
+                    userActionsHandler("edit");
+                  }}
+                  disabled={user.disabled}
+                >
+                  <EditOutlinedIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Tooltip title={user.disabled ? "Enable" : "Disable"}>
+              <IconButton
+                aria-label="edit"
+                onClick={() => {
+                  userActionsHandler("inactivate");
+                }}
+                style={
+                  user.disabled
+                    ? {
+                        color: green[600]
+                      }
+                    : { color: amber[700] }
+                }
+              >
+                <PowerSettingsNewOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton
+                aria-label="delete"
+                className={classes.deleteButton}
+                onClick={() => {
+                  userActionsHandler("delete");
+                }}
+              >
+                <DeleteOutlineOutlinedIcon />
+              </IconButton>
+            </Tooltip>
           </div>
         </div>
         <Collapse in={editToggle && isMobile} timeout="auto">
