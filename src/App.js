@@ -148,7 +148,7 @@ function App(props) {
     if (myAccountSuccess) {
       payload = {
         type: "success",
-        info: { message: "Fields succesfully changed!" }
+        info: { message: "User succesfully updated!" }
       };
     }
     if (onboardingSuccess) {

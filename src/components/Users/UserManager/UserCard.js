@@ -241,32 +241,36 @@ const UserCard = props => {
               </span>
             </Tooltip>
             <Tooltip title={user.disabled ? "Enable" : "Disable"}>
-              <IconButton
-                aria-label="edit"
-                onClick={() => {
-                  userActionsHandler("inactivate");
-                }}
-                style={
-                  user.disabled
-                    ? {
-                        color: green[600]
-                      }
-                    : { color: amber[700] }
-                }
-              >
-                <PowerSettingsNewOutlinedIcon />
-              </IconButton>
+              <span style={{ alignSelf: "center" }}>
+                <IconButton
+                  aria-label="edit"
+                  onClick={() => {
+                    userActionsHandler("inactivate");
+                  }}
+                  style={
+                    user.disabled
+                      ? {
+                          color: green[600]
+                        }
+                      : { color: amber[700] }
+                  }
+                >
+                  <PowerSettingsNewOutlinedIcon />
+                </IconButton>
+              </span>
             </Tooltip>
             <Tooltip title="Delete">
-              <IconButton
-                aria-label="delete"
-                className={classes.deleteButton}
-                onClick={() => {
-                  userActionsHandler("delete");
-                }}
-              >
-                <DeleteOutlineOutlinedIcon />
-              </IconButton>
+              <span style={{ alignSelf: "center" }}>
+                <IconButton
+                  aria-label="delete"
+                  className={classes.deleteButton}
+                  onClick={() => {
+                    userActionsHandler("delete");
+                  }}
+                >
+                  <DeleteOutlineOutlinedIcon />
+                </IconButton>
+              </span>
             </Tooltip>
           </div>
         </div>
