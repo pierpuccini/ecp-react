@@ -79,12 +79,20 @@ const UserManagement = props => {
     },
     {
       collection: "users",
+      storeAs: "pendingUsers",
+      where: ["role", "==", ""]
+    },
+    {
+      collection: "users",
       storeAs: "teachers",
       where: ["role", "==", "teacher"]
     }
   ]);
   const students = useSelector(
     ({ firestore: { ordered } }) => ordered.students
+  );
+  const pendingUsers = useSelector(
+    ({ firestore: { ordered } }) => ordered.pendingUsers
   );
   const teachers = useSelector(
     ({ firestore: { ordered } }) => ordered.teachers
@@ -135,7 +143,7 @@ const UserManagement = props => {
                   Active Teachers: {teachers.length}
                 </Typography>
                 <Typography className={classes.typographySubs}>
-                  Total Users: {students.length + teachers.length}
+                  Total Users: {students.length + teachers.length + pendingUsers.length}
                 </Typography>
               </div>
             </Collapse>
