@@ -123,7 +123,7 @@ const Snackbars = props => {
     variant = payload.type;
     message = payload.info.customErrorMsg
       ? payload.info.customErrorMsg
-      : payload.info.message;
+      : (payload.info.message.message == null )? payload.info.message: payload.info.message.message;
   }
 
   return (
