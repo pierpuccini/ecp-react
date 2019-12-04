@@ -109,7 +109,7 @@ const UserManagement = props => {
         handleChange();
       }}
     >
-      {loaded && isLoaded(teachers) ? (
+      {loaded && isLoaded(teachers, pendingUsers, students) ? (
         <React.Fragment>
           <div className={classes.title}>
             <Typography>User Management</Typography>
@@ -156,7 +156,7 @@ const UserManagement = props => {
                 Active Teachers: {teachers.length}
               </Typography>
               <Typography className={classes.typographySubs}>
-                Total Users: {students.length + teachers.length}
+                Total Users: {students.length + teachers.length + pendingUsers.length}
               </Typography>
             </div>
           )}
