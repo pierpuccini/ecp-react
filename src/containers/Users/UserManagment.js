@@ -48,6 +48,7 @@ const UserManagment = props => {
   const [selectedUser, setselectedUser] = useState(null);
   const [openCard, setopenCard] = useState(false);
   const [openAdminChangeModal, setopenAdminChangeModal] = useState(false);
+  const [modalType, setmodalType] = useState(null);
   const [localTemp, setlocalTemp] = useState(null);
 
   /* Loads clients, teachers and studets data from Firestore */
@@ -97,7 +98,7 @@ const UserManagment = props => {
         <Loader />
       </div>
     );
-  } 
+  }
 
   /* shows admins to only super admin accounts */
   if (props.myRole === "super-admin") {
@@ -154,6 +155,7 @@ const UserManagment = props => {
           user: user,
           changedFields: changedFields
         });
+        setmodalType(null);
         setopenAdminChangeModal(true);
       } else {
         const payload = {
@@ -185,11 +187,21 @@ const UserManagment = props => {
       props.userManagerAuthActions(payload);
     }
     if (action === "delete") {
+      setlocalTemp({
+        user: user
+      });
+      setopenAdminChangeModal(true);
+      setmodalType("delete");
+    }
+    if (action === "confirmDelete") {
+      openCardHandler(false);
+      handleModal("cancel");
       const payload = {
-        uid: user.id,
+        uid: localTemp.user.id,
         action: "delete"
       };
       props.userManagerAuthActions(payload);
+      openCardHandler(action);
     }
   };
 
@@ -207,13 +219,28 @@ const UserManagment = props => {
     <div>
       <div className={classes.modalHeader}>
         <ReportProblemOutlinedIcon
-          style={{
-            alignSelf: "center",
-            marginRight: "8px",
-            color: amber[700]
-          }}
+          style={
+            modalType !== "delete"
+              ? {
+                  alignSelf: "center",
+                  marginRight: "8px",
+                  color: amber[700]
+                }
+              : {
+                  alignSelf: "center",
+                  marginRight: "8px",
+                  color: "#d32f2f"
+                }
+          }
         />
-        <Typography variant="h5" style={{ color: amber[700] }}>
+        <Typography
+          variant="h5"
+          style={
+            modalType !== "delete"
+              ? { color: amber[700] }
+              : { color: "#d32f2f" }
+          }
+        >
           Warning!
         </Typography>
       </div>
@@ -224,7 +251,14 @@ const UserManagment = props => {
           margin: "8px 0px"
         }}
       >
-        Are you sure you want to convert this user to <strong>Admin</strong>?
+        {modalType !== "delete" ? (
+          <div>
+            Are you sure you want to convert this user to <strong>Admin</strong>
+            ?
+          </div>
+        ) : (
+          "Are you sure you want to delete this user"
+        )}
       </Typography>
       <Typography variant="body2" style={{ textAlign: "center" }}>
         THIS CHANGE IS NOT REVERSIBLE
@@ -252,7 +286,7 @@ const UserManagment = props => {
           size="small"
           onClick={() => {
             cardChangedHandler(
-              "confirmAdminChange",
+              modalType !== "delete" ? "confirmAdminChange" : "confirmDelete",
               localTemp.user,
               localTemp.changedFields
             );
@@ -261,17 +295,20 @@ const UserManagment = props => {
           Proceed at your own risk
         </Button>
       </div>
-      <Typography
-        variant="caption"
-        style={{
-          textAlign: "center",
-          margin: "8px 0px"
-        }}
-      >
-        *This user will not appear in the user list anymore.
-      </Typography>
+      {modalType !== "delete" ? (
+        <Typography
+          variant="caption"
+          style={{
+            textAlign: "center",
+            margin: "8px 0px"
+          }}
+        >
+          *This user will not appear in the user list anymore.
+        </Typography>
+      ) : null}
     </div>
   );
+
   //Floating Loader
   let floatingLoader;
   if (props.loading) {
