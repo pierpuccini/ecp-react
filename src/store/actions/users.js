@@ -302,34 +302,22 @@ export const userManagerAuthActions = payload => {
     } /* If token is all good proceed to sending information to API */ else {
       //Creates headers
       const headers = {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
-      if (payload.action === "disbaled") {
+      if (payload.action === "delete") {
         axios
-          .get(`/manageuser?action=${payload.action}&uid=${payload.userId}`, {
-            headers: headers
-          })
-          .then(res => {
-            console.log(res);
-          })
-          .catch(error => {
-            console.log(error.response.data);
-            dispatch(userUpdateFailed(error.response.data));
-          });
-      } else if (payload.action === "delete") {
-        axios
-          .get(`/manageuser?action=${payload.action}&uid=${payload.userId}`, {
-            headers: headers
-          })
+          .post("/manageuser", payload, { headers: headers })
           .then(res => {
             console.log(res);
             //deletes user from firestore
             firestore
               .collection("users")
-              .doc(payload.userId)
+              .doc(payload.uid)
               .delete()
               .then(res => {
                 console.log("res", res);
+                dispatch(userUpdateSuccess());
               })
               .catch(error => {
                 console.log(error.response.data);

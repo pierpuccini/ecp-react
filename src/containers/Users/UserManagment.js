@@ -14,6 +14,7 @@ import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined"
 /* App imports */
 import { stateToPayload } from "../../shared/utility";
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
+import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import UserManager from "../../components/Users/UserManager/UserManager";
 import Modal from "../../components/UI/Modal/Modal";
 import { Typography } from "@material-ui/core";
@@ -90,15 +91,15 @@ const UserManagment = props => {
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
   /* Checks if data is loaded from firestore */
-  if (!isLoaded(clients)) {
+  if (!isLoaded(clients, admins, pendingUsers, teachers, students)) {
     return (
       <div className="App" style={{ width: "100%" }}>
         <Loader />
       </div>
     );
-  }
+  } 
 
-  //shows admins to only super admin accounts
+  /* shows admins to only super admin accounts */
   if (props.myRole === "super-admin") {
     let myAccIndex;
     admins.forEach((adminAccounts, index) => {
@@ -174,13 +175,6 @@ const UserManagment = props => {
       console.log("saved payload", payload);
       props.userManager(payload);
       openCardHandler(action);
-    }
-    if (action === "inactivate") {
-      const payload = {
-        userId: user.id,
-        action: "disbaled"
-      };
-      props.userManagerAuthActions(payload);
     }
     if (action === "delete") {
       const payload = {
@@ -270,10 +264,14 @@ const UserManagment = props => {
       </Typography>
     </div>
   );
-
-  // the (pendingUsers == null)?[]:pendingUsers makes the code iterrable
+  //Floating Loader
+  let floatingLoader;
+  if (props.loading) {
+    floatingLoader = <FloatingLoader></FloatingLoader>;
+  }
   return (
     <React.Fragment>
+      {floatingLoader}
       <Modal
         openModal={openAdminChangeModal}
         closeModal={() => {
@@ -302,7 +300,8 @@ const UserManagment = props => {
 const mapStateToProps = state => {
   return {
     myAccountId: state.firebase.auth.uid,
-    myRole: state.firebase.profile.role
+    myRole: state.firebase.profile.role,
+    loading: state.users.loading
   };
 };
 
