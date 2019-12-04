@@ -349,18 +349,24 @@ export const userManagerAuthActions = payload => {
 export const userManager = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(userUpdateStart());
-    console.log("payload", payload);
     const firestore = getFirestore();
     const currentState = getState();
 
-    //Gets user is from payload
+    //Gets user id from payload
     const userId = payload.userId;
+    //Gets admin By from payload
+    const adminBy = payload.adminBy;
 
     /* Converts they payload to an array */
     // disabeling lint because if block normal array function return
-    // eslint-disable-next-line
     let payloadArr = Object.keys(payload).map(field => {
-      if (field !== "userId") {
+      if (field === "userId") {
+        // eslint-disable-next-line
+        return;
+      } else if (field === "adminBy") {
+        // eslint-disable-next-line
+        return;
+      } else {
         return {
           [field]: payload[field]
         };
@@ -395,12 +401,15 @@ export const userManager = payload => {
       );
     } else {
       delete payload.userId;
+      if (payload.adminBy != null) {
+        delete payload.adminBy;
+      }
       noTouchArr.forEach(field => {
         delete payload[field];
       });
 
       //Creates payload for user to adminCreate
-      if (payload.adminBy === "get-user") {
+      if (adminBy === "get-user") {
         payload.adminBy = {
           id: currentState.firebase.auth.uid,
           displayName: currentState.firebase.profile.displayName,
