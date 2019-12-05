@@ -14,13 +14,18 @@ export const classroomFail = error => {
   };
 };
 
-export const classroomSuccess = (missingFields, code, classroom, classrooms) => {
+export const classroomSuccess = (missingFields, code) => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_SUCCESS,
     missingFields: missingFields,
-    code: code,
-    classroom: classroom,
-    classrooms: classrooms,
+    code: code
+  };
+};
+
+export const getAllClassroomSuccess = (classrooms) => {
+  return {
+    type: actionTypes.CLASSROOM_ALL_CLASSROOMS_SUCCESS,
+    classrooms: classrooms
   };
 };
 
@@ -251,7 +256,7 @@ export const getAllMyClassrooms = payload => {
         .get(url, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            dispatch(classroomSuccess(null, null, null, response.data.classrooms));
+            dispatch(getAllClassroomSuccess(response.data.classrooms));
           } else {
             const unknownError = {
               code: "add-classroom-error",

@@ -35,8 +35,14 @@ const classroomSuccess = (state, action) => {
     error: null,
     missingFields: action.missingFields,
     registrationCode: action.code,
-    success: true,
-    classroom: action.classroom,
+    success: true
+  });
+};
+
+const getAllClassroomSuccess = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: null,
     classrooms: action.classrooms
   });
 };
@@ -57,6 +63,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CLASSROOM_ACTIONS_START: return classroomStart(state, action);
     case actionTypes.CLASSROOM_ACTIONS_FAILED: return classroomFail(state, action);
     case actionTypes.CLASSROOM_ACTIONS_SUCCESS: return classroomSuccess(state, action);
+    case actionTypes.CLASSROOM_ALL_CLASSROOMS_SUCCESS: return getAllClassroomSuccess(state, action);
     case actionTypes.CLASSROOM_ACTIONS_CREATE_RESET: return resetCreateClassroom(state, action);
     default:
       return state;
