@@ -22,6 +22,8 @@ export const authFail = (error, loading) => {
     ? (customErrorMsg = "The Email or Password is incorrect")
     : error.code.includes("new-user")
     ? (customErrorMsg = "Please Sign Up")
+    : error.code.includes("user-disabled") 
+    ? (customErrorMsg = error.message)
     : (customErrorMsg = "General Error, Contact Support");
   let newUser = error.code.includes("user-not-found") ? true : false;
   return {
