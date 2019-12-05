@@ -387,6 +387,7 @@ const ClassroomController = props => {
               pendingStudents={classroom.pending_students}
               activeStudents={classroom.active_students}
               studentStatus={studentStatus}
+              isMobile={isMobile}
             />
           );
         })}
