@@ -119,7 +119,7 @@ function App(props) {
     return () => {
       clearTimeout(showCoinLoader);
     };
-  }, [profileLoaded, newUser, onboardingSuccessLogic, location, setNavRoute]);
+  }, [profileLoaded, newUser, onboardingSuccessLogic, location]);
 
   /* Sends the Id token on authentication only once */
   useEffect(() => {
