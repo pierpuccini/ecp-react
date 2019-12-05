@@ -67,6 +67,7 @@ const useStyles = makeStyles(theme => ({
 
 const ClassroomController = props => {
   const classes = useStyles();
+  const { location, role, userId, loading, getAllMyClassrooms } = props;
 
   //Checks if DOM is ready to un mount loading icon
   const [domReady, setDomReady] = useState(false);
@@ -84,22 +85,39 @@ const ClassroomController = props => {
     }
   });
 
-  /* Use efect handles time out for loader */
+  /* Use efect handles async loading for loader */
   useEffect(() => {
-    let showCoinLoader = setTimeout(() => {
-      setDomReady(true);
-    }, 750);
-    const parsedPath = props.location.pathname.replace("/", "").split("/");
+    // Create an scoped async function in the hook
+    async function getMyClassrooms() {
+      await getAllMyClassrooms({role: role, uid: userId});
+    }
+    // Execute the created function directly
+    getMyClassrooms()
+      .then(() => {
+        setDomReady(true);
+      })
+      .catch(err => {
+        console.log("err", err);
+      });
+  }, []);
+
+  /* TODO: REMOVE SHOW COIN LOADER IN USE EFECT BELLOW AND THE RETURN */
+  /* Use efect handles local component routing */
+  useEffect(() => {
+    // let showCoinLoader = setTimeout(() => {
+    //   setDomReady(true);
+    // }, 750);
+    const parsedPath = location.pathname.replace("/", "").split("/");
     if (parsedPath.length > 1) {
       setNavRoute(`classrooms/${parsedPath[1]}`);
     }
-    if (props.location.state) {
-      setNavRoute(`${props.location.state.overwriteLocalNavState}`);
+    if (location.state) {
+      setNavRoute(`${location.state.overwriteLocalNavState}`);
     }
-    return () => {
-      clearTimeout(showCoinLoader);
-    };
-  }, [props.location]);
+    // return () => {
+    //   clearTimeout(showCoinLoader);
+    // };
+  }, [location]);
 
   const handleNavChange = (event, newValue) => {
     setNavRoute(newValue);
@@ -159,7 +177,7 @@ const ClassroomController = props => {
   routes = (
     <Switch>
       {routesArray.map((route, index) => {
-        if (route.restriction !== props.role) {
+        if (route.restriction !== role) {
           return (
             <Route
               path={`/classrooms/${route.url}`}
@@ -205,16 +223,16 @@ const ClassroomController = props => {
   );
 
   let floatingLoader;
-  if (props.loading) {
+  if (loading) {
     floatingLoader = <FloatingLoader></FloatingLoader>
   }
 
   const classrooomController =
-    props.location.pathname === "/classrooms" ? (
-      <Container maxWidth="sm" className={classes.container}>
+    location.pathname === "/classrooms" ? (
+      <Container maxWidth="md" className={classes.container}>
         {redirect}
         <Paper className={classes.paper}>
-          {props.role === "student" ? null : classroomManager}
+          {role === "student" ? null : classroomManager}
           <div className={classes.classroomListHeaderContainer}>
             <div className={classes.classroomListHeader}>
               <Icon style={{ marginRight: "5px" }}>
@@ -222,7 +240,7 @@ const ClassroomController = props => {
               </Icon>
               <Typography>Classroom List</Typography>
             </div>
-            {props.role === "student" ? (
+            {role === "student" ? (
               <IconButton onClick={handleAddClassStudent}>
                 <AddCircleOutlineOutlinedIcon />
               </IconButton>
@@ -264,13 +282,15 @@ const ClassroomController = props => {
 const mapStateToProps = state => {
   return {
     role: state.firebase.profile.role,
-    loading: state.classrooms.loading
+    loading: state.classrooms.loading,
+    userId: state.firebase.auth.uid
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    addClassroom: payload => dispatch(actions.addClassroom(payload))
+    addClassroom: payload => dispatch(actions.addClassroom(payload)),
+    getAllMyClassrooms: payload => dispatch(actions.getAllMyClassrooms(payload)),
   };
 };
 

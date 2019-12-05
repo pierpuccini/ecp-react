@@ -6,14 +6,18 @@ const initialState = {
   error: false,
   missingFields: {},
   registrationCode: null,
-  success: false
+  success: false,
+  classroom: null,
+  classrooms: null
 };
 
 const classroomStart = state => {
   return updateObject(state, {
     loading: true,
     error: null,
-    success: null
+    success: null,
+    classroom: null,
+    classrooms: null
   });
 };
 
@@ -31,7 +35,9 @@ const classroomSuccess = (state, action) => {
     error: null,
     missingFields: action.missingFields,
     registrationCode: action.code,
-    success: true
+    success: true,
+    classroom: action.classroom,
+    classrooms: action.classrooms
   });
 };
 

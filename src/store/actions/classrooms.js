@@ -14,11 +14,13 @@ export const classroomFail = error => {
   };
 };
 
-export const classroomSuccess = (missingFields, code) => {
+export const classroomSuccess = (missingFields, code, classroom, classrooms) => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_SUCCESS,
     missingFields: missingFields,
-    code: code
+    code: code,
+    classroom: classroom,
+    classrooms: classrooms,
   };
 };
 
@@ -109,28 +111,37 @@ export const createClassroom = payload => {
             response.status === 200 &&
             response.data.code_classroom !== null
           ) {
-
-            // Prevents classroom from being added to admin acc            
+            // Prevents classroom from being added to admin acc
             if (!currentState.firebase.profile.role.includes("admin")) {
               const classrooms = [
-                    ...currentState.firebase.profile.classrooms,
-                    {
-                      code_classroom: response.data.code_classroom,
-                      subject_id: response.data.id
-                    }
+                ...currentState.firebase.profile.classrooms,
+                {
+                  code_classroom: response.data.code_classroom,
+                  subject_id: response.data.id
+                }
               ];
               firestore
                 .collection("users")
                 .doc(currentState.firebase.auth.uid)
                 .set({ classrooms: classrooms }, { merge: true })
                 .then(() => {
-                  dispatch(classroomSuccess(extractMissingFields,response.data.code_classroom));
+                  dispatch(
+                    classroomSuccess(
+                      extractMissingFields,
+                      response.data.code_classroom
+                    )
+                  );
                 })
                 .catch(err => {
                   dispatch(classroomFail(err));
                 });
-            }else{
-              dispatch(classroomSuccess(extractMissingFields,response.data.code_classroom));
+            } else {
+              dispatch(
+                classroomSuccess(
+                  extractMissingFields,
+                  response.data.code_classroom
+                )
+              );
             }
           } else {
             const unknownError = {
@@ -211,6 +222,47 @@ export const addClassroom = payload => {
         })
         .catch(error => {
           dispatch(classroomFail(error.response.data));
+        });
+    }
+  };
+};
+
+export const getAllMyClassrooms = payload => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    dispatch(classroomStart());
+    const currentState = getState();
+
+    let error;
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(classroomFail(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentState.auth.token.token}`
+      };
+
+      const url = `/allclassroom?type=${payload.role}&user_id=${payload.uid}`;
+      axios
+        .get(url, { headers: headers })
+        .then(response => {
+          if (response.status === 200) {
+            dispatch(classroomSuccess(null, null, null, response.data.classrooms));
+          } else {
+            const unknownError = {
+              code: "add-classroom-error",
+              message: "Unkown error, Contact support"
+            };
+            dispatch(classroomFail(unknownError));
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+          dispatch(classroomFail(error.response.data.error));
         });
     }
   };
