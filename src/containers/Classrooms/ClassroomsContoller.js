@@ -155,7 +155,10 @@ const ClassroomController = props => {
   /* Use efect handles local component routing */
   useEffect(() => {
     const parsedPath = location.pathname.replace("/", "").split("/");
-    if (parsedPath.length > 1) {
+    const paramsPath = location.pathname.replace("/", "");
+    if (location.pathname.includes(":")) {
+      setNavRoute(`${paramsPath}`);
+    } else if (parsedPath.length > 1) {
       setNavRoute(`classrooms/${parsedPath[1]}`);
     }
     if (location.state) {
@@ -182,8 +185,12 @@ const ClassroomController = props => {
     }
   ]);
 
-  const students = useSelector(({ firestore: { ordered } }) => ordered.students);
-  const teachers = useSelector(({ firestore: { ordered } }) => ordered.teachers);
+  const students = useSelector(
+    ({ firestore: { ordered } }) => ordered.students
+  );
+  const teachers = useSelector(
+    ({ firestore: { ordered } }) => ordered.teachers
+  );
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
   const loadingDom = (
@@ -197,7 +204,7 @@ const ClassroomController = props => {
   }
 
   const handleNavChange = (event, newValue) => {
-    event.preventDefault()
+    event.preventDefault();
     setNavRoute(newValue);
   };
 
@@ -246,7 +253,7 @@ const ClassroomController = props => {
   let routes, redirect;
   const routesArray = [
     { url: "create", comp: createClassroom, restriction: "student" },
-    { url: "view", comp: viewClassroom, restriction: "none" }
+    { url: "view/:id", comp: viewClassroom, restriction: "none" }
   ];
 
   /* Conditional routes section */
@@ -256,7 +263,7 @@ const ClassroomController = props => {
   routes = (
     <Switch>
       {routesArray.map((route, index) => {
-        if (route.restriction !== role || route.restriction === 'none') {
+        if (route.restriction !== role || route.restriction === "none") {
           return (
             <Route
               path={`/classrooms/${route.url}`}

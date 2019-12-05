@@ -1,6 +1,10 @@
+/* React imports */
 import React from 'react'
+import { withRouter, useParams } from "react-router-dom";
 
 const ViewClassroom = () => {
+    let { id } = useParams();
+    console.log('id',id)
     return (
         <div>
             view classrom
@@ -8,4 +12,4 @@ const ViewClassroom = () => {
     )
 }
 
-export default ViewClassroom
+export default withRouter(ViewClassroom)

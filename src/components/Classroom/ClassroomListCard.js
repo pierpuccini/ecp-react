@@ -165,7 +165,7 @@ const ClassroomListCard = props => {
   //   let classroomViewer
   let mobileActions = (
     <IconButton
-      onClick={(event) => handleNavChange(event, 'classrooms/view')}
+      onClick={(event) => handleNavChange(event, `classrooms/view/:${classroom.id}`)}
       disabled={classroom.active_subject == null}
     >
       <VisibilityOutlinedIcon />
@@ -196,7 +196,7 @@ const ClassroomListCard = props => {
           <MenuItem
             className={classes.classroomCardActionsMenu}
             key="view"
-            onClick={(event)=>{handleMobileMenuClose(event,'classrooms/view')}}
+            onClick={(event)=>{handleMobileMenuClose(event,`classrooms/view/:${classroom.id}`)}}
           >
             <IconButton style={{ padding: "unset" }}>
               <VisibilityOutlinedIcon />
