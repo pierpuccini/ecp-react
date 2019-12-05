@@ -24,6 +24,7 @@ const Routes = (props) => {
     const { authenticated, navRoute, pathname, role } = props;
 
     let routes, redirect;
+    //first value in array indicates if route need auth, second and so forth indicates which user type has access
     const routesArray = [
       { url: "home", comp: asyncDashboard, availableTo: ["protected","all"] },
       { url: "my-account", comp: asyncUsers, availableTo: ["protected","all"] },
