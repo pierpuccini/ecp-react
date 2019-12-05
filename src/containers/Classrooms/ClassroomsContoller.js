@@ -4,8 +4,11 @@ import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 /* Redux */
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
+import { useSelector } from "react-redux";
+import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -22,6 +25,7 @@ import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 import customClasses from "./ClassroomsContoller.module.scss";
 import AddClassroomModal from "../../components/Classroom/AddClassroomModal";
+import ClassroomListCard from '../../components/Classroom/ClassroomListCard'
 import Modal from "../../components/UI/Modal/Modal";
 import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import { updateObject, checkValidity } from "../../shared/utility";
@@ -40,8 +44,10 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
+    border: "unset",
     [theme.breakpoints.down("sm")]: {
-      "box-shadow": "unset"
+      boxShadow: "unset",
+      border: "2px solid"
     }
   },
   button: {
@@ -62,18 +68,34 @@ const useStyles = makeStyles(theme => ({
   classroomListHeaderContainer: {
     display: "flex",
     justifyContent: "space-between"
+  },
+  classroomCard: {
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  classroomNameAndDetails: {
+    display: "flex",
+    flexDirection: "column",
+    alignSelf: "center"
+  },
+  nameAndDetails: {
+    textTransform: "capitalize"
   }
 }));
 
 const ClassroomController = props => {
   const classes = useStyles();
+  const isMobile = useMediaQuery("(max-width: 600px)");
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
   const {
     location,
     role,
     userId,
     loading,
     getAllMyClassrooms,
-    createSuccess
+    createSuccess,
+    classrooms
   } = props;
 
   //Checks if DOM is ready to un mount loading icon
@@ -144,6 +166,43 @@ const ClassroomController = props => {
     //   clearTimeout(showCoinLoader);
     // };
   }, [location]);
+
+  /* Loads clients, teachers and studets data from Firestore */
+  useFirestoreConnect(() => [
+    {
+      collection: "users",
+      storeAs: "students",
+      where: ["role", "==", "student"]
+    },
+    {
+      collection: "users",
+      storeAs: "teachers",
+      where: ["role", "==", "teacher"]
+    },
+    {
+      collection: "clients",
+      storeAs: "clients",
+      where: ["active", "==", true]
+    }
+  ]);
+
+  const students = useSelector(
+    ({ firestore: { ordered } }) => ordered.students
+  );
+  const teachers = useSelector(
+    ({ firestore: { ordered } }) => ordered.teachers
+  );
+  const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
+
+  const loadingDom = (
+    <div style={{ alignSelf: "center" }}>
+      <Loader />
+    </div>
+  );
+
+  if (!isLoaded(clients, teachers, students) && domReady) {
+    return loadingDom
+  }
 
   const handleNavChange = (event, newValue) => {
     setNavRoute(newValue);
@@ -257,7 +316,10 @@ const ClassroomController = props => {
     location.pathname === "/classrooms" ? (
       <Container maxWidth="md" className={classes.container}>
         {redirect}
-        <Paper className={classes.paper}>
+        <Paper
+          className={classes.paper}
+          style={prefersDarkMode ? { border: "unset" } : null}
+        >
           {role === "student" ? null : classroomManager}
           <div className={classes.classroomListHeaderContainer}>
             <div className={classes.classroomListHeader}>
@@ -284,6 +346,20 @@ const ClassroomController = props => {
             />
           </Modal>
         </Paper>
+        {classrooms.map(classroom => {
+          const classroomTeacher = teachers.find(teacher => teacher.id === classroom.teacher_id);
+          const classroomInstitution = clients.find(institution => institution.id === classroom.client_id);
+          return (
+            <ClassroomListCard
+              classroom={classroom}
+              role={role}
+              classroomTeacher={classroomTeacher.displayName}
+              classroomInstitution={classroomInstitution.value}
+              prefersDarkMode={prefersDarkMode}
+              key={classroom.code_classroom}
+            />
+          );
+        })}
       </Container>
     ) : (
       <React.Fragment>
@@ -292,17 +368,7 @@ const ClassroomController = props => {
       </React.Fragment>
     );
 
-  const loadingDom = (
-    <div style={{ alignSelf: "center" }}>
-      <Loader />
-    </div>
-  );
-
-  return (
-    <React.Fragment>
-      {domReady ? classrooomController : loadingDom}
-    </React.Fragment>
-  );
+  return <React.Fragment>{classrooomController}</React.Fragment>;
 };
 
 const mapStateToProps = state => {
@@ -310,7 +376,9 @@ const mapStateToProps = state => {
     role: state.firebase.profile.role,
     loading: state.classrooms.loading,
     userId: state.firebase.auth.uid,
-    createSuccess: state.classrooms.success
+    createSuccess: state.classrooms.success,
+    classrooms:
+      state.classrooms.classrooms == null ? [] : state.classrooms.classrooms
   };
 };
 
