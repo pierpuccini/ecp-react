@@ -287,7 +287,6 @@ export const resetUserErrors = () => {
 export const userManagerAuthActions = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(userUpdateStart());
-    console.log("payload", payload);
     const firestore = getFirestore();
     const currentState = getState();
 
@@ -325,7 +324,6 @@ export const userManagerAuthActions = payload => {
             dispatch(userUpdateFailed(error.response.data));
           });
       } else if (payload.action === "disabled") {
-        console.log("payload2", payload);
         axios
           .post("/manageuser", payload, { headers: headers })
           .then((res) => {
