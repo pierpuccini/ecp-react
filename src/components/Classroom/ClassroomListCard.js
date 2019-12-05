@@ -12,6 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -160,8 +161,15 @@ const ClassroomListCard = props => {
   );
 
   //   let classroomViewer
-  let mobileActions;
-  if (isMobile && role === "teacher") {
+  let mobileActions = (
+    <IconButton
+      onClick={handleMobileMenu}
+      disabled={classroom.active_subject == null}
+    >
+      <VisibilityOutlinedIcon />
+    </IconButton>
+  );
+  if (isMobile && role !== "student") {
     mobileActions = (
       <div className={classes.classroomCardActions}>
         <IconButton onClick={handleMobileMenu}>
@@ -181,6 +189,15 @@ const ClassroomListCard = props => {
           >
             <IconButton color="primary" style={{ padding: "unset" }}>
               <EditOutlinedIcon />
+            </IconButton>
+          </MenuItem>
+          <MenuItem
+            className={classes.classroomCardActionsMenu}
+            key="view"
+            onClick={handleMobileMenuClose}
+          >
+            <IconButton style={{ padding: "unset" }}>
+              <VisibilityOutlinedIcon />
             </IconButton>
           </MenuItem>
           <MenuItem

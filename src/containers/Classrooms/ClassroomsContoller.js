@@ -17,7 +17,6 @@ import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
 //Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 /* App imports */
 import PermisionError from "../../components/Errors/PermisionError/PermisionError";
@@ -31,6 +30,10 @@ import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLo
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const createClassroom = asyncComponent(() => {
+  return import("./Actions/CreateClassroom");
+});
+
+const viewClassroom = asyncComponent(() => {
   return import("./Actions/CreateClassroom");
 });
 
@@ -149,12 +152,8 @@ const ClassroomController = props => {
     // eslint-disable-next-line
   }, [createSuccess]);
 
-  /* TODO: REMOVE SHOW COIN LOADER IN USE EFECT BELLOW AND THE RETURN */
   /* Use efect handles local component routing */
   useEffect(() => {
-    // let showCoinLoader = setTimeout(() => {
-    //   setDomReady(true);
-    // }, 750);
     const parsedPath = location.pathname.replace("/", "").split("/");
     if (parsedPath.length > 1) {
       setNavRoute(`classrooms/${parsedPath[1]}`);
@@ -162,9 +161,6 @@ const ClassroomController = props => {
     if (location.state) {
       setNavRoute(`${location.state.overwriteLocalNavState}`);
     }
-    // return () => {
-    //   clearTimeout(showCoinLoader);
-    // };
   }, [location]);
 
   /* Loads clients, teachers and studets data from Firestore */
@@ -252,7 +248,8 @@ const ClassroomController = props => {
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect;
   const routesArray = [
-    { url: "create", comp: createClassroom, restriction: "student" }
+    { url: "create", comp: createClassroom, restriction: "student" },
+    { url: "view", comp: viewClassroom, restriction: "none" }
   ];
 
   /* Conditional routes section */
@@ -262,7 +259,7 @@ const ClassroomController = props => {
   routes = (
     <Switch>
       {routesArray.map((route, index) => {
-        if (route.restriction !== role) {
+        if (route.restriction !== role || route.restriction === 'none') {
           return (
             <Route
               path={`/classrooms/${route.url}`}
@@ -291,17 +288,6 @@ const ClassroomController = props => {
           }}
         >
           Create Classroom
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          className={customClasses.button}
-          endIcon={<EditOutlinedIcon />}
-          onClick={event => {
-            handleNavChange(event, "classrooms/edit");
-          }}
-        >
-          Edit Classroom
         </Button>
       </div>
     </React.Fragment>
