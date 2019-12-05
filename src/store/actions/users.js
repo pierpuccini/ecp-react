@@ -343,6 +343,7 @@ export const userManagerAuthActions = payload => {
               });
           })
           .catch(error => {
+            console.log('error',error.response);
             dispatch(userUpdateFailed(error.response.data));
           });
       }
