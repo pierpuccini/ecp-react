@@ -57,13 +57,21 @@ const resetCreateClassroom = state => {
   });
 };
 
+const resetFetchClassroom = state => {
+  return updateObject(state, {
+    classroom: null,
+    classrooms: null
+  });
+};
+
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.CLASSROOM_ACTIONS_START: return classroomStart(state, action);
     case actionTypes.CLASSROOM_ACTIONS_FAILED: return classroomFail(state, action);
     case actionTypes.CLASSROOM_ACTIONS_SUCCESS: return classroomSuccess(state, action);
-    case actionTypes.CLASSROOM_ALL_CLASSROOMS_SUCCESS: return getAllClassroomSuccess(state, action);
+    case actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS: return getAllClassroomSuccess(state, action);
+    case actionTypes.CLASSROOM_ACTIONS_FETCH_RESET: return resetFetchClassroom(state, action);
     case actionTypes.CLASSROOM_ACTIONS_CREATE_RESET: return resetCreateClassroom(state, action);
     default:
       return state;

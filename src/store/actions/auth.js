@@ -265,6 +265,12 @@ export const resetCreateClassroom = () => {
   };
 };
 
+export const resetFetchClassrooms = () => {
+  return {
+    type: actionTypes.CLASSROOM_ACTIONS_FETCH_RESET
+  };
+};
+
 export const userResetErrors = () => {
   return {
     type: actionTypes.USER_RESET_ERRORS
@@ -288,6 +294,7 @@ export const authLogout = () => {
     dispatch(logout(cleanErrors, cleanNewUser, errors, newUser));
     dispatch(onboardingReset());
     dispatch(resetCreateClassroom());
+    dispatch(resetFetchClassrooms());
     dispatch(userReset());
     dispatch(userResetErrors());
   };

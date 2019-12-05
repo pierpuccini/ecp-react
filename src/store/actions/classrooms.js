@@ -24,7 +24,7 @@ export const classroomSuccess = (missingFields, code) => {
 
 export const getAllClassroomSuccess = (classrooms) => {
   return {
-    type: actionTypes.CLASSROOM_ALL_CLASSROOMS_SUCCESS,
+    type: actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS,
     classrooms: classrooms
   };
 };
