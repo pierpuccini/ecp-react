@@ -25,7 +25,7 @@ import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 import customClasses from "./ClassroomsContoller.module.scss";
 import AddClassroomModal from "../../components/Classroom/AddClassroomModal";
-import ClassroomListCard from '../../components/Classroom/ClassroomListCard'
+import ClassroomListCard from "../../components/Classroom/ClassroomListCard";
 import Modal from "../../components/UI/Modal/Modal";
 import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import { updateObject, checkValidity } from "../../shared/utility";
@@ -201,7 +201,7 @@ const ClassroomController = props => {
   );
 
   if (!isLoaded(clients, teachers, students) && domReady) {
-    return loadingDom
+    return loadingDom;
   }
 
   const handleNavChange = (event, newValue) => {
@@ -347,14 +347,22 @@ const ClassroomController = props => {
           </Modal>
         </Paper>
         {classrooms.map(classroom => {
-          const classroomTeacher = teachers.find(teacher => teacher.id === classroom.teacher_id);
-          const classroomInstitution = clients.find(institution => institution.id === classroom.client_id);
+          let classroomTeacher;
+          let classroomInstitution;
+          if (role === "student" || role === "teacher") {
+            classroomTeacher = teachers.find(
+              teacher => teacher.id === classroom.teacher_id
+            );
+            classroomInstitution = clients.find(
+              institution => institution.id === classroom.client_id
+            );
+          }
           return (
             <ClassroomListCard
               classroom={classroom}
               role={role}
-              classroomTeacher={classroomTeacher.displayName}
-              classroomInstitution={classroomInstitution.value}
+              classroomTeacher={classroomTeacher}
+              classroomInstitution={classroomInstitution}
               prefersDarkMode={prefersDarkMode}
               key={classroom.code_classroom}
             />

@@ -55,7 +55,7 @@ const ClassroomListCard = props => {
           className={classes.nameAndDetails}
           style={classroom.active_subject == null ? { color: "#777777" } : null}
         >
-          {classroomTeacher}
+          {classroomTeacher.displayName}
         </Typography>
       );
       break;
@@ -66,7 +66,7 @@ const ClassroomListCard = props => {
           className={classes.nameAndDetails}
           style={classroom.active_subject == null ? { color: "#777777" } : null}
         >
-          {classroomInstitution}
+          {classroomInstitution.value}
         </Typography>
       );
       break;
