@@ -66,7 +66,9 @@ function App(props) {
     onboardingSuccess,
     sendIdToken,
     resetReduxErrors,
-    logout
+    logout,
+    disabled,
+    userDisabled
   } = props;
 
   const classes = useStyles();
@@ -85,7 +87,6 @@ function App(props) {
   });
 
   /* Use efect handles time out for loader and conditional routes managed by state */
-
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
@@ -121,7 +122,23 @@ function App(props) {
     return () => {
       clearTimeout(showCoinLoader);
     };
-  }, [profileLoaded, newUser, onboardingSuccessLogic, location]);
+  }, [
+    profileLoaded,
+    newUser,
+    onboardingSuccessLogic,
+    location,
+    disabled,
+    logout
+  ]);
+
+  /* This use effect logs users out on disabled state */
+  useEffect(() => {
+    if (profileLoaded) {
+      if (disabled) {
+        logout(true);
+      }
+    }
+  }, [profileLoaded, disabled, logout]);
 
   /* Sends the Id token on authentication only once */
   useEffect(() => {
@@ -131,6 +148,7 @@ function App(props) {
     // eslint-disable-next-line
   }, [isAuthenticated]);
 
+  //snackbar state handler
   useEffect(() => {
     let payload = snackbarPayload;
     //error handler
@@ -160,6 +178,10 @@ function App(props) {
         duration: 10000
       };
     }
+    //warnings handler
+    if (userDisabled) {
+      payload = userDisabled;
+    }
     // console.log("payload [app]", payload);
     setsnackbarPayload(payload);
     //missing dep: snackbarPayload
@@ -171,7 +193,9 @@ function App(props) {
     usersError,
     classroomError,
     myAccountSuccess,
-    onboardingSuccess
+    onboardingSuccess,
+    disabled,
+    userDisabled
   ]);
 
   const toggleDrawer = open => {
@@ -207,6 +231,9 @@ function App(props) {
   /* Routes for non-authenticated users */
   let app = (
     <div className="App">
+      {snackbarPayload.type === "warning" ? (
+        <Snackbar payload={snackbarPayload} />
+      ) : null}
       <Routes
         authenticated={isAuthenticated}
         navRoute={navRoute}
@@ -240,9 +267,6 @@ function App(props) {
         <Loader />
       </div>
     );
-
-    // //error handler
-    // let snackbarPayload = { type: "none", info: "none"};
 
     //navigation
     const bottomNavigation = (
@@ -390,13 +414,15 @@ const mapStateToProps = state => {
     classroomError: state.classrooms.error,
     onboardingSuccess: state.onboarding.showSuccess,
     myAccountSuccess: state.users.success,
-    role: state.firebase.profile.role
+    role: state.firebase.profile.role,
+    disabled: state.firebase.profile.disabled,
+    userDisabled: state.users.warning
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    logout: () => dispatch(actions.authLogout()),
+    logout: disabledUser => dispatch(actions.authLogout(disabledUser)),
     resetReduxErrors: () => {
       dispatch(actions.resetErrors());
       dispatch(actions.resetUserErrors());

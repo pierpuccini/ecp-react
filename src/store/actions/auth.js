@@ -283,7 +283,13 @@ export const userReset = () => {
   };
 };
 
-export const authLogout = () => {
+export const userDisabled = () => {
+  return {
+    type: actionTypes.USER_DISABLED
+  };
+};
+
+export const authLogout = (disabledUser) => {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
     let errors = getState().auth.error;
@@ -295,6 +301,9 @@ export const authLogout = () => {
     dispatch(onboardingReset());
     dispatch(resetCreateClassroom());
     dispatch(resetFetchClassrooms());
+    if (disabledUser) {
+      dispatch(userDisabled());      
+    }
     dispatch(userReset());
     dispatch(userResetErrors());
   };

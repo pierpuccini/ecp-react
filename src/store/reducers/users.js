@@ -61,12 +61,22 @@ const userResetErrors = (state) => {
   });
 };
 
+const userDisabled = (state) => {
+  return updateObject(state, {
+    warning: {
+      type: "warning",
+      info: {message: "User has been disabled by an Admin."}
+    }
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.USER_UPDATE_STARTED: return userUpdateStart(state, action);
     case actionTypes.USER_UPDATE_SUCCESS: return userUpdateSuccess(state, action);
     case actionTypes.USER_UPDATE_FAILED: return userUpdateFailed(state, action);
     case actionTypes.USER_RESET_ERRORS: return userResetErrors(state, action);
+    case actionTypes.USER_DISABLED: return userDisabled(state, action);
     case actionTypes.USER_RESET: return userUpdateLogout(state, action);
     default:
       return state;
