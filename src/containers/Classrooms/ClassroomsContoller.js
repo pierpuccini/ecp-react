@@ -23,7 +23,7 @@ import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 import customClasses from "./ClassroomsContoller.module.scss";
 import AddClassroomModal from "../../components/Classroom/AddClassroomModal";
 import Modal from "../../components/UI/Modal/Modal";
-import FloatingLoader from '../../components/UI/Loader/FloatingLoader/FloatingLoader'
+import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const createClassroom = asyncComponent(() => {
@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 
 const ClassroomController = props => {
   const classes = useStyles();
-  const { location, role, userId, loading, getAllMyClassrooms } = props;
+  const { location, role, userId, loading, getAllMyClassrooms, createSuccess } = props;
 
   //Checks if DOM is ready to un mount loading icon
   const [domReady, setDomReady] = useState(false);
@@ -89,7 +89,7 @@ const ClassroomController = props => {
   useEffect(() => {
     // Create an scoped async function in the hook
     async function getMyClassrooms() {
-      await getAllMyClassrooms({role: role, uid: userId});
+      await getAllMyClassrooms({ role: role, uid: userId });
     }
     // Execute the created function directly
     getMyClassrooms()
@@ -99,7 +99,16 @@ const ClassroomController = props => {
       .catch(err => {
         console.log("err", err);
       });
-  }, []);
+    if (createSuccess) {
+      getMyClassrooms()
+        .then(() => {
+          setDomReady(true);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    }
+  }, [createSuccess]);
 
   /* TODO: REMOVE SHOW COIN LOADER IN USE EFECT BELLOW AND THE RETURN */
   /* Use efect handles local component routing */
@@ -137,7 +146,7 @@ const ClassroomController = props => {
           valid: false,
           touched: false
         }
-      })
+      });
     }
     setopenAddClassModal(!openAddClassModalCopy);
   };
@@ -156,14 +165,14 @@ const ClassroomController = props => {
     setaddClassroomForm(updatedControls);
   };
 
-  const addClassroomHandler = (event) => {
+  const addClassroomHandler = event => {
     event.preventDefault();
-    setopenAddClassModal(false)
+    setopenAddClassModal(false);
     const payload = {
       code_classroom: addClassroomForm.linkCode.value
-    }
-    props.addClassroom(payload)
-  }
+    };
+    props.addClassroom(payload);
+  };
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect;
   const routesArray = [
@@ -224,7 +233,7 @@ const ClassroomController = props => {
 
   let floatingLoader;
   if (loading) {
-    floatingLoader = <FloatingLoader></FloatingLoader>
+    floatingLoader = <FloatingLoader></FloatingLoader>;
   }
 
   const classrooomController =
@@ -283,15 +292,18 @@ const mapStateToProps = state => {
   return {
     role: state.firebase.profile.role,
     loading: state.classrooms.loading,
-    userId: state.firebase.auth.uid
+    userId: state.firebase.auth.uid,
+    createSuccess: state.classrooms.success
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     addClassroom: payload => dispatch(actions.addClassroom(payload)),
-    getAllMyClassrooms: payload => dispatch(actions.getAllMyClassrooms(payload)),
+    getAllMyClassrooms: payload => dispatch(actions.getAllMyClassrooms(payload))
   };
 };
 
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(ClassroomController));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ClassroomController)
+);

@@ -157,7 +157,8 @@ export const createClassroom = payload => {
           }
         })
         .catch(error => {
-          dispatch(classroomFail(error.response.data));
+          console.log(error.response)
+          dispatch(classroomFail(error.response.data.error));
         });
     }
   };

@@ -284,7 +284,7 @@ const ClassroomCreator = props => {
                   label="Class Code"
                   placeholder="3752"
                   margin="normal"
-                  type="text"
+                  type="number"
                   onChange={event => inputChangedHandler(event, "classCode")}
                   variant="outlined"
                   helperText={
