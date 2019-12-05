@@ -75,7 +75,9 @@ function App(props) {
 
   const [drawerOpen, setdrawerOpen] = useState(false);
 
-  const [navRoute, setNavRoute] = useState("home");
+  const [navRoute, setNavRoute] = useState(
+    newUser === "" ? "onboarding" : "home"
+  );
 
   const [snackbarPayload, setsnackbarPayload] = useState({
     type: "none",
@@ -154,7 +156,8 @@ function App(props) {
     if (onboardingSuccess) {
       payload = {
         type: "success",
-        info: { message: "Classroom Succesfully added!" }
+        info: { message: "Classroom Succesfully added!" },
+        duration: 10000
       };
     }
     // console.log("payload [app]", payload);

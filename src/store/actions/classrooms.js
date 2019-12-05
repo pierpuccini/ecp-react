@@ -158,7 +158,7 @@ export const createClassroom = payload => {
         })
         .catch(error => {
           console.log(error.response)
-          dispatch(classroomFail(error.response.data.error));
+          dispatch(classroomFail(error.response.data.error != null ? error.response.data.error:error.response.data));
         });
     }
   };
@@ -227,7 +227,7 @@ export const addClassroom = payload => {
           }
         })
         .catch(error => {
-          dispatch(classroomFail(error.response.data));
+          dispatch(classroomFail(error.response.data.error != null ? error.response.data.error:error.response.data));
         });
     }
   };
@@ -268,7 +268,7 @@ export const getAllMyClassrooms = payload => {
         })
         .catch(error => {
           console.log(error.response);
-          dispatch(classroomFail(error.response.data.error));
+          dispatch(classroomFail(error.response.data.error != null ? error.response.data.error:error.response.data));
         });
     }
   };

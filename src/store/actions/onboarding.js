@@ -114,7 +114,7 @@ export const checkOnboarding = data => {
           }
         })
         .catch(error => {
-          dispatch(onboardingFailed(error.response.data));
+          dispatch(onboardingFailed(error.response.data.error != null ? error.response.data.error:error.response.data));
         });
     }
   };

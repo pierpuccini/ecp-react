@@ -123,14 +123,14 @@ const Snackbars = props => {
     variant = payload.type;
     message = payload.info.customErrorMsg
       ? payload.info.customErrorMsg
-      : (payload.info.message.message == null )? payload.info.message: payload.info.message.message;
+      : payload.info.message;
   }
 
   return (
     <Snackbar
       anchorOrigin={anchorOrigin}
       open={open}
-      autoHideDuration={6000}
+      autoHideDuration={payload.duration ? payload.duration:6000}
       onClose={handleClose}
     >
       <MySnackbarContentWrapper
