@@ -363,7 +363,6 @@ const ClassroomController = props => {
               status = classroom.active_students.findIndex(
                 student => student === userId
               );
-              console.log("status", status);
               if (status !== -1) {
                 studentStatus = "active";
               }
@@ -372,12 +371,10 @@ const ClassroomController = props => {
               status = classroom.pending_students.findIndex(
                 student => student === userId
               );
-              console.log("status", status);
               if (status !== -1) {
                 studentStatus = "pending";
               }
             }
-            console.log("studentStatus", studentStatus);
           }
           return (
             <ClassroomListCard
