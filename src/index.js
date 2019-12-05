@@ -17,6 +17,7 @@ import firebaseConfig from "./firebase.config";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./index.css";
+import ErrorBoundary from './hoc/ErrorBoundary/ErrorBoundary'
 //reducers
 import authReducer from "./store/reducers/auth";
 import onboardingReducer from "./store/reducers/onboarding";
@@ -81,9 +82,9 @@ let app = (
         <App />
       </BrowserRouter>
     </ReactReduxFirebaseProvider>
-  </Provider>
+  </Provider>  
 );
-ReactDOM.render(app, document.getElementById("root"));
+ReactDOM.render(<ErrorBoundary>{app}</ErrorBoundary>, document.getElementById("root"));
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
