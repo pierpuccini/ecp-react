@@ -34,7 +34,7 @@ const createClassroom = asyncComponent(() => {
 });
 
 const viewClassroom = asyncComponent(() => {
-  return import("./Actions/CreateClassroom");
+  return import("./Actions/ViewClassroom");
 });
 
 const useStyles = makeStyles(theme => ({
@@ -182,12 +182,8 @@ const ClassroomController = props => {
     }
   ]);
 
-  const students = useSelector(
-    ({ firestore: { ordered } }) => ordered.students
-  );
-  const teachers = useSelector(
-    ({ firestore: { ordered } }) => ordered.teachers
-  );
+  const students = useSelector(({ firestore: { ordered } }) => ordered.students);
+  const teachers = useSelector(({ firestore: { ordered } }) => ordered.teachers);
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
   const loadingDom = (
@@ -201,6 +197,7 @@ const ClassroomController = props => {
   }
 
   const handleNavChange = (event, newValue) => {
+    event.preventDefault()
     setNavRoute(newValue);
   };
 
@@ -374,6 +371,7 @@ const ClassroomController = props => {
               activeStudents={classroom.active_students}
               studentStatus={studentStatus}
               isMobile={isMobile}
+              handleNavChange={handleNavChange}
             />
           );
         })}

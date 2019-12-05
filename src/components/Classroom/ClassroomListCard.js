@@ -74,7 +74,8 @@ const ClassroomListCard = props => {
     // pendingStudents,
     // activeStudents,
     studentStatus,
-    isMobile
+    isMobile,
+    handleNavChange
   } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -84,8 +85,9 @@ const ClassroomListCard = props => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
+  const handleMobileMenuClose = (event,action) => {
     setAnchorEl(null);
+    handleNavChange(event,action)
   };
 
   let roleCaption = (
@@ -163,7 +165,7 @@ const ClassroomListCard = props => {
   //   let classroomViewer
   let mobileActions = (
     <IconButton
-      onClick={handleMobileMenu}
+      onClick={(event) => handleNavChange(event, 'classrooms/view')}
       disabled={classroom.active_subject == null}
     >
       <VisibilityOutlinedIcon />
@@ -194,7 +196,7 @@ const ClassroomListCard = props => {
           <MenuItem
             className={classes.classroomCardActionsMenu}
             key="view"
-            onClick={handleMobileMenuClose}
+            onClick={(event)=>{handleMobileMenuClose(event,'classrooms/view')}}
           >
             <IconButton style={{ padding: "unset" }}>
               <VisibilityOutlinedIcon />
