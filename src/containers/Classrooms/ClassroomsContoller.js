@@ -347,8 +347,7 @@ const ClassroomController = props => {
           </Modal>
         </Paper>
         {classrooms.map(classroom => {
-          let classroomTeacher;
-          let classroomInstitution;
+          let classroomTeacher, classroomInstitution, studentStatus;
           if (role === "student" || role === "teacher") {
             classroomTeacher = teachers.find(
               teacher => teacher.id === classroom.teacher_id
@@ -356,6 +355,29 @@ const ClassroomController = props => {
             classroomInstitution = clients.find(
               institution => institution.id === classroom.client_id
             );
+          }
+          if (role === "student") {
+            let status;
+            studentStatus = "Student not found";
+            if (classroom.active_students != null) {
+              status = classroom.active_students.findIndex(
+                student => student === userId
+              );
+              console.log("status", status);
+              if (status !== -1) {
+                studentStatus = "active";
+              }
+            }
+            if (classroom.pending_students != null) {
+              status = classroom.pending_students.findIndex(
+                student => student === userId
+              );
+              console.log("status", status);
+              if (status !== -1) {
+                studentStatus = "pending";
+              }
+            }
+            console.log("studentStatus", studentStatus);
           }
           return (
             <ClassroomListCard
@@ -365,6 +387,9 @@ const ClassroomController = props => {
               classroomInstitution={classroomInstitution}
               prefersDarkMode={prefersDarkMode}
               key={classroom.code_classroom}
+              pendingStudents={classroom.pending_students}
+              activeStudents={classroom.active_students}
+              studentStatus={studentStatus}
             />
           );
         })}

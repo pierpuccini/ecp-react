@@ -2,6 +2,7 @@
 import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import { amber, green } from "@material-ui/core/colors";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
@@ -30,12 +31,29 @@ const useStyles = makeStyles(theme => ({
   },
   nameAndDetails: {
     textTransform: "capitalize"
+  },
+  studentStatusActive: {
+    textTransform: "capitalize",
+    color: green[700]
+  },
+  studentStatusPending: {
+    textTransform: "capitalize",
+    color: amber[600]
   }
 }));
 
 const ClassroomListCard = props => {
   const classes = useStyles();
-  const { classroom, role, classroomTeacher, classroomInstitution, prefersDarkMode } = props;
+  const {
+    classroom,
+    role,
+    classroomTeacher,
+    classroomInstitution,
+    prefersDarkMode,
+    pendingStudents,
+    activeStudents,
+    studentStatus
+  } = props;
 
   let roleCaption = (
     <Typography
@@ -44,6 +62,22 @@ const ClassroomListCard = props => {
       style={classroom.active_subject == null ? { color: "#777777" } : null}
     >
       {classroom.id}
+    </Typography>
+  );
+
+  let statusStudent = (
+    <Typography
+      variant="caption"
+      className={
+        studentStatus === "pending"
+          ? classes.studentStatusPending
+          : classes.studentStatusActive
+      }
+      style={classroom.active_subject == null ? { color: "#777777" } : null}
+    >
+      {studentStatus === "pending"
+        ? "Pending teacher approval"
+        : "Active in classroom"}
     </Typography>
   );
 
@@ -100,6 +134,7 @@ const ClassroomListCard = props => {
             {classroom.subject_name}
           </Typography>
           {roleCaption}
+          {role === "student" ? statusStudent : null}
         </div>
       </div>
     </Paper>
