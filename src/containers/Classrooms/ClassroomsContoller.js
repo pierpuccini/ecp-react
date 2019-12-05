@@ -67,7 +67,14 @@ const useStyles = makeStyles(theme => ({
 
 const ClassroomController = props => {
   const classes = useStyles();
-  const { location, role, userId, loading, getAllMyClassrooms, createSuccess } = props;
+  const {
+    location,
+    role,
+    userId,
+    loading,
+    getAllMyClassrooms,
+    createSuccess
+  } = props;
 
   //Checks if DOM is ready to un mount loading icon
   const [domReady, setDomReady] = useState(false);
@@ -86,12 +93,11 @@ const ClassroomController = props => {
   });
 
   /* Use efect handles async loading for loader */
+  // Fetches new course on load
   useEffect(() => {
-    // Create an scoped async function in the hook
     async function getMyClassrooms() {
       await getAllMyClassrooms({ role: role, uid: userId });
     }
-    // Execute the created function directly
     getMyClassrooms()
       .then(() => {
         setDomReady(true);
@@ -99,6 +105,15 @@ const ClassroomController = props => {
       .catch(err => {
         console.log("err", err);
       });
+    /* MISSING DEP: getAllMyClassrooms, role, userId */
+    // eslint-disable-next-line
+  }, []);
+
+  /* Fetches a new course when created */
+  useEffect(() => {
+    async function getMyClassrooms() {
+      await getAllMyClassrooms({ role: role, uid: userId });
+    }
     if (createSuccess) {
       getMyClassrooms()
         .then(() => {
@@ -108,6 +123,8 @@ const ClassroomController = props => {
           console.log("err", err);
         });
     }
+    /* MISSING DEP: getAllMyClassrooms, role, userId */
+    // eslint-disable-next-line
   }, [createSuccess]);
 
   /* TODO: REMOVE SHOW COIN LOADER IN USE EFECT BELLOW AND THE RETURN */
