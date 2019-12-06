@@ -105,8 +105,8 @@ const ClassroomController = props => {
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
   const [openAddClassModal, setopenAddClassModal] = useState(false);
-  const [classroomPage, setclassroomPage] = useState(1);
-  const [oldClasscount, setoldClasscount] = useState(0)
+  const [classroomPage, /* setclassroomPage */] = useState(1);
+  const [oldClasscount, setoldClasscount] = useState(0);
   const [addClassroomForm, setaddClassroomForm] = useState({
     linkCode: {
       value: "",
@@ -145,7 +145,11 @@ const ClassroomController = props => {
   /* Fetches a new course when created */
   useEffect(() => {
     async function getMyClassrooms() {
-      await getAllMyClassrooms({ role: role, uid: userId, page: classroomPage });
+      await getAllMyClassrooms({
+        role: role,
+        uid: userId,
+        page: classroomPage
+      });
     }
     if (oldClasscount < firebaseClassrooms.length) {
       getMyClassrooms()
@@ -173,7 +177,7 @@ const ClassroomController = props => {
     if (location.state) {
       payload = `${location.state.overwriteLocalNavState}`;
     }
-    setNavRoute(payload)
+    setNavRoute(payload);
   }, [navRoute, location]);
 
   /* Loads clients, teachers and studets data from Firestore */
@@ -264,7 +268,7 @@ const ClassroomController = props => {
   const routesArray = [
     { url: "create", comp: createClassroom, restriction: "student" },
     { url: "view/:id", comp: ViewAndEditClassroom, restriction: "none" },
-    { url: "edit/:id", comp: ViewAndEditClassroom, restriction: "student" },
+    { url: "edit/:id", comp: ViewAndEditClassroom, restriction: "student" }
   ];
 
   /* Conditional routes section */
@@ -411,7 +415,9 @@ const mapStateToProps = state => {
     userId: state.firebase.auth.uid,
     firebaseClassrooms: state.firebase.profile.classrooms,
     classrooms:
-      state.classrooms.classrooms == null ? {data: []} : state.classrooms.classrooms
+      state.classrooms.classrooms == null
+        ? { data: [] }
+        : state.classrooms.classrooms
   };
 };
 
