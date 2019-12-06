@@ -51,7 +51,8 @@ const getClassroomSuccess = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: null,
-    classroom: action.classroom
+    classroom: action.classroom,
+    classrooms: action.classrooms
   });
 };
 

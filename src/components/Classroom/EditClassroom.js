@@ -14,20 +14,6 @@ import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import CodeCopy from "../UI/SpecialFields/CodeCopy";
 
 const useStyles = makeStyles(theme => ({
-  imageIcon: {
-    height: "100%"
-  },
-  iconRoot: {
-    textAlign: "center",
-    marginRight: "8px",
-    width: "18px",
-    height: "18px",
-    "font-size": "unset"
-  },
-  container: {
-    display: "flex",
-    flexDirection: "column"
-  },
   codeAndNameContainer: {
     [theme.breakpoints.up("xs")]: {
       display: "flex",
@@ -56,13 +42,6 @@ const useStyles = makeStyles(theme => ({
       minWidth: "685px !important"
     }
   },
-  autocompleteTextField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    [theme.breakpoints.up("sm")]: {
-      minWidth: "150px"
-    }
-  },
   formActions: {
     display: "flex",
     justifyContent: "space-between"
@@ -85,12 +64,6 @@ const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1)
   },
-  input: {
-    display: "none"
-  },
-  inputFullName: {
-    "text-transform": "capitalize"
-  },
   paper: {
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
@@ -103,9 +76,6 @@ const useStyles = makeStyles(theme => ({
   },
   MuiMenuList: {
     width: "auto !important"
-  },
-  gLogin: {
-    textTransform: "capitalize"
   },
   submitActions: {
     display: "flex",

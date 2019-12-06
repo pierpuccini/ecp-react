@@ -29,10 +29,11 @@ export const getAllClassroomSuccess = classrooms => {
   };
 };
 
-export const getClassroomSuccess = classroom => {
+export const getClassroomSuccess = (classroom, classrooms) => {
   return {
     type: actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS,
-    classroom: classroom
+    classroom: classroom,
+    classrooms: classrooms
   };
 };
 
@@ -113,8 +114,8 @@ export const createClassroom = payload => {
       }
       //deletes null fields in object
       Object.keys(newPayload).forEach(field => {
-        if(newPayload[field] == null){
-          delete newPayload[field]
+        if (newPayload[field] == null) {
+          delete newPayload[field];
         }
       });
 
@@ -308,8 +309,9 @@ export const getAllMyClassrooms = payload => {
 
 export const getOneClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    dispatch(classroomStart());
     const currentState = getState();
+    const allClassrooms = currentState.classrooms.classrooms;
+    dispatch(classroomStart());
 
     let error;
     // Verifies that the token was properly recieved
@@ -330,7 +332,12 @@ export const getOneClassroom = payload => {
         .get(url, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            dispatch(getClassroomSuccess(response.data.classroom));
+            dispatch(
+              getClassroomSuccess(
+                response.data.classroom,
+                allClassrooms
+              )
+            );
           } else {
             const unknownError = {
               code: "add-classroom-error",

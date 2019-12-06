@@ -116,7 +116,7 @@ const ViewAndEditClassroom = props => {
       } = classroom;
       setupdateClassroomForm({
         client_id: {
-          value: client_id == null? "" : client_id,
+          value: client_id == null ? "" : client_id,
           validation: {
             required: true
           },
@@ -124,7 +124,7 @@ const ViewAndEditClassroom = props => {
           touched: true
         },
         subject_id: {
-          value: subject_id == null? "" : subject_id,
+          value: subject_id == null ? "" : subject_id,
           validation: {
             required: true
           },
@@ -132,7 +132,7 @@ const ViewAndEditClassroom = props => {
           touched: false
         },
         subject_name: {
-          value: subject_name == null? "" : subject_name,
+          value: subject_name == null ? "" : subject_name,
           validation: {
             required: true
           },
