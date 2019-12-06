@@ -97,14 +97,16 @@ const ClassroomController = props => {
     userId,
     loading,
     getAllMyClassrooms,
-    createSuccess,
-    classrooms
+    classrooms,
+    firebaseClassrooms
   } = props;
 
   //Checks if DOM is ready to un mount loading icon
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
   const [openAddClassModal, setopenAddClassModal] = useState(false);
+  const [classroomPage] = useState(1);
+  const [oldClasscount, setoldClasscount] = useState(0)
   const [addClassroomForm, setaddClassroomForm] = useState({
     linkCode: {
       value: "",
@@ -117,11 +119,17 @@ const ClassroomController = props => {
     }
   });
 
+  useEffect(() => {
+    setoldClasscount(firebaseClassrooms.length)
+    /* MISSING DEP: firebaseClassrooms.length */
+    // eslint-disable-next-line
+  }, [])
+
   /* Use efect handles async loading for loader */
   // Fetches new course on load
   useEffect(() => {
     async function getMyClassrooms() {
-      await getAllMyClassrooms({ role: role, uid: userId });
+      await getAllMyClassrooms({ role: role, uid: userId, page: classroomPage });
     }
     getMyClassrooms()
       .then(() => {
@@ -137,9 +145,9 @@ const ClassroomController = props => {
   /* Fetches a new course when created */
   useEffect(() => {
     async function getMyClassrooms() {
-      await getAllMyClassrooms({ role: role, uid: userId });
+      await getAllMyClassrooms({ role: role, uid: userId, page: classroomPage });
     }
-    if (createSuccess) {
+    if (oldClasscount < firebaseClassrooms.length) {
       getMyClassrooms()
         .then(() => {
           setDomReady(true);
@@ -150,21 +158,23 @@ const ClassroomController = props => {
     }
     /* MISSING DEP: getAllMyClassrooms, role, userId */
     // eslint-disable-next-line
-  }, [createSuccess]);
+  }, [oldClasscount, firebaseClassrooms]);
 
   /* Use efect handles local component routing */
   useEffect(() => {
     const parsedPath = location.pathname.replace("/", "").split("/");
     const paramsPath = location.pathname.replace("/", "");
+    let payload = navRoute;
     if (location.pathname.includes(":")) {
-      setNavRoute(`${paramsPath}`);
+      payload = `${paramsPath}`;
     } else if (parsedPath.length > 1) {
-      setNavRoute(`classrooms/${parsedPath[1]}`);
+      payload = `classrooms/${parsedPath[1]}`;
     }
     if (location.state) {
-      setNavRoute(`${location.state.overwriteLocalNavState}`);
+      payload = `${location.state.overwriteLocalNavState}`;
     }
-  }, [location]);
+    setNavRoute(payload)
+  }, [navRoute, location]);
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
@@ -336,7 +346,7 @@ const ClassroomController = props => {
             />
           </Modal>
         </Paper>
-        {classrooms.map(classroom => {
+        {classrooms.data.map(classroom => {
           let classroomTeacher, classroomInstitution, studentStatus;
           if (role === "student" || role === "teacher") {
             classroomTeacher = teachers.find(
@@ -398,9 +408,9 @@ const mapStateToProps = state => {
     role: state.firebase.profile.role,
     loading: state.classrooms.loading,
     userId: state.firebase.auth.uid,
-    createSuccess: state.classrooms.success,
+    firebaseClassrooms: state.firebase.profile.classrooms,
     classrooms:
-      state.classrooms.classrooms == null ? [] : state.classrooms.classrooms
+      state.classrooms.classrooms == null ? {data: []} : state.classrooms.classrooms
   };
 };
 

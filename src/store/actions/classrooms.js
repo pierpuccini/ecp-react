@@ -278,7 +278,7 @@ export const getAllMyClassrooms = payload => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
 
-      const url = `/allclassroom?type=${payload.role}&user_id=${payload.uid}`;
+      const url = `/allclassroom?type=${payload.role}&user_id=${payload.uid}&page=${payload.page}`;
       axios
         .get(url, { headers: headers })
         .then(response => {
