@@ -173,6 +173,12 @@ export const updateUser = payload => {
             });
         });
     } else {
+      let uniq = [...new Set(toUpdate)];
+      if(uniq.includes('password')){
+        let passwordIndex = uniq.findIndex(item => item === "password")
+        toUpdate = uniq
+        toUpdate.splice(passwordIndex);
+      }
       toUpdate.forEach(fieldToUpdate => {
         firestore
           .collection("users")

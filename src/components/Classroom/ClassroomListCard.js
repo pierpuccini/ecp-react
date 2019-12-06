@@ -94,7 +94,7 @@ const ClassroomListCard = props => {
     <Typography
       variant="caption"
       className={classes.nameAndDetails}
-      style={classroom.active_subject == null ? { color: "#777777" } : null}
+      style={!classroom.active_classroom ? { color: "#777777" } : null}
     >
       {classroom.id}
     </Typography>
@@ -108,7 +108,7 @@ const ClassroomListCard = props => {
           ? classes.studentStatusPending
           : classes.studentStatusActive
       }
-      style={classroom.active_subject == null ? { color: "#777777" } : null}
+      style={!classroom.active_classroom ? { color: "#777777" } : null}
     >
       {studentStatus === "pending"
         ? "Pending teacher approval"
@@ -122,7 +122,7 @@ const ClassroomListCard = props => {
         <Typography
           variant="caption"
           className={classes.nameAndDetails}
-          style={classroom.active_subject == null ? { color: "#777777" } : null}
+          style={!classroom.active_classroom ? { color: "#777777" } : null}
         >
           {classroomTeacher.displayName}
         </Typography>
@@ -133,7 +133,7 @@ const ClassroomListCard = props => {
         <Typography
           variant="caption"
           className={classes.nameAndDetails}
-          style={classroom.active_subject == null ? { color: "#777777" } : null}
+          style={!classroom.active_classroom ? { color: "#777777" } : null}
         >
           {classroomInstitution.value}
         </Typography>
@@ -144,7 +144,7 @@ const ClassroomListCard = props => {
         <Typography
           variant="caption"
           className={classes.nameAndDetails}
-          style={classroom.active_subject == null ? { color: "#777777" } : null}
+          style={!classroom.active_classroom ? { color: "#777777" } : null}
         >
           {classroom.id}
         </Typography>
@@ -166,7 +166,7 @@ const ClassroomListCard = props => {
   let mobileActions = (
     <IconButton
       onClick={(event) => handleNavChange(event, `classrooms/view/:${classroom.id}`)}
-      disabled={classroom.active_subject == null}
+      disabled={!classroom.active_classroom}
     >
       <VisibilityOutlinedIcon />
     </IconButton>
@@ -230,7 +230,7 @@ const ClassroomListCard = props => {
           <Typography
             className={classes.nameAndDetails}
             style={
-              classroom.active_subject == null ? { color: "#777777" } : null
+              !classroom.active_classroom ? { color: "#777777" } : null
             }
           >
             {classroom.subject_name}
@@ -240,14 +240,14 @@ const ClassroomListCard = props => {
             variant="caption"
             className={classes.nameAndDetails}
             style={
-              classroom.active_subject == null ? { color: "#777777" } : null
+              !classroom.active_classroom ? { color: "#777777" } : null
             }
           >
             {classroom.subject_id}
           </Typography>
           {role === "student"
             ? statusStudent
-            : role === "teacher" && classroom.active_subject == null
+            : role === "teacher" && !classroom.active_classroom
             ? missingActivation
             : null}
         </div>
