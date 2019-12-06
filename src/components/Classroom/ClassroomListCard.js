@@ -164,7 +164,9 @@ const ClassroomListCard = props => {
   //   let classroomViewer
   let mobileActions = (
     <IconButton
-      onClick={(event) => handleNavChange(event, `classrooms/view/:${classroom.id}`)}
+      onClick={event =>
+        handleNavChange(event, `classrooms/view/:${classroom.id}`)
+      }
       disabled={!classroom.active_classroom}
     >
       <VisibilityOutlinedIcon />
@@ -186,7 +188,9 @@ const ClassroomListCard = props => {
           <MenuItem
             className={classes.classroomCardActionsMenu}
             key="edit"
-            onClick={(event) => handleNavChange(event, `classrooms/edit/:${classroom.id}`)}
+            onClick={event =>
+              handleNavChange(event, `classrooms/edit/:${classroom.id}`)
+            }
           >
             <IconButton color="primary" style={{ padding: "unset" }}>
               <EditOutlinedIcon />
@@ -207,6 +211,25 @@ const ClassroomListCard = props => {
         </Menu>
       </div>
     );
+  } else if (role !== "student") {
+    mobileActions = (
+      <div className={classes.classroomCardActions}>
+        <IconButton
+          color="primary"
+          onClick={event =>
+            handleNavChange(event, `classrooms/edit/:${classroom.id}`)
+          }
+        >
+          <EditOutlinedIcon />
+        </IconButton>
+        <IconButton
+          className={classes.deleteButton}
+          onClick={handleMobileMenuClose}
+        >
+          <DeleteOutlineOutlinedIcon />
+        </IconButton>
+      </div>
+    );
   }
 
   return (
@@ -219,9 +242,7 @@ const ClassroomListCard = props => {
         <div className={classes.classroomNameAndDetails}>
           <Typography
             className={classes.nameAndDetails}
-            style={
-              !classroom.active_classroom ? { color: "#777777" } : null
-            }
+            style={!classroom.active_classroom ? { color: "#777777" } : null}
           >
             {classroom.subject_name}
           </Typography>
@@ -229,9 +250,7 @@ const ClassroomListCard = props => {
           <Typography
             variant="caption"
             className={classes.nameAndDetails}
-            style={
-              !classroom.active_classroom ? { color: "#777777" } : null
-            }
+            style={!classroom.active_classroom ? { color: "#777777" } : null}
           >
             {classroom.subject_id}
           </Typography>
