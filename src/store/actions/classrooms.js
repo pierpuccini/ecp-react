@@ -22,10 +22,17 @@ export const classroomSuccess = (missingFields, code) => {
   };
 };
 
-export const getAllClassroomSuccess = (classrooms) => {
+export const getAllClassroomSuccess = classrooms => {
   return {
     type: actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS,
     classrooms: classrooms
+  };
+};
+
+export const getClassroomSuccess = classroom => {
+  return {
+    type: actionTypes.CLASSROOM_GET_CLASSROOM_SUCCESS,
+    classroom: classroom
   };
 };
 
@@ -157,8 +164,14 @@ export const createClassroom = payload => {
           }
         })
         .catch(error => {
-          console.log(error.response)
-          dispatch(classroomFail(error.response.data.error != null ? error.response.data.error:error.response.data));
+          console.log(error.response);
+          dispatch(
+            classroomFail(
+              error.response.data.error != null
+                ? error.response.data.error
+                : error.response.data
+            )
+          );
         });
     }
   };
@@ -227,7 +240,13 @@ export const addClassroom = payload => {
           }
         })
         .catch(error => {
-          dispatch(classroomFail(error.response.data.error != null ? error.response.data.error:error.response.data));
+          dispatch(
+            classroomFail(
+              error.response.data.error != null
+                ? error.response.data.error
+                : error.response.data
+            )
+          );
         });
     }
   };
@@ -268,7 +287,60 @@ export const getAllMyClassrooms = payload => {
         })
         .catch(error => {
           console.log(error.response);
-          dispatch(classroomFail(error.response.data.error != null ? error.response.data.error:error.response.data));
+          dispatch(
+            classroomFail(
+              error.response.data.error != null
+                ? error.response.data.error
+                : error.response.data
+            )
+          );
+        });
+    }
+  };
+};
+
+export const getClassroom = payload => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    dispatch(classroomStart());
+    const currentState = getState();
+
+    let error;
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(classroomFail(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentState.auth.token.token}`
+      };
+      console.log("payload", payload.id.replace(":", ""));
+      const url = `/classroom/:${payload.id.replace(":", "")}`;
+      axios
+        .get(url, { headers: headers })
+        .then(response => {
+          if (response.status === 200) {
+            dispatch(getClassroomSuccess(response.data.classroom));
+          } else {
+            const unknownError = {
+              code: "add-classroom-error",
+              message: "Unkown error, Contact support"
+            };
+            dispatch(classroomFail(unknownError));
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+          dispatch(
+            classroomFail(
+              error.response.data.error != null
+                ? error.response.data.error
+                : error.response.data
+            )
+          );
         });
     }
   };

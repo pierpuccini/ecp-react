@@ -47,6 +47,14 @@ const getAllClassroomSuccess = (state, action) => {
   });
 };
 
+const getClassroomSuccess = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: null,
+    classroom: action.classroom
+  });
+};
+
 const resetCreateClassroom = state => {
   return updateObject(state, {
     loading: false,
@@ -71,6 +79,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CLASSROOM_ACTIONS_FAILED: return classroomFail(state, action);
     case actionTypes.CLASSROOM_ACTIONS_SUCCESS: return classroomSuccess(state, action);
     case actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS: return getAllClassroomSuccess(state, action);
+    case actionTypes.CLASSROOM_GET_CLASSROOM_SUCCESS: return getClassroomSuccess(state, action);
     case actionTypes.CLASSROOM_ACTIONS_FETCH_RESET: return resetFetchClassroom(state, action);
     case actionTypes.CLASSROOM_ACTIONS_CREATE_RESET: return resetCreateClassroom(state, action);
     default:
