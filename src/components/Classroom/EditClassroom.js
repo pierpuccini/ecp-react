@@ -24,6 +24,18 @@ const useStyles = makeStyles(theme => ({
       flexDirection: "column"
     }
   },
+  classCodeContainer: {
+    [theme.breakpoints.up("xs")]: {
+      display: "flex",
+      justifyContent: "space-between",
+      padding: theme.spacing(0, 2),
+      flexDirection: "column"
+    },
+    [theme.breakpoints.down("xs")]: {
+      display: "flex",
+      flexDirection: "column"
+    }
+  },
   AdditionalInfoContainer: {
     [theme.breakpoints.up("xs")]: {
       display: "flex",
@@ -244,6 +256,9 @@ const EditClassroom = props => {
           variant="outlined"
           required
         />
+      </div>
+      <div className={classes.classCodeContainer}>
+        <CodeCopy value={updateClassroomInfo.code_classroom} label="Class Code" helper="Share code with students"/>
       </div>
     </Paper>
   );

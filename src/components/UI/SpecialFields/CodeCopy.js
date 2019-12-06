@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 const CodeCopy = props => {
   const matClasses = useStyles();
+  const { value, label, helper} = props
   //Incharge of copying code to clipboard
   const [copySuccess, setCopySuccess] = useState("");
   const textAreaRef = useRef(null);
@@ -38,10 +39,12 @@ const CodeCopy = props => {
       <TextField
         inputRef={textAreaRef}
         className={matClasses.textField}
-        value={props.value}
+        value={value}
+        label={label}
         type="text"
         margin="normal"
         variant="outlined"
+        helperText={helper}
         InputProps={{
           readOnly: true,
           endAdornment: (

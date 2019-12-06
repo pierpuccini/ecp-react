@@ -165,7 +165,7 @@ const ViewAndEditClassroom = props => {
         }
       });
       setupdateClassroomInfo({
-        code_classroom: code_classroom,
+        code_classroom: code_classroom == null ? "" : code_classroom,
         teacher_id: teacher_id,
         pending_students: pending_students,
         active_students: active_students
