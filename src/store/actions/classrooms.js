@@ -111,10 +111,15 @@ export const createClassroom = payload => {
       if (noMissingFields.length === 6) {
         extractMissingFields = { noMissingFields: true };
       }
+      //deletes null fields in object
+      Object.keys(newPayload).forEach(field => {
+        if(newPayload[field] == null){
+          delete newPayload[field]
+        }
+      });
 
       //Replaces the payload for better code reading
       payload = newPayload;
-
       //Creating course in backend
       axios
         .post("/createclassroom", payload, { headers: headers })
