@@ -92,13 +92,14 @@ function App(props) {
       setDomReady(true);
     }, 750);
     //Conditional Routes
+    let payload = navRoute;
     if (profileLoaded) {
       if (newUser === "") {
-        setNavRoute("onboarding");
+        payload = "onboarding";
       } else if (location.pathname.match("onboarding") && newUser !== "") {
-        setNavRoute("home");
+        payload = "home";
       } else if (location.pathname !== "/home") {
-        setNavRoute(location.pathname.replace("/", ""));
+        payload = location.pathname.replace("/", "");
       }
       setsnackbarPayload({
         type: "none",
@@ -106,23 +107,26 @@ function App(props) {
       });
     }
     if (location.state) {
-      setNavRoute(`${location.state.overwriteLocalNavState}`);
+      payload = `${location.state.overwriteLocalNavState}`;
       setsnackbarPayload({
         type: "none",
         info: "none"
       });
     }
     if (onboardingSuccessLogic) {
-      setNavRoute("home");
+      payload = "home";
       setsnackbarPayload({
         type: "none",
         info: "none"
       });
     }
+    setNavRoute(payload);
     return () => {
       clearTimeout(showCoinLoader);
     };
   }, [
+    navRoute,
+    isAuthenticated,
     profileLoaded,
     newUser,
     onboardingSuccessLogic,
@@ -204,7 +208,11 @@ function App(props) {
 
   const handleNavChange = (event, newValue) => {
     resetReduxErrors();
-    setNavRoute(newValue);
+    if (newValue === "home") {
+      history.push({ state: { overwriteLocalNavState: newValue } });
+    } else {
+      setNavRoute(newValue);
+    }
     setsnackbarPayload({
       type: "none",
       info: "none"
