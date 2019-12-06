@@ -105,7 +105,7 @@ const ClassroomController = props => {
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
   const [openAddClassModal, setopenAddClassModal] = useState(false);
-  const [classroomPage, /* setclassroomPage */] = useState(1);
+  const [classroomPage /* setclassroomPage */] = useState(1);
   const [oldClasscount, setoldClasscount] = useState(0);
   const [addClassroomForm, setaddClassroomForm] = useState({
     linkCode: {
@@ -351,7 +351,7 @@ const ClassroomController = props => {
             />
           </Modal>
         </Paper>
-        {classrooms.data.map(classroom => {
+        {classrooms.data.reverse().map(classroom => {
           let classroomTeacher, classroomInstitution, studentStatus;
           if (role === "student" || role === "teacher") {
             classroomTeacher = teachers.find(
