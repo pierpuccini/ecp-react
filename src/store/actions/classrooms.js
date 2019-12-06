@@ -330,7 +330,6 @@ export const getOneClassroom = payload => {
         .get(url, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            console.log('res',response)
             dispatch(getClassroomSuccess(response.data.classroom));
           } else {
             const unknownError = {

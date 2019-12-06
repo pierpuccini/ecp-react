@@ -202,6 +202,7 @@ const ClassroomCreator = props => {
     </ToggleButton>
   ];
 
+  //Creacts a valid field object
   let createClassroomFormArr = Object.keys(createClassroomForm).map(
     controlName => {
       return {
