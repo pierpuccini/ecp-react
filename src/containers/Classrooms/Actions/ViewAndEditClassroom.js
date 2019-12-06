@@ -5,9 +5,9 @@ import { withRouter, useParams } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions/index";
 
-const ViewClassroom = props => {
+const ViewAndEditClassroom = props => {
   let { id } = useParams();
-  const { createSuccess, getClassroom } = props;
+  const { getOneClassroom, location } = props;
 
   const [domReady, setDomReady] = useState(false);
 
@@ -15,7 +15,8 @@ const ViewClassroom = props => {
   // Fetches new course on load
   useEffect(() => {
     async function getMyClassrooms() {
-      await getClassroom({ id: id });
+      console.log('[loading classroom]')
+      await getOneClassroom({ id: id });
     }
     getMyClassrooms()
       .then(() => {
@@ -28,26 +29,8 @@ const ViewClassroom = props => {
     // eslint-disable-next-line
   }, []);
 
-  /* Fetches a new course when created */
-  useEffect(() => {
-    async function getMyClassrooms() {
-      await getClassroom({ id: id });
-    }
-    if (createSuccess) {
-      getMyClassrooms()
-        .then(() => {
-          setDomReady(true);
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-    }
-    /* MISSING DEP: getAllMyClassrooms, role, userId */
-    // eslint-disable-next-line
-  }, [createSuccess]);
-
   if (domReady) {
-    return <div>view classrom</div>;
+    return <div>{location.pathname.includes('edit') ? "edit classrom" :"view classrom"}</div>;
   } else {
     return <div>Loading</div>;
   }
@@ -63,10 +46,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getClassroom: payload => dispatch(actions.getClassroom(payload))
+    getOneClassroom: payload => dispatch(actions.getOneClassroom(payload))
   };
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ViewClassroom)
+  connect(mapStateToProps, mapDispatchToProps)(ViewAndEditClassroom)
 );

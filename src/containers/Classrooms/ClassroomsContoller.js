@@ -33,8 +33,8 @@ const createClassroom = asyncComponent(() => {
   return import("./Actions/CreateClassroom");
 });
 
-const viewClassroom = asyncComponent(() => {
-  return import("./Actions/ViewClassroom");
+const ViewAndEditClassroom = asyncComponent(() => {
+  return import("./Actions/ViewAndEditClassroom");
 });
 
 const useStyles = makeStyles(theme => ({
@@ -105,7 +105,7 @@ const ClassroomController = props => {
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
   const [openAddClassModal, setopenAddClassModal] = useState(false);
-  const [classroomPage] = useState(1);
+  const [classroomPage, setclassroomPage] = useState(1);
   const [oldClasscount, setoldClasscount] = useState(0)
   const [addClassroomForm, setaddClassroomForm] = useState({
     linkCode: {
@@ -119,17 +119,15 @@ const ClassroomController = props => {
     }
   });
 
-  useEffect(() => {
-    setoldClasscount(firebaseClassrooms.length)
-    /* MISSING DEP: firebaseClassrooms.length */
-    // eslint-disable-next-line
-  }, [])
-
   /* Use efect handles async loading for loader */
-  // Fetches new course on load
+  // Fetches new course on load and gets the firebase classrooms loaded only once
   useEffect(() => {
     async function getMyClassrooms() {
-      await getAllMyClassrooms({ role: role, uid: userId, page: classroomPage });
+      await getAllMyClassrooms({
+        role: role,
+        uid: userId,
+        page: classroomPage
+      });
     }
     getMyClassrooms()
       .then(() => {
@@ -138,7 +136,9 @@ const ClassroomController = props => {
       .catch(err => {
         console.log("err", err);
       });
-    /* MISSING DEP: getAllMyClassrooms, role, userId */
+    setoldClasscount(firebaseClassrooms.length);
+
+    /* MISSING DEP: getAllMyClassrooms, role, userId, firebaseClassrooms */
     // eslint-disable-next-line
   }, []);
 
@@ -158,7 +158,7 @@ const ClassroomController = props => {
     }
     /* MISSING DEP: getAllMyClassrooms, role, userId */
     // eslint-disable-next-line
-  }, [oldClasscount, firebaseClassrooms]);
+  }, [oldClasscount, firebaseClassrooms, location]);
 
   /* Use efect handles local component routing */
   useEffect(() => {
@@ -263,7 +263,8 @@ const ClassroomController = props => {
   let routes, redirect;
   const routesArray = [
     { url: "create", comp: createClassroom, restriction: "student" },
-    { url: "view/:id", comp: viewClassroom, restriction: "none" }
+    { url: "view/:id", comp: ViewAndEditClassroom, restriction: "none" },
+    { url: "edit/:id", comp: ViewAndEditClassroom, restriction: "student" },
   ];
 
   /* Conditional routes section */

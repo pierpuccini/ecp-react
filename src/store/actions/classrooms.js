@@ -31,7 +31,7 @@ export const getAllClassroomSuccess = classrooms => {
 
 export const getClassroomSuccess = classroom => {
   return {
-    type: actionTypes.CLASSROOM_GET_CLASSROOM_SUCCESS,
+    type: actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS,
     classroom: classroom
   };
 };
@@ -306,7 +306,7 @@ export const getAllMyClassrooms = payload => {
   };
 };
 
-export const getClassroom = payload => {
+export const getOneClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(classroomStart());
     const currentState = getState();
@@ -324,12 +324,13 @@ export const getClassroom = payload => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
-      console.log("payload", payload.id.replace(":", ""));
+
       const url = `/classroom/:${payload.id.replace(":", "")}`;
       axios
         .get(url, { headers: headers })
         .then(response => {
           if (response.status === 200) {
+            console.log('res',response)
             dispatch(getClassroomSuccess(response.data.classroom));
           } else {
             const unknownError = {

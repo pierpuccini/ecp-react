@@ -85,9 +85,8 @@ const ClassroomListCard = props => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = (event,action) => {
+  const handleMobileMenuClose = () => {
     setAnchorEl(null);
-    handleNavChange(event,action)
   };
 
   let roleCaption = (
@@ -187,19 +186,10 @@ const ClassroomListCard = props => {
           <MenuItem
             className={classes.classroomCardActionsMenu}
             key="edit"
-            onClick={handleMobileMenuClose}
+            onClick={(event) => handleNavChange(event, `classrooms/edit/:${classroom.id}`)}
           >
             <IconButton color="primary" style={{ padding: "unset" }}>
               <EditOutlinedIcon />
-            </IconButton>
-          </MenuItem>
-          <MenuItem
-            className={classes.classroomCardActionsMenu}
-            key="view"
-            onClick={(event)=>{handleMobileMenuClose(event,`classrooms/view/:${classroom.id}`)}}
-          >
-            <IconButton style={{ padding: "unset" }}>
-              <VisibilityOutlinedIcon />
             </IconButton>
           </MenuItem>
           <MenuItem
