@@ -216,7 +216,7 @@ const ClassroomCreator = props => {
     };
   });
   validFields = Object.assign({}, ...validFields);
-
+  /* TODO: WHEN SELECTING FROM AUTO COMPLETE, AUTO FILL OTHER FIELDS */
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>
       <Paper className={classes.paper}>
@@ -276,7 +276,7 @@ const ClassroomCreator = props => {
               disableOpenOnFocus
               autoHighlight
               onChange={autocompleteHandler}
-              options={classroomsId}
+              options={classroomsId.map(option => option.subject_id)}
               getOptionLabel={option => option.toString()}
               renderInput={params => (
                 <TextField

@@ -134,7 +134,8 @@ export const createClassroom = payload => {
                 ...currentState.firebase.profile.classrooms,
                 {
                   code_classroom: response.data.code_classroom,
-                  subject_id: response.data.id
+                  subject_id: response.data.subject_id,
+                  id: response.data.id
                 }
               ];
               firestore
@@ -218,6 +219,7 @@ export const addClassroom = payload => {
               ...currentState.firebase.profile.classrooms,
               {
                 code_classroom: payload.code_classroom,
+                id: response.data.id,
                 subject_id: response.data.subject_id
               }
             ];
