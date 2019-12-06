@@ -7,6 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 //Icons
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
@@ -142,7 +143,8 @@ const EditClassroom = props => {
     updateClassroomInfo,
     updateClassroomForm,
     institutions,
-    inputChangedHandler
+    inputChangedHandler,
+    buttonClickHandler
   } = props;
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
@@ -258,7 +260,47 @@ const EditClassroom = props => {
         />
       </div>
       <div className={classes.classCodeContainer}>
-        <CodeCopy value={updateClassroomInfo.code_classroom} label="Class Code" helper="Share code with students"/>
+        <CodeCopy
+          value={updateClassroomInfo.code_classroom}
+          label="Class Code"
+          helper="Share code with students"
+        />
+      </div>
+      <div className={classes.formActions}>
+        <div className={classes.negativeActions}>
+          <Button
+            variant="contained"
+            className={classes.button}
+            onClick={() => {
+              buttonClickHandler("cancel");
+            }}
+            size="small"
+            style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+          >
+            Cancel
+          </Button>
+        </div>
+        <div className={classes.positiveActions}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            disabled={
+              !validFields.client_id ||
+              !validFields.subject_id ||
+              !validFields.subject_name ||
+              !validFields.group_size ||
+              !validFields.challenge_duration ||
+              !validFields.initial_coins
+            }
+            onClick={() => {
+              buttonClickHandler("activate");
+            }}
+            size="small"
+          >
+            Activate
+          </Button>
+        </div>
       </div>
     </Paper>
   );

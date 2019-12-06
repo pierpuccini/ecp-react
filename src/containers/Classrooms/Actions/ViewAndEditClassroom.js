@@ -120,48 +120,48 @@ const ViewAndEditClassroom = props => {
           validation: {
             required: true
           },
-          valid: true,
-          touched: true
+          valid: client_id == null ? false : true,
+          touched: client_id == null ? false : true
         },
         subject_id: {
           value: subject_id == null ? "" : subject_id,
           validation: {
             required: true
           },
-          valid: false,
-          touched: false
+          valid: subject_id == null ? false : true,
+          touched: subject_id == null ? false : true
         },
         subject_name: {
           value: subject_name == null ? "" : subject_name,
           validation: {
             required: true
           },
-          valid: false,
-          touched: false
+          valid: subject_name == null ? false : true,
+          touched: subject_name == null ? false : true
         },
         group_size: {
           value: group_size == null ? "" : group_size,
           validation: {
             required: true
           },
-          valid: false,
-          touched: false
+          valid: group_size == null ? false : true,
+          touched: group_size == null ? false : true
         },
         challenge_duration: {
           value: challenge_duration == null ? 15 : challenge_duration,
           validation: {
             required: true
           },
-          valid: false,
-          touched: false
+          valid: challenge_duration == null ? false : true,
+          touched: challenge_duration == null ? false : true
         },
         initial_coins: {
           value: initial_coins == null ? "" : initial_coins,
           validation: {
             required: true
           },
-          valid: false,
-          touched: false
+          valid: initial_coins == null ? false : true,
+          touched: initial_coins == null ? false : true
         }
       });
       setupdateClassroomInfo({
@@ -236,6 +236,79 @@ const ViewAndEditClassroom = props => {
     setupdateClassroomForm(updatedControls);
   };
 
+  /* Handles create classroom actions */
+  const editViewActions = action => {
+    const {
+      client_id,
+      subject_id,
+      subject_name,
+      group_size,
+      challenge_duration,
+      initial_coins
+    } = classroom;
+    if (action === "cancel") {
+      setupdateClassroomForm({
+        client_id: {
+          value: client_id == null ? "" : client_id,
+          validation: {
+            required: true
+          },
+          valid: true,
+          touched: true
+        },
+        subject_id: {
+          value: subject_id == null ? "" : subject_id,
+          validation: {
+            required: true
+          },
+          valid: false,
+          touched: false
+        },
+        subject_name: {
+          value: subject_name == null ? "" : subject_name,
+          validation: {
+            required: true
+          },
+          valid: false,
+          touched: false
+        },
+        group_size: {
+          value: group_size == null ? "" : group_size,
+          validation: {
+            required: true
+          },
+          valid: false,
+          touched: false
+        },
+        challenge_duration: {
+          value: challenge_duration == null ? 15 : challenge_duration,
+          validation: {
+            required: true
+          },
+          valid: false,
+          touched: false
+        },
+        initial_coins: {
+          value: initial_coins == null ? "" : initial_coins,
+          validation: {
+            required: true
+          },
+          valid: false,
+          touched: false
+        }
+      });
+      handleNav();
+    } else if (action === "activate") {
+      console.log("activate");
+      // const payload = stateToPayload(updateClassroomForm);
+      // props.createClassroom(payload);
+    } else if (action === "update") {
+      console.log("update");
+      // const payload = stateToPayload(updateClassroomForm);
+      // props.createClassroom(payload);
+    }
+  };
+
   let view = "view classroom";
   if (location.pathname.includes("edit")) {
     view = (
@@ -245,6 +318,7 @@ const ViewAndEditClassroom = props => {
         updateClassroomInfo={updateClassroomInfo}
         updateClassroomForm={updateClassroomForm}
         inputChangedHandler={classroomInputHandler}
+        buttonClickHandler={editViewActions}
       />
     );
   }
