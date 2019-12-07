@@ -52,9 +52,6 @@ code {
 .MuiSelect-select{
   text-transform: capitalize;
 }
-.MuiInputBase-input{
-  text-transform: capitalize;
-}
 
 .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input {
   padding: 18.5px 14px !important;
