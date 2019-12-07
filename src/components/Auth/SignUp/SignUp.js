@@ -1,23 +1,24 @@
-//React Imports
+/* React Imports */
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-//MaterialUI Imports
+/* MaterialUI Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
-import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import Badge from "@material-ui/core/Badge";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
+//Icons
+import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
-//App Imports
+/* App Imports */
 import classes from "./SignUp.module.scss";
 import gIcon from "../../../assets/svg/search.svg";
 import coinIcon from "../../../assets/icons/educoin.ico";
