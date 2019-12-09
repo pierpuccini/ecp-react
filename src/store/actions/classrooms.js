@@ -411,7 +411,7 @@ export const deleteClassroom = classroomId => {
                   console.log("classroomToDeleteIndex", classroomToDeleteIndex);
                   if (classroomToDeleteIndex >= 0) {
                     //Gets the subject ID of the deleted course before deleting the course
-                    const subjectId = userClassrooms.subject_id
+                    const subjectId = userClassrooms[classroomToDeleteIndex].subject_id
                     
                     //with the deleted classroom index it deletes the classroom
                     userClassrooms.splice(classroomToDeleteIndex, 1);
