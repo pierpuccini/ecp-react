@@ -291,6 +291,7 @@ export const getAllMyClassrooms = payload => {
         .get(url, { headers: headers })
         .then(response => {
           if (response.status === 200) {
+            console.log('res',response.data.classrooms)
             dispatch(getAllClassroomSuccess(response.data.classrooms));
           } else {
             const unknownError = {
@@ -398,23 +399,43 @@ export const deleteClassroom = classroomId => {
                 querySnapshot.forEach(doc => {
                   console.log(doc.id, " => ", doc.data());
                   const userId = doc.id;
-                  let userClassrooms = doc.data().classrooms;
+                  let userNotifications = {...doc.data().notifications};
+                  let userClassrooms = [...doc.data().classrooms];
                   console.log("userId", userId);
                   console.log("userClassrooms", userClassrooms);
 
-                  //Gets the deleted classroom index from the firebase profile and deletes it
+                  //Gets the deleted classroom index from the firebase profile
                   let classroomToDeleteIndex = userClassrooms.findIndex(
                     classroom => classroom.id === classroomId
                   );
-                  userClassrooms.splice(classroomToDeleteIndex, 1);
-                  console.log("userClassrooms", userClassrooms);
+                  console.log("classroomToDeleteIndex", classroomToDeleteIndex);
+                  if (classroomToDeleteIndex >= 0) {
+                    //with the deleted classroom index it deletes the classroom
+                    userClassrooms.splice(classroomToDeleteIndex, 1);
+                    console.log("userClassrooms update", userClassrooms);
+
+                    //TODO: send a notification to the user that the course has been deleted
+                    const deleteNotification = {
+                      message: `You have been deleted from classroom ID: ${userClassrooms.subject_id}, contact your teacher for more information`,
+                      time: new Date()
+                    };
+                    if (userNotifications.classroom != null) {
+                      userNotifications.classroom = [
+                        ...userNotifications.classroom,
+                        deleteNotification
+                      ];
+                    } else {
+                      userNotifications.classroom = [deleteNotification];
+                    }
+                  }
                   //Save changes to firestore for teacher
                   firestore
                     .collection("users")
                     .doc(userId)
                     .set(
                       {
-                        classrooms: userClassrooms
+                        classrooms: userClassrooms,
+                        notifications: userNotifications
                       },
                       { merge: true }
                     )
@@ -425,7 +446,7 @@ export const deleteClassroom = classroomId => {
                       );
                       currentClassrooms.data.splice(currentClassroomsIndex, 1);
                       currentClassrooms.total--;
-      
+
                       dispatch(deleteClassroomSuccess(currentClassrooms));
                     })
                     .catch(err => {
@@ -433,7 +454,6 @@ export const deleteClassroom = classroomId => {
                     });
                 });
               });
-
           } else {
             const unknownError = {
               code: "add-classroom-error",

@@ -108,7 +108,7 @@ const ClassroomController = props => {
   const [openAddClassModal, setopenAddClassModal] = useState(false);
   const [classroomPage, setclassroomPage] = useState(1);
   const [ininiteLoader, setinfiniteLoader] = useState(false);
-  const [oldClasscount, setoldClasscount] = useState(0);
+  const [oldClasscount, setoldClasscount] = useState(firebaseClassrooms.length);
   const [addClassroomForm, setaddClassroomForm] = useState({
     linkCode: {
       value: "",
@@ -138,7 +138,6 @@ const ClassroomController = props => {
       .catch(err => {
         console.log("err", err);
       });
-    setoldClasscount(firebaseClassrooms.length);
 
     /* MISSING DEP: getAllMyClassrooms, role, userId, firebaseClassrooms */
     // eslint-disable-next-line
@@ -153,10 +152,14 @@ const ClassroomController = props => {
         page: classroomPage
       });
     }
+    console.log("oldClasscount", oldClasscount);
+    console.log("firebaseClassrooms.length", firebaseClassrooms.length);
     if (oldClasscount !== firebaseClassrooms.length) {
+      console.log('[feching classroooms]')
       getMyClassrooms()
         .then(() => {
           setDomReady(true);
+          setoldClasscount(firebaseClassrooms.length);
         })
         .catch(err => {
           console.log("err", err);
@@ -187,14 +190,14 @@ const ClassroomController = props => {
     if (loading) {
       setinfiniteLoader(true);
     } else {
-      setinfiniteLoader(false)
+      setinfiniteLoader(false);
     }
   }, [loading]);
 
   /* Incharge of getting next page of items */
   const clasroomFetcher = useCallback(() => {
-    console.log('lastPage', classrooms)
-    console.log('classroomPage', classroomPage)
+    console.log("lastPage", classrooms);
+    console.log("classroomPage", classroomPage);
     if (classrooms.lastPage !== classroomPage) {
       let classroomPageCopy = classroomPage;
       setclassroomPage(classroomPageCopy + 1);
@@ -224,9 +227,11 @@ const ClassroomController = props => {
       }
     };
 
-    if (location.pathname === '/classrooms') {
+    if (location.pathname === "/classrooms") {
       // content is the Id of the main container
-      document.getElementById("content").addEventListener("scroll", handleScroll);
+      document
+        .getElementById("content")
+        .addEventListener("scroll", handleScroll);
     }
     return () => {
       document
@@ -319,9 +324,9 @@ const ClassroomController = props => {
     props.addClassroom(payload);
   };
 
-  const handleDelete = (classroomId) => {
-    deleteClassroom(classroomId)
-  }
+  const handleDelete = classroomId => {
+    deleteClassroom(classroomId);
+  };
 
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect;
@@ -497,9 +502,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addClassroom: payload => dispatch(actions.addClassroom(payload)),
-    getAllMyClassrooms: payload => dispatch(actions.getAllMyClassrooms(payload)),
+    getAllMyClassrooms: payload =>
+      dispatch(actions.getAllMyClassrooms(payload)),
     deleteClassroom: payload => dispatch(actions.deleteClassroom(payload))
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ClassroomController));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ClassroomController)
+);
