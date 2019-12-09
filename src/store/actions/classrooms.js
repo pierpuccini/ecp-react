@@ -387,15 +387,7 @@ export const deleteClassroom = classroomId => {
         .delete(url, { headers: headers })
         .then(response => {
           console.log("response", response);
-          if (response.status === 200) {
-            dispatch(deleteClassroomSuccess());
-          } else {
-            const unknownError = {
-              code: "add-classroom-error",
-              message: "Unkown error, Contact support"
-            };
-            dispatch(classroomFail(unknownError));
-          }
+          dispatch(deleteClassroomSuccess());
         })
         .catch(error => {
           console.log(error.response);
