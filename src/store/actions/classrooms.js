@@ -37,9 +37,10 @@ export const getClassroomSuccess = (classroom, classrooms) => {
   };
 };
 
-export const deleteClassroomSuccess = () => {
+export const deleteClassroomSuccess = (classrooms) => {
   return {
-    type: actionTypes.CLASSROOM_DELETE_SUCCESS
+    type: actionTypes.CLASSROOM_DELETE_SUCCESS,
+    classrooms: classrooms
   };
 };
 
@@ -367,6 +368,8 @@ export const deleteClassroom = classroomId => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const currentState = getState();
     const firestore = getFirestore();
+    let currentClassrooms = currentState.classrooms.classrooms;
+    console.log(currentClassrooms);
     let myClassrooms = currentState.firebase.profile.classrooms;
     dispatch(classroomStart());
 
@@ -383,32 +386,40 @@ export const deleteClassroom = classroomId => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
-
       const url = `/classromdelete/:${classroomId}`;
       axios
         .delete(url, { headers: headers })
         .then(response => {
           console.log("response", response);
           if (response.status === 200) {
+            console.log("classroom id", classroomId);
             //Gets the deleted classroom index from the firebase profile and deletes it
             let classroomToDeleteIndex = myClassrooms.findIndex(
               classroom => classroom.id === classroomId
             );
+            console.log("classroomToDeleteIndex", classroomToDeleteIndex);
             myClassrooms.splice(classroomToDeleteIndex, 1);
-            console.log("myClassrooms", myClassrooms);
-
+         
             //Save changes to firestore
             firestore
-              .collection("users")
-              .doc(currentState.firebase.auth.uid)
-              .set(
-                {
-                  classrooms: myClassrooms
-                },
-                { merge: true }
+            .collection("users")
+            .doc(currentState.firebase.auth.uid)
+            .set(
+              {
+                classrooms: myClassrooms
+              },
+              { merge: true }
               )
               .then(() => {
-                dispatch(deleteClassroomSuccess());
+                //Gets the deleted classroom index from the redux state and deletes it and lowers total counter
+                let currentClassroomsIndex = currentClassrooms.data.findIndex(
+                  classroom => classroom.id === classroomId
+                );
+                console.log("currentClassroomsIndex", currentClassroomsIndex);
+                currentClassrooms.data.splice(currentClassroomsIndex, 1);
+                currentClassrooms.total--;
+                console.log("currentClassrooms", currentClassrooms);
+                dispatch(deleteClassroomSuccess(currentClassrooms));
               })
               .catch(err => {
                 dispatch(classroomFail(err));
