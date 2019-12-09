@@ -37,6 +37,12 @@ export const getClassroomSuccess = (classroom, classrooms) => {
   };
 };
 
+export const deleteClassroomSuccess = () => {
+  return {
+    type: actionTypes.CLASSROOM_DELETE_SUCCESS
+  };
+};
+
 export const createClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(classroomStart());
@@ -333,11 +339,80 @@ export const getOneClassroom = payload => {
         .then(response => {
           if (response.status === 200) {
             dispatch(
-              getClassroomSuccess(
-                response.data.classroom,
-                allClassrooms
-              )
+              getClassroomSuccess(response.data.classroom, allClassrooms)
             );
+          } else {
+            const unknownError = {
+              code: "add-classroom-error",
+              message: "Unkown error, Contact support"
+            };
+            dispatch(classroomFail(unknownError));
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+          dispatch(
+            classroomFail(
+              error.response.data.error != null
+                ? error.response.data.error
+                : error.response.data
+            )
+          );
+        });
+    }
+  };
+};
+
+export const deleteClassroom = classroomId => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const currentState = getState();
+    const firestore = getFirestore();
+    let myClassrooms = currentState.firebase.profile.classrooms;
+    dispatch(classroomStart());
+
+    let error;
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(classroomFail(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentState.auth.token.token}`
+      };
+
+      const url = `/classromdelete/:${classroomId}`;
+      axios
+        .delete(url, { headers: headers })
+        .then(response => {
+          console.log("response", response);
+          if (response.status === 200) {
+            //Gets the deleted classroom index from the firebase profile and deletes it
+            let classroomToDeleteIndex = myClassrooms.findIndex(
+              classroom => classroom.id === classroomId
+            );
+            myClassrooms.splice(classroomToDeleteIndex, 1);
+            console.log("myClassrooms", myClassrooms);
+
+            //Save changes to firestore
+            firestore
+              .collection("users")
+              .doc(currentState.firebase.auth.uid)
+              .set(
+                {
+                  classrooms: myClassrooms
+                },
+                { merge: true }
+              )
+              .then(() => {
+                dispatch(deleteClassroomSuccess());
+              })
+              .catch(err => {
+                dispatch(classroomFail(err));
+              });
           } else {
             const unknownError = {
               code: "add-classroom-error",

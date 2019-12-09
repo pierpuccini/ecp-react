@@ -98,7 +98,8 @@ const ClassroomController = props => {
     loading,
     getAllMyClassrooms,
     classrooms,
-    firebaseClassrooms
+    firebaseClassrooms,
+    deleteClassroom
   } = props;
 
   //Checks if DOM is ready to un mount loading icon
@@ -312,6 +313,11 @@ const ClassroomController = props => {
     };
     props.addClassroom(payload);
   };
+
+  const handleDelete = (classroomId) => {
+    deleteClassroom(classroomId)
+  }
+
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect;
   const routesArray = [
@@ -448,6 +454,7 @@ const ClassroomController = props => {
               studentStatus={studentStatus}
               isMobile={isMobile}
               handleNavChange={handleNavChange}
+              handleDelete={handleDelete}
             />
           );
         })}
@@ -485,7 +492,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addClassroom: payload => dispatch(actions.addClassroom(payload)),
-    getAllMyClassrooms: payload => dispatch(actions.getAllMyClassrooms(payload))
+    getAllMyClassrooms: payload => dispatch(actions.getAllMyClassrooms(payload)),
+    deleteClassroom: payload => dispatch(actions.deleteClassroom(payload))
   };
 };
 

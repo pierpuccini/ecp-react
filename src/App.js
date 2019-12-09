@@ -68,7 +68,8 @@ function App(props) {
     resetReduxErrors,
     logout,
     disabled,
-    userDisabled
+    userDisabled,
+    deleteSuccess
   } = props;
 
   const classes = useStyles();
@@ -179,6 +180,13 @@ function App(props) {
       payload = {
         type: "success",
         info: { message: "Classroom Succesfully added!" },
+        duration: 10000
+      };
+    }
+    if (deleteSuccess) {
+      payload = {
+        type: "success",
+        info: { message: "Classroom Succesfully deleted!" },
         duration: 10000
       };
     }
@@ -422,6 +430,7 @@ const mapStateToProps = state => {
     classroomError: state.classrooms.error,
     onboardingSuccess: state.onboarding.showSuccess,
     myAccountSuccess: state.users.success,
+    deleteSuccess: state.classrooms.deleteSuccess,
     role: state.firebase.profile.role,
     disabled: state.firebase.profile.disabled,
     userDisabled: state.users.warning

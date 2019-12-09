@@ -8,7 +8,8 @@ const initialState = {
   registrationCode: null,
   success: false,
   classroom: null,
-  classrooms: null
+  classrooms: null,
+  deleteSuccess: null
 };
 
 const classroomStart = state => {
@@ -17,7 +18,8 @@ const classroomStart = state => {
     error: null,
     success: null,
     classroom: null,
-    classrooms: null
+    classrooms: null,
+    deleteSuccess: false
   });
 };
 
@@ -56,6 +58,14 @@ const getClassroomSuccess = (state, action) => {
   });
 };
 
+const deleteClassroomSuccess = (state) => {
+  return updateObject(state, {
+    loading: false,
+    error: null,
+    deleteSuccess: true
+  });
+};
+
 const resetCreateClassroom = state => {
   return updateObject(state, {
     loading: false,
@@ -79,6 +89,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CLASSROOM_ACTIONS_START: return classroomStart(state, action);
     case actionTypes.CLASSROOM_ACTIONS_FAILED: return classroomFail(state, action);
     case actionTypes.CLASSROOM_ACTIONS_SUCCESS: return classroomSuccess(state, action);
+    case actionTypes.CLASSROOM_DELETE_SUCCESS: return deleteClassroomSuccess(state, action);
     case actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS: return getClassroomSuccess(state, action);
     case actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS: return getAllClassroomSuccess(state, action);
     case actionTypes.CLASSROOM_ACTIONS_FETCH_RESET: return resetFetchClassroom(state, action);

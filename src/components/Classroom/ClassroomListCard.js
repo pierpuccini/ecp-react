@@ -75,7 +75,8 @@ const ClassroomListCard = props => {
     // activeStudents,
     studentStatus,
     isMobile,
-    handleNavChange
+    handleNavChange,
+    handleDelete
   } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -199,11 +200,12 @@ const ClassroomListCard = props => {
           <MenuItem
             className={classes.classroomCardActionsMenu}
             key="Delete"
-            onClick={handleMobileMenuClose}
+            onClick={() =>{handleDelete(classroom.id)}}
           >
             <IconButton
               className={classes.deleteButton}
               style={{ padding: "unset" }}
+              
             >
               <DeleteOutlineOutlinedIcon />
             </IconButton>
