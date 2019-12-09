@@ -410,13 +410,16 @@ export const deleteClassroom = classroomId => {
                   );
                   console.log("classroomToDeleteIndex", classroomToDeleteIndex);
                   if (classroomToDeleteIndex >= 0) {
+                    //Gets the subject ID of the deleted course before deleting the course
+                    const subjectId = userClassrooms.subject_id
+                    
                     //with the deleted classroom index it deletes the classroom
                     userClassrooms.splice(classroomToDeleteIndex, 1);
                     console.log("userClassrooms update", userClassrooms);
 
                     //TODO: send a notification to the user that the course has been deleted
                     const deleteNotification = {
-                      message: `You have been deleted from classroom ID: ${userClassrooms.subject_id}, contact your teacher for more information`,
+                      message: `You have been deleted from classroom ID: ${subjectId}, contact your teacher for more information`,
                       time: new Date()
                     };
                     if (userNotifications.classroom != null) {
