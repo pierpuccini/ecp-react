@@ -221,14 +221,17 @@ const ClassroomController = props => {
         clasroomFetcher();
       }
     };
-    // content is the Id of the main container
-    document.getElementById("content").addEventListener("scroll", handleScroll);
+    console.log('location.pathname',location.pathname)
+    if (location.pathname === '/classrooms') {
+      // content is the Id of the main container
+      document.getElementById("content").addEventListener("scroll", handleScroll);
+    }
     return () => {
       document
         .getElementById("content")
         .removeEventListener("scroll", handleScroll);
     };
-  }, [clasroomFetcher]);
+  }, [location, clasroomFetcher]);
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
