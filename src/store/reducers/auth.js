@@ -102,7 +102,7 @@ const resetSuccess = state => {
 };
 
 const resetErrors = state => {
-  return updateObject(state, { error: null, newUserGoogleLogin: false});
+  return updateObject(state, { error: null, newUser: false, newUserGoogleLogin: false});
 };
 
 const getIdToken = (state, action) => {

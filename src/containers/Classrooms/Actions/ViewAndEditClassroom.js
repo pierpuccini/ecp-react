@@ -342,6 +342,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ViewAndEditClassroom)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ViewAndEditClassroom));
