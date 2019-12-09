@@ -367,9 +367,6 @@ export const getOneClassroom = payload => {
 export const deleteClassroom = classroomId => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const currentState = getState();
-    const firestore = getFirestore();
-    let currentClassrooms = currentState.classrooms.classrooms;
-    console.log(currentClassrooms);
     dispatch(classroomStart());
 
     let error;
@@ -389,67 +386,9 @@ export const deleteClassroom = classroomId => {
       axios
         .delete(url, { headers: headers })
         .then(response => {
+          console.log("response", response);
           if (response.status === 200) {
-            //Checks all users and deletes the classroom
-            firestore
-              .collection("users")
-              .get()
-              .then(querySnapshot => {
-                querySnapshot.forEach(doc => {
-                  console.log(doc.id, " => ", doc.data());
-                  const userId = doc.id;
-                  let userNotifications = { ...doc.data().notifications };
-                  let userClassrooms = [...doc.data().classrooms];
-                  console.log("userId", userId);
-                  console.log("userClassrooms", userClassrooms);
-
-                  //Gets the deleted classroom index from the firebase profile
-                  let classroomToDeleteIndex = userClassrooms.findIndex(
-                    classroom => classroom.id === classroomId
-                  );
-                  console.log("classroomToDeleteIndex", classroomToDeleteIndex);
-                  if (classroomToDeleteIndex >= 0) {
-                    //Gets the subject ID of the deleted course before deleting the course
-                    const subjectId =
-                      userClassrooms[classroomToDeleteIndex].subject_id;
-
-                    //with the deleted classroom index it deletes the classroom
-                    userClassrooms.splice(classroomToDeleteIndex, 1);
-                    console.log("userClassrooms update", userClassrooms);
-
-                    //TODO: send a notification to the user that the course has been deleted
-                    const deleteNotification = {
-                      message: `You have been deleted from classroom ID: ${subjectId}, contact your teacher for more information`,
-                      time: new Date()
-                    };
-                    if (userNotifications.classroom != null) {
-                      userNotifications.classroom = [
-                        ...userNotifications.classroom,
-                        deleteNotification
-                      ];
-                    } else {
-                      userNotifications.classroom = [deleteNotification];
-                    }
-                  }
-                  //Save changes to firestore for teacher
-                  firestore
-                    .collection("users")
-                    .doc(userId)
-                    .set(
-                      {
-                        classrooms: userClassrooms,
-                        notifications: userNotifications
-                      },
-                      { merge: true }
-                    )
-                    .then(() => {
-                      dispatch(deleteClassroomSuccess());
-                    })
-                    .catch(err => {
-                      dispatch(classroomFail(err));
-                    });
-                });
-              });
+            dispatch(deleteClassroomSuccess());
           } else {
             const unknownError = {
               code: "add-classroom-error",
