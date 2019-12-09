@@ -37,10 +37,9 @@ export const getClassroomSuccess = (classroom, classrooms) => {
   };
 };
 
-export const deleteClassroomSuccess = classrooms => {
+export const deleteClassroomSuccess = () => {
   return {
-    type: actionTypes.CLASSROOM_DELETE_SUCCESS,
-    classrooms: classrooms
+    type: actionTypes.CLASSROOM_DELETE_SUCCESS
   };
 };
 
@@ -291,7 +290,7 @@ export const getAllMyClassrooms = payload => {
         .get(url, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            console.log('res',response.data.classrooms)
+            console.log("res", response.data.classrooms);
             dispatch(getAllClassroomSuccess(response.data.classrooms));
           } else {
             const unknownError = {
@@ -399,7 +398,7 @@ export const deleteClassroom = classroomId => {
                 querySnapshot.forEach(doc => {
                   console.log(doc.id, " => ", doc.data());
                   const userId = doc.id;
-                  let userNotifications = {...doc.data().notifications};
+                  let userNotifications = { ...doc.data().notifications };
                   let userClassrooms = [...doc.data().classrooms];
                   console.log("userId", userId);
                   console.log("userClassrooms", userClassrooms);
@@ -411,8 +410,9 @@ export const deleteClassroom = classroomId => {
                   console.log("classroomToDeleteIndex", classroomToDeleteIndex);
                   if (classroomToDeleteIndex >= 0) {
                     //Gets the subject ID of the deleted course before deleting the course
-                    const subjectId = userClassrooms[classroomToDeleteIndex].subject_id
-                    
+                    const subjectId =
+                      userClassrooms[classroomToDeleteIndex].subject_id;
+
                     //with the deleted classroom index it deletes the classroom
                     userClassrooms.splice(classroomToDeleteIndex, 1);
                     console.log("userClassrooms update", userClassrooms);
@@ -443,14 +443,7 @@ export const deleteClassroom = classroomId => {
                       { merge: true }
                     )
                     .then(() => {
-                      //Gets the deleted classroom index from the redux state and deletes it and lowers total counter
-                      let currentClassroomsIndex = currentClassrooms.data.findIndex(
-                        classroom => classroom.id === classroomId
-                      );
-                      currentClassrooms.data.splice(currentClassroomsIndex, 1);
-                      currentClassrooms.total--;
-
-                      dispatch(deleteClassroomSuccess(currentClassrooms));
+                      dispatch(deleteClassroomSuccess());
                     })
                     .catch(err => {
                       dispatch(classroomFail(err));

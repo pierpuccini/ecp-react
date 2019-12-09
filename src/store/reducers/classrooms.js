@@ -62,8 +62,7 @@ const deleteClassroomSuccess = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: null,
-    deleteSuccess: true,
-    classrooms: action.classrooms
+    deleteSuccess: true
   });
 };
 
