@@ -153,7 +153,7 @@ const ClassroomController = props => {
         page: classroomPage
       });
     }
-    if (oldClasscount < firebaseClassrooms.length) {
+    if (oldClasscount !== firebaseClassrooms.length) {
       getMyClassrooms()
         .then(() => {
           setDomReady(true);
@@ -193,6 +193,8 @@ const ClassroomController = props => {
 
   /* Incharge of getting next page of items */
   const clasroomFetcher = useCallback(() => {
+    console.log('lastPage', classrooms)
+    console.log('classroomPage', classroomPage)
     if (classrooms.lastPage !== classroomPage) {
       let classroomPageCopy = classroomPage;
       setclassroomPage(classroomPageCopy + 1);
@@ -221,7 +223,7 @@ const ClassroomController = props => {
         clasroomFetcher();
       }
     };
-    console.log('location.pathname',location.pathname)
+
     if (location.pathname === '/classrooms') {
       // content is the Id of the main container
       document.getElementById("content").addEventListener("scroll", handleScroll);

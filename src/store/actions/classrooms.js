@@ -37,7 +37,7 @@ export const getClassroomSuccess = (classroom, classrooms) => {
   };
 };
 
-export const deleteClassroomSuccess = (classrooms) => {
+export const deleteClassroomSuccess = classrooms => {
   return {
     type: actionTypes.CLASSROOM_DELETE_SUCCESS,
     classrooms: classrooms
@@ -370,7 +370,6 @@ export const deleteClassroom = classroomId => {
     const firestore = getFirestore();
     let currentClassrooms = currentState.classrooms.classrooms;
     console.log(currentClassrooms);
-    let myClassrooms = currentState.firebase.profile.classrooms;
     dispatch(classroomStart());
 
     let error;
@@ -390,40 +389,51 @@ export const deleteClassroom = classroomId => {
       axios
         .delete(url, { headers: headers })
         .then(response => {
-          console.log("response", response);
           if (response.status === 200) {
-            console.log("classroom id", classroomId);
-            //Gets the deleted classroom index from the firebase profile and deletes it
-            let classroomToDeleteIndex = myClassrooms.findIndex(
-              classroom => classroom.id === classroomId
-            );
-            console.log("classroomToDeleteIndex", classroomToDeleteIndex);
-            myClassrooms.splice(classroomToDeleteIndex, 1);
-         
-            //Save changes to firestore
+            //Checks all users and deletes the classroom
             firestore
-            .collection("users")
-            .doc(currentState.firebase.auth.uid)
-            .set(
-              {
-                classrooms: myClassrooms
-              },
-              { merge: true }
-              )
-              .then(() => {
-                //Gets the deleted classroom index from the redux state and deletes it and lowers total counter
-                let currentClassroomsIndex = currentClassrooms.data.findIndex(
-                  classroom => classroom.id === classroomId
-                );
-                console.log("currentClassroomsIndex", currentClassroomsIndex);
-                currentClassrooms.data.splice(currentClassroomsIndex, 1);
-                currentClassrooms.total--;
-                console.log("currentClassrooms", currentClassrooms);
-                dispatch(deleteClassroomSuccess(currentClassrooms));
-              })
-              .catch(err => {
-                dispatch(classroomFail(err));
+              .collection("users")
+              .get()
+              .then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                  console.log(doc.id, " => ", doc.data());
+                  const userId = doc.id;
+                  let userClassrooms = doc.data().classrooms;
+                  console.log("userId", userId);
+                  console.log("userClassrooms", userClassrooms);
+
+                  //Gets the deleted classroom index from the firebase profile and deletes it
+                  let classroomToDeleteIndex = userClassrooms.findIndex(
+                    classroom => classroom.id === classroomId
+                  );
+                  userClassrooms.splice(classroomToDeleteIndex, 1);
+                  console.log("userClassrooms", userClassrooms);
+                  //Save changes to firestore for teacher
+                  firestore
+                    .collection("users")
+                    .doc(userId)
+                    .set(
+                      {
+                        classrooms: userClassrooms
+                      },
+                      { merge: true }
+                    )
+                    .then(() => {
+                      //Gets the deleted classroom index from the redux state and deletes it and lowers total counter
+                      let currentClassroomsIndex = currentClassrooms.data.findIndex(
+                        classroom => classroom.id === classroomId
+                      );
+                      currentClassrooms.data.splice(currentClassroomsIndex, 1);
+                      currentClassrooms.total--;
+      
+                      dispatch(deleteClassroomSuccess(currentClassrooms));
+                    })
+                    .catch(err => {
+                      dispatch(classroomFail(err));
+                    });
+                });
               });
+
           } else {
             const unknownError = {
               code: "add-classroom-error",
