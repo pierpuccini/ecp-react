@@ -1,5 +1,5 @@
 /* React imports */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 /* Redux */
 import { connect } from "react-redux";
@@ -26,7 +26,7 @@ import customClasses from "./ClassroomsContoller.module.scss";
 import AddClassroomModal from "../../components/Classroom/AddClassroomModal";
 import ClassroomListCard from "../../components/Classroom/ClassroomListCard";
 import Modal from "../../components/UI/Modal/Modal";
-import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLoader";
+import PngLoader from "../../components/UI/Loader/PngLoader/PngLoader";
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const createClassroom = asyncComponent(() => {
@@ -105,7 +105,8 @@ const ClassroomController = props => {
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
   const [openAddClassModal, setopenAddClassModal] = useState(false);
-  const [classroomPage /* setclassroomPage */] = useState(1);
+  const [classroomPage, setclassroomPage] = useState(1);
+  const [ininiteLoader, setinfiniteLoader] = useState(false);
   const [oldClasscount, setoldClasscount] = useState(0);
   const [addClassroomForm, setaddClassroomForm] = useState({
     linkCode: {
@@ -179,6 +180,54 @@ const ClassroomController = props => {
     }
     setNavRoute(payload);
   }, [navRoute, location]);
+
+  /* Incharge of loading infinite loading loader and message */
+  useEffect(() => {
+    if (loading) {
+      setinfiniteLoader(true);
+    } else {
+      setinfiniteLoader(false)
+    }
+  }, [loading]);
+
+  /* Incharge of getting next page of items */
+  const clasroomFetcher = useCallback(() => {
+    if (classrooms.lastPage !== classroomPage) {
+      let classroomPageCopy = classroomPage;
+      setclassroomPage(classroomPageCopy + 1);
+      console.log("loading");
+      getAllMyClassrooms({
+        role: role,
+        uid: userId,
+        page: classroomPage
+      });
+      setinfiniteLoader(true);
+    } else {
+      setinfiniteLoader(false);
+    }
+    /* MISSING DEPENDANCIES, role, userId AND getAllMyClassrooms */
+    //eslint-disable-next-line
+  }, [classrooms, classroomPage]);
+
+  /* Incharge of attaching scroll event to scroll screen */
+  useEffect(() => {
+    /* Incharge of loading more classrooms and showing loader */
+    const handleScroll = e => {
+      const bottom =
+        e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+      if (bottom) {
+        console.log("bottom");
+        clasroomFetcher();
+      }
+    };
+    // content is the Id of the main container
+    document.getElementById("content").addEventListener("scroll", handleScroll);
+    return () => {
+      document
+        .getElementById("content")
+        .removeEventListener("scroll", handleScroll);
+    };
+  }, [clasroomFetcher]);
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
@@ -312,10 +361,16 @@ const ClassroomController = props => {
     </React.Fragment>
   );
 
-  let floatingLoader;
-  if (loading) {
-    floatingLoader = <FloatingLoader></FloatingLoader>;
-  }
+  const customInfiniteLoader = (
+    <div
+      style={{ display: "flex", alignItems: "center", flexDirection: "column" }}
+    >
+      <div style={{ display: "flex" }}>
+        <PngLoader />
+      </div>
+      <p style={{ margin: "unset" }}>Fetching Classrooms</p>
+    </div>
+  );
 
   const classrooomController =
     location.pathname === "/classrooms" ? (
@@ -339,7 +394,6 @@ const ClassroomController = props => {
               </IconButton>
             ) : null}
           </div>
-          {floatingLoader}
           <Modal
             openModal={openAddClassModal}
             closeModal={handleAddClassStudent}
@@ -397,6 +451,13 @@ const ClassroomController = props => {
             />
           );
         })}
+        {ininiteLoader ? (
+          customInfiniteLoader
+        ) : (
+          <Typography style={{ textAlign: "center", margin: "16px 0px" }}>
+            Nothing else to show
+          </Typography>
+        )}
       </Container>
     ) : (
       <React.Fragment>
@@ -428,6 +489,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ClassroomController)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ClassroomController));
