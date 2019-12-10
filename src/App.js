@@ -87,6 +87,7 @@ function App(props) {
     info: "none"
   });
 
+  const [titleState, settitleState] = useState('Edu Coins')
   /* Use efect handles time out for loader and conditional routes managed by state */
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
@@ -262,21 +263,11 @@ function App(props) {
 
   /* Routes for authenticated users */
   if (isAuthenticated) {
-    //Title Checker
-    let title = null;
-    switch (location.pathname) {
-      case "/home":
-        title = `Welcome Back, ${name}`;
-        break;
 
-      case "/onboarding":
-        title = `Welcome ${name}`;
-        break;
-
-      default:
-        title = "Edu Coins";
-        break;
+    const setTitle = (title) => {
+      settitleState(title)
     }
+
 
     //Loader
     app = (
@@ -342,7 +333,7 @@ function App(props) {
                 logout={logoutHandler}
                 toggleDrawer={toggleDrawer}
                 drawerState={drawerOpen}
-                title={title}
+                title={titleState}
                 newUser={newUser === ""}
                 viewAccountHandler={handleNavChange}
               />
@@ -357,6 +348,8 @@ function App(props) {
             navRoute={navRoute}
             pathname={location.pathname}
             role={role}
+            name={name}
+            setTitle={setTitle}
           />
         </Container>
         {newUser === "" ? null : bottomNavigation}

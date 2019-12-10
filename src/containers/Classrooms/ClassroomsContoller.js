@@ -12,7 +12,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
 //Icons
@@ -22,7 +21,6 @@ import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 import PermisionError from "../../components/Errors/PermisionError/PermisionError";
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
-import customClasses from "./ClassroomsContoller.module.scss";
 import AddClassroomModal from "../../components/Classroom/AddClassroomModal";
 import ClassroomListCard from "../../components/Classroom/ClassroomListCard";
 import Modal from "../../components/UI/Modal/Modal";
@@ -66,7 +64,8 @@ const useStyles = makeStyles(theme => ({
   },
   classroomListHeader: {
     display: "flex",
-    alignSelf: "center"
+    alignSelf: "center",
+    margin: theme.spacing(0, 1)
   },
   classroomListHeaderContainer: {
     display: "flex",
@@ -356,25 +355,6 @@ const ClassroomController = props => {
     </Switch>
   );
 
-  const classroomManager = (
-    <React.Fragment>
-      <Typography>Classroom Manager</Typography>
-      <div className={classes.actionButtonsContainer}>
-        <Button
-          variant="contained"
-          color="primary"
-          className={customClasses.button}
-          endIcon={<AddCircleOutlineOutlinedIcon />}
-          onClick={event => {
-            handleNavChange(event, "classrooms/create");
-          }}
-        >
-          Create Classroom
-        </Button>
-      </div>
-    </React.Fragment>
-  );
-
   const customInfiniteLoader = (
     <div
       style={{ display: "flex", alignItems: "center", flexDirection: "column" }}
@@ -394,7 +374,6 @@ const ClassroomController = props => {
           className={classes.paper}
           style={prefersDarkMode ? { border: "unset" } : null}
         >
-          {role === "student" ? null : classroomManager}
           <div className={classes.classroomListHeaderContainer}>
             <div className={classes.classroomListHeader}>
               <Icon style={{ marginRight: "5px" }}>
@@ -406,7 +385,15 @@ const ClassroomController = props => {
               <IconButton onClick={handleAddClassStudent}>
                 <AddCircleOutlineOutlinedIcon />
               </IconButton>
-            ) : null}
+            ) : (
+              <IconButton
+                onClick={event => {
+                  handleNavChange(event, "classrooms/create");
+                }}
+              >
+                <AddCircleOutlineOutlinedIcon />
+              </IconButton>
+            )}
           </div>
           <Modal
             openModal={openAddClassModal}
