@@ -87,7 +87,7 @@ function App(props) {
     info: "none"
   });
 
-  const [titleState, settitleState] = useState('Edu Coins')
+  const [titleState, settitleState] = useState("Edu Coins");
   /* Use efect handles time out for loader and conditional routes managed by state */
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
@@ -263,11 +263,9 @@ function App(props) {
 
   /* Routes for authenticated users */
   if (isAuthenticated) {
-
-    const setTitle = (title) => {
-      settitleState(title)
-    }
-
+    const setTitle = title => {
+      settitleState(title);
+    };
 
     //Loader
     app = (

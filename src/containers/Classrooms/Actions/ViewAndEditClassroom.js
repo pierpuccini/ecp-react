@@ -114,6 +114,7 @@ const ViewAndEditClassroom = props => {
         pending_students,
         active_students
       } = classroom;
+      
       setupdateClassroomForm({
         client_id: {
           value: client_id == null ? "" : client_id,

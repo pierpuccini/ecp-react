@@ -14,6 +14,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 //Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
@@ -382,17 +383,21 @@ const ClassroomController = props => {
               <Typography>Classroom List</Typography>
             </div>
             {role === "student" ? (
-              <IconButton onClick={handleAddClassStudent}>
-                <AddCircleOutlineOutlinedIcon />
-              </IconButton>
+              <Tooltip title="Add Classroom">
+                <IconButton onClick={handleAddClassStudent}>
+                  <AddCircleOutlineOutlinedIcon />
+                </IconButton>
+              </Tooltip>
             ) : (
-              <IconButton
-                onClick={event => {
-                  handleNavChange(event, "classrooms/create");
-                }}
-              >
-                <AddCircleOutlineOutlinedIcon />
-              </IconButton>
+              <Tooltip title="Create Classroom">
+                <IconButton
+                  onClick={event => {
+                    handleNavChange(event, "classrooms/create");
+                  }}
+                >
+                  <AddCircleOutlineOutlinedIcon />
+                </IconButton>
+              </Tooltip>
             )}
           </div>
           <Modal

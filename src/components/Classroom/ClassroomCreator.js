@@ -223,7 +223,7 @@ const ClassroomCreator = props => {
               <ArrowBackIosOutlinedIcon />
             </IconButton>
             <Typography style={{ alignSelf: "center" }}>
-              Create Classroom
+              Return to classroom List
             </Typography>
           </div>
           <div className={classes.codeAndNameContainer}>
