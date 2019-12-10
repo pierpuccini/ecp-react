@@ -193,22 +193,16 @@ const ClassroomListCard = props => {
               handleNavChange(event, `classrooms/edit/:${classroom.id}`)
             }
           >
-            <IconButton color="primary" style={{ padding: "unset" }}>
-              <EditOutlinedIcon />
-            </IconButton>
+            <EditOutlinedIcon color="primary" />
           </MenuItem>
           <MenuItem
             className={classes.classroomCardActionsMenu}
             key="Delete"
-            onClick={() =>{handleDelete(classroom.id)}}
+            onClick={() => {
+              handleDelete(classroom.id);
+            }}
           >
-            <IconButton
-              className={classes.deleteButton}
-              style={{ padding: "unset" }}
-              
-            >
-              <DeleteOutlineOutlinedIcon />
-            </IconButton>
+            <DeleteOutlineOutlinedIcon className={classes.deleteButton} />
           </MenuItem>
         </Menu>
       </div>
@@ -226,7 +220,9 @@ const ClassroomListCard = props => {
         </IconButton>
         <IconButton
           className={classes.deleteButton}
-          onClick={() =>{handleDelete(classroom.id)}}
+          onClick={() => {
+            handleDelete(classroom.id);
+          }}
         >
           <DeleteOutlineOutlinedIcon />
         </IconButton>
