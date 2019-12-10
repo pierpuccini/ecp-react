@@ -29,13 +29,13 @@ export const onboardingReset = () => {
 export const checkOnboarding = data => {
   return (dispatch, getState, { getFirestore }) => {
     dispatch(onboardingStart());
-    const firestore = getFirestore();
     const currentState = getState();
 
     // Payload to sent to backend
     const payload = {
       student_id: currentState.firebase.auth.uid,
-      code_classroom: data.linkCode
+      code_classroom: data.linkCode,
+      studentCode: data.studentCode
     };
 
     let error;
@@ -51,60 +51,14 @@ export const checkOnboarding = data => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
-
       axios
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            firestore
-              .collection("clients")
-              .doc(response.data.client_id)
-              .get()
-              .then(doc => {
-                if (!doc.exists) {
-                  const nonExistingClient = {
-                    code: "client-not-exisit",
-                    message: "Institution does not exisit, Contact support!"
-                  };
-                  dispatch(onboardingFailed(nonExistingClient));
-                } else {
-                  firestore
-                    .collection("users")
-                    .doc(currentState.firebase.auth.uid)
-                    .set(
-                      {
-                        institutions: [{...doc.data(), id: response.data.client_id }],
-                        classrooms: [
-                          {
-                            id: response.data.id,
-                            code_classroom: data.linkCode,
-                            subject_id: response.data.subject_id
-                          }
-                        ],
-                        studentId: data.studentCode,
-                        role: "student"
-                      },
-                      { merge: true }
-                    )
-                    .then(() => {
-                      dispatch(onboardingSuccess());
-                      setTimeout(() => {
-                        dispatch(onboardingReset());
-                      }, 250);
-                    })
-                    .catch(err => {
-                      dispatch(onboardingFailed(err));
-                    });
-                }
-              })
-              .catch(err => {
-                console.log("Error getting document", err);
-                const errorGettingInstitution = {
-                  code: "Error-getting-institution",
-                  message: "Error getting institution, Please try again."
-                };
-                dispatch(onboardingFailed(errorGettingInstitution));
-              });
+            dispatch(onboardingSuccess());
+            setTimeout(() => {
+              dispatch(onboardingReset());
+            }, 250);
           } else {
             const unknownError = {
               code: "add-classroom-error",
@@ -114,7 +68,13 @@ export const checkOnboarding = data => {
           }
         })
         .catch(error => {
-          dispatch(onboardingFailed(error.response.data.error != null ? error.response.data.error:error.response.data));
+          dispatch(
+            onboardingFailed(
+              error.response.data.error != null
+                ? error.response.data.error
+                : error.response.data
+            )
+          );
         });
     }
   };

@@ -206,7 +206,7 @@ const Users = props => {
   const submitOnboardingHandler = event => {
     let payload = {
       linkCode: OnboardingForm.linkCode.value,
-      studentCode: OnboardingForm.studentCode.value
+      studentCode: OnboardingForm.studentCode.value,
     };
     event.preventDefault();
     props.checkOnboarding(payload);
