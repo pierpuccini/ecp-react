@@ -23,19 +23,17 @@ import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import Logo from "../UI/Logo/Logo";
 
 const useStyles = makeStyles(theme => ({
-  imageIcon: {
-    height: "100%"
-  },
-  iconRoot: {
-    textAlign: "center",
-    marginRight: "8px",
-    width: "18px",
-    height: "18px",
-    "font-size": "unset"
-  },
   container: {
     display: "flex",
     flexDirection: "column"
+  },
+  requieredFields:{
+    margin: theme.spacing(2,0)
+  },
+  institutionsField: {
+    width: "-webkit-fill-available",
+    margin: theme.spacing(0,1),
+    marginTop: theme.spacing(2)
   },
   codeAndNameContainer: {
     [theme.breakpoints.up("xs")]: {
@@ -81,17 +79,11 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1)
   },
-  dense: {
-    marginTop: theme.spacing(2)
-  },
   button: {
     margin: theme.spacing(1)
   },
   input: {
     display: "none"
-  },
-  inputFullName: {
-    "text-transform": "capitalize"
   },
   paper: {
     padding: theme.spacing(2, 2),
@@ -102,24 +94,6 @@ const useStyles = makeStyles(theme => ({
   },
   MuiMenuList: {
     width: "auto !important"
-  },
-  gLogin: {
-    textTransform: "capitalize"
-  },
-  submitActions: {
-    display: "flex",
-    flexWrap: "wrap",
-    [theme.breakpoints.down("sm")]: {
-      justifyContent: "center"
-    },
-    [theme.breakpoints.up("sm")]: {
-      justifyContent: "space-between"
-    }
-  },
-  loginError: {
-    textAlign: "center",
-    color: "#f44336",
-    fontSize: "small"
   },
   formHeader: {
     display: "flex"
@@ -226,83 +200,85 @@ const ClassroomCreator = props => {
               Return to classroom List
             </Typography>
           </div>
-          <div className={classes.codeAndNameContainer}>
-            <TextField
-              className={classes.textField}
-              label="Institution"
-              placeholder="Select Your Institution"
-              type="text"
-              margin="normal"
-              variant="outlined"
-              value={createClassroomForm.institutions.value}
-              onChange={event => inputChangedHandler(event, "institutions")}
-              helperText={
-                !createClassroomForm.institutions.valid &&
-                createClassroomForm.institutions.touched
-                  ? "*Please Select you Institution"
-                  : "Select you Institution"
-              }
-              error={
-                !createClassroomForm.institutions.valid &&
-                createClassroomForm.institutions.touched
-              }
-              select
-              required
-            >
-              {institutions.map(option => (
-                <MenuItem
-                  className={classes.MuiMenuList}
-                  key={option.id}
-                  value={option.id}
-                >
-                  {option.value}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              className={classes.textField}
-              value={createClassroomForm.classCode.value}
-              onChange={event => inputChangedHandler(event, "classCode")}
-              label="Class Code"
-              placeholder="3752"
-              type="text"
-              margin="normal"
-              helperText={
-                !createClassroomForm.classCode.valid &&
-                createClassroomForm.classCode.touched
-                  ? "*Please Enter your internal classcode"
-                  : "Enter your internal classcode"
-              }
-              error={
-                !createClassroomForm.classCode.valid &&
-                createClassroomForm.classCode.touched
-              }
-              variant="outlined"
-              required
-            />
-            <TextField
-              className={classes.textField}
-              value={createClassroomForm.className.value}
-              onChange={event => inputChangedHandler(event, "className")}
-              label="Classroom Name"
-              placeholder="Control"
-              type="text"
-              margin="normal"
-              helperText={
-                !createClassroomForm.className.valid &&
-                createClassroomForm.className.touched
-                  ? "*Please Enter your Classroom name"
-                  : null
-              }
-              error={
-                !createClassroomForm.className.valid &&
-                createClassroomForm.className.touched
-              }
-              variant="outlined"
-              required
-            />
+          <div className={classes.requieredFields}>
+              <TextField
+                className={classes.institutionsField}
+                label="Institution"
+                placeholder="Select Your Institution"
+                type="text"
+                margin="normal"
+                variant="outlined"
+                value={createClassroomForm.institutions.value}
+                onChange={event => inputChangedHandler(event, "institutions")}
+                helperText={
+                  !createClassroomForm.institutions.valid &&
+                  createClassroomForm.institutions.touched
+                    ? "*Please Select you Institution"
+                    : "Select you Institution"
+                }
+                error={
+                  !createClassroomForm.institutions.valid &&
+                  createClassroomForm.institutions.touched
+                }
+                select
+                required
+              >
+                {institutions.map(option => (
+                  <MenuItem
+                    className={classes.MuiMenuList}
+                    key={option.id}
+                    value={option.id}
+                  >
+                    {option.value}
+                  </MenuItem>
+                ))}
+              </TextField>
+            <div className={classes.codeAndNameContainer}>
+              <TextField
+                className={classes.textField}
+                value={createClassroomForm.classCode.value}
+                onChange={event => inputChangedHandler(event, "classCode")}
+                label="Class Code"
+                placeholder="3752"
+                type="text"
+                margin="normal"
+                helperText={
+                  !createClassroomForm.classCode.valid &&
+                  createClassroomForm.classCode.touched
+                    ? "*Please Enter your internal classcode"
+                    : "Enter your internal classcode"
+                }
+                error={
+                  !createClassroomForm.classCode.valid &&
+                  createClassroomForm.classCode.touched
+                }
+                variant="outlined"
+                required
+              />
+              <TextField
+                className={classes.textField}
+                value={createClassroomForm.className.value}
+                onChange={event => inputChangedHandler(event, "className")}
+                label="Classroom Name"
+                placeholder="Control"
+                type="text"
+                margin="normal"
+                helperText={
+                  !createClassroomForm.className.valid &&
+                  createClassroomForm.className.touched
+                    ? "*Please Enter your Classroom name"
+                    : "Ex. Math, History etc..."
+                }
+                error={
+                  !createClassroomForm.className.valid &&
+                  createClassroomForm.className.touched
+                }
+                variant="outlined"
+                required
+              />
+            </div>
           </div>
-          <Typography>Additional Classroom Info</Typography>
+          <Typography style={{margin: "0px 8px"}}>Additional Classroom Info</Typography>
           <div className={classes.AdditionalInfoContainer}>
             <div className={classes.switchContainer}>
               <div className={classes.switch}>
