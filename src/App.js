@@ -207,7 +207,8 @@ function App(props) {
     myAccountSuccess,
     onboardingSuccess,
     disabled,
-    userDisabled
+    userDisabled,
+    deleteSuccess
   ]);
 
   const toggleDrawer = open => {
