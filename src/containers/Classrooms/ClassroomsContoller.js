@@ -153,10 +153,7 @@ const ClassroomController = props => {
         page: classroomPage
       });
     }
-    console.log("oldClasscount", oldClasscount);
-    console.log("firebaseClassrooms.length", firebaseClassrooms.length);
     if (oldClasscount !== firebaseClassrooms.length || deleteSuccess) {
-      console.log("[feching classroooms]");
       getMyClassrooms()
         .then(() => {
           setDomReady(true);
