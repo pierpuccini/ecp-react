@@ -91,10 +91,11 @@ const EditClassroomFields = props => {
     institutions,
     inputChangedHandler,
     buttonClickHandler,
-    validFields
+    validFields,
+    isTablet
   } = props;
   return (
-    <React.Fragment>
+    <div>
       <div className={classes.formHeader}>
         <IconButton
           size="small"
@@ -145,6 +146,7 @@ const EditClassroomFields = props => {
         <div className={classes.codeAndNameContainer}>
           <TextField
             className={classes.textField}
+            style={{ width: "-webkit-fill-available" }}
             value={updateClassroomForm.subject_id.value}
             onChange={event => inputChangedHandler(event, "subject_id")}
             label="Class Code"
@@ -166,6 +168,7 @@ const EditClassroomFields = props => {
           />
           <TextField
             className={classes.textField}
+            style={{ width: "-webkit-fill-available" }}
             value={updateClassroomForm.subject_name.value}
             onChange={event => inputChangedHandler(event, "subject_name")}
             label="Classroom Name"
@@ -194,43 +197,45 @@ const EditClassroomFields = props => {
           helper="Share code with students"
         />
       </div>
-      <div className={classes.formActions}>
-        <div className={classes.negativeActions}>
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={() => {
-              buttonClickHandler("cancel");
-            }}
-            size="small"
-            style={{ backgroundColor: "#f44336", color: "#ffffff" }}
-          >
-            Cancel
-          </Button>
+      {!isTablet ? (
+        <div className={classes.formActions}>
+          <div className={classes.negativeActions}>
+            <Button
+              variant="contained"
+              className={classes.button}
+              onClick={() => {
+                buttonClickHandler("cancel");
+              }}
+              size="small"
+              style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+            >
+              Cancel
+            </Button>
+          </div>
+          <div className={classes.positiveActions}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              disabled={
+                !validFields.client_id ||
+                !validFields.subject_id ||
+                !validFields.subject_name ||
+                !validFields.group_size ||
+                !validFields.challenge_duration ||
+                !validFields.initial_coins
+              }
+              onClick={() => {
+                buttonClickHandler("activate");
+              }}
+              size="small"
+            >
+              Activate
+            </Button>
+          </div>
         </div>
-        <div className={classes.positiveActions}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            disabled={
-              !validFields.client_id ||
-              !validFields.subject_id ||
-              !validFields.subject_name ||
-              !validFields.group_size ||
-              !validFields.challenge_duration ||
-              !validFields.initial_coins
-            }
-            onClick={() => {
-              buttonClickHandler("activate");
-            }}
-            size="small"
-          >
-            Activate
-          </Button>
-        </div>
-      </div>
-    </React.Fragment>
+      ) : null}
+    </div>
   );
 };
 

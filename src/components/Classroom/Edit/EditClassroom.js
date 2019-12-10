@@ -11,6 +11,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 /* App Imports */
 import EditClassroomFields from "./EditClassroomFields";
+import EditClassroomRoster from "./EditClassroomRoster";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -18,6 +19,18 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     overflow: "auto",
+    padding: theme.spacing(2, 2),
+    margin: theme.spacing(2),
+    border: "unset",
+    width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      boxShadow: "unset",
+      border: "2px solid"
+    }
+  },
+  desktopPaper: {
+    display: "flex",
+    flexWrap: "wrap",
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
     border: "unset",
@@ -57,6 +70,7 @@ const EditClassroom = props => {
   } = props;
 
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const isTablet = useMediaQuery("(min-width: 959px)");
   //State in charge of tabs
   const [tabValue, settabValue] = useState(0);
 
@@ -80,6 +94,28 @@ const EditClassroom = props => {
   });
   validFields = Object.assign({}, ...validFields);
 
+  if (isTablet) {
+    return (
+      <Paper
+        className={classes.desktopPaper}
+        style={prefersDarkMode ? { border: "unset" } : null}
+      >
+        <EditClassroomFields
+          navActions={navActions}
+          updateClassroomInfo={updateClassroomInfo}
+          updateClassroomForm={updateClassroomForm}
+          institutions={institutions}
+          inputChangedHandler={inputChangedHandler}
+          buttonClickHandler={buttonClickHandler}
+          validFields={validFields}
+          isTablet={isTablet}
+        />
+        <EditClassroomRoster />
+        Item Three
+      </Paper>
+    );
+  }
+
   return (
     <Paper
       className={classes.paper}
@@ -102,7 +138,7 @@ const EditClassroom = props => {
         />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        Item Two
+        <EditClassroomRoster />
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
         Item Three
