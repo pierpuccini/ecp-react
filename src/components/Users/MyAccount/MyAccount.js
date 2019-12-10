@@ -18,6 +18,8 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 import DoneOutlineOutlinedIcon from "@material-ui/icons/DoneOutlineOutlined";
 import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
+import LockOpenOutlinedIcon from "@material-ui/icons/LockOpenOutlined";
+import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
 //App Imports
 import gIcon from "../../../assets/svg/search.svg";
 
@@ -82,6 +84,10 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
     color: "#f44336",
     fontSize: "small"
+  },
+  sectionTitles: {
+    display: "flex",
+    margin: theme.spacing(1,1)
   }
 }));
 
@@ -108,7 +114,10 @@ const MyAccount = props => {
     <Container maxWidth="sm" className={classes.myAccountContainer}>
       <Paper className={classes.paper}>
         <form onSubmit={props.submitHandler}>
-          <Typography>My Account</Typography>
+          <div className={classes.sectionTitles}>
+            <AccountCircleOutlinedIcon style={{marginRight: "8px"}}/>
+            <Typography>My Info</Typography>
+          </div>
           {errors}
           <div className={classes.container}>
             <TextField
@@ -227,14 +236,17 @@ const MyAccount = props => {
               }}
             />
           </div>
-          <Typography>Login Info</Typography>
+          <div className={classes.sectionTitles}>
+            <LockOpenOutlinedIcon style={{marginRight: "8px"}}/>
+            <Typography>Login Info</Typography>
+          </div>
           <div className={classes.container}>
             <TextField
               className={classes.textField}
               label="Email"
               placeholder="placeholder@mail.com"
               type="text"
-              disabled={props.mainAccount === 'google.com'}
+              disabled={props.mainAccount === "google.com"}
               value={props.myProfileForm.email.value}
               onChange={event => props.inputChangedHandler(event, "email")}
               margin="normal"
@@ -269,7 +281,7 @@ const MyAccount = props => {
               className={classes.textField}
               label="Password"
               placeholder="password"
-              disabled={props.mainAccount === 'google.com'}
+              disabled={props.mainAccount === "google.com"}
               type={props.toogleViewPassword ? "text" : "password"}
               value={props.myProfileForm.password.value}
               onChange={event => props.inputChangedHandler(event, "password")}
@@ -291,7 +303,9 @@ const MyAccount = props => {
                     {props.succesfullFieldChange.password === "no-change" ||
                     props.resetSuccessCheck ? (
                       <div onClick={() => props.toggleViewPasswordHandler()}>
-                        <IconButton disabled={props.mainAccount === 'google.com'}>
+                        <IconButton
+                          disabled={props.mainAccount === "google.com"}
+                        >
                           {props.toogleViewPassword ? (
                             <VisibilityOffOutlinedIcon />
                           ) : (
@@ -350,7 +364,7 @@ const MyAccount = props => {
                   variant="outlined"
                   className={classes.button}
                   style={{ width: "210px" }}
-                  disabled={props.mainAccount === 'google.com'}
+                  disabled={props.mainAccount === "google.com"}
                   onClick={() => {
                     props.myProfile.googleLink
                       ? props.unlinkProvider("google")

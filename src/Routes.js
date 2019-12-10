@@ -60,6 +60,9 @@ const Routes = props => {
     case "onboarding":
       title = `Welcome ${name}`;
       break;
+    case "my-account":
+      title = `${name}'s Account`;
+      break;
     case "classrooms":
       title = `Classroom Manager`;
       break;
