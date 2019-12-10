@@ -290,7 +290,6 @@ export const getAllMyClassrooms = payload => {
         .get(url, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            console.log("res", response.data.classrooms);
             dispatch(getAllClassroomSuccess(response.data.classrooms));
           } else {
             const unknownError = {
@@ -334,7 +333,7 @@ export const getOneClassroom = payload => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
 
-      const url = `/classroom/:${payload.id.replace(":", "")}`;
+      const url = `/classroom/${payload.id.replace(":", "")}`;
       axios
         .get(url, { headers: headers })
         .then(response => {
@@ -382,11 +381,11 @@ export const deleteClassroom = classroomId => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
-      const url = `/classromdelete/:${classroomId}`;
+
+      const url = `/classromdelete/${classroomId}`;
       axios
         .delete(url, { headers: headers })
         .then(response => {
-          console.log("response", response);
           dispatch(deleteClassroomSuccess());
         })
         .catch(error => {

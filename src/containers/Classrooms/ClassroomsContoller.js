@@ -99,7 +99,8 @@ const ClassroomController = props => {
     getAllMyClassrooms,
     classrooms,
     firebaseClassrooms,
-    deleteClassroom
+    deleteClassroom,
+    deleteSuccess
   } = props;
 
   //Checks if DOM is ready to un mount loading icon
@@ -154,8 +155,8 @@ const ClassroomController = props => {
     }
     console.log("oldClasscount", oldClasscount);
     console.log("firebaseClassrooms.length", firebaseClassrooms.length);
-    if (oldClasscount !== firebaseClassrooms.length) {
-      console.log('[feching classroooms]')
+    if (oldClasscount !== firebaseClassrooms.length || deleteSuccess) {
+      console.log("[feching classroooms]");
       getMyClassrooms()
         .then(() => {
           setDomReady(true);
@@ -167,7 +168,7 @@ const ClassroomController = props => {
     }
     /* MISSING DEP: getAllMyClassrooms, role, userId */
     // eslint-disable-next-line
-  }, [oldClasscount, firebaseClassrooms, location]);
+  }, [oldClasscount, firebaseClassrooms, location, deleteSuccess]);
 
   /* Use efect handles local component routing */
   useEffect(() => {
@@ -495,7 +496,8 @@ const mapStateToProps = state => {
     classrooms:
       state.classrooms.classrooms == null
         ? { data: [] }
-        : state.classrooms.classrooms
+        : state.classrooms.classrooms,
+    deleteSuccess: state.classrooms.deleteSuccess
   };
 };
 
