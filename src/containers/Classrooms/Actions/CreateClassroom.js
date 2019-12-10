@@ -211,7 +211,7 @@ const CreateClassroom = props => {
           touched: false
         },
         classCode: {
-          value: null,
+          value: "",
           validation: {
             required: true
           },

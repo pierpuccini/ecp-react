@@ -73,6 +73,8 @@ const Routes = props => {
       title = "Edu Coins";
       break;
   }
+  title = navRoute.includes("classrooms/edit")? 'Editing Classroom': title
+  title = navRoute.includes("classrooms/view")? 'Viewing Classroom': title
   setTitle(title);
 
   //Available routes or Guarded routes

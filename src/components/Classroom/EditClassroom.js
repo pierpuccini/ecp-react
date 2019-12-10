@@ -15,6 +15,13 @@ import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import CodeCopy from "../UI/SpecialFields/CodeCopy";
 
 const useStyles = makeStyles(theme => ({
+  requieredFields: {
+    margin: theme.spacing(2, 0)
+  },
+  institutionsField: {
+    width: "-webkit-fill-available",
+    margin: theme.spacing(2, 1)
+  },
   codeAndNameContainer: {
     [theme.breakpoints.up("xs")]: {
       display: "flex",
@@ -26,34 +33,8 @@ const useStyles = makeStyles(theme => ({
     }
   },
   classCodeContainer: {
-    [theme.breakpoints.up("xs")]: {
-      display: "flex",
-      justifyContent: "space-between",
-      padding: theme.spacing(0, 2),
-      flexDirection: "column"
-    },
-    [theme.breakpoints.down("xs")]: {
-      display: "flex",
-      flexDirection: "column"
-    }
-  },
-  AdditionalInfoContainer: {
-    [theme.breakpoints.up("xs")]: {
-      display: "flex",
-      justifyContent: "space-between",
-      padding: theme.spacing(0, 2),
-      flexDirection: "column"
-    },
-    [theme.breakpoints.down("xs")]: {
-      display: "flex",
-      flexDirection: "column"
-    }
-  },
-  classroomContainer: {
-    padding: "unset !important",
-    [theme.breakpoints.up("md")]: {
-      minWidth: "685px !important"
-    }
+    display: "flex",
+    flexDirection: "column"
   },
   formActions: {
     display: "flex",
@@ -71,9 +52,6 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1)
   },
-  dense: {
-    marginTop: theme.spacing(2)
-  },
   button: {
     margin: theme.spacing(1)
   },
@@ -90,21 +68,6 @@ const useStyles = makeStyles(theme => ({
   MuiMenuList: {
     width: "auto !important"
   },
-  submitActions: {
-    display: "flex",
-    flexWrap: "wrap",
-    [theme.breakpoints.down("sm")]: {
-      justifyContent: "center"
-    },
-    [theme.breakpoints.up("sm")]: {
-      justifyContent: "space-between"
-    }
-  },
-  loginError: {
-    textAlign: "center",
-    color: "#f44336",
-    fontSize: "small"
-  },
   formHeader: {
     display: "flex"
   },
@@ -119,9 +82,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     display: "flex",
     width: "100%"
-  },
-  typographyAndIcon: {
-    display: "flex"
   },
   slider: {
     padding: theme.spacing(1, 3)
@@ -180,12 +140,12 @@ const EditClassroom = props => {
           <ArrowBackIosOutlinedIcon />
         </IconButton>
         <Typography style={{ alignSelf: "center" }}>
-          Edit or View classroom
+          Return to classroom List
         </Typography>
       </div>
-      <div className={classes.codeAndNameContainer}>
+      <div className={classes.requieredFields}>
         <TextField
-          className={classes.textField}
+          className={classes.institutionsField}
           label="Institution"
           placeholder="Select Your Institution"
           type="text"
@@ -216,48 +176,50 @@ const EditClassroom = props => {
             </MenuItem>
           ))}
         </TextField>
-        <TextField
-          className={classes.textField}
-          value={updateClassroomForm.subject_id.value}
-          onChange={event => inputChangedHandler(event, "subject_id")}
-          label="Class Code"
-          placeholder="3752"
-          type="number"
-          margin="normal"
-          helperText={
-            !updateClassroomForm.subject_id.valid &&
-            updateClassroomForm.subject_id.touched
-              ? "*Please Enter your internal classcode"
-              : "Enter your internal classcode"
-          }
-          error={
-            !updateClassroomForm.subject_id.valid &&
-            updateClassroomForm.subject_id.touched
-          }
-          variant="outlined"
-          required
-        />
-        <TextField
-          className={classes.textField}
-          value={updateClassroomForm.subject_name.value}
-          onChange={event => inputChangedHandler(event, "subject_name")}
-          label="Classroom Name"
-          placeholder="Control"
-          type="text"
-          margin="normal"
-          helperText={
-            !updateClassroomForm.subject_name.valid &&
-            updateClassroomForm.subject_name.touched
-              ? "*Please Enter your Classroom name"
-              : null
-          }
-          error={
-            !updateClassroomForm.subject_name.valid &&
-            updateClassroomForm.subject_name.touched
-          }
-          variant="outlined"
-          required
-        />
+        <div className={classes.codeAndNameContainer}>
+          <TextField
+            className={classes.textField}
+            value={updateClassroomForm.subject_id.value}
+            onChange={event => inputChangedHandler(event, "subject_id")}
+            label="Class Code"
+            placeholder="3752"
+            type="number"
+            margin="normal"
+            helperText={
+              !updateClassroomForm.subject_id.valid &&
+              updateClassroomForm.subject_id.touched
+                ? "*Please Enter your internal classcode"
+                : "Enter your internal classcode"
+            }
+            error={
+              !updateClassroomForm.subject_id.valid &&
+              updateClassroomForm.subject_id.touched
+            }
+            variant="outlined"
+            required
+          />
+          <TextField
+            className={classes.textField}
+            value={updateClassroomForm.subject_name.value}
+            onChange={event => inputChangedHandler(event, "subject_name")}
+            label="Classroom Name"
+            placeholder="Control"
+            type="text"
+            margin="normal"
+            helperText={
+              !updateClassroomForm.subject_name.valid &&
+              updateClassroomForm.subject_name.touched
+                ? "*Please Enter your Classroom name"
+                : "Ex. Math, History etc..."
+            }
+            error={
+              !updateClassroomForm.subject_name.valid &&
+              updateClassroomForm.subject_name.touched
+            }
+            variant="outlined"
+            required
+          />
+        </div>
       </div>
       <div className={classes.classCodeContainer}>
         <CodeCopy
