@@ -75,3 +75,7 @@ input[type=number] {
 .MuiSnackbar-anchorOriginBottomCenter{
   bottom: 20px !important;
 }
+
+.MuiTabs-flexContainer{
+  justify-content: space-between
+}

@@ -2,8 +2,6 @@
 import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -12,7 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 //Icons
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 /* App Imports */
-import CodeCopy from "../UI/SpecialFields/CodeCopy";
+import CodeCopy from "../../UI/SpecialFields/CodeCopy";
 
 const useStyles = makeStyles(theme => ({
   requieredFields: {
@@ -52,19 +50,6 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1)
   },
-  button: {
-    margin: theme.spacing(1)
-  },
-  paper: {
-    padding: theme.spacing(2, 2),
-    margin: theme.spacing(2),
-    border: "unset",
-    width: "100%",
-    [theme.breakpoints.down("sm")]: {
-      boxShadow: "unset",
-      border: "2px solid"
-    }
-  },
   MuiMenuList: {
     width: "auto !important"
   },
@@ -96,39 +81,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EditClassroom = props => {
+const EditClassroomFields = props => {
   const classes = useStyles();
+
   const {
+    updateClassroomForm,
     navActions,
     updateClassroomInfo,
-    updateClassroomForm,
     institutions,
     inputChangedHandler,
-    buttonClickHandler
+    buttonClickHandler,
+    validFields
   } = props;
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
-  //Creacts a valid field object
-  let updateClassroomFormArr = Object.keys(updateClassroomForm).map(
-    controlName => {
-      return {
-        controlName: controlName,
-        data: updateClassroomForm[controlName]
-      };
-    }
-  );
-  let validFields = updateClassroomFormArr.map(item => {
-    return {
-      [item.controlName]: item.data.valid && item.data.touched
-    };
-  });
-  validFields = Object.assign({}, ...validFields);
-
   return (
-    <Paper
-      className={classes.paper}
-      style={prefersDarkMode ? { border: "unset" } : null}
-    >
+    <React.Fragment>
       <div className={classes.formHeader}>
         <IconButton
           size="small"
@@ -264,8 +230,8 @@ const EditClassroom = props => {
           </Button>
         </div>
       </div>
-    </Paper>
+    </React.Fragment>
   );
 };
 
-export default EditClassroom;
+export default EditClassroomFields;

@@ -22,7 +22,7 @@ import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 import PermisionError from "../../components/Errors/PermisionError/PermisionError";
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
-import AddClassroomModal from "../../components/Classroom/AddClassroomModal";
+import AddClassroomModal from "../../components/Classroom/Modals/AddClassroomModal";
 import ClassroomListCard from "../../components/Classroom/ClassroomListCard";
 import Modal from "../../components/UI/Modal/Modal";
 import PngLoader from "../../components/UI/Loader/PngLoader/PngLoader";

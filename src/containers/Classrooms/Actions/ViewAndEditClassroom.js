@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* App imports */
 import Loader from "../../../components/UI/Loader/PngLoader/PngLoader";
-import EditClassroom from "../../../components/Classroom/EditClassroom";
+import EditClassroom from "../../../components/Classroom/Edit/EditClassroom";
 import { updateObject, checkValidity } from "../../../shared/utility";
 
 const ViewAndEditClassroom = props => {

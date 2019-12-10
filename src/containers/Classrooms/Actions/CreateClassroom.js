@@ -15,7 +15,7 @@ import {
   checkValidity,
   stateToPayload
 } from "../../../shared/utility";
-import ClassroomCreator from "../../../components/Classroom/ClassroomCreator";
+import ClassroomCreator from "../../../components/Classroom/Create/ClassroomCreator";
 import FloatingLoader from "../../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import Modal from "../../../components/UI/Modal/Modal";
 import Loader from "../../../components/UI/Loader/PngLoader/PngLoader"
