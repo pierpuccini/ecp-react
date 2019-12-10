@@ -7,7 +7,6 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import IconButton from "@material-ui/core/IconButton";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
@@ -64,13 +63,6 @@ const useStyles = makeStyles(theme => ({
     padding: "unset !important",
     [theme.breakpoints.up("md")]: {
       minWidth: "685px !important"
-    }
-  },
-  autocompleteTextField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    [theme.breakpoints.up("sm")]: {
-      minWidth: "150px"
     }
   },
   formActions: {
@@ -164,11 +156,9 @@ const ClassroomCreator = props => {
   const classes = useStyles();
   const {
     navActions,
-    classroomsId,
     institutions,
     createClassroomForm,
     inputChangedHandler,
-    autocompleteHandler,
     toggleButtonChangedHandler,
     sliderChangedHandler,
     buttonClickHandler,
@@ -217,7 +207,7 @@ const ClassroomCreator = props => {
     };
   });
   validFields = Object.assign({}, ...validFields);
-  /* TODO: WHEN SELECTING FROM AUTO COMPLETE, AUTO FILL OTHER FIELDS */
+
   return (
     <Container maxWidth="sm" className={classes.classroomContainer}>
       <Paper className={classes.paper}>
@@ -233,7 +223,7 @@ const ClassroomCreator = props => {
               <ArrowBackIosOutlinedIcon />
             </IconButton>
             <Typography style={{ alignSelf: "center" }}>
-              Chose or Create Classroom
+              Create Classroom
             </Typography>
           </div>
           <div className={classes.codeAndNameContainer}>
@@ -269,39 +259,26 @@ const ClassroomCreator = props => {
                 </MenuItem>
               ))}
             </TextField>
-            <Autocomplete
-              className={classes.autocompleteTextField}
+            <TextField
+              className={classes.textField}
               value={createClassroomForm.classCode.value}
-              freeSolo
-              clearOnEscape
-              disableOpenOnFocus
-              autoHighlight
-              onChange={autocompleteHandler}
-              options={classroomsId.map(option => option.subject_id)}
-              getOptionLabel={option => option.toString()}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  label="Class Code"
-                  placeholder="3752"
-                  margin="normal"
-                  type="number"
-                  onChange={event => inputChangedHandler(event, "classCode")}
-                  variant="outlined"
-                  helperText={
-                    !createClassroomForm.classCode.valid &&
-                    createClassroomForm.classCode.touched
-                      ? "*Please Enter your internal classcode"
-                      : "Enter your internal classcode"
-                  }
-                  error={
-                    !createClassroomForm.classCode.valid &&
-                    createClassroomForm.classCode.touched
-                  }
-                  fullWidth
-                  required
-                />
-              )}
+              onChange={event => inputChangedHandler(event, "classCode")}
+              label="Class Code"
+              placeholder="3752"
+              type="text"
+              margin="normal"
+              helperText={
+                !createClassroomForm.classCode.valid &&
+                createClassroomForm.classCode.touched
+                  ? "*Please Enter your internal classcode"
+                  : "Enter your internal classcode"
+              }
+              error={
+                !createClassroomForm.classCode.valid &&
+                createClassroomForm.classCode.touched
+              }
+              variant="outlined"
+              required
             />
             <TextField
               className={classes.textField}

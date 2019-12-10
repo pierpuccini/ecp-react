@@ -81,7 +81,7 @@ const CreateClassroom = props => {
       touched: true
     },
     classCode: {
-      value: null,
+      value: "",
       validation: {
         required: true
       },
@@ -154,7 +154,7 @@ const CreateClassroom = props => {
       [controlName]: updateObject(createClassroomForm[controlName], {
         value:
           controlName === "classCode" && event.target.value === ""
-            ? null
+            ? ""
             : event.target.value,
         valid: checkValidity(
           controlName === "classCode" && event.target.value === ""
@@ -191,21 +191,6 @@ const CreateClassroom = props => {
         valid: checkValidity(
           value.toString(),
           createClassroomForm.challengeTime.validation
-        ),
-        touched: true
-      })
-    });
-    setcreateClassroomForm(updatedControls);
-  };
-
-  /* Controls classroom autocomplete Logic */
-  const classroomAutocompleteHandler = (event, value) => {
-    const updatedControls = updateObject(createClassroomForm, {
-      classCode: updateObject(createClassroomForm.classCode, {
-        value: value,
-        valid: checkValidity(
-          value === null ? "" : value,
-          createClassroomForm.classCode.validation
         ),
         touched: true
       })
@@ -341,7 +326,6 @@ const CreateClassroom = props => {
         inputChangedHandler={classroomInputHandler}
         toggleButtonChangedHandler={classroomToggleButtonHandler}
         sliderChangedHandler={classroomSliderHandler}
-        autocompleteHandler={classroomAutocompleteHandler}
         buttonClickHandler={createOrCancelHandler}
         switchToggle={switchToggle}
         toggleSwitchHandler={toggleSwitchHandler}
