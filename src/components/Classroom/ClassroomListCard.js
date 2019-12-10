@@ -226,7 +226,7 @@ const ClassroomListCard = props => {
         </IconButton>
         <IconButton
           className={classes.deleteButton}
-          onClick={handleMobileMenuClose}
+          onClick={() =>{handleDelete(classroom.id)}}
         >
           <DeleteOutlineOutlinedIcon />
         </IconButton>
