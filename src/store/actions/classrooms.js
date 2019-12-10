@@ -200,7 +200,6 @@ export const addClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(classroomStart());
     const currentState = getState();
-    const firestore = getFirestore();
 
     let error;
     // Verifies that the token was properly recieved
@@ -221,30 +220,7 @@ export const addClassroom = payload => {
         .post("/assignclassroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            //Spreading classroom to prevent mutating array
-            const classrooms = [
-              ...currentState.firebase.profile.classrooms,
-              {
-                code_classroom: payload.code_classroom,
-                id: response.data.id,
-                subject_id: response.data.subject_id
-              }
-            ];
-            firestore
-              .collection("users")
-              .doc(currentState.firebase.auth.uid)
-              .set(
-                {
-                  classrooms: classrooms
-                },
-                { merge: true }
-              )
-              .then(() => {
-                dispatch(classroomSuccess());
-              })
-              .catch(err => {
-                dispatch(classroomFail(err));
-              });
+            dispatch(classroomSuccess());
           } else {
             const unknownError = {
               code: "add-classroom-error",
