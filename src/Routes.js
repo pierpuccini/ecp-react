@@ -32,11 +32,23 @@ const Routes = props => {
     { url: "home", comp: asyncDashboard, availableTo: ["protected", "all"] },
     { url: "my-account", comp: asyncUsers, availableTo: ["protected", "all"] },
     { url: "onboarding", comp: asyncUsers, availableTo: ["protected", "all"] },
-    { url: "classrooms",comp: asyncClassroom,availableTo: ["protected", "all"] },
-    { url: "user-manager",comp: asyncUserManangment,availableTo: ["protected", "admin", "super-admin"]},
+    {
+      url: "classrooms",
+      comp: asyncClassroom,
+      availableTo: ["protected", "all"]
+    },
+    {
+      url: "user-manager",
+      comp: asyncUserManangment,
+      availableTo: ["protected", "admin", "super-admin"]
+    },
     { url: "login", comp: asyncAuth, availableTo: ["un-protected", "all"] },
     { url: "sign-up", comp: asyncAuth, availableTo: ["un-protected", "all"] },
-    { url: "forgot-login",comp: asyncAuth,availableTo: ["un-protected", "all"] }
+    {
+      url: "forgot-login",
+      comp: asyncAuth,
+      availableTo: ["un-protected", "all"]
+    }
   ];
 
   let urlPath = pathname;
@@ -46,36 +58,36 @@ const Routes = props => {
     urlPath !== "/forgot-login"
       ? (redirect = <Redirect to="/login" />)
       : (redirect = null);
+  } else {
+    //Title Checker
+    let title;
+    switch (navRoute) {
+      case "home":
+        title = isMobile ? name : `Welcome Back, ${name}`;
+        break;
+      case "onboarding":
+        title = `Welcome ${name}`;
+        break;
+      case "my-account":
+        title = `${name}'s Account`;
+        break;
+      case "classrooms":
+        title = `Classroom Manager`;
+        break;
+      case "classrooms/create":
+        title = `Creating Classroom`;
+        break;
+      default:
+        title = "Edu Coins";
+        break;
+    }
+    title = navRoute.includes("classrooms/edit") ? "Editing Classroom" : title;
+    title = navRoute.includes("classrooms/view") ? "Viewing Classroom" : title;
+    setTitle(title);
   }
 
   /* Conditional routes section */
   redirect = <Redirect to={`/${navRoute}`} />;
-
-  //Title Checker
-  let title;
-  switch (navRoute) {
-    case "home":
-      title = isMobile ? name : `Welcome Back, ${name}`;
-      break;
-    case "onboarding":
-      title = `Welcome ${name}`;
-      break;
-    case "my-account":
-      title = `${name}'s Account`;
-      break;
-    case "classrooms":
-      title = `Classroom Manager`;
-      break;
-    case "classrooms/create":
-      title = `Creating Classroom`;
-      break;
-    default:
-      title = "Edu Coins";
-      break;
-  }
-  title = navRoute.includes("classrooms/edit")? 'Editing Classroom': title
-  title = navRoute.includes("classrooms/view")? 'Viewing Classroom': title
-  setTitle(title);
 
   //Available routes or Guarded routes
   routes = (

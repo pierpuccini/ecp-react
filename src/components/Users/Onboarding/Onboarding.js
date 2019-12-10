@@ -1,6 +1,6 @@
-//React Imports
+/* React Imports */
 import React from "react";
-//MaterialUI Imports
+/* MaterialUI Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
@@ -9,6 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Icon from "@material-ui/core/Icon";
+//Icons
 import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 
 const useStyles = makeStyles(theme => ({
@@ -18,10 +19,10 @@ const useStyles = makeStyles(theme => ({
   },
   onboardingContainer: {
     [theme.breakpoints.up("sm")]: {
-      width: "50%"
+      width: "380px"
     },
-    [theme.breakpoints.up("lg")]: {
-      width: "40%"
+    [theme.breakpoints.up("md")]: {
+      width: "420px"
     },
     alignSelf: "center"
   },
@@ -29,8 +30,6 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
     [theme.breakpoints.down("sm")]: {
-      padding: theme.spacing(1, 1),
-      margin: theme.spacing(1, 2),
       boxShadow: "unset"
     }
   },

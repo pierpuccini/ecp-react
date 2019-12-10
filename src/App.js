@@ -240,6 +240,10 @@ function App(props) {
     logout();
   };
 
+  const setTitle = title => {
+    settitleState(title);
+  };
+
   let loadingDom = (
     <div className="App">
       <Loader />
@@ -263,10 +267,6 @@ function App(props) {
 
   /* Routes for authenticated users */
   if (isAuthenticated) {
-    const setTitle = title => {
-      settitleState(title);
-    };
-
     //Loader
     app = (
       <div className="App">
