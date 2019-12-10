@@ -9,17 +9,19 @@ const initialState = {
   success: false,
   classroom: null,
   classrooms: null,
-  deleteSuccess: null
+  deleteSuccess: null,
+  action: false
 };
 
-const classroomStart = state => {
+const classroomStart = (state, action) => {
   return updateObject(state, {
     loading: true,
     error: null,
     success: null,
     classroom: null,
     classrooms: null,
-    deleteSuccess: false
+    deleteSuccess: false,
+    action: action.action
   });
 };
 
@@ -43,7 +45,7 @@ const classroomSuccess = (state, action) => {
 
 const getAllClassroomSuccess = (state, action) => {
   return updateObject(state, {
-    loading: false,
+    loading: action.loading,
     error: null,
     classrooms: action.classrooms
   });

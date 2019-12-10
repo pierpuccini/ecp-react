@@ -58,7 +58,7 @@ export const checkOnboarding = data => {
             dispatch(onboardingSuccess());
             setTimeout(() => {
               dispatch(onboardingReset());
-            }, 250);
+            }, 550);
           } else {
             const unknownError = {
               code: "add-classroom-error",

@@ -1,9 +1,10 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios/axios";
 
-export const classroomStart = () => {
+export const classroomStart = (action) => {
   return {
-    type: actionTypes.CLASSROOM_ACTIONS_START
+    type: actionTypes.CLASSROOM_ACTIONS_START,
+    action: action
   };
 };
 
@@ -22,10 +23,11 @@ export const classroomSuccess = (missingFields, code) => {
   };
 };
 
-export const getAllClassroomSuccess = classrooms => {
+export const getAllClassroomSuccess = (classrooms, loading) => {
   return {
     type: actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS,
-    classrooms: classrooms
+    classrooms: classrooms,
+    loading: loading
   };
 };
 
@@ -45,7 +47,7 @@ export const deleteClassroomSuccess = () => {
 
 export const createClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    dispatch(classroomStart());
+    dispatch(classroomStart('create'));
     const currentState = getState();
     const firestore = getFirestore();
     let error;
@@ -244,8 +246,8 @@ export const addClassroom = payload => {
 
 export const getAllMyClassrooms = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    dispatch(classroomStart());
     const currentState = getState();
+    dispatch(classroomStart(currentState.classrooms.action));
 
     let error;
     // Verifies that the token was properly recieved
@@ -266,7 +268,11 @@ export const getAllMyClassrooms = payload => {
         .get(url, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            dispatch(getAllClassroomSuccess(response.data.classrooms));
+            let loading = false
+            if (currentState.classrooms.action === 'create') {
+              loading = true
+            }
+            dispatch(getAllClassroomSuccess(response.data.classrooms, loading));
           } else {
             const unknownError = {
               code: "add-classroom-error",
