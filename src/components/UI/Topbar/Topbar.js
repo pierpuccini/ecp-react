@@ -13,18 +13,14 @@ import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneO
 import PowerSettingsNewOutlinedIcon from "@material-ui/icons/PowerSettingsNewOutlined";
 import AssignmentIndOutlinedIcon from "@material-ui/icons/AssignmentIndOutlined";
 //App Imports
-import CoinIcon from '../CoinIcon/CoinIcon'
+import CoinIcon from "../CoinIcon/CoinIcon";
 
 const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1
   },
   title: {
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-      textTransform: "capitalize"
-    }
+    textTransform: "capitalize"
   },
   inputRoot: {
     color: "inherit"
@@ -73,16 +69,16 @@ const Topbar = props => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-  
+
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-  
+
   const viewAccount = () => {
     handleMenuClose();
     handleMobileMenuClose();
-    props.viewAccountHandler(null , 'my-account');
-  }
+    props.viewAccountHandler(null, "my-account");
+  };
 
   const logout = typeOfScreen => {
     typeOfScreen === "desktop" ? handleMenuClose() : handleMobileMenuClose();
@@ -106,7 +102,7 @@ const Topbar = props => {
           <AssignmentIndOutlinedIcon />
           <Typography>My Account</Typography>
         </MenuItem>
-      ) }
+      )}
       <MenuItem
         className={classes.menuItem}
         onClick={() => {
