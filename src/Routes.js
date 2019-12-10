@@ -77,6 +77,9 @@ const Routes = props => {
       case "classrooms/create":
         title = `Creating Classroom`;
         break;
+      case "user-manager":
+        title = `Manage Users`;
+        break;
       default:
         title = "Edu Coins";
         break;
