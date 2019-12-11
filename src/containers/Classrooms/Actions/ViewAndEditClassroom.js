@@ -211,12 +211,13 @@ const ViewAndEditClassroom = props => {
   );
 
   if (!isLoaded(clients, teachers, students) && domReady) {
+    history.push({ state: { getAllClassrooms: false } });
     return loadingDom;
   }
 
   //Action to push to the main classroom page /classrooms
   const handleNav = () => {
-    history.push({ state: { overwriteLocalNavState: "classrooms" } });
+    history.push({ state: { overwriteLocalNavState: "classrooms", getAllClassrooms: true } });
   };
 
   /* Controls classroom input Logic */
@@ -391,6 +392,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ViewAndEditClassroom)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ViewAndEditClassroom));

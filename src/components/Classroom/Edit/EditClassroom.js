@@ -98,26 +98,30 @@ const EditClassroom = props => {
   });
   validFields = Object.assign({}, ...validFields);
 
+  const classroomFields = (
+    <EditClassroomFields
+      navActions={navActions}
+      updateClassroomInfo={updateClassroomInfo}
+      updateClassroomForm={updateClassroomForm}
+      institutions={institutions}
+      inputChangedHandler={inputChangedHandler}
+      buttonClickHandler={buttonClickHandler}
+      validFields={validFields}
+      isTablet={isTablet}
+      switchToggle={switchToggle}
+      toggleSwitchHandler={toggleSwitchHandler}
+      toggleButtonChangedHandler={toggleButtonChangedHandler}
+      sliderChangedHandler={sliderChangedHandler}
+    />
+  );
+
   if (isTablet) {
     return (
       <Paper
         className={classes.desktopPaper}
         style={prefersDarkMode ? { border: "unset" } : null}
       >
-        <EditClassroomFields
-          navActions={navActions}
-          updateClassroomInfo={updateClassroomInfo}
-          updateClassroomForm={updateClassroomForm}
-          institutions={institutions}
-          inputChangedHandler={inputChangedHandler}
-          buttonClickHandler={buttonClickHandler}
-          validFields={validFields}
-          isTablet={isTablet}
-          switchToggle={switchToggle}
-          toggleSwitchHandler={toggleSwitchHandler}
-          toggleButtonChangedHandler={toggleButtonChangedHandler}
-          sliderChangedHandler={sliderChangedHandler}
-        />
+        {classroomFields}
         <EditClassroomRoster />
         Item Three
       </Paper>
@@ -135,19 +139,7 @@ const EditClassroom = props => {
         <Tab label="Wallet" disabled />
       </Tabs>
       <TabPanel value={tabValue} index={0}>
-        <EditClassroomFields
-          navActions={navActions}
-          updateClassroomInfo={updateClassroomInfo}
-          updateClassroomForm={updateClassroomForm}
-          institutions={institutions}
-          inputChangedHandler={inputChangedHandler}
-          buttonClickHandler={buttonClickHandler}
-          validFields={validFields}
-          switchToggle={switchToggle}
-          toggleSwitchHandler={toggleSwitchHandler}
-          toggleButtonChangedHandler={toggleButtonChangedHandler}
-          sliderChangedHandler={sliderChangedHandler}
-        />
+        {classroomFields}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
         <EditClassroomRoster />
