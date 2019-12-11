@@ -23,6 +23,8 @@ const ViewAndEditClassroom = props => {
   } = props;
 
   const [domReady, setDomReady] = useState(false);
+  //Incharge of handeling the student groups toggle
+  const [switchToggle, setswitchToggle] = useState(false);
   //Editable state fields
   const [updateClassroomForm, setupdateClassroomForm] = useState({
     client_id: {
@@ -58,7 +60,7 @@ const ViewAndEditClassroom = props => {
       touched: false
     },
     challenge_duration: {
-      value: "",
+      value: 15,
       validation: {
         required: true
       },
@@ -114,7 +116,7 @@ const ViewAndEditClassroom = props => {
         pending_students,
         active_students
       } = classroom;
-      
+
       setupdateClassroomForm({
         client_id: {
           value: client_id == null ? "" : client_id,
@@ -310,6 +312,48 @@ const ViewAndEditClassroom = props => {
     }
   };
 
+  /* Handles the switch and if off resets the student groups counter */
+  const toggleSwitchHandler = event => {
+    if (!event.target.checked) {
+      const updatedControls = updateObject(updateClassroomForm, {
+        group_size: updateObject(updateClassroomForm.group_size, {
+          value: "",
+          valid: false,
+          touched: false
+        })
+      });
+      setupdateClassroomForm(updatedControls);
+    }
+    setswitchToggle(event.target.checked);
+  };
+
+  /* Controls classroom toggle button Logic */
+  const classroomToggleButtonHandler = (event, value) => {
+    const updatedControls = updateObject(updateClassroomForm, {
+      group_size: updateObject(updateClassroomForm.group_size, {
+        value: value === null ? null : value,
+        valid: checkValidity(value, updateClassroomForm.group_size.validation),
+        touched: true
+      })
+    });
+    setupdateClassroomForm(updatedControls);
+  };
+
+  /* Controls classroom time slider Logic */
+  const classroomSliderHandler = (event, value) => {
+    const updatedControls = updateObject(updateClassroomForm, {
+      challenge_duration: updateObject(updateClassroomForm.challenge_duration, {
+        value: value === null ? null : value,
+        valid: checkValidity(
+          value.toString(),
+          updateClassroomForm.challenge_duration.validation
+        ),
+        touched: true
+      })
+    });
+    setupdateClassroomForm(updatedControls);
+  };
+
   let view = "view classroom";
   if (location.pathname.includes("edit")) {
     view = (
@@ -320,6 +364,10 @@ const ViewAndEditClassroom = props => {
         updateClassroomForm={updateClassroomForm}
         inputChangedHandler={classroomInputHandler}
         buttonClickHandler={editViewActions}
+        switchToggle={switchToggle}
+        toggleSwitchHandler={toggleSwitchHandler}
+        toggleButtonChangedHandler={classroomToggleButtonHandler}
+        sliderChangedHandler={classroomSliderHandler}
       />
     );
   }
@@ -343,4 +391,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ViewAndEditClassroom));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ViewAndEditClassroom)
+);

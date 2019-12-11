@@ -66,7 +66,11 @@ const EditClassroom = props => {
     updateClassroomInfo,
     institutions,
     inputChangedHandler,
-    buttonClickHandler
+    buttonClickHandler,
+    switchToggle,
+    toggleSwitchHandler,
+    toggleButtonChangedHandler,
+    sliderChangedHandler
   } = props;
 
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -109,6 +113,10 @@ const EditClassroom = props => {
           buttonClickHandler={buttonClickHandler}
           validFields={validFields}
           isTablet={isTablet}
+          switchToggle={switchToggle}
+          toggleSwitchHandler={toggleSwitchHandler}
+          toggleButtonChangedHandler={toggleButtonChangedHandler}
+          sliderChangedHandler={sliderChangedHandler}
         />
         <EditClassroomRoster />
         Item Three
@@ -135,6 +143,10 @@ const EditClassroom = props => {
           inputChangedHandler={inputChangedHandler}
           buttonClickHandler={buttonClickHandler}
           validFields={validFields}
+          switchToggle={switchToggle}
+          toggleSwitchHandler={toggleSwitchHandler}
+          toggleButtonChangedHandler={toggleButtonChangedHandler}
+          sliderChangedHandler={sliderChangedHandler}
         />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>

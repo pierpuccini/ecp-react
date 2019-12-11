@@ -7,9 +7,19 @@ import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
+import Switch from "@material-ui/core/Switch";
+import Collapse from "@material-ui/core/Collapse";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import Slider from "@material-ui/core/Slider";
 //Icons
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
+import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
+import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined";
+
 /* App Imports */
+import Logo from "../../UI/Logo/Logo";
 import CodeCopy from "../../UI/SpecialFields/CodeCopy";
 
 const useStyles = makeStyles(theme => ({
@@ -68,6 +78,9 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     width: "100%"
   },
+  typographyAndIcon: {
+    display: "flex"
+  },
   slider: {
     padding: theme.spacing(1, 3)
   },
@@ -92,8 +105,39 @@ const EditClassroomFields = props => {
     inputChangedHandler,
     buttonClickHandler,
     validFields,
-    isTablet
+    isTablet,
+    switchToggle,
+    toggleSwitchHandler,
+    toggleButtonChangedHandler,
+    sliderChangedHandler
   } = props;
+
+  const marks = [
+    {
+      value: 10,
+      label: "10 min"
+    },
+    {
+      value: 60,
+      label: "60 min"
+    }
+  ];
+
+  const children = [
+    <ToggleButton key={2} value="2">
+      <Typography>2</Typography>
+    </ToggleButton>,
+    <ToggleButton key={3} value="3">
+      <Typography>3</Typography>
+    </ToggleButton>,
+    <ToggleButton key={4} value="4">
+      <Typography>4</Typography>
+    </ToggleButton>,
+    <ToggleButton key={5} value="5" disabled>
+      <Typography>5</Typography>
+    </ToggleButton>
+  ];
+
   return (
     <div>
       <div className={classes.formHeader}>
@@ -196,6 +240,91 @@ const EditClassroomFields = props => {
           label="Class Code"
           helper="Share code with students"
         />
+      </div>
+      <Typography style={{ margin: "0px 8px" }}>
+        Additional Classroom Info
+      </Typography>
+      <div className={classes.AdditionalInfoContainer}>
+        <div className={classes.switchContainer}>
+          <div className={classes.switch}>
+            <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
+            <FormControlLabel
+              className={classes.switchFormLabel}
+              control={
+                <Switch
+                  value={switchToggle}
+                  color="primary"
+                  onChange={event => {
+                    toggleSwitchHandler(event);
+                  }}
+                />
+              }
+              labelPlacement="start"
+              label="Student Groups"
+            />
+          </div>
+          <Collapse
+            in={switchToggle}
+            timeout="auto"
+            style={{ justifyContent: "center", display: "flex" }}
+          >
+            <Typography gutterBottom>Group Size</Typography>
+            <ToggleButtonGroup
+              value={updateClassroomForm.group_size.value}
+              onChange={(event, value) => {
+                toggleButtonChangedHandler(event, value);
+              }}
+              exclusive
+            >
+              {children}
+            </ToggleButtonGroup>
+          </Collapse>
+        </div>
+        <div className={classes.sliderContainer}>
+          <div className={classes.typographyAndIcon}>
+            <TimerOutlinedIcon />
+            <Typography
+              style={{ alignSelf: "center", marginLeft: "16px" }}
+              gutterBottom
+            >
+              Default Time Per Challenge
+            </Typography>
+          </div>
+          <div className={classes.slider}>
+            <Slider
+              defaultValue={15}
+              value={updateClassroomForm.challenge_duration.value}
+              valueLabelDisplay="auto"
+              onChange={(event, value) => {
+                sliderChangedHandler(event, value);
+              }}
+              step={5}
+              marks={marks}
+              min={10}
+              max={60}
+            />
+          </div>
+        </div>
+        <div className={classes.coinInput}>
+          <TextField
+            className={classes.textField}
+            label="Initial Coins"
+            placeholder="5000"
+            type="number"
+            value={updateClassroomForm.initial_coins.value}
+            onChange={event => {
+              inputChangedHandler(event, "initial_coins");
+            }}
+            margin="normal"
+            variant="outlined"
+            required
+            style={{ width: "190px" }}
+            InputProps={{
+              inputProps: { min: 0 },
+              endAdornment: <Logo height="56px" />
+            }}
+          />
+        </div>
       </div>
       {!isTablet ? (
         <div className={classes.formActions}>
