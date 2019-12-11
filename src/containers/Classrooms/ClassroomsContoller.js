@@ -413,10 +413,10 @@ const ClassroomController = props => {
         </Paper>
         {classrooms.data.reverse().map(classroom => {
           let classroomTeacher, classroomInstitution, studentStatus;
+          classroomTeacher = teachers.find(
+            teacher => teacher.id === classroom.teacher_id
+          );
           if (role === "student" || role === "teacher") {
-            classroomTeacher = teachers.find(
-              teacher => teacher.id === classroom.teacher_id
-            );
             classroomInstitution = clients.find(
               institution => institution.id === classroom.client_id
             );

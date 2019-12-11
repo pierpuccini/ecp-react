@@ -119,35 +119,69 @@ const ClassroomListCard = props => {
   switch (role) {
     case "student":
       roleCaption = (
-        <Typography
-          variant="caption"
-          className={classes.nameAndDetails}
-          style={!classroom.active_classroom ? { color: "#777777" } : null}
-        >
-          {classroomTeacher.displayName}
-        </Typography>
+        <React.Fragment>
+          <Typography
+            variant="caption"
+            className={classes.nameAndDetails}
+            style={!classroom.active_classroom ? { color: "#777777" } : null}
+          >
+            {classroomTeacher.displayName}
+          </Typography>
+          <Typography
+            variant="caption"
+            className={classes.nameAndDetails}
+            style={!classroom.active_classroom ? { color: "#777777" } : null}
+          >
+            Classroom ID: {classroom.subject_id}
+          </Typography>
+        </React.Fragment>
       );
       break;
     case "teacher":
       roleCaption = (
-        <Typography
-          variant="caption"
-          className={classes.nameAndDetails}
-          style={!classroom.active_classroom ? { color: "#777777" } : null}
-        >
-          {classroomInstitution.value}
-        </Typography>
+        <React.Fragment>
+          <Typography
+            variant="caption"
+            className={classes.nameAndDetails}
+            style={!classroom.active_classroom ? { color: "#777777" } : null}
+          >
+            {classroomInstitution.value}
+          </Typography>
+          <Typography
+            variant="caption"
+            className={classes.nameAndDetails}
+            style={!classroom.active_classroom ? { color: "#777777" } : null}
+          >
+            Classroom ID: {classroom.subject_id}
+          </Typography>
+        </React.Fragment>
       );
       break;
     default:
       roleCaption = (
-        <Typography
-          variant="caption"
-          className={classes.nameAndDetails}
-          style={!classroom.active_classroom ? { color: "#777777" } : null}
-        >
-          {classroom.id}
-        </Typography>
+        <React.Fragment>
+          <Typography
+            variant="caption"
+            className={classes.nameAndDetails}
+            style={!classroom.active_classroom ? { color: "#777777" } : null}
+          >
+            Teacher: {classroomTeacher.displayName}
+          </Typography>
+          <Typography
+            variant="caption"
+            className={classes.nameAndDetails}
+            style={!classroom.active_classroom ? { color: "#777777" } : null}
+          >
+            Classroom ID: {classroom.subject_id}
+          </Typography>
+          <Typography
+            variant="caption"
+            className={classes.nameAndDetails}
+            style={!classroom.active_classroom ? { color: "#777777" } : null}
+          >
+            Database ID: {classroom.id}
+          </Typography>
+        </React.Fragment>
       );
       break;
   }
@@ -245,13 +279,6 @@ const ClassroomListCard = props => {
             {classroom.subject_name}
           </Typography>
           {roleCaption}
-          <Typography
-            variant="caption"
-            className={classes.nameAndDetails}
-            style={!classroom.active_classroom ? { color: "#777777" } : null}
-          >
-            {classroom.subject_id}
-          </Typography>
           {role === "student"
             ? statusStudent
             : role === "teacher" && !classroom.active_classroom
