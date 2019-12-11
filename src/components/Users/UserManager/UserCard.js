@@ -72,7 +72,8 @@ const UserCard = props => {
     clients,
     onlyEditUsersCard,
     openCardHandler,
-    openCard
+    openCard,
+    myRole
   } = props;
 
   const [editToggle, seteditToggle] = useState(false);
@@ -267,8 +268,9 @@ const UserCard = props => {
                   onClick={() => {
                     userActionsHandler("delete");
                   }}
+                  disabled={myRole !== 'super-admin'}
                 >
-                  <DeleteOutlineOutlinedIcon />
+                  <DeleteOutlineOutlinedIcon/>
                 </IconButton>
               </span>
             </Tooltip>

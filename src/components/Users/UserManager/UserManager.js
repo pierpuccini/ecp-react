@@ -111,7 +111,8 @@ const UserManager = props => {
     cardChangedHandler,
     selectedUser,
     openCard,
-    openCardHandler
+    openCardHandler,
+    myRole
   } = props;
 
   const [userType, setuserType] = useState(["all"]);
@@ -296,6 +297,7 @@ const UserManager = props => {
                 isMobile={isMobile}
                 isChanging={cardChangedHandler}
                 clients={clients}
+                myRole={myRole}
               />
             );
           })}
@@ -309,6 +311,7 @@ const UserManager = props => {
               isChanging={cardChangedHandler}
               clients={clients}
               openCardHandler={openCardHandler}
+              myRole={myRole}
             />
           </SideCollapseCard>
         ) : null}

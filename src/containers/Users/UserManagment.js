@@ -337,6 +337,7 @@ const UserManagment = props => {
         selectedUser={selectedUser}
         openCard={openCard}
         openCardHandler={openCardHandler}
+        myRole={props.myRole}
       />
     </React.Fragment>
   );

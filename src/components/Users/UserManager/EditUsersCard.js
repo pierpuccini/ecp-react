@@ -104,7 +104,7 @@ const EditUsersCard = props => {
             <MenuItem
               className={classes.MuiMenuList}
               key={option.id}
-              value={option.id}
+              value={option.id}              
             >
               {option.value}
             </MenuItem>
@@ -126,6 +126,7 @@ const EditUsersCard = props => {
               className={classes.MuiMenuList}
               key={option.id}
               value={option.value}
+              disabled={option.value === 'student' && user.role === 'teacher'}
             >
               {option.value}
             </MenuItem>
