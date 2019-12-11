@@ -107,8 +107,7 @@ const ClassroomListCard = props => {
         studentStatus === "pending"
           ? classes.studentStatusPending
           : classes.studentStatusActive
-      }
-      style={!classroom.active_classroom ? { color: "#777777" } : null}
+      }      
     >
       {studentStatus === "pending"
         ? "Pending teacher approval"
