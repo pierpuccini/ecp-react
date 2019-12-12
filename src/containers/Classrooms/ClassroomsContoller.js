@@ -178,6 +178,8 @@ const ClassroomController = props => {
       payload = `${location.state.overwriteLocalNavState}`;
     } else if (location.pathname.includes(":")) {
       payload = `${paramsPath}`;
+    } else if ((location.pathname.includes('edit') || location.pathname.includes('view')) && !location.pathname.includes(':')) {
+      payload = "classrooms"
     } else if (parsedPath.length > 1) {
       payload = `classrooms/${parsedPath[1]}`;
     }
@@ -456,8 +458,6 @@ const ClassroomController = props => {
               classroomInstitution={classroomInstitution}
               prefersDarkMode={prefersDarkMode}
               key={classroom.code_classroom}
-              pendingStudents={classroom.pending_students}
-              activeStudents={classroom.active_students}
               studentStatus={studentStatus}
               isMobile={isMobile}
               handleNavChange={handleNavChange}
