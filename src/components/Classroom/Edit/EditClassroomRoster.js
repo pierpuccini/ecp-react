@@ -18,8 +18,6 @@ import Divider from "@material-ui/core/Divider";
 import HighlightOffOutlinedIcon from "@material-ui/icons/HighlightOffOutlined";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ArrowForwardOutlinedIcon from "@material-ui/icons/ArrowForwardOutlined";
-import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
