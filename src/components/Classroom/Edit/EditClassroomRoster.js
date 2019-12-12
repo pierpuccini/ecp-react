@@ -49,6 +49,10 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down("sm")]: {
       width: "100%"
     }
+  },
+  bottomActios: {
+    display: "flex",
+    justifyContent: "space-between"
   }
 }));
 
@@ -112,6 +116,17 @@ const EditClassroomRoster = props => {
     setChecked(not(checked, activeStudentsChecked));
   };
 
+  const handleRemoveStudent = student => {
+    console.log(student);
+    const { id } = student;
+    let pendingStudentsCopy = [...pendingStudents];
+    const studentToRemove = pendingStudentsCopy.findIndex(
+      student => student.id === id
+    );
+    pendingStudentsCopy.splice(studentToRemove, 1);
+    setpendingStudents(pendingStudentsCopy);
+  };
+
   const customList = (title, items) => (
     <Card className={classes.studentsTransferCards}>
       <CardHeader
@@ -153,11 +168,21 @@ const EditClassroomRoster = props => {
                   inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={value.name} />
+              <ListItemText
+                style={{ textTransform: "capitalize" }}
+                id={labelId}
+                primary={value.name}
+              />
               {title === "Pending Students" ? (
                 <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="delete">
-                    <HighlightOffOutlinedIcon />
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => {
+                      handleRemoveStudent(value);
+                    }}
+                  >
+                    <HighlightOffOutlinedIcon style={{ color: "#f44336" }} />
                   </IconButton>
                 </ListItemSecondaryAction>
               ) : null}
@@ -170,52 +195,76 @@ const EditClassroomRoster = props => {
   );
 
   return (
-    <Grid
-      container
-      spacing={2}
-      justify="center"
-      alignItems="center"
-      className={classes.root}
-    >
-      <Grid item className={classes.gridItemSize}>
-        {customList("Pending Students", pendingStudents)}
-      </Grid>
-      <Grid item>
-        <Grid
-          container
-          direction={isTablet ? "column" : "row"}
-          alignItems="center"
-        >
-          <Button
-            variant="outlined"
-            size="small"
-            className={classes.button}
-            onClick={handleCheckedActiveStudents}
-            disabled={pendingStudentsChecked.length === 0}
-            aria-label="move selected activeStudents"
+    <React.Fragment>
+      <Grid
+        container
+        spacing={2}
+        justify="center"
+        alignItems="center"
+        className={classes.root}
+      >
+        <Grid item className={classes.gridItemSize}>
+          {customList("Pending Students", pendingStudents)}
+        </Grid>
+        <Grid item>
+          <Grid
+            container
+            direction={isTablet ? "column" : "row"}
+            alignItems="center"
           >
-            {isTablet ? (
-              <ArrowForwardOutlinedIcon />
-            ) : (
-              <ArrowDownwardOutlinedIcon />
-            )}
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            className={classes.button}
-            onClick={handleCheckedPendingStudents}
-            disabled={activeStudentsChecked.length === 0}
-            aria-label="move selected pendingStudents"
-          >
-            {isTablet ? <ArrowBackOutlinedIcon /> : <ArrowUpwardOutlinedIcon />}
-          </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              className={classes.button}
+              onClick={handleCheckedActiveStudents}
+              disabled={pendingStudentsChecked.length === 0}
+              aria-label="move selected activeStudents"
+            >
+              {isTablet ? (
+                <ArrowForwardOutlinedIcon />
+              ) : (
+                <ArrowDownwardOutlinedIcon />
+              )}
+            </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              className={classes.button}
+              onClick={handleCheckedPendingStudents}
+              disabled={activeStudentsChecked.length === 0}
+              aria-label="move selected pendingStudents"
+            >
+              {isTablet ? (
+                <ArrowBackOutlinedIcon />
+              ) : (
+                <ArrowUpwardOutlinedIcon />
+              )}
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item className={classes.gridItemSize}>
+          {customList("Active Students", activeStudents)}
         </Grid>
       </Grid>
-      <Grid item className={classes.gridItemSize}>
-        {customList("Active Students", activeStudents)}
-      </Grid>
-    </Grid>
+      <div className={classes.bottomActios}>
+        <Button
+          variant="contained"
+          className={classes.button}
+          size="small"
+          style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+        >
+          cancel
+        </Button>
+        <Button
+          className={classes.button}
+          variant="contained"
+          size="small"
+          color="primary"
+        >
+          save
+        </Button>
+      </div>
+    </React.Fragment>
   );
 };
 
