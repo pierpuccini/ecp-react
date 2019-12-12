@@ -80,7 +80,11 @@ function App(props) {
   const [drawerOpen, setdrawerOpen] = useState(false);
 
   const [navRoute, setNavRoute] = useState(
-    newUser === "" ? "onboarding" : "home"
+    newUser === ""
+      ? "onboarding"
+      : location.pathname !== "/home"
+      ? location.pathname.replace("/", "")
+      : "home"
   );
 
   const [snackbarPayload, setsnackbarPayload] = useState({
@@ -89,28 +93,26 @@ function App(props) {
   });
 
   const [titleState, settitleState] = useState("Edu Coins");
+
   /* Use efect handles time out for loader and conditional routes managed by state */
   useEffect(() => {
     let showCoinLoader = setTimeout(() => {
       setDomReady(true);
     }, 750);
+
     //Conditional Routes
     let payload = navRoute;
-    if (profileLoaded) {
-      if (newUser === "") {
-        payload = "onboarding";
-      } else if (location.pathname.match("onboarding") && newUser !== "") {
-        payload = "home";
-      } else if (location.pathname !== "/home") {
-        payload = location.pathname.replace("/", "");
-      }
+    if (location.state) {
+      payload = `${location.state.overwriteLocalNavState}`;
       setsnackbarPayload({
         type: "none",
         info: "none"
       });
-    }
-    if (location.state) {
-      payload = `${location.state.overwriteLocalNavState}`;
+    } else if (profileLoaded) {
+      if (location.pathname.match("onboarding") && newUser !== "") {
+        console.log("2");
+        payload = "home";
+      }
       setsnackbarPayload({
         type: "none",
         info: "none"
@@ -127,16 +129,7 @@ function App(props) {
     return () => {
       clearTimeout(showCoinLoader);
     };
-  }, [
-    navRoute,
-    isAuthenticated,
-    profileLoaded,
-    newUser,
-    onboardingSuccessLogic,
-    location,
-    disabled,
-    logout
-  ]);
+  }, [navRoute, profileLoaded, newUser, onboardingSuccessLogic, location]);
 
   /* This use effect logs users out on disabled state */
   useEffect(() => {
