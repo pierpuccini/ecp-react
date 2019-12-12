@@ -304,7 +304,6 @@ export const getAllMyClassrooms = payload => {
 export const getOneClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const currentState = getState();
-    const allClassrooms = currentState.classrooms.classrooms;
     dispatch(classroomStart());
 
     let error;
@@ -327,7 +326,7 @@ export const getOneClassroom = payload => {
         .then(response => {
           if (response.status === 200) {
             dispatch(
-              getClassroomSuccess(response.data.classroom, allClassrooms)
+              getClassroomSuccess(response.data.classroom, currentState.classrooms.classrooms)
             );
           } else {
             const unknownError = {
