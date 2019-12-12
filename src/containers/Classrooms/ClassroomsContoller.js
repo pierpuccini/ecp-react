@@ -99,8 +99,11 @@ const ClassroomController = props => {
     getAllMyClassrooms,
     classrooms,
     firebaseClassrooms,
+    addClassroom,
     deleteClassroom,
-    deleteSuccess
+    restoreClassroom,
+    deleteSuccess,
+    restoreSuccess
   } = props;
 
   //Checks if DOM is ready to un mount loading icon
@@ -153,7 +156,7 @@ const ClassroomController = props => {
         page: classroomPage
       });
     }
-    if (oldClasscount !== firebaseClassrooms.length || deleteSuccess) {
+    if (oldClasscount !== firebaseClassrooms.length || deleteSuccess || restoreSuccess) {
       getMyClassrooms()
         .then(() => {
           setDomReady(true);
@@ -165,7 +168,7 @@ const ClassroomController = props => {
     }
     /* MISSING DEP: getAllMyClassrooms, role, userId */
     // eslint-disable-next-line
-  }, [oldClasscount, firebaseClassrooms, location, deleteSuccess]);
+  }, [oldClasscount, firebaseClassrooms, location, deleteSuccess, restoreSuccess]);
 
   /* Use efect handles local component routing */
   useEffect(() => {
@@ -319,11 +322,15 @@ const ClassroomController = props => {
     const payload = {
       code_classroom: addClassroomForm.linkCode.value
     };
-    props.addClassroom(payload);
+    addClassroom(payload);
   };
 
   const handleDelete = classroomId => {
     deleteClassroom(classroomId);
+  };
+
+  const handleRestore = classroomId => {
+    restoreClassroom(classroomId);
   };
 
   /* Define new routes in routes array with their url and corresponding component */
@@ -388,7 +395,7 @@ const ClassroomController = props => {
                   <AddCircleOutlineOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            ) : !props.role.includes("admin") ? (
+            ) : !role.includes("admin") ? (
               <Tooltip title="Create Classroom">
                 <IconButton
                   onClick={event => {
@@ -457,6 +464,7 @@ const ClassroomController = props => {
               isMobile={isMobile}
               handleNavChange={handleNavChange}
               handleDelete={handleDelete}
+              handleRestore={handleRestore}
             />
           );
         })}
@@ -488,7 +496,8 @@ const mapStateToProps = state => {
       state.classrooms.classrooms == null
         ? { data: [] }
         : state.classrooms.classrooms,
-    deleteSuccess: state.classrooms.deleteSuccess
+    deleteSuccess: state.classrooms.deleteSuccess,
+    restoreSuccess: state.classrooms.restoreSuccess
   };
 };
 
@@ -497,7 +506,8 @@ const mapDispatchToProps = dispatch => {
     addClassroom: payload => dispatch(actions.addClassroom(payload)),
     getAllMyClassrooms: payload =>
       dispatch(actions.getAllMyClassrooms(payload)),
-    deleteClassroom: payload => dispatch(actions.deleteClassroom(payload))
+    deleteClassroom: payload => dispatch(actions.deleteClassroom(payload)),
+    restoreClassroom: payload => dispatch(actions.restoreClassroom(payload))
   };
 };
 

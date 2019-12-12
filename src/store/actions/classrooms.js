@@ -370,11 +370,10 @@ export const restoreClassroom = classroomId => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
 
-      const url = `/restore-classroom/${classroomId}`;
       axios
-        .delete(url, { headers: headers })
+        .put("/restore", { id: classroomId }, { headers: headers })
         .then(response => {
-          console.log('res',response);
+          console.log("res", response);
           dispatch(restoreClassroomSuccess());
         })
         .catch(error => {

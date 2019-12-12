@@ -69,7 +69,8 @@ function App(props) {
     logout,
     disabled,
     userDisabled,
-    deleteSuccess
+    deleteSuccess,
+    restoreSuccess
   } = props;
 
   const classes = useStyles();
@@ -180,14 +181,21 @@ function App(props) {
     if (onboardingSuccess) {
       payload = {
         type: "success",
-        info: { message: "Classroom Succesfully added!" },
+        info: { message: "Classroom succesfully added!" },
         duration: 10000
       };
     }
     if (deleteSuccess) {
       payload = {
         type: "success",
-        info: { message: "Classroom Succesfully deleted!" },
+        info: { message: "Classroom succesfully deleted!" },
+        duration: 10000
+      };
+    }
+    if (restoreSuccess) {
+      payload = {
+        type: "success",
+        info: { message: "Classroom succesfully restored!" },
         duration: 10000
       };
     }
@@ -209,7 +217,8 @@ function App(props) {
     onboardingSuccess,
     disabled,
     userDisabled,
-    deleteSuccess
+    deleteSuccess,
+    restoreSuccess
   ]);
 
   const toggleDrawer = open => {
@@ -423,6 +432,7 @@ const mapStateToProps = state => {
     onboardingSuccess: state.onboarding.showSuccess,
     myAccountSuccess: state.users.success,
     deleteSuccess: state.classrooms.deleteSuccess,
+    restoreSuccess: state.classrooms.restoreSuccess,
     role: state.firebase.profile.role,
     disabled: state.firebase.profile.disabled,
     userDisabled: state.users.warning
