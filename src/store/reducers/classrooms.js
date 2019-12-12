@@ -31,7 +31,9 @@ const classroomFail = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: action.error,
-    success: false
+    success: false,
+    classroom: action.classroom,
+    classrooms: action.classrooms,
   });
 };
 

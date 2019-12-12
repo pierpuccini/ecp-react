@@ -8,10 +8,12 @@ export const classroomStart = action => {
   };
 };
 
-export const classroomFail = error => {
+export const classroomFail = (error, classroom, classrooms) => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_FAILED,
-    error: error
+    error: error,
+    classrooms: classrooms,
+    classroom: classroom
   };
 };
 
@@ -401,7 +403,13 @@ export const manageClassroomStudents = payload => {
               code: "add-classroom-error",
               message: "Unkown error, Contact support"
             };
-            dispatch(classroomFail(unknownError));
+            dispatch(
+              classroomFail(
+                unknownError,
+                currentState.classrooms.classroom,
+                currentState.classrooms.classrooms
+              )
+            );
           }
         })
         .catch(error => {
@@ -410,7 +418,9 @@ export const manageClassroomStudents = payload => {
             classroomFail(
               error.response.data.error != null
                 ? error.response.data.error
-                : error.response.data
+                : error.response.data,
+              currentState.classrooms.classroom,
+              currentState.classrooms.classrooms
             )
           );
         });
