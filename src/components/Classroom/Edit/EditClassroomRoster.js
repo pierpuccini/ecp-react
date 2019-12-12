@@ -232,11 +232,7 @@ const EditClassroomRoster = props => {
           {customList("Pending Students", pendingStudents)}
         </Grid>
         <Grid item>
-          <Grid
-            container
-            direction={isTablet ? "column" : "row"}
-            alignItems="center"
-          >
+          <Grid container direction="row" alignItems="center">
             <Button
               variant="outlined"
               size="small"
