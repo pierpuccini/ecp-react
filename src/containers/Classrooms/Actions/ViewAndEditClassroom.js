@@ -261,7 +261,7 @@ const ViewAndEditClassroom = props => {
     setupdateClassroomForm(updatedControls);
   };
 
-  /* Handles create classroom actions */
+  /* Handles edit and view classroom actions */
   const editViewActions = (action, payload) => {
     const {
       client_id,
