@@ -334,7 +334,7 @@ const ViewAndEditClassroom = props => {
       // props.createClassroom(payload);
     } else if (action === "save") {
       console.log("save", payload);
-      manageClassroomStudents({...payload, id: id})
+      manageClassroomStudents({...payload, id: id.replace(':',"")})
     }
   };
 
