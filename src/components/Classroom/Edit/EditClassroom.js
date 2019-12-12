@@ -122,6 +122,7 @@ const EditClassroom = props => {
     <EditClassroomRoster
       pending_students={pendingStudents}
       active_students={activeStudents}
+      buttonClickHandler={buttonClickHandler}
     />
   );
 

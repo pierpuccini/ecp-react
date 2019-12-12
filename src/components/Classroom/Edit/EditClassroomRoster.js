@@ -72,7 +72,7 @@ const EditClassroomRoster = props => {
   const classes = useStyles();
   const isTablet = useMediaQuery("(min-width: 959px)");
 
-  const { pending_students, active_students } = props;
+  const { pending_students, active_students, buttonClickHandler } = props;
 
   const [checked, setChecked] = useState([]);
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -133,6 +133,7 @@ const EditClassroomRoster = props => {
         className={classes.cardHeader}
         avatar={
           <Checkbox
+            color="primary"
             onClick={handleToggleAll(items)}
             checked={
               numberOfChecked(items) === items.length && items.length !== 0
@@ -162,6 +163,7 @@ const EditClassroomRoster = props => {
             >
               <ListItemIcon>
                 <Checkbox
+                  color="primary"
                   checked={checked.indexOf(value) !== -1}
                   tabIndex={-1}
                   disableRipple
@@ -246,24 +248,35 @@ const EditClassroomRoster = props => {
           {customList("Active Students", activeStudents)}
         </Grid>
       </Grid>
-      <div className={classes.bottomActios}>
-        <Button
-          variant="contained"
-          className={classes.button}
-          size="small"
-          style={{ backgroundColor: "#f44336", color: "#ffffff" }}
-        >
-          cancel
-        </Button>
-        <Button
-          className={classes.button}
-          variant="contained"
-          size="small"
-          color="primary"
-        >
-          save
-        </Button>
-      </div>
+      {!isTablet ? (
+        <div className={classes.bottomActios}>
+          <Button
+            variant="contained"
+            className={classes.button}
+            size="small"
+            style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+            onClick={() => {
+              buttonClickHandler("cancel");
+            }}
+          >
+            cancel
+          </Button>
+          <Button
+            className={classes.button}
+            variant="contained"
+            size="small"
+            color="primary"
+            onClick={() => {
+              buttonClickHandler("save", {
+                pending_students: pendingStudents,
+                active_students: activeStudents
+              });
+            }}
+          >
+            save
+          </Button>
+        </div>
+      ) : null}
     </React.Fragment>
   );
 };

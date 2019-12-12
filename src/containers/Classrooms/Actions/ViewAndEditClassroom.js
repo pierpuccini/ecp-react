@@ -263,7 +263,7 @@ const ViewAndEditClassroom = props => {
   };
 
   /* Handles create classroom actions */
-  const editViewActions = action => {
+  const editViewActions = (action, payload) => {
     const {
       client_id,
       subject_id,
@@ -272,6 +272,7 @@ const ViewAndEditClassroom = props => {
       challenge_duration,
       initial_coins
     } = classroom;
+
     if (action === "cancel") {
       setupdateClassroomForm({
         client_id: {
@@ -332,6 +333,8 @@ const ViewAndEditClassroom = props => {
       console.log("update");
       // const payload = stateToPayload(updateClassroomForm);
       // props.createClassroom(payload);
+    } else if (action === "save"){
+      console.log('save',payload)
     }
   };
 
