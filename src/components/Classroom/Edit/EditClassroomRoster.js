@@ -2,16 +2,22 @@
 import React, { useState } from "react";
 /* Material imports */
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+//Icons
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ArrowForwardOutlinedIcon from "@material-ui/icons/ArrowForwardOutlined";
+import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
+import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
+import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     overflow: "auto"
   },
   button: {
-    margin: theme.spacing(0.5, 0)
+    margin: theme.spacing(1)
   },
   studentsTransferCards: {
     border: "unset",
@@ -57,8 +63,9 @@ const union = (a, b) => {
 
 const EditClassroomRoster = props => {
   const classes = useStyles();
+  const isTablet = useMediaQuery("(min-width: 959px)");
 
-//   const { pending_students, active_students } = props;
+  const { pending_students, active_students } = props;
 
   const [checked, setChecked] = useState([]);
   const [pendingStudents, setpendingStudents] = useState([0, 1, 2, 3]);
@@ -160,9 +167,15 @@ const EditClassroomRoster = props => {
       alignItems="center"
       className={classes.root}
     >
-      <Grid item className={classes.gridItemSize}>{customList("Pending Students", pendingStudents)}</Grid>
+      <Grid item className={classes.gridItemSize}>
+        {customList("Pending Students", pendingStudents)}
+      </Grid>
       <Grid item>
-        <Grid container direction="column" alignItems="center">
+        <Grid
+          container
+          direction={isTablet ? "column" : "row"}
+          alignItems="center"
+        >
           <Button
             variant="outlined"
             size="small"
@@ -171,7 +184,11 @@ const EditClassroomRoster = props => {
             disabled={pendingStudentsChecked.length === 0}
             aria-label="move selected activeStudents"
           >
-            &gt;
+            {isTablet ? (
+              <ArrowForwardOutlinedIcon />
+            ) : (
+              <ArrowDownwardOutlinedIcon />
+            )}
           </Button>
           <Button
             variant="outlined"
@@ -181,11 +198,17 @@ const EditClassroomRoster = props => {
             disabled={activeStudentsChecked.length === 0}
             aria-label="move selected pendingStudents"
           >
-            &lt;
+            {isTablet ? (
+              <ArrowBackOutlinedIcon />
+            ) : (
+              <ArrowUpwardOutlinedIcon />
+            )}
           </Button>
         </Grid>
       </Grid>
-      <Grid item className={classes.gridItemSize}>{customList("Active Students", activeStudents)}</Grid>
+      <Grid item className={classes.gridItemSize}>
+        {customList("Active Students", activeStudents)}
+      </Grid>
     </Grid>
   );
 };
