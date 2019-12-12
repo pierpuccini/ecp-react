@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -21,6 +22,7 @@ import ArrowForwardOutlinedIcon from "@material-ui/icons/ArrowForwardOutlined";
 import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
+import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,20 +41,18 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1)
   },
   studentsTransferCards: {
-    border: "unset",
-    [theme.breakpoints.down("sm")]: {
-      boxShadow: "unset",
-      border: "2px solid #808080"
-    }
+    boxShadow: "unset",
+    border: "2px solid #808080"
   },
   gridItemSize: {
-    [theme.breakpoints.down("sm")]: {
-      width: "100%"
-    }
+    width: "100%"
   },
   bottomActios: {
     display: "flex",
     justifyContent: "space-between"
+  },
+  formHeader: {
+    display: "flex"
   }
 }));
 
@@ -72,7 +72,13 @@ const EditClassroomRoster = props => {
   const classes = useStyles();
   const isTablet = useMediaQuery("(min-width: 959px)");
 
-  const { pending_students, active_students, buttonClickHandler } = props;
+  const {
+    pending_students,
+    active_students,
+    buttonClickHandler,
+    navActions
+  } = props;
+  console.log(pending_students);
 
   const [checked, setChecked] = useState([]);
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -124,8 +130,8 @@ const EditClassroomRoster = props => {
     const studentToRemove = pendingStudentsCopy.findIndex(
       student => student.id === id
     );
-    studentToDelete.push(pendingStudentsCopy[studentToRemove])
-    setdeletedStudents(studentToDelete)
+    studentToDelete.push(pendingStudentsCopy[studentToRemove]);
+    setdeletedStudents(studentToDelete);
     pendingStudentsCopy.splice(studentToRemove, 1);
     setpendingStudents(pendingStudentsCopy);
   };
@@ -201,6 +207,20 @@ const EditClassroomRoster = props => {
 
   return (
     <React.Fragment>
+      <div className={classes.formHeader}>
+        <IconButton
+          size="small"
+          style={{ marginRight: "5px" }}
+          onClick={() => {
+            navActions();
+          }}
+        >
+          <ArrowBackIosOutlinedIcon />
+        </IconButton>
+        <Typography style={{ alignSelf: "center" }}>
+          Return to classroom List
+        </Typography>
+      </div>
       <Grid
         container
         spacing={2}
@@ -225,11 +245,7 @@ const EditClassroomRoster = props => {
               disabled={pendingStudentsChecked.length === 0}
               aria-label="move selected activeStudents"
             >
-              {isTablet ? (
-                <ArrowForwardOutlinedIcon />
-              ) : (
-                <ArrowDownwardOutlinedIcon />
-              )}
+              <ArrowDownwardOutlinedIcon />
             </Button>
             <Button
               variant="outlined"
@@ -239,11 +255,7 @@ const EditClassroomRoster = props => {
               disabled={activeStudentsChecked.length === 0}
               aria-label="move selected pendingStudents"
             >
-              {isTablet ? (
-                <ArrowBackOutlinedIcon />
-              ) : (
-                <ArrowUpwardOutlinedIcon />
-              )}
+              <ArrowUpwardOutlinedIcon />
             </Button>
           </Grid>
         </Grid>

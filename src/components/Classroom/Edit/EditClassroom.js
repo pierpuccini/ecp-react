@@ -120,24 +120,12 @@ const EditClassroom = props => {
 
   const roster = (
     <EditClassroomRoster
+      navActions={navActions}
       pending_students={pendingStudents}
       active_students={activeStudents}
       buttonClickHandler={buttonClickHandler}
     />
   );
-
-  if (isTablet) {
-    return (
-      <Paper
-        className={classes.desktopPaper}
-        style={prefersDarkMode ? { border: "unset" } : null}
-      >
-        {classroomFields}
-        <EditClassroomRoster />
-        Item Three
-      </Paper>
-    );
-  }
 
   return (
     <Paper
