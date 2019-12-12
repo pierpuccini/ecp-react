@@ -5,13 +5,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import ListItem from "@material-ui/core/ListItem";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
 //Icons
+import HighlightOffOutlinedIcon from "@material-ui/icons/HighlightOffOutlined";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ArrowForwardOutlinedIcon from "@material-ui/icons/ArrowForwardOutlined";
@@ -27,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1, 2)
   },
   list: {
-    width: 200,
+    width: "100%",
     height: 230,
     backgroundColor: theme.palette.background.paper,
     overflow: "auto"
@@ -68,8 +71,20 @@ const EditClassroomRoster = props => {
   const { pending_students, active_students } = props;
 
   const [checked, setChecked] = useState([]);
-  const [pendingStudents, setpendingStudents] = useState([0, 1, 2, 3]);
-  const [activeStudents, setactiveStudents] = useState([4, 5, 6, 7]);
+  const [pendingStudents, setpendingStudents] = useState([
+    0,
+    1,
+    2,
+    3,
+    ...pending_students
+  ]);
+  const [activeStudents, setactiveStudents] = useState([
+    4,
+    5,
+    6,
+    7,
+    ...active_students
+  ]);
 
   const pendingStudentsChecked = intersection(checked, pendingStudents);
   const activeStudentsChecked = intersection(checked, activeStudents);
@@ -151,6 +166,13 @@ const EditClassroomRoster = props => {
                 />
               </ListItemIcon>
               <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+              {title === "Pending Students" ? (
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" aria-label="delete">
+                    <HighlightOffOutlinedIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              ) : null}
             </ListItem>
           );
         })}
@@ -198,11 +220,7 @@ const EditClassroomRoster = props => {
             disabled={activeStudentsChecked.length === 0}
             aria-label="move selected pendingStudents"
           >
-            {isTablet ? (
-              <ArrowBackOutlinedIcon />
-            ) : (
-              <ArrowUpwardOutlinedIcon />
-            )}
+            {isTablet ? <ArrowBackOutlinedIcon /> : <ArrowUpwardOutlinedIcon />}
           </Button>
         </Grid>
       </Grid>
