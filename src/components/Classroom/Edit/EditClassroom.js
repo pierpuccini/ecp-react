@@ -58,6 +58,7 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired
 };
 
+/* Semi smart component */
 const EditClassroom = props => {
   const classes = useStyles();
   const {
@@ -70,7 +71,9 @@ const EditClassroom = props => {
     switchToggle,
     toggleSwitchHandler,
     toggleButtonChangedHandler,
-    sliderChangedHandler
+    sliderChangedHandler,
+    pendingStudents,
+    activeStudents
   } = props;
 
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -116,7 +119,10 @@ const EditClassroom = props => {
   );
 
   const roster = (
-    <EditClassroomRoster updateClassroomInfo={updateClassroomInfo} />
+    <EditClassroomRoster
+      pending_students={pendingStudents}
+      active_students={activeStudents}
+    />
   );
 
   if (isTablet) {

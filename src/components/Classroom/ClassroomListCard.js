@@ -76,8 +76,6 @@ const ClassroomListCard = props => {
     classroomTeacher,
     classroomInstitution,
     prefersDarkMode,
-    // pendingStudents,
-    // activeStudents,
     studentStatus,
     isMobile,
     handleNavChange,

@@ -76,7 +76,8 @@ const ViewAndEditClassroom = props => {
       touched: false
     }
   });
-  //static state fields
+
+  //static state fields, only ones available for change are pending and active students
   const [updateClassroomInfo, setupdateClassroomInfo] = useState({
     code_classroom: "",
     teacher_id: "",
@@ -215,9 +216,30 @@ const ViewAndEditClassroom = props => {
     return loadingDom;
   }
 
-  //Action to push to the main classroom page /classrooms
+  /* Transforms pending and active students ID's to readable names */
+  const studentObjCreator = studentsArray => {
+    if (studentsArray.length === 0) {
+      return [];
+    }
+
+    let studentObj = [];
+    studentsArray.forEach(studentId => {
+      const foundStudent = students.find(student => student.id === studentId);
+      if (foundStudent != null) {
+        studentObj.push({ id: studentId, name: foundStudent.displayName });
+      }
+    });
+    return studentObj;
+  };
+  studentObjCreator(
+    classroom.pending_students == null ? [] : classroom.pending_students
+  );
+  /*  --------------------- HANDLERS --------------------- */
+  /* Action to push to the main classroom page /classrooms */
   const handleNav = () => {
-    history.push({ state: { overwriteLocalNavState: "classrooms", getAllClassrooms: true } });
+    history.push({
+      state: { overwriteLocalNavState: "classrooms", getAllClassrooms: true }
+    });
   };
 
   /* Controls classroom input Logic */
@@ -369,6 +391,8 @@ const ViewAndEditClassroom = props => {
         toggleSwitchHandler={toggleSwitchHandler}
         toggleButtonChangedHandler={classroomToggleButtonHandler}
         sliderChangedHandler={classroomSliderHandler}
+        pendingStudents={studentObjCreator(classroom.pending_students == null? [] :classroom.pending_students)}
+        activeStudents={studentObjCreator(classroom.active_students == null? [] :classroom.active_students)}
       />
     );
   }
@@ -392,4 +416,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ViewAndEditClassroom));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ViewAndEditClassroom)
+);
