@@ -71,20 +71,8 @@ const EditClassroomRoster = props => {
   const { pending_students, active_students } = props;
 
   const [checked, setChecked] = useState([]);
-  const [pendingStudents, setpendingStudents] = useState([
-    0,
-    1,
-    2,
-    3,
-    ...pending_students
-  ]);
-  const [activeStudents, setactiveStudents] = useState([
-    4,
-    5,
-    6,
-    7,
-    ...active_students
-  ]);
+  const [pendingStudents, setpendingStudents] = useState([...pending_students]);
+  const [activeStudents, setactiveStudents] = useState([...active_students]);
 
   const pendingStudentsChecked = intersection(checked, pendingStudents);
   const activeStudentsChecked = intersection(checked, activeStudents);
@@ -112,13 +100,13 @@ const EditClassroomRoster = props => {
     }
   };
 
-  const handleCheckedRight = () => {
+  const handleCheckedActiveStudents = () => {
     setactiveStudents(activeStudents.concat(pendingStudentsChecked));
     setpendingStudents(not(pendingStudents, pendingStudentsChecked));
     setChecked(not(checked, pendingStudentsChecked));
   };
 
-  const handleCheckedLeft = () => {
+  const handleCheckedPendingStudents = () => {
     setpendingStudents(pendingStudents.concat(activeStudentsChecked));
     setactiveStudents(not(activeStudents, activeStudentsChecked));
     setChecked(not(checked, activeStudentsChecked));
@@ -148,11 +136,11 @@ const EditClassroomRoster = props => {
       <Divider />
       <List className={classes.list} dense component="div" role="list">
         {items.map(value => {
-          const labelId = `transfer-list-all-item-${value}-label`;
+          const labelId = `transfer-list-all-item-${value.id}-label`;
 
           return (
             <ListItem
-              key={value}
+              key={value.id}
               role="listitem"
               button
               onClick={handleToggle(value)}
@@ -165,7 +153,7 @@ const EditClassroomRoster = props => {
                   inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+              <ListItemText id={labelId} primary={value.name} />
               {title === "Pending Students" ? (
                 <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="delete">
@@ -202,7 +190,7 @@ const EditClassroomRoster = props => {
             variant="outlined"
             size="small"
             className={classes.button}
-            onClick={handleCheckedRight}
+            onClick={handleCheckedActiveStudents}
             disabled={pendingStudentsChecked.length === 0}
             aria-label="move selected activeStudents"
           >
@@ -216,7 +204,7 @@ const EditClassroomRoster = props => {
             variant="outlined"
             size="small"
             className={classes.button}
-            onClick={handleCheckedLeft}
+            onClick={handleCheckedPendingStudents}
             disabled={activeStudentsChecked.length === 0}
             aria-label="move selected pendingStudents"
           >
