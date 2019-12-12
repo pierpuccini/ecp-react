@@ -26,6 +26,7 @@ const ViewAndEditClassroom = props => {
   const [domReady, setDomReady] = useState(false);
   //Incharge of handeling the student groups toggle
   const [switchToggle, setswitchToggle] = useState(false);
+  
   //Editable state fields
   const [updateClassroomForm, setupdateClassroomForm] = useState({
     client_id: {
@@ -212,7 +213,7 @@ const ViewAndEditClassroom = props => {
     </div>
   );
 
-  if (!isLoaded(clients, teachers, students) && domReady) {
+  if (!isLoaded(clients, teachers, students) && !domReady && updateClassroomInfo.code_classroom.value === "") {
     history.push({ state: { getAllClassrooms: false } });
     return loadingDom;
   }

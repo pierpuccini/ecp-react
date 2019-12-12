@@ -155,7 +155,7 @@ const ClassroomController = props => {
         page: classroomPage
       });
     }
-    if (oldClasscount !== firebaseClassrooms.length || deleteSuccess || restoreSuccess) {
+    if (oldClasscount !== firebaseClassrooms.length || deleteSuccess || restoreSuccess || location.pathname.match('/classrooms')) {
       getMyClassrooms()
         .then(() => {
           setDomReady(true);

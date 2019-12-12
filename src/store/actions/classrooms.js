@@ -332,7 +332,10 @@ export const getOneClassroom = payload => {
         .then(response => {
           if (response.status === 200) {
             dispatch(
-              getClassroomSuccess(response.data.classroom, currentState.classrooms.classrooms)
+              getClassroomSuccess(
+                response.data.classroom,
+                currentState.classrooms.classrooms
+              )
             );
           } else {
             const unknownError = {
@@ -375,13 +378,24 @@ export const manageClassroomStudents = payload => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
 
+      const studentNameRemover = studentArray => {
+        let newStudentArray = [];
+        studentArray.forEach(student => newStudentArray.push(student.id));
+        return newStudentArray;
+      };
+
+      payload = {
+        id: payload.id,
+        active_students: studentNameRemover(payload.active_students),
+        pending_students: studentNameRemover(payload.pending_students),
+        deleted_students: studentNameRemover(payload.deleted_students)
+      };
+
       axios
         .post("student-manager", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            dispatch(
-              classroomManageStudentsSuccess()
-            );
+            dispatch(classroomManageStudentsSuccess());
           } else {
             const unknownError = {
               code: "add-classroom-error",
