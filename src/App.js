@@ -109,9 +109,14 @@ function App(props) {
         info: "none"
       });
     } else if (profileLoaded) {
-      if (location.pathname.match("onboarding") && newUser !== "") {
-        console.log("2");
+      if (newUser === "") {
+        payload = "onboarding"
+      } else if (location.pathname.match("onboarding") && newUser !== "") {
         payload = "home";
+      } else if (location.pathname !== "/home") {
+        payload = location.pathname.replace("/", "")
+      } else {
+        payload = 'home'
       }
       setsnackbarPayload({
         type: "none",

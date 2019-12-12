@@ -241,7 +241,7 @@ const EditClassroomFields = props => {
           helper="Share code with students"
         />
       </div>
-      <Typography style={{ margin: "0px 8px" }}>
+      <Typography style={{ margin: "8px 16px 8px 0px" }}>
         Additional Classroom Info
       </Typography>
       <div className={classes.AdditionalInfoContainer}>

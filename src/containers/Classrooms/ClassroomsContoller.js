@@ -175,13 +175,12 @@ const ClassroomController = props => {
     const parsedPath = location.pathname.replace("/", "").split("/");
     const paramsPath = location.pathname.replace("/", "");
     let payload = navRoute;
-    if (location.pathname.includes(":")) {
+    if (location.state) {
+      payload = `${location.state.overwriteLocalNavState}`;
+    } else if (location.pathname.includes(":")) {
       payload = `${paramsPath}`;
     } else if (parsedPath.length > 1) {
       payload = `classrooms/${parsedPath[1]}`;
-    }
-    if (location.state) {
-      payload = `${location.state.overwriteLocalNavState}`;
     }
     setNavRoute(payload);
   }, [navRoute, location]);
