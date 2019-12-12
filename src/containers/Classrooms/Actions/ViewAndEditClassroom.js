@@ -15,6 +15,7 @@ const ViewAndEditClassroom = props => {
   let { id } = useParams();
   const {
     getOneClassroom,
+    manageClassroomStudents,
     location,
     classroom,
     myInstitutions,
@@ -231,9 +232,7 @@ const ViewAndEditClassroom = props => {
     });
     return studentObj;
   };
-  studentObjCreator(
-    classroom.pending_students == null ? [] : classroom.pending_students
-  );
+
   /*  --------------------- HANDLERS --------------------- */
   /* Action to push to the main classroom page /classrooms */
   const handleNav = () => {
@@ -335,6 +334,7 @@ const ViewAndEditClassroom = props => {
       // props.createClassroom(payload);
     } else if (action === "save") {
       console.log("save", payload);
+      manageClassroomStudents({...payload, id: id})
     }
   };
 
@@ -419,7 +419,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getOneClassroom: payload => dispatch(actions.getOneClassroom(payload))
+    getOneClassroom: payload => dispatch(actions.getOneClassroom(payload)),
+    manageClassroomStudents: payload => dispatch(actions.manageClassroomStudents(payload))
   };
 };
 

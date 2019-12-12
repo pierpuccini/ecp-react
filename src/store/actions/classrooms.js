@@ -23,6 +23,12 @@ export const classroomSuccess = (missingFields, code) => {
   };
 };
 
+export const classroomManageStudentsSuccess = () => {
+  return {
+    type: actionTypes.CLASSROOM_MANAGE_STUDENTS_SUCCESS
+  };
+};
+
 export const getAllClassroomSuccess = (classrooms, loading) => {
   return {
     type: actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS,
@@ -327,6 +333,54 @@ export const getOneClassroom = payload => {
           if (response.status === 200) {
             dispatch(
               getClassroomSuccess(response.data.classroom, currentState.classrooms.classrooms)
+            );
+          } else {
+            const unknownError = {
+              code: "add-classroom-error",
+              message: "Unkown error, Contact support"
+            };
+            dispatch(classroomFail(unknownError));
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+          dispatch(
+            classroomFail(
+              error.response.data.error != null
+                ? error.response.data.error
+                : error.response.data
+            )
+          );
+        });
+    }
+  };
+};
+
+export const manageClassroomStudents = payload => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const currentState = getState();
+    dispatch(classroomStart());
+
+    let error;
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(classroomFail(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentState.auth.token.token}`
+      };
+
+      axios
+        .post("student-manager", payload, { headers: headers })
+        .then(response => {
+          if (response.status === 200) {
+            dispatch(
+              classroomManageStudentsSuccess()
             );
           } else {
             const unknownError = {

@@ -118,7 +118,6 @@ const EditClassroomRoster = props => {
   };
 
   const handleRemoveStudent = student => {
-    console.log(student);
     const { id } = student;
     let studentToDelete = [];
     let pendingStudentsCopy = [...pendingStudents];
