@@ -113,11 +113,9 @@ function App(props) {
         payload = "onboarding"
       } else if (location.pathname.match("onboarding") && newUser !== "") {
         payload = "home";
-      } else if (location.pathname !== "/home") {
+      } else if (location.pathname !== "/home" && !location.pathname.includes('/classrooms')) {
         payload = location.pathname.replace("/", "")
-      } else {
-        payload = 'home'
-      }
+      } 
       setsnackbarPayload({
         type: "none",
         info: "none"

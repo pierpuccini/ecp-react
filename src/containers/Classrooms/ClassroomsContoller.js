@@ -19,7 +19,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 /* App imports */
-import PermisionError from "../../components/Errors/PermisionError/PermisionError";
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
 import AddClassroomModal from "../../components/Classroom/Modals/AddClassroomModal";
@@ -335,9 +334,9 @@ const ClassroomController = props => {
   /* Define new routes in routes array with their url and corresponding component */
   let routes, redirect;
   const routesArray = [
-    { url: "create", comp: createClassroom, restriction: "student" },
-    { url: "view/:id", comp: ViewAndEditClassroom, restriction: "none" },
-    { url: "edit/:id", comp: ViewAndEditClassroom, restriction: "student" }
+    { url: "create", comp: createClassroom, availableTo: ["teacher"] },
+    { url: "view/:id", comp: ViewAndEditClassroom, availableTo: ["student","admin","super-admin"] },
+    { url: "edit/:id", comp: ViewAndEditClassroom, availableTo: ["teacher"] }
   ];
 
   /* Conditional routes section */
@@ -347,7 +346,7 @@ const ClassroomController = props => {
   routes = (
     <Switch>
       {routesArray.map((route, index) => {
-        if (route.restriction !== role || route.restriction === "none") {
+        if (route.availableTo.includes(role)) {
           return (
             <Route
               path={`/classrooms/${route.url}`}
@@ -356,7 +355,7 @@ const ClassroomController = props => {
             />
           );
         } else {
-          return <PermisionError key={index} />;
+          return null
         }
       })}
     </Switch>
