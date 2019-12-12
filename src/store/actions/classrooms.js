@@ -1,7 +1,7 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios/axios";
 
-export const classroomStart = (action) => {
+export const classroomStart = action => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_START,
     action: action
@@ -39,6 +39,12 @@ export const getClassroomSuccess = (classroom, classrooms) => {
   };
 };
 
+export const restoreClassroomSuccess = () => {
+  return {
+    type: actionTypes.CLASSROOM_RESTORE_SUCCESS
+  };
+};
+
 export const deleteClassroomSuccess = () => {
   return {
     type: actionTypes.CLASSROOM_DELETE_SUCCESS
@@ -47,7 +53,7 @@ export const deleteClassroomSuccess = () => {
 
 export const createClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    dispatch(classroomStart('create'));
+    dispatch(classroomStart("create"));
     const currentState = getState();
     const firestore = getFirestore();
     let error;
@@ -131,7 +137,7 @@ export const createClassroom = payload => {
       payload = newPayload;
       //Creating course in backend
       axios
-        .post("/createclassroom", payload, { headers: headers })
+        .post("/create-classroom", payload, { headers: headers })
         .then(response => {
           if (
             response.status === 200 &&
@@ -219,7 +225,7 @@ export const addClassroom = payload => {
 
       payload = { ...payload, student_id: currentState.firebase.auth.uid };
       axios
-        .post("/assignclassroom", payload, { headers: headers })
+        .post("/assign-classroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
             dispatch(classroomSuccess());
@@ -263,14 +269,14 @@ export const getAllMyClassrooms = payload => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
 
-      const url = `/allclassroom?type=${payload.role}&user_id=${payload.uid}&page=${payload.page}`;
+      const url = `/all-classroom?type=${payload.role}&user_id=${payload.uid}&page=${payload.page}`;
       axios
         .get(url, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            let loading = false
-            if (currentState.classrooms.action === 'create') {
-              loading = true
+            let loading = false;
+            if (currentState.classrooms.action === "create") {
+              loading = true;
             }
             dispatch(getAllClassroomSuccess(response.data.classrooms, loading));
           } else {
@@ -345,6 +351,46 @@ export const getOneClassroom = payload => {
   };
 };
 
+export const restoreClassroom = classroomId => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const currentState = getState();
+    dispatch(classroomStart());
+
+    let error;
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(classroomFail(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentState.auth.token.token}`
+      };
+
+      const url = `/restore-classroom/${classroomId}`;
+      axios
+        .delete(url, { headers: headers })
+        .then(response => {
+          console.log('res',response);
+          dispatch(restoreClassroomSuccess());
+        })
+        .catch(error => {
+          console.log(error.response);
+          dispatch(
+            classroomFail(
+              error.response.data.error != null
+                ? error.response.data.error
+                : error.response.data
+            )
+          );
+        });
+    }
+  };
+};
+
 export const deleteClassroom = classroomId => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const currentState = getState();
@@ -364,7 +410,7 @@ export const deleteClassroom = classroomId => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
 
-      const url = `/classromdelete/${classroomId}`;
+      const url = `/delete-classroom/${classroomId}/${currentState.firebase.profile.role}`;
       axios
         .delete(url, { headers: headers })
         .then(response => {

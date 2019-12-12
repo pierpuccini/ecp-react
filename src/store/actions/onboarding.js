@@ -52,7 +52,7 @@ export const checkOnboarding = data => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
       axios
-        .post("/assignclassroom", payload, { headers: headers })
+        .post("/assign-classroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
             dispatch(onboardingSuccess());

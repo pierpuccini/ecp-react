@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { amber, green } from "@material-ui/core/colors";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import Button from '@material-ui/core/Button';
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -60,6 +61,10 @@ const useStyles = makeStyles(theme => ({
   },
   deleteButton: {
     color: theme.palette.error.dark
+  },
+  button: {
+    margin: theme.spacing(3, 1),
+    backgroundColor: green[700]
   }
 }));
 
@@ -94,7 +99,7 @@ const ClassroomListCard = props => {
     <Typography
       variant="caption"
       className={classes.nameAndDetails}
-      style={!classroom.active_classroom ? { color: "#777777" } : null}
+      style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
     >
       {classroom.id}
     </Typography>
@@ -107,7 +112,7 @@ const ClassroomListCard = props => {
         studentStatus === "pending"
           ? classes.studentStatusPending
           : classes.studentStatusActive
-      }      
+      }
     >
       {studentStatus === "pending"
         ? "Pending teacher approval"
@@ -122,14 +127,14 @@ const ClassroomListCard = props => {
           <Typography
             variant="caption"
             className={classes.nameAndDetails}
-            style={!classroom.active_classroom ? { color: "#777777" } : null}
+            style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
           >
             {classroomTeacher.displayName}
           </Typography>
           <Typography
             variant="caption"
             className={classes.nameAndDetails}
-            style={!classroom.active_classroom ? { color: "#777777" } : null}
+            style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
           >
             Classroom ID: {classroom.subject_id}
           </Typography>
@@ -142,14 +147,14 @@ const ClassroomListCard = props => {
           <Typography
             variant="caption"
             className={classes.nameAndDetails}
-            style={!classroom.active_classroom ? { color: "#777777" } : null}
+            style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
           >
             {classroomInstitution.value}
           </Typography>
           <Typography
             variant="caption"
             className={classes.nameAndDetails}
-            style={!classroom.active_classroom ? { color: "#777777" } : null}
+            style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
           >
             Classroom ID: {classroom.subject_id}
           </Typography>
@@ -162,21 +167,28 @@ const ClassroomListCard = props => {
           <Typography
             variant="caption"
             className={classes.nameAndDetails}
-            style={!classroom.active_classroom ? { color: "#777777" } : null}
+            style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
+          >
+            Institution: {classroomInstitution.value}
+          </Typography>
+          <Typography
+            variant="caption"
+            className={classes.nameAndDetails}
+            style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
           >
             Teacher: {classroomTeacher.displayName}
           </Typography>
           <Typography
             variant="caption"
             className={classes.nameAndDetails}
-            style={!classroom.active_classroom ? { color: "#777777" } : null}
+            style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
           >
             Classroom ID: {classroom.subject_id}
           </Typography>
           <Typography
             variant="caption"
             className={classes.nameAndDetails}
-            style={!classroom.active_classroom ? { color: "#777777" } : null}
+            style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
           >
             Database ID: {classroom.id}
           </Typography>
@@ -262,6 +274,10 @@ const ClassroomListCard = props => {
       </div>
     );
   }
+  // only for admins, they will be the only ones able to restore a classroom
+  if (classroom.deleted) {
+    mobileActions = (<Button size="small" variant="contained" className={classes.button}>Restore</Button>)
+  }
 
   return (
     <Paper
@@ -273,7 +289,7 @@ const ClassroomListCard = props => {
         <div className={classes.classroomNameAndDetails}>
           <Typography
             className={classes.nameAndDetails}
-            style={!classroom.active_classroom ? { color: "#777777" } : null}
+            style={!classroom.active_classroom || classroom.deleted ? { color: "#777777" } : null}
           >
             {classroom.subject_name}
           </Typography>

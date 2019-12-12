@@ -388,7 +388,7 @@ const ClassroomController = props => {
                   <AddCircleOutlineOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            ) : (
+            ) : !props.role.includes("admin") ? (
               <Tooltip title="Create Classroom">
                 <IconButton
                   onClick={event => {
@@ -398,7 +398,7 @@ const ClassroomController = props => {
                   <AddCircleOutlineOutlinedIcon />
                 </IconButton>
               </Tooltip>
-            )}
+            ) : null}
           </div>
           <Modal
             openModal={openAddClassModal}
@@ -412,15 +412,17 @@ const ClassroomController = props => {
           </Modal>
         </Paper>
         {classrooms.data.reverse().map(classroom => {
+          //Variables to search in data from FB
           let classroomTeacher, classroomInstitution, studentStatus;
+          //Finds classroom teacher
           classroomTeacher = teachers.find(
             teacher => teacher.id === classroom.teacher_id
           );
-          if (role === "student" || role === "teacher") {
-            classroomInstitution = clients.find(
-              institution => institution.id === classroom.client_id
-            );
-          }
+          //Finds classroom institution
+          classroomInstitution = clients.find(
+            institution => institution.id === classroom.client_id
+          );
+          //Gets status for student
           if (role === "student") {
             let status;
             studentStatus = "Student not found";
