@@ -115,6 +115,10 @@ const EditClassroom = props => {
     />
   );
 
+  const roster = (
+    <EditClassroomRoster updateClassroomInfo={updateClassroomInfo} />
+  );
+
   if (isTablet) {
     return (
       <Paper
@@ -142,7 +146,7 @@ const EditClassroom = props => {
         {classroomFields}
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        <EditClassroomRoster />
+        {roster}
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
         Item Three

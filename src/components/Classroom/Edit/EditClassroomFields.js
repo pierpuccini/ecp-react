@@ -124,6 +124,9 @@ const EditClassroomFields = props => {
   ];
 
   const children = [
+    <ToggleButton key={1} value="1">
+      <Typography>1</Typography>
+    </ToggleButton>,
     <ToggleButton key={2} value="2">
       <Typography>2</Typography>
     </ToggleButton>,
@@ -132,9 +135,6 @@ const EditClassroomFields = props => {
     </ToggleButton>,
     <ToggleButton key={4} value="4">
       <Typography>4</Typography>
-    </ToggleButton>,
-    <ToggleButton key={5} value="5" disabled>
-      <Typography>5</Typography>
     </ToggleButton>
   ];
 
