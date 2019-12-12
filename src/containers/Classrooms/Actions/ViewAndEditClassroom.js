@@ -333,8 +333,8 @@ const ViewAndEditClassroom = props => {
       console.log("update");
       // const payload = stateToPayload(updateClassroomForm);
       // props.createClassroom(payload);
-    } else if (action === "save"){
-      console.log('save',payload)
+    } else if (action === "save") {
+      console.log("save", payload);
     }
   };
 
@@ -394,8 +394,12 @@ const ViewAndEditClassroom = props => {
         toggleSwitchHandler={toggleSwitchHandler}
         toggleButtonChangedHandler={classroomToggleButtonHandler}
         sliderChangedHandler={classroomSliderHandler}
-        pendingStudents={studentObjCreator(classroom.pending_students == null? [] :classroom.pending_students)}
-        activeStudents={studentObjCreator(classroom.active_students == null? [] :classroom.active_students)}
+        pendingStudents={studentObjCreator(
+          classroom.pending_students == null ? [] : classroom.pending_students
+        )}
+        activeStudents={studentObjCreator(
+          classroom.active_students == null ? [] : classroom.active_students
+        )}
       />
     );
   }

@@ -77,6 +77,7 @@ const EditClassroomRoster = props => {
   const [checked, setChecked] = useState([]);
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
   const [activeStudents, setactiveStudents] = useState([...active_students]);
+  const [deletedStudents, setdeletedStudents] = useState([]);
 
   const pendingStudentsChecked = intersection(checked, pendingStudents);
   const activeStudentsChecked = intersection(checked, activeStudents);
@@ -119,10 +120,13 @@ const EditClassroomRoster = props => {
   const handleRemoveStudent = student => {
     console.log(student);
     const { id } = student;
+    let studentToDelete = [];
     let pendingStudentsCopy = [...pendingStudents];
     const studentToRemove = pendingStudentsCopy.findIndex(
       student => student.id === id
     );
+    studentToDelete.push(pendingStudentsCopy[studentToRemove])
+    setdeletedStudents(studentToDelete)
     pendingStudentsCopy.splice(studentToRemove, 1);
     setpendingStudents(pendingStudentsCopy);
   };
@@ -269,7 +273,8 @@ const EditClassroomRoster = props => {
             onClick={() => {
               buttonClickHandler("save", {
                 pending_students: pendingStudents,
-                active_students: activeStudents
+                active_students: activeStudents,
+                deleted_students: deletedStudents
               });
             }}
           >
