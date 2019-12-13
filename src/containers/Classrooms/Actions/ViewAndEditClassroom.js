@@ -245,20 +245,20 @@ const ViewAndEditClassroom = props => {
     return loadingDom;
   }
 
-  /* Transforms pending and active students ID's to readable names */
-  const studentObjCreator = studentsArray => {
-    if (studentsArray.length === 0) {
+  /* Transforms user ID's to readable names */
+  const userObjCreator = (usersArray, fbUsers) => {
+    if (usersArray.length === 0) {
       return [];
     }
 
-    let studentObj = [];
-    studentsArray.forEach(studentId => {
-      const foundStudent = students.find(student => student.id === studentId);
-      if (foundStudent != null) {
-        studentObj.push({ id: studentId, name: foundStudent.displayName });
+    let usersObj = [];
+    usersArray.forEach(userId => {
+      const foundUser = fbUsers.find(user => user.id === userId);
+      if (foundUser != null) {
+        usersObj.push({ id: userId, name: foundUser.displayName });
       }
     });
-    return studentObj;
+    return usersObj;
   };
 
   /*  --------------------- HANDLERS --------------------- */
@@ -387,6 +387,21 @@ const ViewAndEditClassroom = props => {
     setupdateClassroomForm(updatedControls);
   };
 
+  /* Converts editable state to a value readonly state */
+  const convertStateToInfo = () => {
+    let classroomInfo = { ...updateClassroomInfo };
+    const formKeys = Object.keys(updateClassroomForm);
+    /* Es lint disabled because map does not return anything */
+    //eslint-disable-next-line
+    formKeys.map(key => {
+      classroomInfo = {
+        ...classroomInfo,
+        [key]: updateClassroomForm[key].value
+      };
+    });
+    return classroomInfo;
+  };
+
   let view = "view classroom";
   if (location.pathname.includes("edit")) {
     view = (
@@ -399,11 +414,13 @@ const ViewAndEditClassroom = props => {
         buttonClickHandler={editViewActions}
         toggleButtonChangedHandler={classroomToggleButtonHandler}
         sliderChangedHandler={classroomSliderHandler}
-        pendingStudents={studentObjCreator(
-          classroom.pending_students == null ? [] : classroom.pending_students
+        pendingStudents={userObjCreator(
+          classroom.pending_students == null ? [] : classroom.pending_students,
+          students
         )}
-        activeStudents={studentObjCreator(
-          classroom.active_students == null ? [] : classroom.active_students
+        activeStudents={userObjCreator(
+          classroom.active_students == null ? [] : classroom.active_students,
+          students
         )}
       />
     );
@@ -412,15 +429,15 @@ const ViewAndEditClassroom = props => {
       <ViewClassroom
         navActions={handleNav}
         institutions={role.includes("admin") ? clients : myInstitutions}
-        updateClassroomInfo={updateClassroomInfo}
-        updateClassroomForm={updateClassroomForm}
-        inputChangedHandler={classroomInputHandler}
-        buttonClickHandler={editViewActions}
-        pendingStudents={studentObjCreator(
-          classroom.pending_students == null ? [] : classroom.pending_students
+        info={convertStateToInfo()}
+        teacher={userObjCreator([classroom.teacher_id], teachers)}
+        pendingStudents={userObjCreator(
+          classroom.pending_students == null ? [] : classroom.pending_students,
+          students
         )}
-        activeStudents={studentObjCreator(
-          classroom.active_students == null ? [] : classroom.active_students
+        activeStudents={userObjCreator(
+          classroom.active_students == null ? [] : classroom.active_students,
+          students
         )}
       />
     );

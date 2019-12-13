@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    [theme.breakpoints.up('md')]:{
+    [theme.breakpoints.up("md")]: {
       height: "100%"
     }
   },
@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
   AdditionalInfoContainer: {
     [theme.breakpoints.up("md")]: {
       display: "flex",
-      justifyContent: "space-around",
+      justifyContent: "space-around"
     }
   },
   formActions: {
@@ -267,20 +267,22 @@ const EditClassroomFields = props => {
         </Typography>
         <div className={classes.AdditionalInfoContainer}>
           <div className={classes.studentGroupContainer}>
-          <div className={classes.studentGroupContainerHeader}>
-            <PeopleAltOutlinedIcon style={{ alignSelf: "center", marginRight: "8px" }} />
-            <Typography>Student Group Size</Typography>
-          </div>
-          <ToggleButtonGroup
-            value={updateClassroomForm.group_size.value.toString()}
-            onChange={(event, value) => {
-              toggleButtonChangedHandler(event, value);
-            }}
-            style={{ alignSelf: "center" }}
-            exclusive
-          >
-            {children}
-          </ToggleButtonGroup>
+            <div className={classes.studentGroupContainerHeader}>
+              <PeopleAltOutlinedIcon
+                style={{ alignSelf: "center", marginRight: "8px" }}
+              />
+              <Typography>Student Group Size</Typography>
+            </div>
+            <ToggleButtonGroup
+              value={updateClassroomForm.group_size.value.toString()}
+              onChange={(event, value) => {
+                toggleButtonChangedHandler(event, value);
+              }}
+              style={{ alignSelf: "center" }}
+              exclusive
+            >
+              {children}
+            </ToggleButtonGroup>
           </div>
           <div className={classes.sliderContainer}>
             <div className={classes.typographyAndIcon}>

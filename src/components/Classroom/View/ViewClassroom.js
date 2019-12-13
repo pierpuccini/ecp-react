@@ -10,6 +10,7 @@ import Box from "@material-ui/core/Box";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 /* App Imports */
+import ViewClassroomInfo from "./ViewClassroomInfo";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -69,16 +70,10 @@ TabPanel.propTypes = {
 const ViewClassroom = props => {
   const classes = useStyles();
   const {
-    updateClassroomForm,
     navActions,
-    updateClassroomInfo,
+    info,
     institutions,
-    inputChangedHandler,
-    buttonClickHandler,
-    switchToggle,
-    toggleSwitchHandler,
-    toggleButtonChangedHandler,
-    sliderChangedHandler,
+    teacher,
     pendingStudents,
     activeStudents
   } = props;
@@ -92,23 +87,17 @@ const ViewClassroom = props => {
     settabValue(newValue);
   };
 
-  //Creacts a valid field object
-  let updateClassroomFormArr = Object.keys(updateClassroomForm).map(
-    controlName => {
-      return {
-        controlName: controlName,
-        data: updateClassroomForm[controlName]
-      };
-    }
+  const classroomFields = (
+    <ViewClassroomInfo
+      navActions={navActions}
+      info={info}
+      isTablet={isTablet}
+      institutions={institutions}
+      teacher={teacher}
+      pendingStudents={pendingStudents}
+      activeStudents={activeStudents}
+    />
   );
-  let validFields = updateClassroomFormArr.map(item => {
-    return {
-      [item.controlName]: item.data.valid && item.data.touched
-    };
-  });
-  validFields = Object.assign({}, ...validFields);
-
-  const classroomFields = <p>info</p>;
 
   const roster = <p>roster</p>;
 

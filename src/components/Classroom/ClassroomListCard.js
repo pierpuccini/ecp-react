@@ -274,14 +274,16 @@ const ClassroomListCard = props => {
 
   //   let classroomViewer
   let mobileActions = (
-    <IconButton
-      onClick={event =>
-        handleNavChange(event, `classrooms/view/:${classroom.id}`)
-      }
-      disabled={!activeClassroom}
-    >
-      <VisibilityOutlinedIcon />
-    </IconButton>
+    <span style={{alignSelf: "center"}}>
+      <IconButton
+        onClick={event =>
+          handleNavChange(event, `classrooms/view/:${classroom.id}`)
+        }
+        disabled={!activeClassroom}
+      >
+        <VisibilityOutlinedIcon />
+      </IconButton>
+    </span>
   );
   if (isMobile && role === "teacher") {
     mobileActions = (
