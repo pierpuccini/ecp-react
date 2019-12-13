@@ -216,7 +216,7 @@ export const createClassroom = payload => {
 export const updateClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const currentState = getState();
-    dispatch(classroomStart("create"));
+    dispatch(classroomStart("update"));
 
     let error;
     // Verifies that the token was properly recieved
@@ -272,9 +272,8 @@ export const updateClassroom = payload => {
 
       //Replaces the payload for better code reading
       payload = newPayload;
-      console.log("payload", payload);
-      console.log("extractMissingFields", extractMissingFields);
-      //Creating course in backend
+
+      //Updates course in backend
       axios
         .post("/update-classroom", payload, { headers: headers })
         .then(response => {

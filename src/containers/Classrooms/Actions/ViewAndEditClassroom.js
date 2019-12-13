@@ -8,8 +8,13 @@ import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* App imports */
 import Loader from "../../../components/UI/Loader/PngLoader/PngLoader";
+import FloatingLoader from "../../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import EditClassroom from "../../../components/Classroom/Edit/EditClassroom";
-import { updateObject, checkValidity, stateToPayload } from "../../../shared/utility";
+import {
+  updateObject,
+  checkValidity,
+  stateToPayload
+} from "../../../shared/utility";
 
 const ViewAndEditClassroom = props => {
   let { id } = useParams();
@@ -21,7 +26,9 @@ const ViewAndEditClassroom = props => {
     classroom,
     myInstitutions,
     history,
-    role
+    role,
+    success,
+    loading
   } = props;
 
   const [domReady, setDomReady] = useState(false);
@@ -101,9 +108,27 @@ const ViewAndEditClassroom = props => {
       .catch(err => {
         console.log("err", err);
       });
-    /* MISSING DEP: getAllMyClassrooms, role, userId */
+    /* MISSING DEP: getAllMyClassrooms, id */
     // eslint-disable-next-line
   }, []);
+
+  // Fetches new course on success
+  useEffect(() => {
+    async function getMyClassrooms() {
+      await getOneClassroom({ id: id });
+    }
+    if (success) {
+      getMyClassrooms()
+        .then(() => {
+          setDomReady(true);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    }
+    /* MISSING DEP: getAllMyClassrooms,id */
+    // eslint-disable-next-line
+  }, [success]);
 
   /* use effect in charge of populating edit state with classroom info */
   useEffect(() => {
@@ -214,11 +239,16 @@ const ViewAndEditClassroom = props => {
     </div>
   );
 
+  console.log(isLoaded(clients, teachers, students));
+  console.log(domReady);
+  console.log(updateClassroomInfo.code_classroom.value === "");
+
   if (
     !isLoaded(clients, teachers, students) &&
     !domReady &&
     updateClassroomInfo.code_classroom.value === ""
   ) {
+    console.log("loading");
     history.push({ state: { getAllClassrooms: false } });
     return loadingDom;
   }
@@ -331,10 +361,8 @@ const ViewAndEditClassroom = props => {
       });
       handleNav();
     } else if (action === "activate") {
-      console.log("activate");
       const payload = stateToPayload(updateClassroomForm);
-      console.log('container payload',payload);
-      updateClassroom({...payload, id: id.replace(":","")});
+      updateClassroom({ ...payload, id: id.replace(":", "") });
     } else if (action === "update") {
       console.log("update");
       // const payload = stateToPayload(updateClassroomForm);
@@ -410,6 +438,14 @@ const ViewAndEditClassroom = props => {
       />
     );
   }
+  if (loading) {
+    return (
+      <React.Fragment>
+        <FloatingLoader></FloatingLoader>
+        {view}
+      </React.Fragment>
+    );
+  }
   return view;
 };
 
@@ -417,6 +453,7 @@ const mapStateToProps = state => {
   return {
     role: state.firebase.profile.role,
     loading: state.classrooms.loading,
+    success: state.classrooms.success,
     createSuccess: state.classrooms.success,
     classroom:
       state.classrooms.classroom == null ? {} : state.classrooms.classroom,
@@ -427,7 +464,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getOneClassroom: payload => dispatch(actions.getOneClassroom(payload)),
-    updateClassroom : payload => dispatch(actions.updateClassroom(payload)),
+    updateClassroom: payload => dispatch(actions.updateClassroom(payload)),
     manageClassroomStudents: payload =>
       dispatch(actions.manageClassroomStudents(payload))
   };

@@ -47,6 +47,15 @@ const classroomSuccess = (state, action) => {
   });
 };
 
+const classroomUpdateSuccess = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: null,
+    missingFields: action.missingFields,
+    success: true
+  });
+};
+
 const classroomManageStudentsSuccess = (state, action) => {
   return updateObject(state, {
     loading: false,
@@ -110,6 +119,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CLASSROOM_ACTIONS_START: return classroomStart(state, action);
     case actionTypes.CLASSROOM_ACTIONS_FAILED: return classroomFail(state, action);
     case actionTypes.CLASSROOM_ACTIONS_SUCCESS: return classroomSuccess(state, action);
+    case actionTypes.CLASSROOM_UPDATE_SUCCESS: return classroomUpdateSuccess(state, action);
     case actionTypes.CLASSROOM_MANAGE_STUDENTS_SUCCESS: return classroomManageStudentsSuccess(state, action);
     case actionTypes.CLASSROOM_RESTORE_SUCCESS: return restoreClassroomSuccess(state, action);
     case actionTypes.CLASSROOM_DELETE_SUCCESS: return deleteClassroomSuccess(state, action);

@@ -78,7 +78,6 @@ const EditClassroomRoster = props => {
     buttonClickHandler,
     navActions
   } = props;
-  console.log(pending_students);
 
   const [checked, setChecked] = useState([]);
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
