@@ -1,5 +1,5 @@
 /* React Imports */
-import React, { useState } from "react";
+import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -7,9 +7,6 @@ import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import Switch from "@material-ui/core/Switch";
-import Collapse from "@material-ui/core/Collapse";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Slider from "@material-ui/core/Slider";
@@ -83,9 +80,13 @@ const useStyles = makeStyles(theme => ({
   switch: {
     display: "flex"
   },
-  switchContainer: {
+  studentGroupContainer: {
     display: "flex",
     flexDirection: "column"
+  },
+  studentGroupContainerHeader: {
+    display: "flex",
+    marginBottom: theme.spacing(2)
   },
   switchFormLabel: {
     justifyContent: "space-between",
@@ -119,19 +120,9 @@ const EditClassroomFields = props => {
     inputChangedHandler,
     buttonClickHandler,
     validFields,
-    switchToggle,
-    toggleSwitchHandler,
     toggleButtonChangedHandler,
     sliderChangedHandler
   } = props;
-
-  const [activateOrSave] = useState(
-    updateClassroomForm.group_size.value !== "" &&
-      updateClassroomForm.challenge_duration.value !== "" &&
-      updateClassroomForm.initial_coins.value !== ""
-      ? "save"
-      : "activate"
-  );
 
   const marks = [
     {
@@ -145,16 +136,16 @@ const EditClassroomFields = props => {
   ];
 
   const children = [
-    <ToggleButton key={1} value="1">
+    <ToggleButton key="1" value="1">
       <Typography>1</Typography>
     </ToggleButton>,
-    <ToggleButton key={2} value="2">
+    <ToggleButton key="2" value="2">
       <Typography>2</Typography>
     </ToggleButton>,
-    <ToggleButton key={3} value="3">
+    <ToggleButton key="3" value="3">
       <Typography>3</Typography>
     </ToggleButton>,
-    <ToggleButton key={4} value="4">
+    <ToggleButton key="4" value="4">
       <Typography>4</Typography>
     </ToggleButton>
   ];
@@ -267,40 +258,20 @@ const EditClassroomFields = props => {
           Additional Classroom Info
         </Typography>
         <div className={classes.AdditionalInfoContainer}>
-          <div className={classes.switchContainer}>
-            <div className={classes.switch}>
-              <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
-              <FormControlLabel
-                className={classes.switchFormLabel}
-                control={
-                  <Switch
-                    value={switchToggle}
-                    color="primary"
-                    onChange={event => {
-                      toggleSwitchHandler(event);
-                    }}
-                  />
-                }
-                labelPlacement="start"
-                label="Student Groups"
-              />
-            </div>
-            <Collapse
-              in={switchToggle}
-              timeout="auto"
-              style={{ justifyContent: "center", display: "flex" }}
-            >
-              <Typography gutterBottom>Group Size</Typography>
-              <ToggleButtonGroup
-                value={updateClassroomForm.group_size.value}
-                onChange={(event, value) => {
-                  toggleButtonChangedHandler(event, value);
-                }}
-                exclusive
-              >
-                {children}
-              </ToggleButtonGroup>
-            </Collapse>
+          <div className={classes.studentGroupContainer}>
+          <div className={classes.studentGroupContainerHeader}>
+            <PeopleAltOutlinedIcon style={{ alignSelf: "center", marginRight: "8px" }} />
+            <Typography>Student Group Size</Typography>
+          </div>
+          <ToggleButtonGroup
+            value={updateClassroomForm.group_size.value.toString()}
+            onChange={(event, value) => {
+              toggleButtonChangedHandler(event, value);
+            }}
+            exclusive
+          >
+            {children}
+          </ToggleButtonGroup>
           </div>
           <div className={classes.sliderContainer}>
             <div className={classes.typographyAndIcon}>
@@ -381,7 +352,7 @@ const EditClassroomFields = props => {
             }}
             size="small"
           >
-            {activateOrSave}
+            save
           </Button>
         </div>
       </div>

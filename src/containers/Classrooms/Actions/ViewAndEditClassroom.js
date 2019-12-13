@@ -32,8 +32,6 @@ const ViewAndEditClassroom = props => {
   } = props;
 
   const [domReady, setDomReady] = useState(false);
-  //Incharge of handeling the student groups toggle
-  const [switchToggle, setswitchToggle] = useState(false);
 
   //Editable state fields
   const [updateClassroomForm, setupdateClassroomForm] = useState({
@@ -359,26 +357,11 @@ const ViewAndEditClassroom = props => {
     }
   };
 
-  /* Handles the switch and if off resets the student groups counter */
-  const toggleSwitchHandler = event => {
-    if (!event.target.checked) {
-      const updatedControls = updateObject(updateClassroomForm, {
-        group_size: updateObject(updateClassroomForm.group_size, {
-          value: "",
-          valid: false,
-          touched: false
-        })
-      });
-      setupdateClassroomForm(updatedControls);
-    }
-    setswitchToggle(event.target.checked);
-  };
-
   /* Controls classroom toggle button Logic */
   const classroomToggleButtonHandler = (event, value) => {
     const updatedControls = updateObject(updateClassroomForm, {
       group_size: updateObject(updateClassroomForm.group_size, {
-        value: value === null ? null : value,
+        value: value === "" ? "" : value,
         valid: checkValidity(value, updateClassroomForm.group_size.validation),
         touched: true
       })
@@ -411,8 +394,6 @@ const ViewAndEditClassroom = props => {
         updateClassroomForm={updateClassroomForm}
         inputChangedHandler={classroomInputHandler}
         buttonClickHandler={editViewActions}
-        switchToggle={switchToggle}
-        toggleSwitchHandler={toggleSwitchHandler}
         toggleButtonChangedHandler={classroomToggleButtonHandler}
         sliderChangedHandler={classroomSliderHandler}
         pendingStudents={studentObjCreator(
