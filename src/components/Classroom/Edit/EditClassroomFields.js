@@ -23,8 +23,10 @@ const useStyles = makeStyles(theme => ({
   infoContainer: {
     display: "flex",
     flexDirection: "column",
-    height: "100%",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    [theme.breakpoints.up('md')]:{
+      height: "100%"
+    }
   },
   fieldsContainer: {
     [theme.breakpoints.up("md")]: {
