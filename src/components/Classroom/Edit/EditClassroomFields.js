@@ -52,6 +52,12 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column"
   },
+  AdditionalInfoContainer: {
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
+      justifyContent: "space-around",
+    }
+  },
   formActions: {
     display: "flex",
     justifyContent: "space-between",
@@ -268,6 +274,7 @@ const EditClassroomFields = props => {
             onChange={(event, value) => {
               toggleButtonChangedHandler(event, value);
             }}
+            style={{ alignSelf: "center" }}
             exclusive
           >
             {children}

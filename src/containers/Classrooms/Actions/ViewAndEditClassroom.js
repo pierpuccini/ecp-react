@@ -32,6 +32,7 @@ const ViewAndEditClassroom = props => {
   } = props;
 
   const [domReady, setDomReady] = useState(false);
+  const [stateReady, setstateReady] = useState(false);
 
   //Editable state fields
   const [updateClassroomForm, setupdateClassroomForm] = useState({
@@ -200,6 +201,7 @@ const ViewAndEditClassroom = props => {
         pending_students: pending_students,
         active_students: active_students
       });
+      setstateReady(true)
     }
   }, [classroom]);
 
@@ -237,7 +239,7 @@ const ViewAndEditClassroom = props => {
     </div>
   );
 
-  if (!isLoaded(clients, teachers, students) && !domReady) {
+  if (!isLoaded(clients, teachers, students) && !domReady && !stateReady) {
     history.push({ state: { getAllClassrooms: false } });
     return loadingDom;
   }
