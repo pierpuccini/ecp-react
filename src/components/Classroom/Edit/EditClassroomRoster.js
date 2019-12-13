@@ -25,8 +25,30 @@ import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined"
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    margin: "auto"
+  rosterContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    [theme.breakpoints.up('md')]:{
+      height: "100%"
+    }
+  },
+  formHeader: {
+    display: "flex"
+  },
+  gridContainer: {
+    margin: theme.spacing(2),
+    width: "unset",
+    height: "100%"
+  },
+  gridItemSize: {
+    width: "100%",
+    height: "100%"
+  },
+  studentsTransferCards: {
+    boxShadow: "unset",
+    border: "2px solid #808080",
+    height: "100%"
   },
   cardHeader: {
     padding: theme.spacing(1, 2)
@@ -37,22 +59,12 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     overflow: "auto"
   },
-  button: {
-    margin: theme.spacing(1)
-  },
-  studentsTransferCards: {
-    boxShadow: "unset",
-    border: "2px solid #808080"
-  },
-  gridItemSize: {
-    width: "100%"
-  },
   bottomActios: {
     display: "flex",
     justifyContent: "space-between"
   },
-  formHeader: {
-    display: "flex"
+  button: {
+    margin: theme.spacing(1)
   }
 }));
 
@@ -205,7 +217,7 @@ const EditClassroomRoster = props => {
   );
 
   return (
-    <React.Fragment>
+    <div className={classes.rosterContainer}>
       <div className={classes.formHeader}>
         <IconButton
           size="small"
@@ -226,7 +238,7 @@ const EditClassroomRoster = props => {
         justify="center"
         alignItems="center"
         style={isTablet ? { flexWrap: "nowrap" } : null}
-        className={classes.root}
+        className={classes.gridContainer}
       >
         <Grid item className={classes.gridItemSize}>
           {customList("Pending Students", pendingStudents)}
@@ -299,7 +311,7 @@ const EditClassroomRoster = props => {
           save
         </Button>
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 
