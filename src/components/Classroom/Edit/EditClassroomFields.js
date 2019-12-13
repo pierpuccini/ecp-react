@@ -105,7 +105,6 @@ const EditClassroomFields = props => {
     inputChangedHandler,
     buttonClickHandler,
     validFields,
-    isTablet,
     switchToggle,
     toggleSwitchHandler,
     toggleButtonChangedHandler,
@@ -244,6 +243,88 @@ const EditClassroomFields = props => {
       <Typography style={{ margin: "8px 16px 8px 0px" }}>
         Additional Classroom Info
       </Typography>
+      <div className={classes.AdditionalInfoContainer}>
+        <div className={classes.switchContainer}>
+          <div className={classes.switch}>
+            <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
+            <FormControlLabel
+              className={classes.switchFormLabel}
+              control={
+                <Switch
+                  value={switchToggle}
+                  color="primary"
+                  onChange={event => {
+                    toggleSwitchHandler(event);
+                  }}
+                />
+              }
+              labelPlacement="start"
+              label="Student Groups"
+            />
+          </div>
+          <Collapse
+            in={switchToggle}
+            timeout="auto"
+            style={{ justifyContent: "center", display: "flex" }}
+          >
+            <Typography gutterBottom>Group Size</Typography>
+            <ToggleButtonGroup
+              value={updateClassroomForm.group_size.value}
+              onChange={(event, value) => {
+                toggleButtonChangedHandler(event, value);
+              }}
+              exclusive
+            >
+              {children}
+            </ToggleButtonGroup>
+          </Collapse>
+        </div>
+        <div className={classes.sliderContainer}>
+          <div className={classes.typographyAndIcon}>
+            <TimerOutlinedIcon />
+            <Typography
+              style={{ alignSelf: "center", marginLeft: "16px" }}
+              gutterBottom
+            >
+              Default Time Per Challenge
+            </Typography>
+          </div>
+          <div className={classes.slider}>
+            <Slider
+              defaultValue={15}
+              value={updateClassroomForm.challenge_duration.value}
+              valueLabelDisplay="auto"
+              onChange={(event, value) => {
+                sliderChangedHandler(event, value);
+              }}
+              step={5}
+              marks={marks}
+              min={10}
+              max={60}
+            />
+          </div>
+        </div>
+        <div className={classes.coinInput}>
+          <TextField
+            className={classes.textField}
+            label="Initial Coins"
+            placeholder="5000"
+            type="number"
+            value={updateClassroomForm.initial_coins.value}
+            onChange={event => {
+              inputChangedHandler(event, "initial_coins");
+            }}
+            margin="normal"
+            variant="outlined"
+            required
+            style={{ width: "190px" }}
+            InputProps={{
+              inputProps: { min: 0 },
+              endAdornment: <Logo height="56px" />
+            }}
+          />
+        </div>
+      </div>
       <div className={classes.formActions}>
         <div className={classes.negativeActions}>
           <Button
