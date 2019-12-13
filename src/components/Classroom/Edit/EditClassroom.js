@@ -43,11 +43,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function TabPanel(props) {
-  const { children, value, index } = props;
+  const { children, value, index, ...other } = props;
 
   return (
-    <Typography component="div" role="tabpanel" hidden={value !== index}>
-      {value === index && <Box p={2}>{children}</Box>}
+    <Typography component="div" role="tabpanel" hidden={value !== index} {...other}>
+      {value === index && <Box p={2} style={{height: "100%"}}>{children}</Box>}
     </Typography>
   );
 }
@@ -137,13 +137,13 @@ const EditClassroom = props => {
         <Tab label="Roster" />
         <Tab label="Wallet" disabled />
       </Tabs>
-      <TabPanel value={tabValue} index={0}>
+      <TabPanel value={tabValue} index={0} style={{height: "calc(100% - 5vh)"}}>
         {classroomFields}
       </TabPanel>
-      <TabPanel value={tabValue} index={1}>
+      <TabPanel value={tabValue} index={1} style={{height: "calc(100% - 5vh)"}}>
         {roster}
       </TabPanel>
-      <TabPanel value={tabValue} index={2}>
+      <TabPanel value={tabValue} index={2} style={{height: "calc(100% - 5vh)"}}>
         Item Three
       </TabPanel>
     </Paper>
