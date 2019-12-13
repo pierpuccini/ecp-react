@@ -73,6 +73,7 @@ const ClassroomListCard = props => {
   const {
     classroom,
     role,
+    activeClassroom,
     classroomTeacher,
     classroomInstitution,
     prefersDarkMode,
@@ -94,35 +95,19 @@ const ClassroomListCard = props => {
     setAnchorEl(null);
   };
 
-  let roleCaption = (
+  const classroomName = (
     <Typography
-      variant="caption"
       className={classes.nameAndDetails}
       style={
-        !classroom.active_classroom || classroom.deleted
-          ? { color: "#777777" }
-          : null
+        !activeClassroom || classroom.deleted ? { color: "#777777" } : null
       }
     >
-      {classroom.id}
+      {classroom.subject_name}
     </Typography>
   );
 
-  let statusStudent = (
-    <Typography
-      variant="caption"
-      className={
-        studentStatus === "pending"
-          ? classes.studentStatusPending
-          : classes.studentStatusActive
-      }
-    >
-      {studentStatus === "pending"
-        ? "Pending teacher approval"
-        : "Active in classroom"}
-    </Typography>
-  );
-
+  let roleCaption;
+  /* Caption switcher */
   switch (role) {
     case "student":
       roleCaption = (
@@ -131,7 +116,7 @@ const ClassroomListCard = props => {
             variant="caption"
             className={classes.nameAndDetails}
             style={
-              !classroom.active_classroom || classroom.deleted
+              !activeClassroom || classroom.deleted
                 ? { color: "#777777" }
                 : null
             }
@@ -142,7 +127,7 @@ const ClassroomListCard = props => {
             variant="caption"
             className={classes.nameAndDetails}
             style={
-              !classroom.active_classroom || classroom.deleted
+              !activeClassroom || classroom.deleted
                 ? { color: "#777777" }
                 : null
             }
@@ -159,7 +144,7 @@ const ClassroomListCard = props => {
             variant="caption"
             className={classes.nameAndDetails}
             style={
-              !classroom.active_classroom || classroom.deleted
+              !activeClassroom || classroom.deleted
                 ? { color: "#777777" }
                 : null
             }
@@ -170,7 +155,7 @@ const ClassroomListCard = props => {
             variant="caption"
             className={classes.nameAndDetails}
             style={
-              !classroom.active_classroom || classroom.deleted
+              !activeClassroom || classroom.deleted
                 ? { color: "#777777" }
                 : null
             }
@@ -187,7 +172,7 @@ const ClassroomListCard = props => {
             variant="caption"
             className={classes.nameAndDetails}
             style={
-              !classroom.active_classroom || classroom.deleted
+              !activeClassroom || classroom.deleted
                 ? { color: "#777777" }
                 : null
             }
@@ -198,7 +183,7 @@ const ClassroomListCard = props => {
             variant="caption"
             className={classes.nameAndDetails}
             style={
-              !classroom.active_classroom || classroom.deleted
+              !activeClassroom || classroom.deleted
                 ? { color: "#777777" }
                 : null
             }
@@ -209,7 +194,7 @@ const ClassroomListCard = props => {
             variant="caption"
             className={classes.nameAndDetails}
             style={
-              !classroom.active_classroom || classroom.deleted
+              !activeClassroom || classroom.deleted
                 ? { color: "#777777" }
                 : null
             }
@@ -220,7 +205,7 @@ const ClassroomListCard = props => {
             variant="caption"
             className={classes.nameAndDetails}
             style={
-              !classroom.active_classroom || classroom.deleted
+              !activeClassroom || classroom.deleted
                 ? { color: "#777777" }
                 : null
             }
@@ -232,6 +217,19 @@ const ClassroomListCard = props => {
       break;
   }
 
+  let statusStudent = (
+    <Typography
+      variant="caption"
+      className={
+        studentStatus === "pending"
+          ? classes.studentStatusPending
+          : classes.studentStatusActive
+      }
+    >
+      {activeClassroom ? "Pending teacher approval" : "Active in classroom"}
+    </Typography>
+  );
+
   const missingActivation = (
     <Typography
       variant="caption"
@@ -242,18 +240,51 @@ const ClassroomListCard = props => {
     </Typography>
   );
 
+  const active = (
+    <Typography
+      variant="caption"
+      className={classes.nameAndDetails}
+      style={{ color: green[700] }}
+    >
+      *Active Classroom.
+    </Typography>
+  );
+
+  /* Sets status for all users */
+  let cardStatus;
+  switch (role) {
+    case "student":
+      cardStatus = statusStudent;
+
+      break;
+    case "teacher":
+      if (!activeClassroom) {
+        cardStatus = missingActivation;
+      } else {
+        cardStatus = active;
+      }
+      break;
+    default:
+      if (!activeClassroom) {
+        cardStatus = missingActivation;
+      } else {
+        cardStatus = active;
+      }
+      break;
+  }
+
   //   let classroomViewer
   let mobileActions = (
     <IconButton
       onClick={event =>
         handleNavChange(event, `classrooms/view/:${classroom.id}`)
       }
-      disabled={!classroom.active_classroom}
+      disabled={!activeClassroom}
     >
       <VisibilityOutlinedIcon />
     </IconButton>
   );
-  if (isMobile && role !== "student") {
+  if (isMobile && role === "teacher") {
     mobileActions = (
       <div className={classes.classroomCardActions}>
         <IconButton onClick={handleMobileMenu}>
@@ -287,7 +318,7 @@ const ClassroomListCard = props => {
         </Menu>
       </div>
     );
-  } else if (role !== "student") {
+  } else if (role === "teacher") {
     mobileActions = (
       <div className={classes.classroomCardActions}>
         <IconButton
@@ -333,22 +364,9 @@ const ClassroomListCard = props => {
     >
       <div className={classes.classroomCard}>
         <div className={classes.classroomNameAndDetails}>
-          <Typography
-            className={classes.nameAndDetails}
-            style={
-              !classroom.active_classroom || classroom.deleted
-                ? { color: "#777777" }
-                : null
-            }
-          >
-            {classroom.subject_name}
-          </Typography>
+          {classroomName}
           {roleCaption}
-          {role === "student"
-            ? statusStudent
-            : role === "teacher" && !classroom.active_classroom
-            ? missingActivation
-            : null}
+          {cardStatus}
         </div>
       </div>
       {mobileActions}

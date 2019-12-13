@@ -102,7 +102,8 @@ const ClassroomController = props => {
     deleteClassroom,
     restoreClassroom,
     deleteSuccess,
-    restoreSuccess
+    restoreSuccess,
+    activeClassroom
   } = props;
 
   //Checks if DOM is ready to un mount loading icon
@@ -155,7 +156,12 @@ const ClassroomController = props => {
         page: classroomPage
       });
     }
-    if (oldClasscount !== firebaseClassrooms.length || deleteSuccess || restoreSuccess || location.pathname.match('/classrooms')) {
+    if (
+      oldClasscount !== firebaseClassrooms.length ||
+      deleteSuccess ||
+      restoreSuccess ||
+      location.pathname.match("/classrooms")
+    ) {
       getMyClassrooms()
         .then(() => {
           setDomReady(true);
@@ -167,7 +173,13 @@ const ClassroomController = props => {
     }
     /* MISSING DEP: getAllMyClassrooms, role, userId */
     // eslint-disable-next-line
-  }, [oldClasscount, firebaseClassrooms, location, deleteSuccess, restoreSuccess]);
+  }, [
+    oldClasscount,
+    firebaseClassrooms,
+    location,
+    deleteSuccess,
+    restoreSuccess
+  ]);
 
   /* Use efect handles local component routing */
   useEffect(() => {
@@ -178,8 +190,12 @@ const ClassroomController = props => {
       payload = `${location.state.overwriteLocalNavState}`;
     } else if (location.pathname.includes(":")) {
       payload = `${paramsPath}`;
-    } else if ((location.pathname.includes('edit') || location.pathname.includes('view')) && !location.pathname.includes(':')) {
-      payload = "classrooms"
+    } else if (
+      (location.pathname.includes("edit") ||
+        location.pathname.includes("view")) &&
+      !location.pathname.includes(":")
+    ) {
+      payload = "classrooms";
     } else if (parsedPath.length > 1) {
       payload = `classrooms/${parsedPath[1]}`;
     }
@@ -337,7 +353,11 @@ const ClassroomController = props => {
   let routes, redirect;
   const routesArray = [
     { url: "create", comp: createClassroom, availableTo: ["teacher"] },
-    { url: "view/:id", comp: ViewAndEditClassroom, availableTo: ["student","admin","super-admin"] },
+    {
+      url: "view/:id",
+      comp: ViewAndEditClassroom,
+      availableTo: ["student", "admin", "super-admin"]
+    },
     { url: "edit/:id", comp: ViewAndEditClassroom, availableTo: ["teacher"] }
   ];
 
@@ -357,7 +377,7 @@ const ClassroomController = props => {
             />
           );
         } else {
-          return null
+          return null;
         }
       })}
     </Switch>
@@ -418,7 +438,12 @@ const ClassroomController = props => {
             />
           </Modal>
         </Paper>
-        {classrooms.data.reverse().map(classroom => {
+        {classrooms.data.map(classroom => {
+          //Checks if classroom is active in firebase
+          let isClassroomActive = activeClassroom.find(
+            fbClassroom => fbClassroom.id === Number(classroom.id)
+          );
+
           //Variables to search in data from FB
           let classroomTeacher, classroomInstitution, studentStatus;
           //Finds classroom teacher
@@ -454,6 +479,7 @@ const ClassroomController = props => {
             <ClassroomListCard
               classroom={classroom}
               role={role}
+              activeClassroom={isClassroomActive.active}
               classroomTeacher={classroomTeacher}
               classroomInstitution={classroomInstitution}
               prefersDarkMode={prefersDarkMode}
@@ -495,7 +521,8 @@ const mapStateToProps = state => {
         ? { data: [] }
         : state.classrooms.classrooms,
     deleteSuccess: state.classrooms.deleteSuccess,
-    restoreSuccess: state.classrooms.restoreSuccess
+    restoreSuccess: state.classrooms.restoreSuccess,
+    activeClassroom: state.firebase.profile.classrooms
   };
 };
 
