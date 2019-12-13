@@ -220,7 +220,7 @@ const ClassroomListCard = props => {
     <Typography
       variant="caption"
       className={
-        !activeClassroom === "pending"
+        !activeClassroom
           ? classes.studentStatusPending
           : classes.studentStatusActive
       }
