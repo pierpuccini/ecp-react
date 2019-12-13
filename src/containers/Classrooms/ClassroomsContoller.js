@@ -445,7 +445,7 @@ const ClassroomController = props => {
           );
 
           //Variables to search in data from FB
-          let classroomTeacher, classroomInstitution, studentStatus;
+          let classroomTeacher, classroomInstitution;
           //Finds classroom teacher
           classroomTeacher = teachers.find(
             teacher => teacher.id === classroom.teacher_id
@@ -454,27 +454,6 @@ const ClassroomController = props => {
           classroomInstitution = clients.find(
             institution => institution.id === classroom.client_id
           );
-          //Gets status for student
-          if (role === "student") {
-            let status;
-            studentStatus = "Student not found";
-            if (classroom.active_students != null) {
-              status = classroom.active_students.findIndex(
-                student => student === userId
-              );
-              if (status !== -1) {
-                studentStatus = "active";
-              }
-            }
-            if (classroom.pending_students != null) {
-              status = classroom.pending_students.findIndex(
-                student => student === userId
-              );
-              if (status !== -1) {
-                studentStatus = "pending";
-              }
-            }
-          }
           return (
             <ClassroomListCard
               classroom={classroom}
@@ -484,7 +463,6 @@ const ClassroomController = props => {
               classroomInstitution={classroomInstitution}
               prefersDarkMode={prefersDarkMode}
               key={classroom.code_classroom}
-              studentStatus={studentStatus}
               isMobile={isMobile}
               handleNavChange={handleNavChange}
               handleDelete={handleDelete}

@@ -77,7 +77,6 @@ const ClassroomListCard = props => {
     classroomTeacher,
     classroomInstitution,
     prefersDarkMode,
-    studentStatus,
     isMobile,
     handleNavChange,
     handleDelete,
@@ -221,12 +220,12 @@ const ClassroomListCard = props => {
     <Typography
       variant="caption"
       className={
-        studentStatus === "pending"
+        !activeClassroom === "pending"
           ? classes.studentStatusPending
           : classes.studentStatusActive
       }
     >
-      {activeClassroom ? "Pending teacher approval" : "Active in classroom"}
+      {!activeClassroom ? "Pending teacher approval" : "Active in classroom"}
     </Typography>
   );
 
