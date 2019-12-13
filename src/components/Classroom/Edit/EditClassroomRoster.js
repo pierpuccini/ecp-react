@@ -18,6 +18,8 @@ import Divider from "@material-ui/core/Divider";
 import HighlightOffOutlinedIcon from "@material-ui/icons/HighlightOffOutlined";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ArrowForwardOutlinedIcon from "@material-ui/icons/ArrowForwardOutlined";
+import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
@@ -224,13 +226,18 @@ const EditClassroomRoster = props => {
         spacing={2}
         justify="center"
         alignItems="center"
+        style={isTablet ? { flexWrap: "nowrap" } : null}
         className={classes.root}
       >
         <Grid item className={classes.gridItemSize}>
           {customList("Pending Students", pendingStudents)}
         </Grid>
         <Grid item>
-          <Grid container direction="row" alignItems="center">
+          <Grid
+            container
+            direction={!isTablet ? "row" : "column"}
+            alignItems="center"
+          >
             <Button
               variant="outlined"
               size="small"
@@ -239,7 +246,11 @@ const EditClassroomRoster = props => {
               disabled={pendingStudentsChecked.length === 0}
               aria-label="move selected activeStudents"
             >
-              <ArrowDownwardOutlinedIcon />
+              {isTablet ? (
+                <ArrowForwardOutlinedIcon />
+              ) : (
+                <ArrowDownwardOutlinedIcon />
+              )}
             </Button>
             <Button
               variant="outlined"
@@ -249,7 +260,11 @@ const EditClassroomRoster = props => {
               disabled={activeStudentsChecked.length === 0}
               aria-label="move selected pendingStudents"
             >
-              <ArrowUpwardOutlinedIcon />
+              {isTablet ? (
+                <ArrowBackOutlinedIcon />
+              ) : (
+                <ArrowUpwardOutlinedIcon />
+              )}
             </Button>
           </Grid>
         </Grid>
@@ -257,36 +272,34 @@ const EditClassroomRoster = props => {
           {customList("Active Students", activeStudents)}
         </Grid>
       </Grid>
-      {!isTablet ? (
-        <div className={classes.bottomActios}>
-          <Button
-            variant="contained"
-            className={classes.button}
-            size="small"
-            style={{ backgroundColor: "#f44336", color: "#ffffff" }}
-            onClick={() => {
-              buttonClickHandler("cancel");
-            }}
-          >
-            cancel
-          </Button>
-          <Button
-            className={classes.button}
-            variant="contained"
-            size="small"
-            color="primary"
-            onClick={() => {
-              buttonClickHandler("save", {
-                pending_students: pendingStudents,
-                active_students: activeStudents,
-                deleted_students: deletedStudents
-              });
-            }}
-          >
-            save
-          </Button>
-        </div>
-      ) : null}
+      <div className={classes.bottomActios}>
+        <Button
+          variant="contained"
+          className={classes.button}
+          size="small"
+          style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+          onClick={() => {
+            buttonClickHandler("cancel");
+          }}
+        >
+          cancel
+        </Button>
+        <Button
+          className={classes.button}
+          variant="contained"
+          size="small"
+          color="primary"
+          onClick={() => {
+            buttonClickHandler("save", {
+              pending_students: pendingStudents,
+              active_students: activeStudents,
+              deleted_students: deletedStudents
+            });
+          }}
+        >
+          save
+        </Button>
+      </div>
     </React.Fragment>
   );
 };

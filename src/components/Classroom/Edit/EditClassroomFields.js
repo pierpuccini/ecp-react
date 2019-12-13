@@ -244,126 +244,42 @@ const EditClassroomFields = props => {
       <Typography style={{ margin: "8px 16px 8px 0px" }}>
         Additional Classroom Info
       </Typography>
-      <div className={classes.AdditionalInfoContainer}>
-        <div className={classes.switchContainer}>
-          <div className={classes.switch}>
-            <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
-            <FormControlLabel
-              className={classes.switchFormLabel}
-              control={
-                <Switch
-                  value={switchToggle}
-                  color="primary"
-                  onChange={event => {
-                    toggleSwitchHandler(event);
-                  }}
-                />
-              }
-              labelPlacement="start"
-              label="Student Groups"
-            />
-          </div>
-          <Collapse
-            in={switchToggle}
-            timeout="auto"
-            style={{ justifyContent: "center", display: "flex" }}
+      <div className={classes.formActions}>
+        <div className={classes.negativeActions}>
+          <Button
+            variant="contained"
+            className={classes.button}
+            onClick={() => {
+              buttonClickHandler("cancel");
+            }}
+            size="small"
+            style={{ backgroundColor: "#f44336", color: "#ffffff" }}
           >
-            <Typography gutterBottom>Group Size</Typography>
-            <ToggleButtonGroup
-              value={updateClassroomForm.group_size.value}
-              onChange={(event, value) => {
-                toggleButtonChangedHandler(event, value);
-              }}
-              exclusive
-            >
-              {children}
-            </ToggleButtonGroup>
-          </Collapse>
+            Cancel
+          </Button>
         </div>
-        <div className={classes.sliderContainer}>
-          <div className={classes.typographyAndIcon}>
-            <TimerOutlinedIcon />
-            <Typography
-              style={{ alignSelf: "center", marginLeft: "16px" }}
-              gutterBottom
-            >
-              Default Time Per Challenge
-            </Typography>
-          </div>
-          <div className={classes.slider}>
-            <Slider
-              defaultValue={15}
-              value={updateClassroomForm.challenge_duration.value}
-              valueLabelDisplay="auto"
-              onChange={(event, value) => {
-                sliderChangedHandler(event, value);
-              }}
-              step={5}
-              marks={marks}
-              min={10}
-              max={60}
-            />
-          </div>
-        </div>
-        <div className={classes.coinInput}>
-          <TextField
-            className={classes.textField}
-            label="Initial Coins"
-            placeholder="5000"
-            type="number"
-            value={updateClassroomForm.initial_coins.value}
-            onChange={event => {
-              inputChangedHandler(event, "initial_coins");
+        <div className={classes.positiveActions}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            disabled={
+              !validFields.client_id ||
+              !validFields.subject_id ||
+              !validFields.subject_name ||
+              !validFields.group_size ||
+              !validFields.challenge_duration ||
+              !validFields.initial_coins
+            }
+            onClick={() => {
+              buttonClickHandler("activate");
             }}
-            margin="normal"
-            variant="outlined"
-            required
-            style={{ width: "190px" }}
-            InputProps={{
-              inputProps: { min: 0 },
-              endAdornment: <Logo height="56px" />
-            }}
-          />
+            size="small"
+          >
+            Activate
+          </Button>
         </div>
       </div>
-      {!isTablet ? (
-        <div className={classes.formActions}>
-          <div className={classes.negativeActions}>
-            <Button
-              variant="contained"
-              className={classes.button}
-              onClick={() => {
-                buttonClickHandler("cancel");
-              }}
-              size="small"
-              style={{ backgroundColor: "#f44336", color: "#ffffff" }}
-            >
-              Cancel
-            </Button>
-          </div>
-          <div className={classes.positiveActions}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              disabled={
-                !validFields.client_id ||
-                !validFields.subject_id ||
-                !validFields.subject_name ||
-                !validFields.group_size ||
-                !validFields.challenge_duration ||
-                !validFields.initial_coins
-              }
-              onClick={() => {
-                buttonClickHandler("activate");
-              }}
-              size="small"
-            >
-              Activate
-            </Button>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 };
