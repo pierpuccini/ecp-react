@@ -10,6 +10,7 @@ import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 import Loader from "../../../components/UI/Loader/PngLoader/PngLoader";
 import FloatingLoader from "../../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import EditClassroom from "../../../components/Classroom/Edit/EditClassroom";
+import ViewClassroom from "../../../components/Classroom/View/ViewClassroom";
 import {
   updateObject,
   checkValidity,
@@ -201,7 +202,7 @@ const ViewAndEditClassroom = props => {
         pending_students: pending_students,
         active_students: active_students
       });
-      setstateReady(true)
+      setstateReady(true);
     }
   }, [classroom]);
 
@@ -398,6 +399,23 @@ const ViewAndEditClassroom = props => {
         buttonClickHandler={editViewActions}
         toggleButtonChangedHandler={classroomToggleButtonHandler}
         sliderChangedHandler={classroomSliderHandler}
+        pendingStudents={studentObjCreator(
+          classroom.pending_students == null ? [] : classroom.pending_students
+        )}
+        activeStudents={studentObjCreator(
+          classroom.active_students == null ? [] : classroom.active_students
+        )}
+      />
+    );
+  } else if (location.pathname.includes("view")) {
+    view = (
+      <ViewClassroom
+        navActions={handleNav}
+        institutions={role.includes("admin") ? clients : myInstitutions}
+        updateClassroomInfo={updateClassroomInfo}
+        updateClassroomForm={updateClassroomForm}
+        inputChangedHandler={classroomInputHandler}
+        buttonClickHandler={editViewActions}
         pendingStudents={studentObjCreator(
           classroom.pending_students == null ? [] : classroom.pending_students
         )}
