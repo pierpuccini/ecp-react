@@ -239,16 +239,7 @@ const ViewAndEditClassroom = props => {
     </div>
   );
 
-  console.log(isLoaded(clients, teachers, students));
-  console.log(domReady);
-  console.log(updateClassroomInfo.code_classroom.value === "");
-
-  if (
-    !isLoaded(clients, teachers, students) &&
-    !domReady &&
-    updateClassroomInfo.code_classroom.value === ""
-  ) {
-    console.log("loading");
+  if (!isLoaded(clients, teachers, students) && !domReady) {
     history.push({ state: { getAllClassrooms: false } });
     return loadingDom;
   }
