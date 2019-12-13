@@ -9,12 +9,13 @@ import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* App imports */
 import Loader from "../../../components/UI/Loader/PngLoader/PngLoader";
 import EditClassroom from "../../../components/Classroom/Edit/EditClassroom";
-import { updateObject, checkValidity } from "../../../shared/utility";
+import { updateObject, checkValidity, stateToPayload } from "../../../shared/utility";
 
 const ViewAndEditClassroom = props => {
   let { id } = useParams();
   const {
     getOneClassroom,
+    updateClassroom,
     manageClassroomStudents,
     location,
     classroom,
@@ -26,7 +27,7 @@ const ViewAndEditClassroom = props => {
   const [domReady, setDomReady] = useState(false);
   //Incharge of handeling the student groups toggle
   const [switchToggle, setswitchToggle] = useState(false);
-  
+
   //Editable state fields
   const [updateClassroomForm, setupdateClassroomForm] = useState({
     client_id: {
@@ -213,7 +214,11 @@ const ViewAndEditClassroom = props => {
     </div>
   );
 
-  if (!isLoaded(clients, teachers, students) && !domReady && updateClassroomInfo.code_classroom.value === "") {
+  if (
+    !isLoaded(clients, teachers, students) &&
+    !domReady &&
+    updateClassroomInfo.code_classroom.value === ""
+  ) {
     history.push({ state: { getAllClassrooms: false } });
     return loadingDom;
   }
@@ -327,15 +332,16 @@ const ViewAndEditClassroom = props => {
       handleNav();
     } else if (action === "activate") {
       console.log("activate");
-      // const payload = stateToPayload(updateClassroomForm);
-      // props.createClassroom(payload);
+      const payload = stateToPayload(updateClassroomForm);
+      console.log('container payload',payload);
+      updateClassroom({...payload, id: id.replace(":","")});
     } else if (action === "update") {
       console.log("update");
       // const payload = stateToPayload(updateClassroomForm);
       // props.createClassroom(payload);
     } else if (action === "save") {
       console.log("save", payload);
-      manageClassroomStudents({...payload, id: id.replace(':',"")})
+      manageClassroomStudents({ ...payload, id: id.replace(":", "") });
     }
   };
 
@@ -421,7 +427,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getOneClassroom: payload => dispatch(actions.getOneClassroom(payload)),
-    manageClassroomStudents: payload => dispatch(actions.manageClassroomStudents(payload))
+    updateClassroom : payload => dispatch(actions.updateClassroom(payload)),
+    manageClassroomStudents: payload =>
+      dispatch(actions.manageClassroomStudents(payload))
   };
 };
 

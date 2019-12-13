@@ -25,6 +25,13 @@ export const classroomSuccess = (missingFields, code) => {
   };
 };
 
+export const classroomUpdateSuccess = missingFields => {
+  return {
+    type: actionTypes.CLASSROOM_UPDATE_SUCCESS,
+    missingFields: missingFields
+  };
+};
+
 export const classroomManageStudentsSuccess = () => {
   return {
     type: actionTypes.CLASSROOM_MANAGE_STUDENTS_SUCCESS
@@ -190,6 +197,95 @@ export const createClassroom = payload => {
               message: "Unkown error, Contact support"
             };
             dispatch(classroomFail(unknownError));
+          }
+        })
+        .catch(error => {
+          console.log(error.response);
+          dispatch(
+            classroomFail(
+              error.response.data.error != null
+                ? error.response.data.error
+                : error.response.data
+            )
+          );
+        });
+    }
+  };
+};
+
+export const updateClassroom = payload => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const currentState = getState();
+    dispatch(classroomStart("create"));
+
+    let error;
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(classroomFail(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      //Creates headers
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentState.auth.token.token}`
+      };
+
+      // In order to active the course, this missing fields must be empty
+      let extractMissingFields = {};
+      let noMissingFields = [];
+
+      // add the teachers id to payload
+      let newPayload = { teacher_id: currentState.firebase.auth.uid };
+      Object.keys(payload).forEach(fields => {
+        // eslint-disable-next-line
+
+        //Retrieved the missing fields to return to the teacher on empty creation
+        extractMissingFields = {
+          ...extractMissingFields,
+          [fields]: payload[fields] === "no-touch" ? true : false
+        };
+
+        //logic to check how many empty fiels exist
+        if (payload[fields] !== "no-touch") {
+          noMissingFields.push("a");
+        }
+        newPayload = {
+          ...newPayload,
+          [fields]:
+            payload[fields] === "no-touch" ? null : payload[fields]
+        };
+      });
+
+      // if no missing fields exists this replaces the missing fields object
+      if (noMissingFields.length === 6) {
+        extractMissingFields = { noMissingFields: true };
+      }
+      //deletes null fields in object
+      Object.keys(newPayload).forEach(field => {
+        if (newPayload[field] == null) {
+          delete newPayload[field];
+        }
+      });
+
+      //Replaces the payload for better code reading
+      payload = newPayload;
+      console.log("payload", payload);
+      console.log("extractMissingFields", extractMissingFields);
+      //Creating course in backend
+      axios
+        .post("/update-classroom", payload, { headers: headers })
+        .then(response => {
+          if (response.status === 200) {
+            dispatch(classroomUpdateSuccess(extractMissingFields));
+          } else {
+            const unknownError = {
+              code: "create-classroom-error",
+              message: "Unkown error, Contact support"
+            };
+            dispatch(classroomFail(unknownError,currentState.classrooms.classroom,currentState.classrooms.classrooms));
           }
         })
         .catch(error => {

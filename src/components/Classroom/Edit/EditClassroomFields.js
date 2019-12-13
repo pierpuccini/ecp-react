@@ -1,5 +1,5 @@
 /* React Imports */
-import React from "react";
+import React, { useState } from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -110,6 +110,14 @@ const EditClassroomFields = props => {
     toggleButtonChangedHandler,
     sliderChangedHandler
   } = props;
+
+  const [activateOrSave] = useState(
+    updateClassroomForm.group_size.value !== "" &&
+      updateClassroomForm.challenge_duration.value !== "" &&
+      updateClassroomForm.initial_coins.value !== ""
+      ? "save"
+      : "activate"
+  );
 
   const marks = [
     {
@@ -357,7 +365,7 @@ const EditClassroomFields = props => {
             }}
             size="small"
           >
-            Activate
+            {activateOrSave}
           </Button>
         </div>
       </div>

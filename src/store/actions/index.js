@@ -19,6 +19,7 @@ export {
   createClassroom,
   resetCreateClassroom,
   addClassroom,
+  updateClassroom,
   manageClassroomStudents,
   getAllMyClassrooms,
   getOneClassroom,
