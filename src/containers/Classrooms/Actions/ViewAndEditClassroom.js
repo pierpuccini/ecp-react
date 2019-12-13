@@ -354,12 +354,7 @@ const ViewAndEditClassroom = props => {
     } else if (action === "activate") {
       const payload = stateToPayload(updateClassroomForm);
       updateClassroom({ ...payload, id: id.replace(":", "") });
-    } else if (action === "update") {
-      console.log("update");
-      // const payload = stateToPayload(updateClassroomForm);
-      // props.createClassroom(payload);
     } else if (action === "save") {
-      console.log("save", payload);
       manageClassroomStudents({ ...payload, id: id.replace(":", "") });
     }
   };
