@@ -165,7 +165,8 @@ export const createClassroom = payload => {
                 {
                   code_classroom: response.data.code_classroom,
                   subject_id: response.data.subject_id,
-                  id: response.data.id
+                  id: response.data.id,
+                  active: payload.length > 4 ? true : false
                 }
               ];
               firestore
