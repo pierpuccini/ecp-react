@@ -23,6 +23,17 @@ import Logo from "../../UI/Logo/Logo";
 import CodeCopy from "../../UI/SpecialFields/CodeCopy";
 
 const useStyles = makeStyles(theme => ({
+  infoContainer: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    justifyContent: "space-between"
+  },
+  fieldsContainer: {
+    [theme.breakpoints.up("md")]: {
+      height: "100%"
+    }
+  },
   requieredFields: {
     margin: theme.spacing(2, 0)
   },
@@ -46,7 +57,10 @@ const useStyles = makeStyles(theme => ({
   },
   formActions: {
     display: "flex",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    [theme.breakpoints.down("md")]: {
+      margin: theme.spacing(2, 0)
+    }
   },
   positiveActions: {
     display: "flex",
@@ -146,7 +160,7 @@ const EditClassroomFields = props => {
   ];
 
   return (
-    <div>
+    <div className={classes.infoContainer}>
       <div className={classes.formHeader}>
         <IconButton
           size="small"
@@ -161,176 +175,178 @@ const EditClassroomFields = props => {
           Return to classroom List
         </Typography>
       </div>
-      <div className={classes.requieredFields}>
-        <TextField
-          className={classes.institutionsField}
-          label="Institution"
-          placeholder="Select Your Institution"
-          type="text"
-          margin="normal"
-          variant="outlined"
-          value={updateClassroomForm.client_id.value}
-          onChange={event => inputChangedHandler(event, "client_id")}
-          helperText={
-            !updateClassroomForm.client_id.valid &&
-            updateClassroomForm.client_id.touched
-              ? "*Please Select you Institution"
-              : "Select you Institution"
-          }
-          error={
-            !updateClassroomForm.client_id.valid &&
-            updateClassroomForm.client_id.touched
-          }
-          select
-          required
-        >
-          {institutions.map(option => (
-            <MenuItem
-              className={classes.MuiMenuList}
-              key={option.id}
-              value={option.id}
-            >
-              {option.value}
-            </MenuItem>
-          ))}
-        </TextField>
-        <div className={classes.codeAndNameContainer}>
+      <div className={classes.fieldsContainer}>
+        <div className={classes.requieredFields}>
           <TextField
-            className={classes.textField}
-            style={{ width: "-webkit-fill-available" }}
-            value={updateClassroomForm.subject_id.value}
-            onChange={event => inputChangedHandler(event, "subject_id")}
-            label="Class Code"
-            placeholder="3752"
-            type="number"
-            margin="normal"
-            helperText={
-              !updateClassroomForm.subject_id.valid &&
-              updateClassroomForm.subject_id.touched
-                ? "*Please Enter your internal classcode"
-                : "Enter your internal classcode"
-            }
-            error={
-              !updateClassroomForm.subject_id.valid &&
-              updateClassroomForm.subject_id.touched
-            }
-            variant="outlined"
-            required
-          />
-          <TextField
-            className={classes.textField}
-            style={{ width: "-webkit-fill-available" }}
-            value={updateClassroomForm.subject_name.value}
-            onChange={event => inputChangedHandler(event, "subject_name")}
-            label="Classroom Name"
-            placeholder="Control"
+            className={classes.institutionsField}
+            label="Institution"
+            placeholder="Select Your Institution"
             type="text"
             margin="normal"
+            variant="outlined"
+            value={updateClassroomForm.client_id.value}
+            onChange={event => inputChangedHandler(event, "client_id")}
             helperText={
-              !updateClassroomForm.subject_name.valid &&
-              updateClassroomForm.subject_name.touched
-                ? "*Please Enter your Classroom name"
-                : "Ex. Math, History etc..."
+              !updateClassroomForm.client_id.valid &&
+              updateClassroomForm.client_id.touched
+                ? "*Please Select you Institution"
+                : "Select you Institution"
             }
             error={
-              !updateClassroomForm.subject_name.valid &&
-              updateClassroomForm.subject_name.touched
+              !updateClassroomForm.client_id.valid &&
+              updateClassroomForm.client_id.touched
             }
-            variant="outlined"
+            select
             required
-          />
-        </div>
-      </div>
-      <div className={classes.classCodeContainer}>
-        <CodeCopy
-          value={updateClassroomInfo.code_classroom}
-          label="Class Code"
-          helper="Share code with students"
-        />
-      </div>
-      <Typography style={{ margin: "8px 16px 8px 0px" }}>
-        Additional Classroom Info
-      </Typography>
-      <div className={classes.AdditionalInfoContainer}>
-        <div className={classes.switchContainer}>
-          <div className={classes.switch}>
-            <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
-            <FormControlLabel
-              className={classes.switchFormLabel}
-              control={
-                <Switch
-                  value={switchToggle}
-                  color="primary"
-                  onChange={event => {
-                    toggleSwitchHandler(event);
-                  }}
-                />
-              }
-              labelPlacement="start"
-              label="Student Groups"
-            />
-          </div>
-          <Collapse
-            in={switchToggle}
-            timeout="auto"
-            style={{ justifyContent: "center", display: "flex" }}
           >
-            <Typography gutterBottom>Group Size</Typography>
-            <ToggleButtonGroup
-              value={updateClassroomForm.group_size.value}
-              onChange={(event, value) => {
-                toggleButtonChangedHandler(event, value);
-              }}
-              exclusive
-            >
-              {children}
-            </ToggleButtonGroup>
-          </Collapse>
-        </div>
-        <div className={classes.sliderContainer}>
-          <div className={classes.typographyAndIcon}>
-            <TimerOutlinedIcon />
-            <Typography
-              style={{ alignSelf: "center", marginLeft: "16px" }}
-              gutterBottom
-            >
-              Default Time Per Challenge
-            </Typography>
-          </div>
-          <div className={classes.slider}>
-            <Slider
-              defaultValue={15}
-              value={updateClassroomForm.challenge_duration.value}
-              valueLabelDisplay="auto"
-              onChange={(event, value) => {
-                sliderChangedHandler(event, value);
-              }}
-              step={5}
-              marks={marks}
-              min={10}
-              max={60}
+            {institutions.map(option => (
+              <MenuItem
+                className={classes.MuiMenuList}
+                key={option.id}
+                value={option.id}
+              >
+                {option.value}
+              </MenuItem>
+            ))}
+          </TextField>
+          <div className={classes.codeAndNameContainer}>
+            <TextField
+              className={classes.textField}
+              style={{ width: "-webkit-fill-available" }}
+              value={updateClassroomForm.subject_id.value}
+              onChange={event => inputChangedHandler(event, "subject_id")}
+              label="Class Code"
+              placeholder="3752"
+              type="number"
+              margin="normal"
+              helperText={
+                !updateClassroomForm.subject_id.valid &&
+                updateClassroomForm.subject_id.touched
+                  ? "*Please Enter your internal classcode"
+                  : "Enter your internal classcode"
+              }
+              error={
+                !updateClassroomForm.subject_id.valid &&
+                updateClassroomForm.subject_id.touched
+              }
+              variant="outlined"
+              required
+            />
+            <TextField
+              className={classes.textField}
+              style={{ width: "-webkit-fill-available" }}
+              value={updateClassroomForm.subject_name.value}
+              onChange={event => inputChangedHandler(event, "subject_name")}
+              label="Classroom Name"
+              placeholder="Control"
+              type="text"
+              margin="normal"
+              helperText={
+                !updateClassroomForm.subject_name.valid &&
+                updateClassroomForm.subject_name.touched
+                  ? "*Please Enter your Classroom name"
+                  : "Ex. Math, History etc..."
+              }
+              error={
+                !updateClassroomForm.subject_name.valid &&
+                updateClassroomForm.subject_name.touched
+              }
+              variant="outlined"
+              required
             />
           </div>
         </div>
-        <div className={classes.coinInput}>
-          <TextField
-            className={classes.textField}
-            label="Initial Coins"
-            placeholder="5000"
-            type="number"
-            value={updateClassroomForm.initial_coins.value}
-            onChange={event => {
-              inputChangedHandler(event, "initial_coins");
-            }}
-            margin="normal"
-            variant="outlined"
-            required
-            style={{ width: "190px" }}
-            InputProps={{
-              inputProps: { min: 0 },
-              endAdornment: <Logo height="56px" />
-            }}
+        <div className={classes.classCodeContainer}>
+          <CodeCopy
+            value={updateClassroomInfo.code_classroom}
+            label="Class Code"
+            helper="Share code with students"
           />
+        </div>
+        <Typography style={{ margin: "8px 16px 8px 0px" }}>
+          Additional Classroom Info
+        </Typography>
+        <div className={classes.AdditionalInfoContainer}>
+          <div className={classes.switchContainer}>
+            <div className={classes.switch}>
+              <PeopleAltOutlinedIcon style={{ alignSelf: "center" }} />
+              <FormControlLabel
+                className={classes.switchFormLabel}
+                control={
+                  <Switch
+                    value={switchToggle}
+                    color="primary"
+                    onChange={event => {
+                      toggleSwitchHandler(event);
+                    }}
+                  />
+                }
+                labelPlacement="start"
+                label="Student Groups"
+              />
+            </div>
+            <Collapse
+              in={switchToggle}
+              timeout="auto"
+              style={{ justifyContent: "center", display: "flex" }}
+            >
+              <Typography gutterBottom>Group Size</Typography>
+              <ToggleButtonGroup
+                value={updateClassroomForm.group_size.value}
+                onChange={(event, value) => {
+                  toggleButtonChangedHandler(event, value);
+                }}
+                exclusive
+              >
+                {children}
+              </ToggleButtonGroup>
+            </Collapse>
+          </div>
+          <div className={classes.sliderContainer}>
+            <div className={classes.typographyAndIcon}>
+              <TimerOutlinedIcon />
+              <Typography
+                style={{ alignSelf: "center", marginLeft: "16px" }}
+                gutterBottom
+              >
+                Default Time Per Challenge
+              </Typography>
+            </div>
+            <div className={classes.slider}>
+              <Slider
+                defaultValue={15}
+                value={updateClassroomForm.challenge_duration.value}
+                valueLabelDisplay="auto"
+                onChange={(event, value) => {
+                  sliderChangedHandler(event, value);
+                }}
+                step={5}
+                marks={marks}
+                min={10}
+                max={60}
+              />
+            </div>
+          </div>
+          <div className={classes.coinInput}>
+            <TextField
+              className={classes.textField}
+              label="Initial Coins"
+              placeholder="5000"
+              type="number"
+              value={updateClassroomForm.initial_coins.value}
+              onChange={event => {
+                inputChangedHandler(event, "initial_coins");
+              }}
+              margin="normal"
+              variant="outlined"
+              required
+              style={{ width: "190px" }}
+              InputProps={{
+                inputProps: { min: 0 },
+                endAdornment: <Logo height="56px" />
+              }}
+            />
+          </div>
         </div>
       </div>
       <div className={classes.formActions}>
