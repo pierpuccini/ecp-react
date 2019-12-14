@@ -258,6 +258,9 @@ const ViewAndEditClassroom = props => {
         usersObj.push({ id: userId, name: foundUser.displayName });
       }
     });
+    if (usersObj.length === 1) {
+      usersObj = usersObj[0]
+    }
     return usersObj;
   };
 
