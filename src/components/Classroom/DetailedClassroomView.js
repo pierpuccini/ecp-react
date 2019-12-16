@@ -1,5 +1,5 @@
 /* React imports */
-import React from "react";
+import React, { useState, useEffect } from "react";
 /* Material imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -90,11 +90,24 @@ const DetailedClassroomView = props => {
     toggleSwitchHandler,
     toggleButtonChangedHandler,
     sliderChangedHandler,
-    pendingStudents,
-    activeStudents
+    pending_students,
+    active_students
   } = props;
 
-  //Creacts a valid field object
+  const [pendingStudents, setpendingStudents] = useState([...pending_students]);
+  const [activeStudents, setactiveStudents] = useState([...active_students]);
+  const [deletedStudents, setdeletedStudents] = useState([]);
+
+  useEffect(() => {
+    if (pending_students.length > 0) {
+      setpendingStudents([...pending_students]);
+    }
+    if (active_students.length > 0) {
+      setactiveStudents([...active_students]);
+    }
+  }, [pending_students, active_students]);
+
+  /* Creacts a valid field object */
   let updateClassroomFormArr = Object.keys(updateClassroomForm).map(
     controlName => {
       return {
@@ -110,7 +123,6 @@ const DetailedClassroomView = props => {
   });
   validFields = Object.assign({}, ...validFields);
 
-  let payload;
   const actionsPicker = type => {
     switch (type) {
       case "info":
@@ -142,7 +154,11 @@ const DetailedClassroomView = props => {
             color="primary"
             className={classes.button}
             onClick={() => {
-              buttonClickHandler("save", payload);
+              buttonClickHandler("save", {
+                pending_students: pendingStudents,
+                active_students: activeStudents,
+                deleted_students: deletedStudents
+              });
             }}
             size="small"
           >
@@ -178,7 +194,12 @@ const DetailedClassroomView = props => {
         pending_students={pendingStudents}
         active_students={activeStudents}
         buttonClickHandler={buttonClickHandler}
-        payload={payload}
+        pendingStudents={pendingStudents}
+        setpendingStudents={setpendingStudents}
+        activeStudents={activeStudents}
+        setactiveStudents={setactiveStudents}
+        deletedStudents={deletedStudents}
+        setdeletedStudents={setdeletedStudents}
       />
     );
   } else if (view) {

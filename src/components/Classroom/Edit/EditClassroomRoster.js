@@ -1,5 +1,5 @@
 /* React Imports */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 /* Material imports */
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -79,24 +79,18 @@ const EditClassroomRoster = props => {
   const classes = useStyles();
   const isTablet = useMediaQuery("(min-width: 959px)");
 
-  const { pending_students, active_students } = props;
+  const {
+    pendingStudents,
+    setpendingStudents,
+    activeStudents,
+    setactiveStudents,
+    setdeletedStudents
+  } = props;
 
   const [checked, setChecked] = useState([]);
-  const [pendingStudents, setpendingStudents] = useState([...pending_students]);
-  const [activeStudents, setactiveStudents] = useState([...active_students]);
-  const [deletedStudents, setdeletedStudents] = useState([]);
 
   const pendingStudentsChecked = intersection(checked, pendingStudents);
   const activeStudentsChecked = intersection(checked, activeStudents);
-
-  useEffect(() => {
-    if (pending_students.length > 0) {
-      setpendingStudents([...pending_students]);
-    }
-    if (active_students.length > 0) {
-      setactiveStudents([...active_students]);
-    }
-  }, [pending_students, active_students]);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -107,7 +101,6 @@ const EditClassroomRoster = props => {
     } else {
       newChecked.splice(currentIndex, 1);
     }
-
     setChecked(newChecked);
   };
 

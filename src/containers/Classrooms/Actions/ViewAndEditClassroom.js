@@ -419,11 +419,11 @@ const ViewAndEditClassroom = props => {
         buttonClickHandler={editViewActions}
         toggleButtonChangedHandler={classroomToggleButtonHandler}
         sliderChangedHandler={classroomSliderHandler}
-        pendingStudents={userObjCreator(
+        pending_students={userObjCreator(
           classroom.pending_students == null ? [] : classroom.pending_students,
           students
         )}
-        activeStudents={userObjCreator(
+        active_students={userObjCreator(
           classroom.active_students == null ? [] : classroom.active_students,
           students
         )}
