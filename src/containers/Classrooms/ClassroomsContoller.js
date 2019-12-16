@@ -125,62 +125,6 @@ const ClassroomController = props => {
     }
   });
 
-  /* Use efect handles async loading for loader */
-  // Fetches new course on load and gets the firebase classrooms loaded only once
-  useEffect(() => {
-    async function getMyClassrooms() {
-      await getAllMyClassrooms({
-        role: role,
-        uid: userId,
-        page: classroomPage
-      });
-    }
-    getMyClassrooms()
-      .then(() => {
-        setDomReady(true);
-      })
-      .catch(err => {
-        console.log("err", err);
-      });
-
-    /* MISSING DEP: getAllMyClassrooms, role, userId, firebaseClassrooms */
-    // eslint-disable-next-line
-  }, []);
-
-  /* Fetches a new course when created */
-  useEffect(() => {
-    async function getMyClassrooms() {
-      await getAllMyClassrooms({
-        role: role,
-        uid: userId,
-        page: classroomPage
-      });
-    }
-    if (
-      oldClasscount !== firebaseClassrooms.length ||
-      deleteSuccess ||
-      restoreSuccess ||
-      location.pathname.match("/classrooms")
-    ) {
-      getMyClassrooms()
-        .then(() => {
-          setDomReady(true);
-          setoldClasscount(firebaseClassrooms.length);
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-    }
-    /* MISSING DEP: getAllMyClassrooms, role, userId */
-    // eslint-disable-next-line
-  }, [
-    oldClasscount,
-    firebaseClassrooms,
-    location,
-    deleteSuccess,
-    restoreSuccess
-  ]);
-
   /* Use efect handles local component routing */
   useEffect(() => {
     const parsedPath = location.pathname.replace("/", "").split("/");
@@ -290,7 +234,81 @@ const ClassroomController = props => {
     </div>
   );
 
-  if (!isLoaded(clients, teachers, students) && domReady) {
+  /* Use efect handles async loading for loader */
+  // Fetches new course on load and gets the firebase classrooms loaded only once
+  useEffect(() => {
+    if (isLoaded(clients, teachers, students)) {
+      async function getMyClassrooms() {
+        await getAllMyClassrooms({
+          role: role,
+          uid: userId,
+          page: classroomPage
+        });
+      }
+      getMyClassrooms()
+        .then(() => {
+          setDomReady(true);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    }
+    /* MISSING DEP: getAllMyClassrooms, role, userId, firebaseClassrooms */
+    // eslint-disable-next-line
+  }, [clients, teachers, students]);
+
+  /* Fetches a new course when created */
+  useEffect(() => {
+    async function getMyClassrooms() {
+      await getAllMyClassrooms({
+        role: role,
+        uid: userId,
+        page: classroomPage
+      });
+    }
+    if (oldClasscount !== firebaseClassrooms.length) {
+      console.log('count check')
+      getMyClassrooms()
+        .then(() => {
+          setDomReady(true);
+          setoldClasscount(firebaseClassrooms.length);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    }
+    if (deleteSuccess) {
+      console.log('delete')
+      getMyClassrooms()
+        .then(() => {
+          setDomReady(true);
+          setoldClasscount(firebaseClassrooms.length);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    }
+    if (restoreSuccess) {
+      console.log('restore')
+      getMyClassrooms()
+        .then(() => {
+          setDomReady(true);
+          setoldClasscount(firebaseClassrooms.length);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    }
+    /* MISSING DEP: classroomPage, getAllMyClassrooms, role, userId */
+    // eslint-disable-next-line
+  }, [
+    oldClasscount,
+    firebaseClassrooms,
+    deleteSuccess,
+    restoreSuccess
+  ]);
+  
+  if (!isLoaded(clients, teachers, students) && !domReady) {
     return loadingDom;
   }
 
