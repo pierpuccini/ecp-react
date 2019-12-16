@@ -202,13 +202,17 @@ export const createClassroom = payload => {
         })
         .catch(error => {
           console.log(error.response);
-          dispatch(
-            classroomFail(
+
+          if (error.response == null) {
+            error = { message: "Server Error, contact support" };
+          } else {
+            error =
               error.response.data.error != null
                 ? error.response.data.error
-                : error.response.data
-            )
-          );
+                : error.response.data;
+          }
+
+          dispatch(classroomFail(error));
         });
     }
   };
@@ -255,8 +259,7 @@ export const updateClassroom = payload => {
         }
         newPayload = {
           ...newPayload,
-          [fields]:
-            payload[fields] === "no-touch" ? null : payload[fields]
+          [fields]: payload[fields] === "no-touch" ? null : payload[fields]
         };
       });
 
@@ -285,18 +288,28 @@ export const updateClassroom = payload => {
               code: "create-classroom-error",
               message: "Unkown error, Contact support"
             };
-            dispatch(classroomFail(unknownError,currentState.classrooms.classroom,currentState.classrooms.classrooms));
+            dispatch(
+              classroomFail(
+                unknownError,
+                currentState.classrooms.classroom,
+                currentState.classrooms.classrooms
+              )
+            );
           }
         })
         .catch(error => {
           console.log(error.response);
-          dispatch(
-            classroomFail(
+
+          if (error.response == null) {
+            error = { message: "Server Error, contact support" };
+          } else {
+            error =
               error.response.data.error != null
                 ? error.response.data.error
-                : error.response.data
-            )
-          );
+                : error.response.data;
+          }
+
+          dispatch(classroomFail(error));
         });
     }
   };
@@ -342,13 +355,16 @@ export const addClassroom = payload => {
           }
         })
         .catch(error => {
-          dispatch(
-            classroomFail(
+          if (error.response == null) {
+            error = { message: "Server Error, contact support" };
+          } else {
+            error =
               error.response.data.error != null
                 ? error.response.data.error
-                : error.response.data
-            )
-          );
+                : error.response.data;
+          }
+
+          dispatch(classroomFail(error));
         });
     }
   };
@@ -393,13 +409,17 @@ export const getAllMyClassrooms = payload => {
         })
         .catch(error => {
           console.log(error.response);
-          dispatch(
-            classroomFail(
+
+          if (error.response == null) {
+            error = { message: "Server Error, contact support" };
+          } else {
+            error =
               error.response.data.error != null
                 ? error.response.data.error
-                : error.response.data
-            )
-          );
+                : error.response.data;
+          }
+
+          dispatch(classroomFail(error));
         });
     }
   };
@@ -445,13 +465,17 @@ export const getOneClassroom = payload => {
         })
         .catch(error => {
           console.log(error.response);
-          dispatch(
-            classroomFail(
+
+          if (error.response == null) {
+            error = { message: "Server Error, contact support" };
+          } else {
+            error =
               error.response.data.error != null
                 ? error.response.data.error
-                : error.response.data
-            )
-          );
+                : error.response.data;
+          }
+
+          dispatch(classroomFail(error));
         });
     }
   };
@@ -550,14 +574,16 @@ export const restoreClassroom = classroomId => {
           dispatch(restoreClassroomSuccess());
         })
         .catch(error => {
-          console.log(error.response);
-          dispatch(
-            classroomFail(
+          if (error.response == null) {
+            error = { message: "Server Error, contact support" };
+          } else {
+            error =
               error.response.data.error != null
                 ? error.response.data.error
-                : error.response.data
-            )
-          );
+                : error.response.data;
+          }
+
+          dispatch(classroomFail(error));
         });
     }
   };
@@ -590,13 +616,16 @@ export const deleteClassroom = classroomId => {
         })
         .catch(error => {
           console.log(error.response);
-          dispatch(
-            classroomFail(
+          if (error.response == null) {
+            error = { message: "Server Error, contact support" };
+          } else {
+            error =
               error.response.data.error != null
                 ? error.response.data.error
-                : error.response.data
-            )
-          );
+                : error.response.data;
+          }
+
+          dispatch(classroomFail(error));
         });
     }
   };
