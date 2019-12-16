@@ -229,6 +229,7 @@ const DetailedClassroomView = props => {
         <ExpansionPanel
           defaultExpanded
           className={classes.expandableContentCards}
+          TransitionProps={{ unmountOnExit: true }}
         >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
@@ -263,6 +264,7 @@ const DetailedClassroomView = props => {
         <ExpansionPanel
           defaultExpanded={isTablet}
           className={classes.expandableContentCards}
+          TransitionProps={{ unmountOnExit: true }}
         >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
@@ -294,7 +296,11 @@ const DetailedClassroomView = props => {
             </React.Fragment>
           ) : null}
         </ExpansionPanel>
-        <ExpansionPanel className={classes.expandableContentCards} disabled>
+        <ExpansionPanel
+          className={classes.expandableContentCards}
+          TransitionProps={{ unmountOnExit: true }}
+          disabled
+        >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1c-content"
