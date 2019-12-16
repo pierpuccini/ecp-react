@@ -458,11 +458,8 @@ const ClassroomController = props => {
         </Paper>
         {classrooms.data.map(classroom => {
           //Checks if classroom is active in firebase
-          console.log(activeClassroom)
           let isClassroomActive = activeClassroom.find(
-            fbClassroom => {
-              console.log(fbClassroom)
-              return fbClassroom.id === Number(classroom.id)}
+            fbClassroom => fbClassroom.id === Number(classroom.id)
           );
 
           //Variables to search in data from FB
