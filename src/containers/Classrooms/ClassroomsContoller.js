@@ -97,12 +97,9 @@ const ClassroomController = props => {
     loading,
     getAllMyClassrooms,
     classrooms,
-    firebaseClassrooms,
     addClassroom,
     deleteClassroom,
     restoreClassroom,
-    deleteSuccess,
-    restoreSuccess,
     activeClassroom
   } = props;
 
@@ -112,7 +109,6 @@ const ClassroomController = props => {
   const [openAddClassModal, setopenAddClassModal] = useState(false);
   const [classroomPage, setclassroomPage] = useState(1);
   const [ininiteLoader, setinfiniteLoader] = useState(false);
-  const [oldClasscount, setoldClasscount] = useState(firebaseClassrooms.length);
   const [addClassroomForm, setaddClassroomForm] = useState({
     linkCode: {
       value: "",
@@ -256,57 +252,6 @@ const ClassroomController = props => {
     /* MISSING DEP: getAllMyClassrooms, role, userId, firebaseClassrooms */
     // eslint-disable-next-line
   }, [clients, teachers, students]);
-
-  /* Fetches a new course when created */
-  useEffect(() => {
-    async function getMyClassrooms() {
-      await getAllMyClassrooms({
-        role: role,
-        uid: userId,
-        page: classroomPage
-      });
-    }
-    if (oldClasscount !== firebaseClassrooms.length) {
-      console.log('count check')
-      getMyClassrooms()
-        .then(() => {
-          setDomReady(true);
-          setoldClasscount(firebaseClassrooms.length);
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-    }
-    if (deleteSuccess) {
-      console.log('delete')
-      getMyClassrooms()
-        .then(() => {
-          setDomReady(true);
-          setoldClasscount(firebaseClassrooms.length);
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-    }
-    if (restoreSuccess) {
-      console.log('restore')
-      getMyClassrooms()
-        .then(() => {
-          setDomReady(true);
-          setoldClasscount(firebaseClassrooms.length);
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-    }
-    /* MISSING DEP: classroomPage, getAllMyClassrooms, role, userId */
-    // eslint-disable-next-line
-  }, [
-    oldClasscount,
-    firebaseClassrooms,
-    deleteSuccess,
-    restoreSuccess
-  ]);
   
   if (!isLoaded(clients, teachers, students) && !domReady) {
     return loadingDom;
@@ -511,13 +456,10 @@ const mapStateToProps = state => {
     role: state.firebase.profile.role,
     loading: state.classrooms.loading,
     userId: state.firebase.auth.uid,
-    firebaseClassrooms: state.firebase.profile.classrooms,
     classrooms:
       state.classrooms.classrooms == null
         ? { data: [] }
         : state.classrooms.classrooms,
-    deleteSuccess: state.classrooms.deleteSuccess,
-    restoreSuccess: state.classrooms.restoreSuccess,
     activeClassroom: state.firebase.profile.classrooms
   };
 };
