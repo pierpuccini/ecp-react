@@ -25,10 +25,11 @@ export const classroomSuccess = (missingFields, code) => {
   };
 };
 
-export const classroomUpdateSuccess = missingFields => {
+export const classroomUpdateSuccess = (missingFields, classrooms) => {
   return {
     type: actionTypes.CLASSROOM_UPDATE_SUCCESS,
-    missingFields: missingFields
+    missingFields: missingFields,
+    classrooms: classrooms
   };
 };
 
@@ -46,11 +47,12 @@ export const getAllClassroomSuccess = (classrooms, loading) => {
   };
 };
 
-export const getClassroomSuccess = (classroom, classrooms) => {
+export const getClassroomSuccess = (classroom, classrooms, updateSuccess) => {
   return {
     type: actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS,
     classroom: classroom,
-    classrooms: classrooms
+    classrooms: classrooms,
+    updateSuccess: updateSuccess
   };
 };
 
@@ -219,9 +221,9 @@ export const createClassroom = payload => {
 };
 
 export const updateClassroom = payload => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+  return (dispatch, getState) => {
     const currentState = getState();
-    dispatch(classroomStart("update"));
+    dispatch(classroomStart());
 
     let error;
     // Verifies that the token was properly recieved
@@ -282,7 +284,12 @@ export const updateClassroom = payload => {
         .post("/update-classroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            dispatch(classroomUpdateSuccess(extractMissingFields));
+            dispatch(
+              classroomUpdateSuccess(
+                extractMissingFields,
+                currentState.classrooms.classrooms
+              )
+            );
           } else {
             const unknownError = {
               code: "create-classroom-error",
@@ -452,7 +459,8 @@ export const getOneClassroom = payload => {
             dispatch(
               getClassroomSuccess(
                 response.data.classroom,
-                currentState.classrooms.classrooms
+                currentState.classrooms.classrooms,
+                currentState.classrooms.updateSuccess
               )
             );
           } else {
@@ -611,7 +619,7 @@ export const deleteClassroom = classroomId => {
       const url = `/delete-classroom/${classroomId}/${currentState.firebase.profile.role}`;
       axios
         .delete(url, { headers: headers })
-        .then(response => {
+        .then(() => {
           dispatch(deleteClassroomSuccess());
         })
         .catch(error => {

@@ -33,7 +33,7 @@ const classroomFail = (state, action) => {
     error: action.error,
     success: false,
     classroom: action.classroom,
-    classrooms: action.classrooms,
+    classrooms: action.classrooms
   });
 };
 
@@ -52,7 +52,9 @@ const classroomUpdateSuccess = (state, action) => {
     loading: false,
     error: null,
     missingFields: action.missingFields,
-    success: true
+    updateSuccess: true,
+    success: true,
+    classrooms: action.classrooms
   });
 };
 
@@ -77,7 +79,8 @@ const getClassroomSuccess = (state, action) => {
     loading: false,
     error: null,
     classroom: action.classroom,
-    classrooms: action.classrooms
+    classrooms: action.classrooms,
+    updateSuccess: action.updateSuccess
   });
 };
 
@@ -116,17 +119,28 @@ const resetFetchClassroom = state => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.CLASSROOM_ACTIONS_START: return classroomStart(state, action);
-    case actionTypes.CLASSROOM_ACTIONS_FAILED: return classroomFail(state, action);
-    case actionTypes.CLASSROOM_ACTIONS_SUCCESS: return classroomSuccess(state, action);
-    case actionTypes.CLASSROOM_UPDATE_SUCCESS: return classroomUpdateSuccess(state, action);
-    case actionTypes.CLASSROOM_MANAGE_STUDENTS_SUCCESS: return classroomManageStudentsSuccess(state, action);
-    case actionTypes.CLASSROOM_RESTORE_SUCCESS: return restoreClassroomSuccess(state, action);
-    case actionTypes.CLASSROOM_DELETE_SUCCESS: return deleteClassroomSuccess(state, action);
-    case actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS: return getClassroomSuccess(state, action);
-    case actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS: return getAllClassroomSuccess(state, action);
-    case actionTypes.CLASSROOM_ACTIONS_FETCH_RESET: return resetFetchClassroom(state, action);
-    case actionTypes.CLASSROOM_ACTIONS_CREATE_RESET: return resetCreateClassroom(state, action);
+    case actionTypes.CLASSROOM_ACTIONS_START:
+      return classroomStart(state, action);
+    case actionTypes.CLASSROOM_ACTIONS_FAILED:
+      return classroomFail(state, action);
+    case actionTypes.CLASSROOM_ACTIONS_SUCCESS:
+      return classroomSuccess(state, action);
+    case actionTypes.CLASSROOM_UPDATE_SUCCESS:
+      return classroomUpdateSuccess(state, action);
+    case actionTypes.CLASSROOM_MANAGE_STUDENTS_SUCCESS:
+      return classroomManageStudentsSuccess(state, action);
+    case actionTypes.CLASSROOM_RESTORE_SUCCESS:
+      return restoreClassroomSuccess(state, action);
+    case actionTypes.CLASSROOM_DELETE_SUCCESS:
+      return deleteClassroomSuccess(state, action);
+    case actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS:
+      return getClassroomSuccess(state, action);
+    case actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS:
+      return getAllClassroomSuccess(state, action);
+    case actionTypes.CLASSROOM_ACTIONS_FETCH_RESET:
+      return resetFetchClassroom(state, action);
+    case actionTypes.CLASSROOM_ACTIONS_CREATE_RESET:
+      return resetCreateClassroom(state, action);
     default:
       return state;
   }
