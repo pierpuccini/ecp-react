@@ -9,7 +9,7 @@ import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* App imports */
 import Loader from "../../../components/UI/Loader/PngLoader/PngLoader";
 import FloatingLoader from "../../../components/UI/Loader/FloatingLoader/FloatingLoader";
-import EditClassroom from "../../../components/Classroom/Edit/EditClassroom";
+import DetailedClassroomView from "../../../components/Classroom/DetailedClassroomView";
 import ViewClassroom from "../../../components/Classroom/View/ViewClassroom";
 import {
   updateObject,
@@ -246,7 +246,7 @@ const ViewAndEditClassroom = props => {
   }
 
   /* Transforms user ID's to readable names */
-  const userObjCreator = (usersArray, fbUsers) => {
+  const userObjCreator = (usersArray, fbUsers, teacher) => {
     if (usersArray.length === 0) {
       return [];
     }
@@ -258,8 +258,8 @@ const ViewAndEditClassroom = props => {
         usersObj.push({ id: userId, name: foundUser.displayName });
       }
     });
-    if (usersObj.length === 1) {
-      usersObj = usersObj[0]
+    if (usersObj.length === 1 && teacher) {
+      usersObj = usersObj[0];
     }
     return usersObj;
   };
@@ -408,8 +408,10 @@ const ViewAndEditClassroom = props => {
   let view = "view classroom";
   if (location.pathname.includes("edit")) {
     view = (
-      <EditClassroom
+      <DetailedClassroomView
         navActions={handleNav}
+        view={location.pathname.includes("view")}
+        edit={location.pathname.includes("edit")}
         institutions={role.includes("admin") ? clients : myInstitutions}
         updateClassroomInfo={updateClassroomInfo}
         updateClassroomForm={updateClassroomForm}
@@ -433,7 +435,7 @@ const ViewAndEditClassroom = props => {
         navActions={handleNav}
         institutions={role.includes("admin") ? clients : myInstitutions}
         info={convertStateToInfo()}
-        teacher={userObjCreator([classroom.teacher_id], teachers)}
+        teacher={userObjCreator([classroom.teacher_id], teachers, true)}
         pendingStudents={userObjCreator(
           classroom.pending_students == null ? [] : classroom.pending_students,
           students

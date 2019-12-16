@@ -5,13 +5,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Slider from "@material-ui/core/Slider";
 //Icons
-import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined";
 
@@ -24,21 +21,17 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    [theme.breakpoints.up("md")]: {
-      height: "100%"
-    }
+    width: "100%"
   },
   fieldsContainer: {
-    [theme.breakpoints.up("md")]: {
-      height: "100%"
-    }
+    width: "100%"
   },
   requieredFields: {
     margin: theme.spacing(2, 0)
   },
   institutionsField: {
     width: "-webkit-fill-available",
-    margin: theme.spacing(2, 1)
+    margin: theme.spacing(0, 1)
   },
   codeAndNameContainer: {
     [theme.breakpoints.up("xs")]: {
@@ -60,30 +53,12 @@ const useStyles = makeStyles(theme => ({
       justifyContent: "space-around"
     }
   },
-  formActions: {
-    display: "flex",
-    justifyContent: "space-between",
-    [theme.breakpoints.down("md")]: {
-      margin: theme.spacing(2, 0)
-    }
-  },
-  positiveActions: {
-    display: "flex",
-    justifyContent: "space-between"
-  },
-  negativeActions: {
-    display: "flex",
-    justifyContent: "flex-end"
-  },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1)
   },
   MuiMenuList: {
     width: "auto !important"
-  },
-  formHeader: {
-    display: "flex"
   },
   switch: {
     display: "flex"
@@ -122,12 +97,9 @@ const EditClassroomFields = props => {
 
   const {
     updateClassroomForm,
-    navActions,
     updateClassroomInfo,
     institutions,
     inputChangedHandler,
-    buttonClickHandler,
-    validFields,
     toggleButtonChangedHandler,
     sliderChangedHandler
   } = props;
@@ -160,20 +132,6 @@ const EditClassroomFields = props => {
 
   return (
     <div className={classes.infoContainer}>
-      <div className={classes.formHeader}>
-        <IconButton
-          size="small"
-          style={{ marginRight: "5px" }}
-          onClick={() => {
-            navActions();
-          }}
-        >
-          <ArrowBackIosOutlinedIcon />
-        </IconButton>
-        <Typography style={{ alignSelf: "center" }}>
-          Return to classroom List
-        </Typography>
-      </div>
       <div className={classes.fieldsContainer}>
         <div className={classes.requieredFields}>
           <TextField
@@ -329,42 +287,6 @@ const EditClassroomFields = props => {
               }}
             />
           </div>
-        </div>
-      </div>
-      <div className={classes.formActions}>
-        <div className={classes.negativeActions}>
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={() => {
-              buttonClickHandler("cancel");
-            }}
-            size="small"
-            style={{ backgroundColor: "#f44336", color: "#ffffff" }}
-          >
-            Cancel
-          </Button>
-        </div>
-        <div className={classes.positiveActions}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            disabled={
-              !validFields.client_id ||
-              !validFields.subject_id ||
-              !validFields.subject_name ||
-              !validFields.group_size ||
-              !validFields.challenge_duration ||
-              !validFields.initial_coins
-            }
-            onClick={() => {
-              buttonClickHandler("activate");
-            }}
-            size="small"
-          >
-            save
-          </Button>
         </div>
       </div>
     </div>

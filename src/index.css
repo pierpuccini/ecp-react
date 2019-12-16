@@ -79,3 +79,7 @@ input[type=number] {
 .MuiTabs-flexContainer{
   justify-content: space-between
 }
+
+.MuiExpansionPanel-root::before {
+  height: 0 !important;
+}

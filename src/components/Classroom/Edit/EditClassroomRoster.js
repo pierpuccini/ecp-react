@@ -1,10 +1,9 @@
 /* React Imports */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 /* Material imports */
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -22,19 +21,15 @@ import ArrowForwardOutlinedIcon from "@material-ui/icons/ArrowForwardOutlined";
 import ArrowBackOutlinedIcon from "@material-ui/icons/ArrowBackOutlined";
 import ArrowUpwardOutlinedIcon from "@material-ui/icons/ArrowUpwardOutlined";
 import ArrowDownwardOutlinedIcon from "@material-ui/icons/ArrowDownwardOutlined";
-import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
 
 const useStyles = makeStyles(theme => ({
   rosterContainer: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    [theme.breakpoints.up('md')]:{
-      height: "100%"
+    [theme.breakpoints.up("md")]: {
+      width: "100%"
     }
-  },
-  formHeader: {
-    display: "flex"
   },
   gridContainer: {
     margin: theme.spacing(2),
@@ -84,12 +79,7 @@ const EditClassroomRoster = props => {
   const classes = useStyles();
   const isTablet = useMediaQuery("(min-width: 959px)");
 
-  const {
-    pending_students,
-    active_students,
-    buttonClickHandler,
-    navActions
-  } = props;
+  const { pending_students, active_students, buttonClickHandler } = props;
 
   const [checked, setChecked] = useState([]);
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -98,6 +88,15 @@ const EditClassroomRoster = props => {
 
   const pendingStudentsChecked = intersection(checked, pendingStudents);
   const activeStudentsChecked = intersection(checked, activeStudents);
+
+  useEffect(() => {
+    if (pending_students.length > 0) {
+      setpendingStudents([...pending_students]);
+    }
+    if (active_students.length > 0) {
+      setactiveStudents([...active_students]);
+    }
+  }, [pending_students, active_students]);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -218,20 +217,6 @@ const EditClassroomRoster = props => {
 
   return (
     <div className={classes.rosterContainer}>
-      <div className={classes.formHeader}>
-        <IconButton
-          size="small"
-          style={{ marginRight: "5px" }}
-          onClick={() => {
-            navActions();
-          }}
-        >
-          <ArrowBackIosOutlinedIcon />
-        </IconButton>
-        <Typography style={{ alignSelf: "center" }}>
-          Return to classroom List
-        </Typography>
-      </div>
       <Grid
         container
         spacing={2}
@@ -283,7 +268,7 @@ const EditClassroomRoster = props => {
           {customList("Active Students", activeStudents)}
         </Grid>
       </Grid>
-      <div className={classes.bottomActios}>
+      {/*       <div className={classes.bottomActios}>
         <Button
           variant="contained"
           className={classes.button}
@@ -310,7 +295,7 @@ const EditClassroomRoster = props => {
         >
           save
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };
