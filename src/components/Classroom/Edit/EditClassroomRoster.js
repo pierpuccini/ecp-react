@@ -79,7 +79,7 @@ const EditClassroomRoster = props => {
   const classes = useStyles();
   const isTablet = useMediaQuery("(min-width: 959px)");
 
-  const { pending_students, active_students, buttonClickHandler } = props;
+  const { pending_students, active_students } = props;
 
   const [checked, setChecked] = useState([]);
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -268,34 +268,6 @@ const EditClassroomRoster = props => {
           {customList("Active Students", activeStudents)}
         </Grid>
       </Grid>
-      {/*       <div className={classes.bottomActios}>
-        <Button
-          variant="contained"
-          className={classes.button}
-          size="small"
-          style={{ backgroundColor: "#f44336", color: "#ffffff" }}
-          onClick={() => {
-            buttonClickHandler("cancel");
-          }}
-        >
-          cancel
-        </Button>
-        <Button
-          className={classes.button}
-          variant="contained"
-          size="small"
-          color="primary"
-          onClick={() => {
-            buttonClickHandler("save", {
-              pending_students: pendingStudents,
-              active_students: activeStudents,
-              deleted_students: deletedStudents
-            });
-          }}
-        >
-          save
-        </Button>
-      </div> */}
     </div>
   );
 };

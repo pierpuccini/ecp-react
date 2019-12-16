@@ -110,42 +110,11 @@ const DetailedClassroomView = props => {
   });
   validFields = Object.assign({}, ...validFields);
 
-  let info,
-    roster,
-    actions = null;
-  /* This condition handles the info, roster and wallet for edit and view as well as save actions for edit */
-  if (edit) {
-    info = (
-      <EditClassroomFields
-        navActions={navActions}
-        updateClassroomInfo={updateClassroomInfo}
-        updateClassroomForm={updateClassroomForm}
-        institutions={institutions}
-        inputChangedHandler={inputChangedHandler}
-        buttonClickHandler={buttonClickHandler}
-        validFields={validFields}
-        isTablet={isTablet}
-        switchToggle={switchToggle}
-        toggleSwitchHandler={toggleSwitchHandler}
-        toggleButtonChangedHandler={toggleButtonChangedHandler}
-        sliderChangedHandler={sliderChangedHandler}
-      />
-    );
-    actions = (
-      <React.Fragment>
-        <Divider />
-        <ExpansionPanelActions className={classes.expandableActions}>
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={() => {
-              buttonClickHandler("cancel");
-            }}
-            size="small"
-            style={{ backgroundColor: "#f44336", color: "#ffffff" }}
-          >
-            Cancel
-          </Button>
+  let payload;
+  const actionsPicker = type => {
+    switch (type) {
+      case "info":
+        return (
           <Button
             variant="contained"
             color="primary"
@@ -165,14 +134,51 @@ const DetailedClassroomView = props => {
           >
             save
           </Button>
-        </ExpansionPanelActions>
-      </React.Fragment>
+        );
+      case "roster":
+        return (
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={() => {
+              buttonClickHandler("save", payload);
+            }}
+            size="small"
+          >
+            save
+          </Button>
+        );
+      default:
+        break;
+    }
+  };
+
+  let info, roster;
+  /* This condition handles the info, roster and wallet for edit and view as well as save actions for edit */
+  if (edit) {
+    info = (
+      <EditClassroomFields
+        navActions={navActions}
+        updateClassroomInfo={updateClassroomInfo}
+        updateClassroomForm={updateClassroomForm}
+        institutions={institutions}
+        inputChangedHandler={inputChangedHandler}
+        buttonClickHandler={buttonClickHandler}
+        validFields={validFields}
+        isTablet={isTablet}
+        switchToggle={switchToggle}
+        toggleSwitchHandler={toggleSwitchHandler}
+        toggleButtonChangedHandler={toggleButtonChangedHandler}
+        sliderChangedHandler={sliderChangedHandler}
+      />
     );
     roster = (
       <EditClassroomRoster
         pending_students={pendingStudents}
         active_students={activeStudents}
         buttonClickHandler={buttonClickHandler}
+        payload={payload}
       />
     );
   } else if (view) {
@@ -213,7 +219,25 @@ const DetailedClassroomView = props => {
           <ExpansionPanelDetails className={classes.details}>
             {info}
           </ExpansionPanelDetails>
-          {actions}
+          {edit ? (
+            <React.Fragment>
+              <Divider />
+              <ExpansionPanelActions className={classes.expandableActions}>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={() => {
+                    buttonClickHandler("cancel");
+                  }}
+                  size="small"
+                  style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+                >
+                  Cancel
+                </Button>
+                {actionsPicker("info")}
+              </ExpansionPanelActions>
+            </React.Fragment>
+          ) : null}
         </ExpansionPanel>
         <ExpansionPanel
           defaultExpanded={isTablet}
@@ -229,7 +253,25 @@ const DetailedClassroomView = props => {
           <ExpansionPanelDetails className={classes.details}>
             {roster}
           </ExpansionPanelDetails>
-          {actions}
+          {edit ? (
+            <React.Fragment>
+              <Divider />
+              <ExpansionPanelActions className={classes.expandableActions}>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={() => {
+                    buttonClickHandler("cancel");
+                  }}
+                  size="small"
+                  style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+                >
+                  Cancel
+                </Button>
+                {actionsPicker("roster")}
+              </ExpansionPanelActions>
+            </React.Fragment>
+          ) : null}
         </ExpansionPanel>
         <ExpansionPanel className={classes.expandableContentCards} disabled>
           <ExpansionPanelSummary
@@ -248,7 +290,25 @@ const DetailedClassroomView = props => {
               </a>
             </Typography>
           </ExpansionPanelDetails>
-          {actions}
+          {edit ? (
+            <React.Fragment>
+              <Divider />
+              <ExpansionPanelActions className={classes.expandableActions}>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={() => {
+                    buttonClickHandler("cancel");
+                  }}
+                  size="small"
+                  style={{ backgroundColor: "#f44336", color: "#ffffff" }}
+                >
+                  Cancel
+                </Button>
+                {actionsPicker("")}
+              </ExpansionPanelActions>
+            </React.Fragment>
+          ) : null}
         </ExpansionPanel>
       </div>
     </Paper>
