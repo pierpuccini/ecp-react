@@ -69,6 +69,7 @@ export const deleteClassroomSuccess = () => {
   };
 };
 
+/* ---------- Indexed fuctions ---------- */
 export const createClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     dispatch(classroomStart("create"));

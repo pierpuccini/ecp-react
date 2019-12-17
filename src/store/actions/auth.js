@@ -339,12 +339,9 @@ export const sendIdToken = () => {
       .auth()
       .currentUser.getIdToken(/* forceRefresh */ true)
       .then(idToken => {
-        // Send token to your backend via HTTPS
-        // ...
         dispatch(getIdToken({type: "success", message: "", token: idToken}))
       })
       .catch(error => {
-        // Handle error
         console.error("[error] idtoken: ", error);
         dispatch(getIdToken({type: "error", message: "Error getting token", token: error}))
 
