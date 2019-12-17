@@ -102,8 +102,8 @@ const ClassroomController = props => {
     loading,
     getAllMyClassrooms,
     classrooms,
-    addClassroom,
     fetchClassrooms,
+    addClassroom,
     deleteClassroom,
     restoreClassroom,
     activeClassroom
@@ -448,7 +448,7 @@ const mapStateToProps = state => {
     loading: state.classrooms.loading,
     userId: state.firebase.auth.uid,
     classrooms: state.classrooms.classrooms,
-    fetchClassrooms: state.classrooms.success,
+    fetchClassrooms: state.classrooms.classrooms != null,
     activeClassroom: state.firebase.profile.classrooms
   };
 };

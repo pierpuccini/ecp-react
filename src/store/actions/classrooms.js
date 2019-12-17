@@ -558,7 +558,7 @@ export const manageClassroomStudents = payload => {
 };
 
 export const restoreClassroom = classroomId => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+  return (dispatch, getState) => {
     const currentState = getState();
     dispatch(classroomStart("restore", currentState.classrooms.classrooms));
 

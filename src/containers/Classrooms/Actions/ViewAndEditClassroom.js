@@ -10,7 +10,6 @@ import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 import Loader from "../../../components/UI/Loader/PngLoader/PngLoader";
 import FloatingLoader from "../../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import DetailedClassroomView from "../../../components/Classroom/DetailedClassroomView";
-import ViewClassroom from "../../../components/Classroom/View/ViewClassroom";
 import {
   updateObject,
   checkValidity,
@@ -28,6 +27,7 @@ const ViewAndEditClassroom = props => {
     myInstitutions,
     history,
     role,
+    updateSuccess,
     success,
     loading
   } = props;
@@ -117,7 +117,7 @@ const ViewAndEditClassroom = props => {
     async function getMyClassrooms() {
       await getOneClassroom({ id: id });
     }
-    if (success) {
+    if (updateSuccess) {
       getMyClassrooms()
         .then(() => {
           setDomReady(true);
@@ -128,11 +128,11 @@ const ViewAndEditClassroom = props => {
     }
     /* MISSING DEP: getAllMyClassrooms,id */
     // eslint-disable-next-line
-  }, [success]);
+  }, [updateSuccess]);
 
   /* use effect in charge of populating edit state with classroom info */
   useEffect(() => {
-    if (classroom != null) {
+    if (success && classroom != null) {
       const {
         client_id,
         subject_id,
@@ -145,34 +145,34 @@ const ViewAndEditClassroom = props => {
         pending_students,
         active_students
       } = classroom;
-
+      console.log("1");
       setupdateClassroomForm({
         client_id: {
-          value: client_id == null ? "" : client_id,
+          value: client_id,
           validation: {
             required: true
           },
-          valid: client_id == null ? false : true,
-          touched: client_id == null ? false : true
+          valid: true,
+          touched: true
         },
         subject_id: {
-          value: subject_id == null ? "" : subject_id,
+          value: subject_id,
           validation: {
             required: true
           },
-          valid: subject_id == null ? false : true,
-          touched: subject_id == null ? false : true
+          valid: true,
+          touched: true
         },
         subject_name: {
-          value: subject_name == null ? "" : subject_name,
+          value: subject_name,
           validation: {
             required: true
           },
-          valid: subject_name == null ? false : true,
-          touched: subject_name == null ? false : true
+          valid: true,
+          touched: true
         },
         group_size: {
-          value: group_size == null ? "" : group_size,
+          value: group_size,
           validation: {
             required: true
           },
@@ -197,14 +197,15 @@ const ViewAndEditClassroom = props => {
         }
       });
       setupdateClassroomInfo({
-        code_classroom: code_classroom == null ? "" : code_classroom,
+        code_classroom: code_classroom,
         teacher_id: teacher_id,
         pending_students: pending_students,
         active_students: active_students
       });
+      console.log("state ready");
       setstateReady(true);
     }
-  }, [classroom]);
+  }, [success, classroom]);
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
@@ -232,18 +233,6 @@ const ViewAndEditClassroom = props => {
     ({ firestore: { ordered } }) => ordered.teachers
   );
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
-
-  /* Incharge of showing coin loader */
-  const loadingDom = (
-    <div style={{ alignSelf: "center" }}>
-      <Loader />
-    </div>
-  );
-
-  if (!isLoaded(clients, teachers, students) && !domReady && !stateReady) {
-    history.push({ state: { getAllClassrooms: false } });
-    return loadingDom;
-  }
 
   /* Transforms user ID's to readable names */
   const userObjCreator = (usersArray, fbUsers, teacher) => {
@@ -314,7 +303,7 @@ const ViewAndEditClassroom = props => {
           touched: true
         },
         subject_id: {
-          value: subject_id == null ? "" : subject_id,
+          value: subject_id,
           validation: {
             required: true
           },
@@ -322,7 +311,7 @@ const ViewAndEditClassroom = props => {
           touched: false
         },
         subject_name: {
-          value: subject_name == null ? "" : subject_name,
+          value: subject_name,
           validation: {
             required: true
           },
@@ -330,7 +319,7 @@ const ViewAndEditClassroom = props => {
           touched: false
         },
         group_size: {
-          value: group_size == null ? "" : group_size,
+          value: group_size,
           validation: {
             required: true
           },
@@ -390,82 +379,76 @@ const ViewAndEditClassroom = props => {
     setupdateClassroomForm(updatedControls);
   };
 
-  /* Converts editable state to a value readonly state */
-  const convertStateToInfo = () => {
-    let classroomInfo = { ...updateClassroomInfo };
-    const formKeys = Object.keys(updateClassroomForm);
-    /* Es lint disabled because map does not return anything */
-    //eslint-disable-next-line
-    formKeys.map(key => {
-      classroomInfo = {
-        ...classroomInfo,
-        [key]: updateClassroomForm[key].value
-      };
-    });
-    return classroomInfo;
-  };
+  /* Converts editable state to a value readonly state FOR VIEW */
+  // const convertStateToInfo = () => {
+  //   let classroomInfo = { ...updateClassroomInfo };
+  //   const formKeys = Object.keys(updateClassroomForm);
+  //   /* Es lint disabled because map does not return anything */
+  //   //eslint-disable-next-line
+  //   formKeys.map(key => {
+  //     classroomInfo = {
+  //       ...classroomInfo,
+  //       [key]: updateClassroomForm[key].value
+  //     };
+  //   });
+  //   return classroomInfo;
+  // };
 
-  let view = "view classroom";
-  if (location.pathname.includes("edit")) {
-    view = (
-      <DetailedClassroomView
-        navActions={handleNav}
-        view={location.pathname.includes("view")}
-        edit={location.pathname.includes("edit")}
-        institutions={role.includes("admin") ? clients : myInstitutions}
-        updateClassroomInfo={updateClassroomInfo}
-        updateClassroomForm={updateClassroomForm}
-        inputChangedHandler={classroomInputHandler}
-        buttonClickHandler={editViewActions}
-        toggleButtonChangedHandler={classroomToggleButtonHandler}
-        sliderChangedHandler={classroomSliderHandler}
-        pending_students={userObjCreator(
-          classroom.pending_students == null ? [] : classroom.pending_students,
-          students
-        )}
-        active_students={userObjCreator(
-          classroom.active_students == null ? [] : classroom.active_students,
-          students
-        )}
-      />
-    );
-  } else if (location.pathname.includes("view")) {
-    view = (
-      <ViewClassroom
-        navActions={handleNav}
-        institutions={role.includes("admin") ? clients : myInstitutions}
-        info={convertStateToInfo()}
-        teacher={userObjCreator([classroom.teacher_id], teachers, true)}
-        pendingStudents={userObjCreator(
-          classroom.pending_students == null ? [] : classroom.pending_students,
-          students
-        )}
-        activeStudents={userObjCreator(
-          classroom.active_students == null ? [] : classroom.active_students,
-          students
-        )}
-      />
-    );
-  }
-  if (loading) {
+  console.log("fb 2", isLoaded(clients, teachers, students));
+  console.log("dm 2", domReady);
+  console.log("st 2", stateReady);
+  console.log("cr 2", classroom);
+  /* Incharge of showing detailed view or coin loader */
+  if (
+    isLoaded(clients, teachers, students) &&
+    domReady &&
+    stateReady &&
+    classroom
+  ) {
     return (
       <React.Fragment>
-        <FloatingLoader></FloatingLoader>
-        {view}
+        {loading ? <FloatingLoader></FloatingLoader> : null}
+        <DetailedClassroomView
+          navActions={handleNav}
+          view={location.pathname.includes("view")}
+          edit={location.pathname.includes("edit")}
+          institutions={role.includes("admin") ? clients : myInstitutions}
+          updateClassroomInfo={updateClassroomInfo}
+          updateClassroomForm={updateClassroomForm}
+          inputChangedHandler={classroomInputHandler}
+          buttonClickHandler={editViewActions}
+          toggleButtonChangedHandler={classroomToggleButtonHandler}
+          sliderChangedHandler={classroomSliderHandler}
+          pending_students={userObjCreator(
+            classroom.pending_students == null
+              ? []
+              : classroom.pending_students,
+            students
+          )}
+          active_students={userObjCreator(
+            classroom.active_students == null ? [] : classroom.active_students,
+            students
+          )}
+        />
       </React.Fragment>
     );
+  } else {
+    // history.push({ state: { getAllClassrooms: false } });
+    return (
+      <div style={{ alignSelf: "center" }}>
+        <Loader />
+      </div>
+    );
   }
-  return view;
 };
 
 const mapStateToProps = state => {
   return {
     role: state.firebase.profile.role,
     loading: state.classrooms.loading,
+    updateSuccess: state.classrooms.updateSuccess,
     success: state.classrooms.success,
-    createSuccess: state.classrooms.success,
-    classroom:
-      state.classrooms.classroom == null ? {} : state.classrooms.classroom,
+    classroom: state.classrooms.classroom,
     myInstitutions: state.firebase.profile.institutions
   };
 };

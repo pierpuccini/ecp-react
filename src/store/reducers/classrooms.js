@@ -80,6 +80,7 @@ const getClassroomSuccess = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: null,
+    success: true,
     classroom: action.classroom,
     classrooms: action.classrooms,
     updateSuccess: action.updateSuccess
