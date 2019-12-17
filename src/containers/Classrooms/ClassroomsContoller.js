@@ -15,9 +15,13 @@ import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
+import Divider from "@material-ui/core/Divider";
+import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 //Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
+import FilterListOutlinedIcon from "@material-ui/icons/FilterListOutlined";
 /* App imports */
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
@@ -25,8 +29,8 @@ import AddClassroomModal from "../../components/Classroom/Modals/AddClassroomMod
 import ClassroomListCard from "../../components/Classroom/ClassroomListCard";
 import Modal from "../../components/UI/Modal/Modal";
 import PngLoader from "../../components/UI/Loader/PngLoader/PngLoader";
-import FloatingLoader from '../../components/UI/Loader/FloatingLoader/FloatingLoader'
-import { updateObject, checkValidity } from "../../shared/utility";
+import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLoader";
+import { updateObject, checkValidity, sortDates } from "../../shared/utility";
 
 const createClassroom = asyncComponent(() => {
   return import("./Actions/CreateClassroom");
@@ -65,12 +69,24 @@ const useStyles = makeStyles(theme => ({
   },
   classroomListHeader: {
     display: "flex",
-    alignSelf: "center",
-    margin: theme.spacing(0, 1)
+    alignSelf: "center"
   },
   classroomListHeaderContainer: {
     display: "flex",
-    justifyContent: "space-between"
+    margin: theme.spacing(1, 1)
+  },
+  classroomFilters: {
+    display: "flex",
+    alignSelf: "center",
+    margin: theme.spacing(0, 1)
+  },
+  classroomFiltersContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    margin: theme.spacing(1, 1)
+  },
+  statusSelect: {
+    width: "120px"
   },
   classroomCard: {
     display: "flex",
@@ -114,6 +130,10 @@ const ClassroomController = props => {
   const [domReady, setDomReady] = useState(false);
   const [navRoute, setNavRoute] = useState("classrooms");
   const [openAddClassModal, setopenAddClassModal] = useState(false);
+  const [selectState, setselectState] = useState({
+    status: "all",
+    time: "none"
+  });
   const [classroomPage, setclassroomPage] = useState(1);
   const [ininiteLoader, setinfiniteLoader] = useState(false);
   const [addClassroomForm, setaddClassroomForm] = useState({
@@ -295,6 +315,103 @@ const ClassroomController = props => {
     addClassroom(payload);
   };
 
+  const handleselectState = (event, control) => {
+    setselectState({ ...selectState, [control]: event.target.value });
+  };
+
+  const classroomListFilters = (list, status, time) => {
+    let classroomList;
+    let activeList = (classroomList = list.filter(
+      classroom => classroom.active_classroom === true
+    ));
+    let inactiveList = list.filter(
+      classroom => classroom.active_classroom === false
+    );
+    if (status === "all" && time === "none") {
+      return [
+        ...sortDates("new", activeList, "updated_at"),
+        ...sortDates("new", inactiveList, "updated_at")
+      ];
+    } else if (status !== "all") {
+      switch (status) {
+        case "active":
+          classroomList = activeList;
+          break;
+        case "inactive":
+          classroomList = inactiveList;
+          break;
+        default:
+          break;
+      }
+    } else if (time !== "none") {
+      switch (time) {
+        case "createdNew":
+          classroomList = sortDates("new", list, "created_at");
+          break;
+        case "createdOld":
+          classroomList = sortDates("old", list, "created_at");
+          break;
+        case "updatedNew":
+          classroomList = sortDates("new", list, "updated_at");
+          break;
+        case "updatedOld":
+          classroomList = sortDates("old", list, "updated_at");
+          break;
+        default:
+          break;
+      }
+    }
+    return classroomList;
+  };
+
+  const classroomsToMap = classroomsArray => {
+    const classroomlistCard = classroomListFilters(
+      classroomsArray,
+      selectState.status,
+      selectState.time
+    ).map(classroom => {
+      //Checks if classroom is active in firebase
+      let isClassroomActive;
+      if (role.includes("admin")) {
+        isClassroomActive = classroom.active_classroom;
+      } else {
+        isClassroomActive = activeClassroom.find(fbClassroom => {
+          if (fbClassroom.id === Number(classroom.id)) {
+            return classroom.active_classroom;
+          }
+          return false;
+        });
+      }
+      //Variables to search in data from FB
+      let classroomTeacher, classroomInstitution;
+      //Finds classroom teacher
+      classroomTeacher = teachers.find(
+        teacher => teacher.id === classroom.teacher_id
+      );
+      //Finds classroom institution
+      classroomInstitution = clients.find(
+        institution => institution.id === classroom.client_id
+      );
+
+      return (
+        <ClassroomListCard
+          classroom={classroom}
+          role={role}
+          activeClassroom={isClassroomActive}
+          classroomTeacher={classroomTeacher}
+          classroomInstitution={classroomInstitution}
+          prefersDarkMode={prefersDarkMode}
+          key={classroom.code_classroom}
+          isMobile={isMobile}
+          handleNavChange={handleNavChange}
+          handleDelete={handleDelete}
+          handleRestore={handleRestore}
+        />
+      );
+    });
+    return classroomlistCard;
+  };
+
   const handleDelete = classroomId => {
     deleteClassroom(classroomId);
   };
@@ -371,6 +488,51 @@ const ClassroomController = props => {
               </Tooltip>
             ) : null}
           </div>
+          <Divider />
+          <div className={classes.classroomFiltersContainer}>
+            <div className={classes.classroomFilters}>
+              <Icon style={{ marginRight: "5px" }}>
+                <FilterListOutlinedIcon />
+              </Icon>
+              <Typography>Filters</Typography>
+            </div>
+            <TextField
+              className={classes.statusSelect}
+              label="Status"
+              placeholder="Active"
+              type="text"
+              margin="normal"
+              variant="outlined"
+              value={selectState.status}
+              onChange={event => {
+                handleselectState(event, "status");
+              }}
+              select
+            >
+              <MenuItem value="all">All</MenuItem>
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+            </TextField>
+            <TextField
+              className={classes.statusSelect}
+              label="Status"
+              placeholder="Active"
+              type="text"
+              margin="normal"
+              variant="outlined"
+              value={selectState.time}
+              onChange={event => {
+                handleselectState(event, "time");
+              }}
+              select
+            >
+              <MenuItem value="none">none</MenuItem>
+              <MenuItem value="createdNew">created (newest)</MenuItem>
+              <MenuItem value="createdOld">created (oldest)</MenuItem>
+              <MenuItem value="updatedNew">updated (newest)</MenuItem>
+              <MenuItem value="updatedOld">updated (oldest)</MenuItem>
+            </TextField>
+          </div>
           <Modal
             openModal={openAddClassModal}
             closeModal={handleAddClassStudent}
@@ -382,46 +544,7 @@ const ClassroomController = props => {
             />
           </Modal>
         </Paper>
-        {classrooms.data.map(classroom => {
-          //Checks if classroom is active in firebase
-          let isClassroomActive;
-          if (role.includes("admin")) {
-            isClassroomActive = classroom.active_classroom;
-          } else {
-            isClassroomActive = activeClassroom.find(fbClassroom => {
-              if (fbClassroom.id === Number(classroom.id)) {
-                return classroom.active_classroom;
-              }
-              return false;
-            });
-          }
-          //Variables to search in data from FB
-          let classroomTeacher, classroomInstitution;
-          //Finds classroom teacher
-          classroomTeacher = teachers.find(
-            teacher => teacher.id === classroom.teacher_id
-          );
-          //Finds classroom institution
-          classroomInstitution = clients.find(
-            institution => institution.id === classroom.client_id
-          );
-
-          return (
-            <ClassroomListCard
-              classroom={classroom}
-              role={role}
-              activeClassroom={isClassroomActive}
-              classroomTeacher={classroomTeacher}
-              classroomInstitution={classroomInstitution}
-              prefersDarkMode={prefersDarkMode}
-              key={classroom.code_classroom}
-              isMobile={isMobile}
-              handleNavChange={handleNavChange}
-              handleDelete={handleDelete}
-              handleRestore={handleRestore}
-            />
-          );
-        })}
+        {classroomsToMap(classrooms.data)}
         {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (
           <div className={classes.infiniteLoaderContainer}>
             <div style={{ display: "flex" }}>

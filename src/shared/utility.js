@@ -62,3 +62,25 @@ export const stateToPayload = state => {
   payload = payloadArr2Obj;
   return payload;
 };
+
+ /**
+ *Date sorter
+ *
+ * @param {*} how new, old
+ * @param {*} list array to sort
+ * @param {*} listOrObjectParam specific parameter to search for in
+ * @returns
+ */
+export const sortDates = (how, list, listOrObjectParam) => {  
+  let sortedList;
+  if (how === 'new') {
+    sortedList = list.sort((a, b) => {
+      return new Date(b[listOrObjectParam]) - new Date(a[listOrObjectParam]);
+    });
+  } else {
+    sortedList = list.sort((a, b) => {
+      return new Date(a[listOrObjectParam]) - new Date(b[listOrObjectParam]);
+    });
+  }
+  return sortedList
+}
