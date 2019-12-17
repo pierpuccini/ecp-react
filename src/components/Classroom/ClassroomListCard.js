@@ -285,32 +285,7 @@ const ClassroomListCard = props => {
       </IconButton>
     </span>
   );
-  if (role === "super-admin") {
-    mobileActions = (
-      <div className={classes.classroomCardActions}>
-        <span style={{ alignSelf: "center" }}>
-          <IconButton
-            onClick={event =>
-              handleNavChange(event, `classrooms/view/:${classroom.id}`)
-            }
-            disabled={!activeClassroom}
-          >
-            <VisibilityOutlinedIcon />
-          </IconButton>
-        </span>
-        <span>
-          <IconButton
-          className={classes.deleteButton}
-          onClick={() => {
-            handleDelete(classroom.id);
-          }}
-        >
-          <DeleteOutlineOutlinedIcon />
-        </IconButton>
-        </span>
-      </div>
-    );
-  }
+
   if (isMobile && role === "teacher") {
     mobileActions = (
       <div className={classes.classroomCardActions}>
@@ -380,6 +355,59 @@ const ClassroomListCard = props => {
       >
         Restore
       </Button>
+    );
+  }
+  if (role === "super-admin" && classroom.deleted) {
+    mobileActions = (
+      <div className={classes.classroomCardActions}>
+        <span style={{ alignSelf: "center" }}>
+          <Button
+            size="small"
+            variant="contained"
+            className={classes.button}
+            onClick={() => {
+              handleRestore(classroom.id);
+            }}
+          >
+            Restore
+          </Button>
+        </span>
+        <span style={{ alignSelf: "center" }}>
+          <IconButton
+            className={classes.deleteButton}
+            onClick={() => {
+              handleDelete(classroom.id);
+            }}
+          >
+            <DeleteOutlineOutlinedIcon />
+          </IconButton>
+        </span>
+      </div>
+    );
+  } else if (role === "super-admin") {
+    mobileActions = (
+      <div className={classes.classroomCardActions}>
+        <span style={{ alignSelf: "center" }}>
+          <IconButton
+            onClick={event =>
+              handleNavChange(event, `classrooms/view/:${classroom.id}`)
+            }
+            disabled={!activeClassroom}
+          >
+            <VisibilityOutlinedIcon />
+          </IconButton>
+        </span>
+        <span>
+          <IconButton
+            className={classes.deleteButton}
+            onClick={() => {
+              handleDelete(classroom.id);
+            }}
+          >
+            <DeleteOutlineOutlinedIcon />
+          </IconButton>
+        </span>
+      </div>
     );
   }
 
