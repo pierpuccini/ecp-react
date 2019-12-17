@@ -28,6 +28,7 @@ import Loader from "./components/UI/Loader/PngLoader/PngLoader";
 import Topbar from "./components/UI/Topbar/Topbar";
 import SideList from "./components/UI/SideList/SideList";
 import Snackbar from "./components/UI/Snackbar/Snackbar";
+import SnackbarLogic from "./hoc/SnackbarLogic/SnackbarLogic";
 import Routes from "./Routes";
 
 const useStyles = makeStyles(theme => ({
@@ -110,12 +111,15 @@ function App(props) {
       });
     } else if (profileLoaded) {
       if (newUser === "") {
-        payload = "onboarding"
+        payload = "onboarding";
       } else if (location.pathname.match("onboarding") && newUser !== "") {
         payload = "home";
-      } else if (location.pathname !== "/home" && !location.pathname.includes('/classrooms')) {
-        payload = location.pathname.replace("/", "")
-      } 
+      } else if (
+        location.pathname !== "/home" &&
+        !location.pathname.includes("/classrooms")
+      ) {
+        payload = location.pathname.replace("/", "");
+      }
       setsnackbarPayload({
         type: "none",
         info: "none"
@@ -258,9 +262,6 @@ function App(props) {
   /* Routes for non-authenticated users */
   let app = (
     <div className="App">
-      {snackbarPayload.type === "warning" ? (
-        <Snackbar payload={snackbarPayload} />
-      ) : null}
       <Routes
         authenticated={isAuthenticated}
         navRoute={navRoute}
@@ -385,6 +386,10 @@ function App(props) {
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
+        <SnackbarLogic
+          snackbarPayload={snackbarPayload}
+          setsnackbarPayload={setsnackbarPayload}
+        />
         {domReady && profileLoaded ? app : loadingDom}
       </ThemeProvider>
     </React.Fragment>
