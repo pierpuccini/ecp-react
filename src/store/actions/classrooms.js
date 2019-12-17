@@ -48,7 +48,11 @@ export const getAllclassroomCreateSuccess = (classrooms, loading) => {
   };
 };
 
-export const getclassroomCreateSuccess = (classroom, classrooms, updateSuccess) => {
+export const getclassroomCreateSuccess = (
+  classroom,
+  classrooms,
+  updateSuccess
+) => {
   return {
     type: actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS,
     classroom: classroom,
@@ -71,10 +75,10 @@ export const deleteclassroomCreateSuccess = () => {
 
 /* ---------- Indexed fuctions ---------- */
 export const createClassroom = payload => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+  return (dispatch, getState) => {
     dispatch(classroomStart("create"));
     const currentState = getState();
-    const firestore = getFirestore();
+
     let error;
     // Verifies that the token was properly recieved
     if (currentState.auth.token.type === "error") {
@@ -162,41 +166,13 @@ export const createClassroom = payload => {
             response.status === 200 &&
             response.data.code_classroom !== null
           ) {
-            // Prevents classroom from being added to admin acc
-            if (!currentState.firebase.profile.role.includes("admin")) {
-              const classrooms = [
-                ...currentState.firebase.profile.classrooms,
-                {
-                  code_classroom: response.data.code_classroom,
-                  subject_id: response.data.subject_id,
-                  id: response.data.id,
-                  active: payload.length > 4 ? true : false
-                }
-              ];
-              firestore
-                .collection("users")
-                .doc(currentState.firebase.auth.uid)
-                .set({ classrooms: classrooms }, { merge: true })
-                .then(() => {
-                  dispatch(
-                    classroomCreateSuccess(
-                      extractMissingFields,
-                      response.data.code_classroom
-                    )
-                  );
-                })
-                .catch(err => {
-                  dispatch(classroomFail(err));
-                });
-            } else {
-              dispatch(
-                classroomCreateSuccess(
-                  extractMissingFields,
-                  response.data.code_classroom
-                )
-              );
-            }
-          } else /* Usually this error occurrs due to Firestore */ {
+            dispatch(
+              classroomCreateSuccess(
+                extractMissingFields,
+                response.data.code_classroom
+              )
+            );
+          } /* Usually this error occurrs due to Firestore */ else {
             const unknownError = {
               code: "create-classroom-error",
               message: "Unkown error, Contact support"
@@ -382,7 +358,12 @@ export const addClassroom = payload => {
 export const getAllMyClassrooms = payload => {
   return (dispatch, getState) => {
     const currentState = getState();
-    dispatch(classroomStart(currentState.classrooms.action,currentState.classrooms.classrooms));
+    dispatch(
+      classroomStart(
+        currentState.classrooms.action,
+        currentState.classrooms.classrooms
+      )
+    );
 
     let error;
     // Verifies that the token was properly recieved
@@ -407,7 +388,9 @@ export const getAllMyClassrooms = payload => {
             if (currentState.classrooms.action === "create") {
               loading = true;
             }
-            dispatch(getAllclassroomCreateSuccess(response.data.classrooms, loading));
+            dispatch(
+              getAllclassroomCreateSuccess(response.data.classrooms, loading)
+            );
           } else {
             const unknownError = {
               code: "add-classroom-error",
@@ -437,7 +420,9 @@ export const getAllMyClassrooms = payload => {
 export const getOneClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const currentState = getState();
-    dispatch(classroomStart('oneClassroom',currentState.classrooms.classrooms));
+    dispatch(
+      classroomStart("oneClassroom", currentState.classrooms.classrooms)
+    );
 
     let error;
     // Verifies that the token was properly recieved
