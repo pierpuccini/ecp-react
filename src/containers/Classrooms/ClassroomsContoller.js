@@ -396,12 +396,13 @@ const ClassroomController = props => {
           classroomInstitution = clients.find(
             institution => institution.id === classroom.client_id
           );
+
           return (
             <ClassroomListCard
               classroom={classroom}
               role={role}
               activeClassroom={
-                activeClassroom.length === 0 ? [] : isClassroomActive.active
+                isClassroomActive == null ? [] : isClassroomActive.active
               }
               classroomTeacher={classroomTeacher}
               classroomInstitution={classroomInstitution}

@@ -18,9 +18,9 @@ export const classroomFail = (error, classroom, classrooms) => {
   };
 };
 
-export const classroomSuccess = (missingFields, code) => {
+export const classroomCreateSuccess = (missingFields, code) => {
   return {
-    type: actionTypes.CLASSROOM_ACTIONS_SUCCESS,
+    type: actionTypes.CLASSROOM_CREATE_SUCCESS,
     missingFields: missingFields,
     code: code
   };
@@ -40,7 +40,7 @@ export const classroomManageStudentsSuccess = () => {
   };
 };
 
-export const getAllClassroomSuccess = (classrooms, loading) => {
+export const getAllclassroomCreateSuccess = (classrooms, loading) => {
   return {
     type: actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS,
     classrooms: classrooms,
@@ -48,7 +48,7 @@ export const getAllClassroomSuccess = (classrooms, loading) => {
   };
 };
 
-export const getClassroomSuccess = (classroom, classrooms, updateSuccess) => {
+export const getclassroomCreateSuccess = (classroom, classrooms, updateSuccess) => {
   return {
     type: actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS,
     classroom: classroom,
@@ -57,13 +57,13 @@ export const getClassroomSuccess = (classroom, classrooms, updateSuccess) => {
   };
 };
 
-export const restoreClassroomSuccess = () => {
+export const restoreclassroomCreateSuccess = () => {
   return {
     type: actionTypes.CLASSROOM_RESTORE_SUCCESS
   };
 };
 
-export const deleteClassroomSuccess = () => {
+export const deleteclassroomCreateSuccess = () => {
   return {
     type: actionTypes.CLASSROOM_DELETE_SUCCESS
   };
@@ -179,7 +179,7 @@ export const createClassroom = payload => {
                 .set({ classrooms: classrooms }, { merge: true })
                 .then(() => {
                   dispatch(
-                    classroomSuccess(
+                    classroomCreateSuccess(
                       extractMissingFields,
                       response.data.code_classroom
                     )
@@ -190,13 +190,13 @@ export const createClassroom = payload => {
                 });
             } else {
               dispatch(
-                classroomSuccess(
+                classroomCreateSuccess(
                   extractMissingFields,
                   response.data.code_classroom
                 )
               );
             }
-          } else {
+          } else /* Usually this error occurrs due to Firestore */ {
             const unknownError = {
               code: "create-classroom-error",
               message: "Unkown error, Contact support"
@@ -354,7 +354,7 @@ export const addClassroom = payload => {
         .post("/assign-classroom", payload, { headers: headers })
         .then(response => {
           if (response.status === 200) {
-            dispatch(classroomSuccess());
+            dispatch(classroomCreateSuccess());
           } else {
             const unknownError = {
               code: "add-classroom-error",
@@ -407,7 +407,7 @@ export const getAllMyClassrooms = payload => {
             if (currentState.classrooms.action === "create") {
               loading = true;
             }
-            dispatch(getAllClassroomSuccess(response.data.classrooms, loading));
+            dispatch(getAllclassroomCreateSuccess(response.data.classrooms, loading));
           } else {
             const unknownError = {
               code: "add-classroom-error",
@@ -459,7 +459,7 @@ export const getOneClassroom = payload => {
         .then(response => {
           if (response.status === 200) {
             dispatch(
-              getClassroomSuccess(
+              getclassroomCreateSuccess(
                 response.data.classroom,
                 currentState.classrooms.classrooms,
                 currentState.classrooms.updateSuccess
@@ -581,7 +581,7 @@ export const restoreClassroom = classroomId => {
         .put("/restore", { id: classroomId }, { headers: headers })
         .then(response => {
           console.log("res", response);
-          dispatch(restoreClassroomSuccess());
+          dispatch(restoreclassroomCreateSuccess());
         })
         .catch(error => {
           if (error.response == null) {
@@ -622,7 +622,7 @@ export const deleteClassroom = classroomId => {
       axios
         .delete(url, { headers: headers })
         .then(() => {
-          dispatch(deleteClassroomSuccess());
+          dispatch(deleteclassroomCreateSuccess());
         })
         .catch(error => {
           console.log(error.response);

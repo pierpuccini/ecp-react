@@ -38,7 +38,7 @@ const CreateClassroom = props => {
     classrooms,
     myInstitutions,
     loading,
-    success,
+    createSuccess,
     missingFields,
     registrationCode,
     resetCreateClassroom,
@@ -63,12 +63,12 @@ const CreateClassroom = props => {
   //Opens modal on create classroom success
   useEffect(() => {
     /* IF NEW CASE IS ADDED PLEASE REDO IN AN OTHER USE EFFECT */
-    if (success) {
+    if (createSuccess) {
       handleModal(true);
     }
     /* IF NEW CASE IS ADDED PLEASE REDO IN AN OTHER USE EFFECT */
     // eslint-disable-next-line
-  }, [success]);
+  }, [createSuccess]);
 
   //Input form controlers
   const [createClassroomForm, setcreateClassroomForm] = useState({
@@ -340,7 +340,7 @@ const mapStateToProps = state => {
     myInstitutions: state.firebase.profile.institutions,
     classrooms: state.firebase.profile.classrooms,
     loading: state.classrooms.loading,
-    success: state.classrooms.success,
+    createSuccess: state.classrooms.createSuccess,
     missingFields: state.classrooms.missingFields,
     registrationCode: state.classrooms.registrationCode
   };
