@@ -382,10 +382,19 @@ const ClassroomController = props => {
         </Paper>
         {classrooms.data.map(classroom => {
           //Checks if classroom is active in firebase
-          let isClassroomActive = activeClassroom.find(
-            fbClassroom => fbClassroom.id === Number(classroom.id)
-          );
-
+          let isClassroomActive;
+          if (role.includes("admin")) {
+            console.log(classroom);
+            isClassroomActive = classroom.active_classroom;
+          } else {
+            isClassroomActive = activeClassroom.find(fbClassroom => {
+              if (fbClassroom.id === Number(classroom.id)) {
+                return classroom.active_classroom;
+              }
+              return false;
+            });
+          }
+          console.log(isClassroomActive);
           //Variables to search in data from FB
           let classroomTeacher, classroomInstitution;
           //Finds classroom teacher
@@ -401,9 +410,7 @@ const ClassroomController = props => {
             <ClassroomListCard
               classroom={classroom}
               role={role}
-              activeClassroom={
-                isClassroomActive == null ? [] : isClassroomActive.active
-              }
+              activeClassroom={isClassroomActive}
               classroomTeacher={classroomTeacher}
               classroomInstitution={classroomInstitution}
               prefersDarkMode={prefersDarkMode}
