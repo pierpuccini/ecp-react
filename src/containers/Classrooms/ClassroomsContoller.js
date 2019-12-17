@@ -25,6 +25,7 @@ import AddClassroomModal from "../../components/Classroom/Modals/AddClassroomMod
 import ClassroomListCard from "../../components/Classroom/ClassroomListCard";
 import Modal from "../../components/UI/Modal/Modal";
 import PngLoader from "../../components/UI/Loader/PngLoader/PngLoader";
+import FloatingLoader from '../../components/UI/Loader/FloatingLoader/FloatingLoader'
 import { updateObject, checkValidity } from "../../shared/utility";
 
 const createClassroom = asyncComponent(() => {
@@ -339,6 +340,7 @@ const ClassroomController = props => {
   if (isLoaded(clients, teachers, students) && domReady && fetchClassrooms) {
     return location.pathname === "/classrooms" ? (
       <Container maxWidth="md" className={classes.container}>
+        {loading ? <FloatingLoader></FloatingLoader> : null}
         {redirect}
         <Paper
           className={classes.paper}
@@ -384,7 +386,6 @@ const ClassroomController = props => {
           //Checks if classroom is active in firebase
           let isClassroomActive;
           if (role.includes("admin")) {
-            console.log(classroom);
             isClassroomActive = classroom.active_classroom;
           } else {
             isClassroomActive = activeClassroom.find(fbClassroom => {
@@ -394,7 +395,6 @@ const ClassroomController = props => {
               return false;
             });
           }
-          console.log(isClassroomActive);
           //Variables to search in data from FB
           let classroomTeacher, classroomInstitution;
           //Finds classroom teacher

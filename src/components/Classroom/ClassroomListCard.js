@@ -274,7 +274,7 @@ const ClassroomListCard = props => {
 
   //   let classroomViewer
   let mobileActions = (
-    <span style={{alignSelf: "center"}}>
+    <span style={{ alignSelf: "center" }}>
       <IconButton
         onClick={event =>
           handleNavChange(event, `classrooms/view/:${classroom.id}`)
@@ -285,6 +285,32 @@ const ClassroomListCard = props => {
       </IconButton>
     </span>
   );
+  if (role === "super-admin") {
+    mobileActions = (
+      <div className={classes.classroomCardActions}>
+        <span style={{ alignSelf: "center" }}>
+          <IconButton
+            onClick={event =>
+              handleNavChange(event, `classrooms/view/:${classroom.id}`)
+            }
+            disabled={!activeClassroom}
+          >
+            <VisibilityOutlinedIcon />
+          </IconButton>
+        </span>
+        <span>
+          <IconButton
+          className={classes.deleteButton}
+          onClick={() => {
+            handleDelete(classroom.id);
+          }}
+        >
+          <DeleteOutlineOutlinedIcon />
+        </IconButton>
+        </span>
+      </div>
+    );
+  }
   if (isMobile && role === "teacher") {
     mobileActions = (
       <div className={classes.classroomCardActions}>
