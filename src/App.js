@@ -27,7 +27,6 @@ import "./App.css";
 import Loader from "./components/UI/Loader/PngLoader/PngLoader";
 import Topbar from "./components/UI/Topbar/Topbar";
 import SideList from "./components/UI/SideList/SideList";
-import Snackbar from "./components/UI/Snackbar/Snackbar";
 import SnackbarLogic from "./hoc/SnackbarLogic/SnackbarLogic";
 import Routes from "./Routes";
 
@@ -60,18 +59,10 @@ function App(props) {
     role,
     name,
     onboardingSuccessLogic,
-    onboardingError,
-    usersError,
-    classroomError,
-    myAccountSuccess,
-    onboardingSuccess,
     sendIdToken,
     resetReduxErrors,
     logout,
-    disabled,
-    userDisabled,
-    deleteSuccess,
-    restoreSuccess
+    disabled
   } = props;
 
   const classes = useStyles();
@@ -154,72 +145,6 @@ function App(props) {
     }
     // eslint-disable-next-line
   }, [isAuthenticated]);
-
-  //snackbar state handler
-  useEffect(() => {
-    let payload = snackbarPayload;
-    //error handler
-    if (usersError) {
-      payload = { type: "error", info: usersError };
-    }
-    if (onboardingError) {
-      payload = { type: "error", info: onboardingError };
-    }
-    if (usersError) {
-      payload = { type: "error", info: usersError };
-    }
-    if (classroomError) {
-      payload = { type: "error", info: classroomError };
-    }
-    //success handler
-    if (myAccountSuccess) {
-      payload = {
-        type: "success",
-        info: { message: "User succesfully updated!" }
-      };
-    }
-    if (onboardingSuccess) {
-      payload = {
-        type: "success",
-        info: { message: "Classroom succesfully added!" },
-        duration: 10000
-      };
-    }
-    if (deleteSuccess) {
-      payload = {
-        type: "success",
-        info: { message: "Classroom succesfully deleted!" },
-        duration: 10000
-      };
-    }
-    if (restoreSuccess) {
-      payload = {
-        type: "success",
-        info: { message: "Classroom succesfully restored!" },
-        duration: 10000
-      };
-    }
-    //warnings handler
-    if (userDisabled) {
-      payload = userDisabled;
-    }
-    // console.log("payload [app]", payload);
-    setsnackbarPayload(payload);
-    //missing dep: snackbarPayload
-    // eslint-disable-next-line
-  }, [
-    isAuthenticated,
-    usersError,
-    onboardingError,
-    usersError,
-    classroomError,
-    myAccountSuccess,
-    onboardingSuccess,
-    disabled,
-    userDisabled,
-    deleteSuccess,
-    restoreSuccess
-  ]);
 
   const toggleDrawer = open => {
     setdrawerOpen(open);
@@ -328,7 +253,6 @@ function App(props) {
 
     app = (
       <React.Fragment>
-        <Snackbar payload={snackbarPayload} />
         <CssBaseline />
         <ElevationScroll id="header" {...props}>
           <AppBar>
@@ -427,13 +351,6 @@ const mapStateToProps = state => {
       ? state.firebase.profile.role
       : false,
     onboardingSuccessLogic: state.onboarding.success,
-    onboardingError: state.onboarding.error,
-    usersError: state.users.error,
-    classroomError: state.classrooms.error,
-    onboardingSuccess: state.onboarding.showSuccess,
-    myAccountSuccess: state.users.success,
-    deleteSuccess: state.classrooms.deleteSuccess,
-    restoreSuccess: state.classrooms.restoreSuccess,
     role: state.firebase.profile.role,
     disabled: state.firebase.profile.disabled,
     userDisabled: state.users.warning
