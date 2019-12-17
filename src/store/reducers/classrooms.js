@@ -15,6 +15,7 @@ const initialState = {
 };
 
 const classroomStart = (state, action) => {
+
   return updateObject(state, {
     loading: true,
     error: null,

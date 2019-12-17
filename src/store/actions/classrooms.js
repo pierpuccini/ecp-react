@@ -381,7 +381,7 @@ export const addClassroom = payload => {
 export const getAllMyClassrooms = payload => {
   return (dispatch, getState) => {
     const currentState = getState();
-    dispatch(classroomStart(currentState.classrooms.action));
+    dispatch(classroomStart(currentState.classrooms.action,currentState.classrooms.classrooms));
 
     let error;
     // Verifies that the token was properly recieved
@@ -436,7 +436,7 @@ export const getAllMyClassrooms = payload => {
 export const getOneClassroom = payload => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const currentState = getState();
-    dispatch(classroomStart());
+    dispatch(classroomStart('oneClassroom',currentState.classrooms.classrooms));
 
     let error;
     // Verifies that the token was properly recieved
