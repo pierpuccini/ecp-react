@@ -1,10 +1,11 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios/axios";
 
-export const classroomStart = action => {
+export const classroomStart = (action, classrooms) => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_START,
-    action: action
+    action: action,
+    classrooms: classrooms
   };
 };
 
@@ -223,7 +224,7 @@ export const createClassroom = payload => {
 export const updateClassroom = payload => {
   return (dispatch, getState) => {
     const currentState = getState();
-    dispatch(classroomStart());
+    dispatch(classroomStart("update", currentState.classrooms.classrooms));
 
     let error;
     // Verifies that the token was properly recieved
@@ -378,7 +379,7 @@ export const addClassroom = payload => {
 };
 
 export const getAllMyClassrooms = payload => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
+  return (dispatch, getState) => {
     const currentState = getState();
     dispatch(classroomStart(currentState.classrooms.action));
 
@@ -559,7 +560,7 @@ export const manageClassroomStudents = payload => {
 export const restoreClassroom = classroomId => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const currentState = getState();
-    dispatch(classroomStart());
+    dispatch(classroomStart("restore", currentState.classrooms.classrooms));
 
     let error;
     // Verifies that the token was properly recieved
@@ -600,7 +601,7 @@ export const restoreClassroom = classroomId => {
 export const deleteClassroom = classroomId => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const currentState = getState();
-    dispatch(classroomStart());
+    dispatch(classroomStart("delete", currentState.classrooms.classrooms));
 
     let error;
     // Verifies that the token was properly recieved

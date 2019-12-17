@@ -1,5 +1,5 @@
 /* React imports */
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 /* Redux */
 import { connect } from "react-redux";
@@ -82,6 +82,11 @@ const useStyles = makeStyles(theme => ({
   },
   nameAndDetails: {
     textTransform: "capitalize"
+  },
+  infiniteLoaderContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column"
   }
 }));
 
@@ -98,6 +103,7 @@ const ClassroomController = props => {
     getAllMyClassrooms,
     classrooms,
     addClassroom,
+    fetchClassrooms,
     deleteClassroom,
     restoreClassroom,
     activeClassroom
@@ -151,27 +157,6 @@ const ClassroomController = props => {
     }
   }, [loading]);
 
-  /* Incharge of getting next page of items */
-  const clasroomFetcher = useCallback(() => {
-    console.log("lastPage", classrooms);
-    console.log("classroomPage", classroomPage);
-    if (classrooms.lastPage !== classroomPage) {
-      let classroomPageCopy = classroomPage;
-      setclassroomPage(classroomPageCopy + 1);
-      console.log("loading");
-      getAllMyClassrooms({
-        role: role,
-        uid: userId,
-        page: classroomPage
-      });
-      setinfiniteLoader(true);
-    } else {
-      setinfiniteLoader(false);
-    }
-    /* MISSING DEPENDANCIES, role, userId AND getAllMyClassrooms */
-    //eslint-disable-next-line
-  }, [classrooms, classroomPage]);
-
   /* Incharge of attaching scroll event to scroll screen */
   useEffect(() => {
     /* Incharge of loading more classrooms and showing loader */
@@ -179,23 +164,38 @@ const ClassroomController = props => {
       const bottom =
         e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
       if (bottom) {
-        console.log("bottom");
-        clasroomFetcher();
+        if (classrooms.lastPage !== classroomPage) {
+          let classroomPageCopy = classroomPage;
+          setclassroomPage(classroomPageCopy + 1);
+          console.log("loading");
+          getAllMyClassrooms({
+            role: role,
+            uid: userId,
+            page: classroomPage
+          });
+          setinfiniteLoader(true);
+        } else {
+          setinfiniteLoader(false);
+        }
       }
     };
 
+    //Attaches event listener
     if (location.pathname === "/classrooms") {
       // content is the Id of the main container
       document
         .getElementById("content")
         .addEventListener("scroll", handleScroll);
     }
+    //Detaches event listener
     return () => {
       document
         .getElementById("content")
         .removeEventListener("scroll", handleScroll);
     };
-  }, [location, clasroomFetcher]);
+    /* MISSING DEP: 'getAllMyClassrooms', 'role', and 'userId' */
+    //eslint-disable-next-line
+  }, [location, classrooms, classroomPage]);
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
@@ -224,12 +224,6 @@ const ClassroomController = props => {
   );
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
-  const loadingDom = (
-    <div style={{ alignSelf: "center" }}>
-      <Loader />
-    </div>
-  );
-
   /* Use efect handles async loading for loader */
   // Fetches new course on load and gets the firebase classrooms loaded only once
   useEffect(() => {
@@ -242,7 +236,7 @@ const ClassroomController = props => {
         });
       }
       getMyClassrooms()
-        .then(() => {
+        .then(res => {
           setDomReady(true);
         })
         .catch(err => {
@@ -252,10 +246,6 @@ const ClassroomController = props => {
     /* MISSING DEP: getAllMyClassrooms, role, userId, firebaseClassrooms */
     // eslint-disable-next-line
   }, [clients, teachers, students]);
-  
-  if (!isLoaded(clients, teachers, students) && !domReady) {
-    return loadingDom;
-  }
 
   const handleNavChange = (event, newValue) => {
     event.preventDefault();
@@ -346,19 +336,8 @@ const ClassroomController = props => {
     </Switch>
   );
 
-  const customInfiniteLoader = (
-    <div
-      style={{ display: "flex", alignItems: "center", flexDirection: "column" }}
-    >
-      <div style={{ display: "flex" }}>
-        <PngLoader />
-      </div>
-      <p style={{ margin: "unset" }}>Fetching Classrooms</p>
-    </div>
-  );
-
-  const classrooomController =
-    location.pathname === "/classrooms" ? (
+  if (isLoaded(clients, teachers, students) && domReady && fetchClassrooms) {
+    return location.pathname === "/classrooms" ? (
       <Container maxWidth="md" className={classes.container}>
         {redirect}
         <Paper
@@ -421,7 +400,9 @@ const ClassroomController = props => {
             <ClassroomListCard
               classroom={classroom}
               role={role}
-              activeClassroom={activeClassroom.length===0?[]:isClassroomActive.active}
+              activeClassroom={
+                activeClassroom.length === 0 ? [] : isClassroomActive.active
+              }
               classroomTeacher={classroomTeacher}
               classroomInstitution={classroomInstitution}
               prefersDarkMode={prefersDarkMode}
@@ -433,8 +414,13 @@ const ClassroomController = props => {
             />
           );
         })}
-        {ininiteLoader ? (
-          customInfiniteLoader
+        {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (
+          <div className={classes.infiniteLoaderContainer}>
+            <div style={{ display: "flex" }}>
+              <PngLoader />
+            </div>
+            <Typography variant="caption">Fetching Classrooms</Typography>
+          </div>
         ) : (
           <Typography style={{ textAlign: "center", margin: "16px 0px" }}>
             Nothing else to show
@@ -447,8 +433,13 @@ const ClassroomController = props => {
         {routes}
       </React.Fragment>
     );
-
-  return <React.Fragment>{classrooomController}</React.Fragment>;
+  } else {
+    return (
+      <div style={{ alignSelf: "center" }}>
+        <Loader />
+      </div>
+    );
+  }
 };
 
 const mapStateToProps = state => {
@@ -456,10 +447,8 @@ const mapStateToProps = state => {
     role: state.firebase.profile.role,
     loading: state.classrooms.loading,
     userId: state.firebase.auth.uid,
-    classrooms:
-      state.classrooms.classrooms == null
-        ? { data: [] }
-        : state.classrooms.classrooms,
+    classrooms: state.classrooms.classrooms,
+    fetchClassrooms: state.classrooms.success,
     activeClassroom: state.firebase.profile.classrooms
   };
 };

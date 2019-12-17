@@ -20,7 +20,7 @@ const classroomStart = (state, action) => {
     error: null,
     success: null,
     classroom: null,
-    classrooms: null,
+    classrooms: action.classrooms,
     deleteSuccess: false,
     action: action.action,
     restoreSuccess: false
@@ -70,6 +70,7 @@ const getAllClassroomSuccess = (state, action) => {
   return updateObject(state, {
     loading: action.loading,
     error: null,
+    success: true,
     classrooms: action.classrooms
   });
 };
