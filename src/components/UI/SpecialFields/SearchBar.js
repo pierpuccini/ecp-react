@@ -19,8 +19,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto"
+      marginLeft: theme.spacing(1)
     }
   },
   searchIcon: {
@@ -41,12 +40,8 @@ const useStyles = makeStyles(theme => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     textOverflow: "ellipsis",
-    [theme.breakpoints.up("sm")]: {
-      width: 120,
-      "&:focus": {
-        width: 200
-      }
-    }
+    border: "solid 1px #0000003b",
+    borderRadius: "4px"
   }
 }));
 

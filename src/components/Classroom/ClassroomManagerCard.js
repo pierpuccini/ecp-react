@@ -69,7 +69,8 @@ const useStyles = makeStyles(theme => ({
     color: "#FFA000"
   },
   listOptions: {
-      display: "flex"
+      display: "flex",
+      justifyContent: "space-between"
   }
 }));
 
@@ -96,7 +97,6 @@ const ClassroomManagerCard = props => {
       <Button
         variant="outlined"
         onClick={handleFilterToggle}
-        size="small"
         style={!role.includes("admin") ? { width: "100%" } : null}
       >
         <Icon style={{ marginRight: "5px" }}>

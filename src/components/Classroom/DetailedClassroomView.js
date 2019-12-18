@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   },
   expandableContentCards: {
     boxShadow: "unset",
-    border: "2px solid #808080",
+    border: "2px solid #0000003b",
     height: "100%",
     borderRadius: "16px !important",
     margin: theme.spacing(1)
