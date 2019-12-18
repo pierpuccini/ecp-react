@@ -24,5 +24,6 @@ export {
   getAllMyClassrooms,
   getOneClassroom,
   deleteClassroom,
-  restoreClassroom
+  restoreClassroom,
+  searchClassroom
 } from "./classrooms";

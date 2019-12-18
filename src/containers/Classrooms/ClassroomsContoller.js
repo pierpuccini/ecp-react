@@ -114,10 +114,12 @@ const ClassroomController = props => {
     loading,
     getAllMyClassrooms,
     classrooms,
+    classroomsCopy,
     fetchClassrooms,
     addClassroom,
     deleteClassroom,
     restoreClassroom,
+    searchClassroom,
     activeClassroom
   } = props;
 
@@ -337,6 +339,7 @@ const ClassroomController = props => {
 
   const handleClassroomSearch = (event) =>{
     setclassroomSearch(event.target.value)
+    searchClassroom({localSearch: true, classrooms: classroomsCopy, value: event.target.value})
   }
 
   /* Incharge of displaying classroom list */
@@ -479,6 +482,7 @@ const mapStateToProps = state => {
     loading: state.classrooms.loading,
     userId: state.firebase.auth.uid,
     classrooms: state.classrooms.classrooms,
+    classroomsCopy: state.classrooms.classroomsCopy,
     fetchClassrooms: state.classrooms.classrooms != null,
     activeClassroom: state.firebase.profile.classrooms
   };
@@ -490,7 +494,8 @@ const mapDispatchToProps = dispatch => {
     getAllMyClassrooms: payload =>
       dispatch(actions.getAllMyClassrooms(payload)),
     deleteClassroom: payload => dispatch(actions.deleteClassroom(payload)),
-    restoreClassroom: payload => dispatch(actions.restoreClassroom(payload))
+    restoreClassroom: payload => dispatch(actions.restoreClassroom(payload)),
+    searchClassroom: payload => dispatch(actions.searchClassroom(payload))
   };
 };
 

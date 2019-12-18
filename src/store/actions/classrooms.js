@@ -73,6 +73,13 @@ export const deleteclassroomCreateSuccess = () => {
   };
 };
 
+export const classroomSearchSuccess = classrooms => {
+  return {
+    type: actionTypes.CLASSROOM_SEARCH_SUCCESS,
+    classrooms: classrooms
+  };
+};
+
 /* ---------- Indexed fuctions ---------- */
 export const createClassroom = payload => {
   return (dispatch, getState) => {
@@ -378,7 +385,9 @@ export const getAllMyClassrooms = payload => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
-      const url = `/all-classroom?type=${payload.role}&user_id=${payload.uid}&page=${payload.page}&filterString=${
+      const url = `/all-classroom?type=${payload.role}&user_id=${
+        payload.uid
+      }&page=${payload.page}&filterString=${
         payload.filter == null
           ? '{"status": "all", "time": "none"}'
           : JSON.stringify(payload.filter)
@@ -625,6 +634,78 @@ export const deleteClassroom = classroomId => {
 
           dispatch(classroomFail(error));
         });
+    }
+  };
+};
+
+export const searchClassroom = payload => {
+  return (dispatch, getState) => {
+    const currentState = getState();
+    dispatch(classroomStart("search", currentState.classrooms.classrooms));
+
+    let error;
+    // Verifies that the token was properly recieved
+    if (currentState.auth.token.type === "error") {
+      error = {
+        code: "token-error",
+        message: `${currentState.auth.token.message} for user, please refresh the page`
+      };
+      dispatch(classroomFail(error));
+    } /* If token is all good proceed to sending information to API */ else {
+      console.log("payload", payload);
+      /* This condition first searches to match local classroom
+       if user prefers then it will find in whole db */
+      if (payload.localSearch) {
+        let newClassroom;
+        let data = [...payload.classrooms.data];
+        let resultArray = [];
+        //Checks if input is type string
+        if (isNaN(payload.value)) {
+          //If string the only param for local search is name
+          data.forEach(classroom => {
+            if (classroom.subject_name.includes(payload.value)) {
+              resultArray.push(classroom);
+            }
+          });
+        } else {
+          //If number the only param for local search is classroom ID
+          data.forEach(classroom => {
+            if (classroom.subject_id.toString().includes(payload.value)) {
+              resultArray.push(classroom);
+            }
+          });
+        }
+        newClassroom = { ...payload.classrooms, data: resultArray };
+        if (payload.value === "") {
+          newClassroom = currentState.classrooms.classroomsCopy;
+        }
+        dispatch(classroomSearchSuccess(newClassroom));
+      } else {
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentState.auth.token.token}`
+        };
+
+        const url = `/search-classroom`;
+        axios
+          .get(url, { headers: headers })
+          .then(() => {
+            dispatch(deleteclassroomCreateSuccess());
+          })
+          .catch(error => {
+            console.log(error.response);
+            if (error.response == null) {
+              error = { message: "Server Error, contact support" };
+            } else {
+              error =
+                error.response.data.error != null
+                  ? error.response.data.error
+                  : error.response.data;
+            }
+
+            dispatch(classroomFail(error));
+          });
+      }
     }
   };
 };
