@@ -17,6 +17,8 @@ import Collapse from "@material-ui/core/Collapse";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
 import FilterListOutlinedIcon from "@material-ui/icons/FilterListOutlined";
+/* App Imports */
+import SearchBar from "../UI/SpecialFields/SearchBar";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -73,7 +75,9 @@ const ClassroomManagerCard = props => {
     selectState,
     handleselectState,
     handleNavChange,
-    handleAddClassStudent
+    handleAddClassStudent,
+    searchValue,
+    searchOnChange
   } = props;
 
   const filterToggleButton = (
@@ -174,11 +178,10 @@ const ClassroomManagerCard = props => {
           filterToggleButton
         ) : null}
       </div>
+      <Divider style={{margin: "8px 0px"}}/>
+      <SearchBar value={searchValue} onChange={(event)=>{searchOnChange(event)}} placeholder="Search for classroom..." />
       {!role.includes("admin") ? (
-        <React.Fragment>
-          <Divider />
-          {filtersContainer}
-        </React.Fragment>
+        <React.Fragment>{filtersContainer}</React.Fragment>
       ) : (
         filterCollapsable
       )}

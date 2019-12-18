@@ -130,6 +130,7 @@ const ClassroomController = props => {
     time: "none"
   });
   const [filterToggle, setfilterToggle] = useState(false);
+  const [classroomSearch, setclassroomSearch] = useState("")
   const [classroomPage, setclassroomPage] = useState(1);
   const [ininiteLoader, setinfiniteLoader] = useState(false);
   const [addClassroomForm, setaddClassroomForm] = useState({
@@ -334,6 +335,10 @@ const ClassroomController = props => {
     setfilterToggle(!copy);
   };
 
+  const handleClassroomSearch = (event) =>{
+    setclassroomSearch(event.target.value)
+  }
+
   /* Incharge of displaying classroom list */
   const classroomsToMap = classroomsArray => {
     return classroomsArray.map(classroom => {
@@ -436,6 +441,8 @@ const ClassroomController = props => {
           handleselectState={handleselectState}
           handleAddClassStudent={handleAddClassStudent}
           handleNavChange={handleNavChange}
+          searchValue={classroomSearch}
+          searchOnChange={handleClassroomSearch}
         />
         {classroomsToMap(classrooms.data)}
         {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (
