@@ -48,7 +48,11 @@ export const getAllclassroomCreateSuccess = (classrooms, loading) => {
   };
 };
 
-export const getclassroomCreateSuccess = (classroom,classrooms,updateSuccess) => {
+export const getclassroomCreateSuccess = (
+  classroom,
+  classrooms,
+  updateSuccess
+) => {
   return {
     type: actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS,
     classroom: classroom,
@@ -375,7 +379,11 @@ export const getAllMyClassrooms = payload => {
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
       console.log(payload.filter);
-      const url = `/all-classroom?type=${payload.role}&user_id=${payload.uid}&page=${payload.page}&filter=${JSON.stringify(payload.filter)}`;
+      const url = `/all-classroom?type=${payload.role}&user_id=${payload.uid}&page=${payload.page}&filterString=${
+        payload.filter == null
+          ? '{"status": "all", "time": "none"}'
+          : JSON.stringify(payload.filter)
+      }`;
       axios
         .get(url, { headers: headers })
         .then(response => {
