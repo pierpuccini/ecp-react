@@ -14,10 +14,12 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
+import Collapse from "@material-ui/core/Collapse";
 //Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
@@ -74,6 +76,7 @@ const useStyles = makeStyles(theme => ({
   classroomListHeaderContainer: {
     display: "flex",
     justifyContent: "space-between",
+    flexWrap : "wrap",
     margin: theme.spacing(1, 1)
   },
   classroomFilters: {
@@ -82,9 +85,12 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(0, 1)
   },
   classroomFiltersContainer: {
-    display: "flex",
-    justifyContent: "space-between",
     margin: theme.spacing(1, 1)
+  },
+  classroomFiltersInputs: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-evenly"
   },
   statusSelect: {
     width: "120px"
@@ -135,6 +141,7 @@ const ClassroomController = props => {
     status: "all",
     time: "none"
   });
+  const [filterToggle, setfilterToggle] = useState(false);
   const [classroomPage, setclassroomPage] = useState(1);
   const [ininiteLoader, setinfiniteLoader] = useState(false);
   const [addClassroomForm, setaddClassroomForm] = useState({
@@ -334,6 +341,11 @@ const ClassroomController = props => {
     });
   };
 
+  const handleFilterToggle = () => {
+    let copy = filterToggle;
+    setfilterToggle(!copy);
+  };
+
   /* Incharge of displaying classroom list */
   const classroomsToMap = classroomsArray => {
     return classroomsArray.map(classroom => {
@@ -412,96 +424,129 @@ const ClassroomController = props => {
     </Switch>
   );
 
+  const filterToggleButton = (
+    <div className={classes.classroomFilters}>
+      <Button
+        variant="outlined"
+        onClick={handleFilterToggle}
+        size="small"
+        style={!role.includes("admin") ? { width: "100%" } : null}
+      >
+        <Icon style={{ marginRight: "5px" }}>
+          <FilterListOutlinedIcon />
+        </Icon>
+        <Typography>Filters</Typography>
+      </Button>
+    </div>
+  );
+
+  const filterCollapsable = (
+    <Collapse in={filterToggle}>
+      <div className={classes.classroomFiltersInputs}>
+        <TextField
+          className={classes.statusSelect}
+          label="By Status"
+          placeholder="Active"
+          type="text"
+          margin="normal"
+          variant="outlined"
+          value={selectState.status}
+          onChange={event => {
+            handleselectState(event, "status");
+          }}
+          select
+        >
+          <MenuItem value="all">All</MenuItem>
+          <MenuItem value="active">Active</MenuItem>
+          <MenuItem value="inactive">Inactive</MenuItem>
+        </TextField>
+        <TextField
+          className={classes.statusSelect}
+          label="By Time"
+          placeholder="Created (Newest)"
+          type="text"
+          margin="normal"
+          variant="outlined"
+          value={selectState.time}
+          onChange={event => {
+            handleselectState(event, "time");
+          }}
+          select
+        >
+          <MenuItem value="none">none</MenuItem>
+          <MenuItem value="createdNew">created (newest)</MenuItem>
+          <MenuItem value="createdOld">created (oldest)</MenuItem>
+          <MenuItem value="updatedNew">updated (newest)</MenuItem>
+          <MenuItem value="updatedOld">updated (oldest)</MenuItem>
+        </TextField>
+      </div>
+    </Collapse>
+  );
+  const filtersContainer = (
+    <div className={classes.classroomFiltersContainer}>
+      {!role.includes("admin") ? filterToggleButton : null}
+      {filterCollapsable}
+    </div>
+  );
+
+  const managerCard = (
+    <Paper
+      className={classes.paper}
+      style={prefersDarkMode ? { border: "unset" } : null}
+    >
+      <div className={classes.classroomListHeaderContainer}>
+        <div className={classes.classroomListHeader}>
+          <Icon style={{ marginRight: "5px" }}>
+            <ListOutlinedIcon />
+          </Icon>
+          <Typography>Classroom List</Typography>
+        </div>
+        {role === "student" ? (
+          <Tooltip title="Add Classroom">
+            <IconButton onClick={handleAddClassStudent}>
+              <AddCircleOutlineOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        ) : role === "teacher" ? (
+          <Tooltip title="Create Classroom">
+            <IconButton
+              onClick={event => {
+                handleNavChange(event, "classrooms/create");
+              }}
+            >
+              <AddCircleOutlineOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        ) : role.includes("admin") ? (
+          filterToggleButton
+        ) : null}
+      </div>
+      {!role.includes("admin") ? (
+        <React.Fragment>
+          <Divider />
+          {filtersContainer}
+        </React.Fragment>
+      ) : filterCollapsable}
+    </Paper>
+  );
+
+  const modalContainer = (
+    <Modal openModal={openAddClassModal} closeModal={handleAddClassStudent}>
+      <AddClassroomModal
+        addClassroomForm={addClassroomForm}
+        addClassroomFormChanged={addClassroomInputHandler}
+        submitHandler={addClassroomHandler}
+      />
+    </Modal>
+  );
+
   if (isLoaded(clients, teachers, students) && domReady && fetchClassrooms) {
     return location.pathname === "/classrooms" ? (
       <Container maxWidth="md" className={classes.container}>
         {loading ? <FloatingLoader></FloatingLoader> : null}
+        {modalContainer}
         {redirect}
-        <Paper
-          className={classes.paper}
-          style={prefersDarkMode ? { border: "unset" } : null}
-        >
-          <div className={classes.classroomListHeaderContainer}>
-            <div className={classes.classroomListHeader}>
-              <Icon style={{ marginRight: "5px" }}>
-                <ListOutlinedIcon />
-              </Icon>
-              <Typography>Classroom List</Typography>
-            </div>
-            {role === "student" ? (
-              <Tooltip title="Add Classroom">
-                <IconButton onClick={handleAddClassStudent}>
-                  <AddCircleOutlineOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            ) : !role.includes("admin") ? (
-              <Tooltip title="Create Classroom">
-                <IconButton
-                  onClick={event => {
-                    handleNavChange(event, "classrooms/create");
-                  }}
-                >
-                  <AddCircleOutlineOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            ) : null}
-          </div>
-          <Divider />
-          <div className={classes.classroomFiltersContainer}>
-            <div className={classes.classroomFilters}>
-              <Icon style={{ marginRight: "5px" }}>
-                <FilterListOutlinedIcon />
-              </Icon>
-              <Typography>Filters</Typography>
-            </div>
-            <TextField
-              className={classes.statusSelect}
-              label="By Status"
-              placeholder="Active"
-              type="text"
-              margin="normal"
-              variant="outlined"
-              value={selectState.status}
-              onChange={event => {
-                handleselectState(event, "status");
-              }}
-              select
-            >
-              <MenuItem value="all">All</MenuItem>
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="inactive">Inactive</MenuItem>
-            </TextField>
-            <TextField
-              className={classes.statusSelect}
-              label="By Time"
-              placeholder="Created (Newest)"
-              type="text"
-              margin="normal"
-              variant="outlined"
-              value={selectState.time}
-              onChange={event => {
-                handleselectState(event, "time");
-              }}
-              select
-            >
-              <MenuItem value="none">none</MenuItem>
-              <MenuItem value="createdNew">created (newest)</MenuItem>
-              <MenuItem value="createdOld">created (oldest)</MenuItem>
-              <MenuItem value="updatedNew">updated (newest)</MenuItem>
-              <MenuItem value="updatedOld">updated (oldest)</MenuItem>
-            </TextField>
-          </div>
-          <Modal
-            openModal={openAddClassModal}
-            closeModal={handleAddClassStudent}
-          >
-            <AddClassroomModal
-              addClassroomForm={addClassroomForm}
-              addClassroomFormChanged={addClassroomInputHandler}
-              submitHandler={addClassroomHandler}
-            />
-          </Modal>
-        </Paper>
+        {managerCard}
         {classroomsToMap(classrooms.data)}
         {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (
           <div className={classes.infiniteLoaderContainer}>
