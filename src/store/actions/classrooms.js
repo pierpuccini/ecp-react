@@ -9,12 +9,10 @@ export const classroomStart = (action, classrooms) => {
   };
 };
 
-export const classroomFail = (error, classroom, classrooms) => {
+export const classroomFail = (error) => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_FAILED,
-    error: error,
-    classrooms: classrooms,
-    classroom: classroom
+    error: error
   };
 };
 
