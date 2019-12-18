@@ -168,27 +168,25 @@ const ClassroomManagerCard = props => {
     </div>
   );
 
-  let topButton;
-  if (role.includes("admin")) {
-    topButton = filterToggleButton;
-  } else {
-    topButton = (
-      <Tooltip
-        placement="left"
-        title={role === "teacher" ? "Create Classroom" : "Add Classroom"}
+  let topButton = null;
+if (!role.includes('admin')) {
+  topButton = (
+    <Tooltip
+      placement="left"
+      title={role === "teacher" ? "Create Classroom" : "Add Classroom"}
+    >
+      <IconButton
+        onClick={event => {
+          role === "teacher"
+            ? handleNavChange(event, "classrooms/create")
+            : handleAddClassStudent();
+        }}
       >
-        <IconButton
-          onClick={event => {
-            role === "teacher"
-              ? handleNavChange(event, "classrooms/create")
-              : handleAddClassStudent();
-          }}
-        >
-          <AddCircleOutlineOutlinedIcon />
-        </IconButton>
-      </Tooltip>
-    );
-  }
+        <AddCircleOutlineOutlinedIcon />
+      </IconButton>
+    </Tooltip>
+  );
+}
 
   return (
     <Paper
@@ -213,7 +211,7 @@ const ClassroomManagerCard = props => {
           }}
           placeholder="Search by Name or ID..."
         />
-        {!role.includes("admin") ? filterToggleButton : null}
+        {filterToggleButton}
         </div>
         {serverSearch ? serverSearchButton : null}
       {filterCollapsable}

@@ -448,9 +448,6 @@ const ClassroomController = props => {
     </Modal>
   );
 
-  console.log('1',isLoaded(clients, teachers, students));
-  console.log('2',domReady);
-  console.log('3',fetchClassrooms);
   if (isLoaded(clients, teachers, students) && domReady && fetchClassrooms) {
     return location.pathname === "/classrooms" ? (
       <Container maxWidth="md" className={classes.container}>
