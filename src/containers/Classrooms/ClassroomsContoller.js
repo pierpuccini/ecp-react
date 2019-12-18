@@ -30,7 +30,7 @@ import ClassroomListCard from "../../components/Classroom/ClassroomListCard";
 import Modal from "../../components/UI/Modal/Modal";
 import PngLoader from "../../components/UI/Loader/PngLoader/PngLoader";
 import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLoader";
-import { updateObject, checkValidity, sortDates } from "../../shared/utility";
+import { updateObject, checkValidity } from "../../shared/utility";
 
 const createClassroom = asyncComponent(() => {
   return import("./Actions/CreateClassroom");
@@ -73,6 +73,7 @@ const useStyles = makeStyles(theme => ({
   },
   classroomListHeaderContainer: {
     display: "flex",
+    justifyContent: "space-between",
     margin: theme.spacing(1, 1)
   },
   classroomFilters: {
@@ -315,61 +316,27 @@ const ClassroomController = props => {
     addClassroom(payload);
   };
 
+  const handleDelete = classroomId => {
+    deleteClassroom(classroomId);
+  };
+
+  const handleRestore = classroomId => {
+    restoreClassroom(classroomId);
+  };
+
   const handleselectState = (event, control) => {
     setselectState({ ...selectState, [control]: event.target.value });
+    getAllMyClassrooms({
+      role: role,
+      uid: userId,
+      page: classroomPage,
+      filter: selectState
+    });
   };
 
-  const classroomListFilters = (list, status, time) => {
-    let classroomList;
-    let activeList = (classroomList = list.filter(
-      classroom => classroom.active_classroom === true
-    ));
-    let inactiveList = list.filter(
-      classroom => classroom.active_classroom === false
-    );
-    if (status === "all" && time === "none") {
-      return [
-        ...sortDates("new", activeList, "updated_at"),
-        ...sortDates("new", inactiveList, "updated_at")
-      ];
-    } else if (status !== "all") {
-      switch (status) {
-        case "active":
-          classroomList = activeList;
-          break;
-        case "inactive":
-          classroomList = inactiveList;
-          break;
-        default:
-          break;
-      }
-    } else if (time !== "none") {
-      switch (time) {
-        case "createdNew":
-          classroomList = sortDates("new", list, "created_at");
-          break;
-        case "createdOld":
-          classroomList = sortDates("old", list, "created_at");
-          break;
-        case "updatedNew":
-          classroomList = sortDates("new", list, "updated_at");
-          break;
-        case "updatedOld":
-          classroomList = sortDates("old", list, "updated_at");
-          break;
-        default:
-          break;
-      }
-    }
-    return classroomList;
-  };
-
+  /* Incharge of displaying classroom list */
   const classroomsToMap = classroomsArray => {
-    const classroomlistCard = classroomListFilters(
-      classroomsArray,
-      selectState.status,
-      selectState.time
-    ).map(classroom => {
+    return classroomsArray.map(classroom => {
       //Checks if classroom is active in firebase
       let isClassroomActive;
       if (role.includes("admin")) {
@@ -409,15 +376,6 @@ const ClassroomController = props => {
         />
       );
     });
-    return classroomlistCard;
-  };
-
-  const handleDelete = classroomId => {
-    deleteClassroom(classroomId);
-  };
-
-  const handleRestore = classroomId => {
-    restoreClassroom(classroomId);
   };
 
   /* Define new routes in routes array with their url and corresponding component */
@@ -498,7 +456,7 @@ const ClassroomController = props => {
             </div>
             <TextField
               className={classes.statusSelect}
-              label="Status"
+              label="By Status"
               placeholder="Active"
               type="text"
               margin="normal"
@@ -515,8 +473,8 @@ const ClassroomController = props => {
             </TextField>
             <TextField
               className={classes.statusSelect}
-              label="Status"
-              placeholder="Active"
+              label="By Time"
+              placeholder="Created (Newest)"
               type="text"
               margin="normal"
               variant="outlined"
