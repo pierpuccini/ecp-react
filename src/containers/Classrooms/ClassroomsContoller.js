@@ -10,23 +10,11 @@ import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Container from "@material-ui/core/Container";
-import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import Icon from "@material-ui/core/Icon";
-import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
-import Tooltip from "@material-ui/core/Tooltip";
-import Divider from "@material-ui/core/Divider";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import Collapse from "@material-ui/core/Collapse";
-//Icons
-import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
-import ListOutlinedIcon from "@material-ui/icons/ListOutlined";
-import FilterListOutlinedIcon from "@material-ui/icons/FilterListOutlined";
 /* App imports */
 import Loader from "../../components/UI/Loader/PngLoader/PngLoader";
 import asyncComponent from "../../hoc/asyncComponent/asyncComponent";
+import ClassroomManagerCard from "../../components/Classroom/ClassroomManagerCard";
 import AddClassroomModal from "../../components/Classroom/Modals/AddClassroomModal";
 import ClassroomListCard from "../../components/Classroom/ClassroomListCard";
 import Modal from "../../components/UI/Modal/Modal";
@@ -76,7 +64,7 @@ const useStyles = makeStyles(theme => ({
   classroomListHeaderContainer: {
     display: "flex",
     justifyContent: "space-between",
-    flexWrap : "wrap",
+    flexWrap: "wrap",
     margin: theme.spacing(1, 1)
   },
   classroomFilters: {
@@ -424,112 +412,6 @@ const ClassroomController = props => {
     </Switch>
   );
 
-  const filterToggleButton = (
-    <div className={classes.classroomFilters}>
-      <Button
-        variant="outlined"
-        onClick={handleFilterToggle}
-        size="small"
-        style={!role.includes("admin") ? { width: "100%" } : null}
-      >
-        <Icon style={{ marginRight: "5px" }}>
-          <FilterListOutlinedIcon />
-        </Icon>
-        <Typography>Filters</Typography>
-      </Button>
-    </div>
-  );
-
-  const filterCollapsable = (
-    <Collapse in={filterToggle}>
-      <div className={classes.classroomFiltersInputs}>
-        <TextField
-          className={classes.statusSelect}
-          label="By Status"
-          placeholder="Active"
-          type="text"
-          margin="normal"
-          variant="outlined"
-          value={selectState.status}
-          onChange={event => {
-            handleselectState(event, "status");
-          }}
-          select
-        >
-          <MenuItem value="all">All</MenuItem>
-          <MenuItem value="active">Active</MenuItem>
-          <MenuItem value="inactive">Inactive</MenuItem>
-        </TextField>
-        <TextField
-          className={classes.statusSelect}
-          label="By Time"
-          placeholder="Created (Newest)"
-          type="text"
-          margin="normal"
-          variant="outlined"
-          value={selectState.time}
-          onChange={event => {
-            handleselectState(event, "time");
-          }}
-          select
-        >
-          <MenuItem value="none">none</MenuItem>
-          <MenuItem value="createdNew">created (newest)</MenuItem>
-          <MenuItem value="createdOld">created (oldest)</MenuItem>
-          <MenuItem value="updatedNew">updated (newest)</MenuItem>
-          <MenuItem value="updatedOld">updated (oldest)</MenuItem>
-        </TextField>
-      </div>
-    </Collapse>
-  );
-  const filtersContainer = (
-    <div className={classes.classroomFiltersContainer}>
-      {!role.includes("admin") ? filterToggleButton : null}
-      {filterCollapsable}
-    </div>
-  );
-
-  const managerCard = (
-    <Paper
-      className={classes.paper}
-      style={prefersDarkMode ? { border: "unset" } : null}
-    >
-      <div className={classes.classroomListHeaderContainer}>
-        <div className={classes.classroomListHeader}>
-          <Icon style={{ marginRight: "5px" }}>
-            <ListOutlinedIcon />
-          </Icon>
-          <Typography>Classroom List</Typography>
-        </div>
-        {role === "student" ? (
-          <Tooltip title="Add Classroom">
-            <IconButton onClick={handleAddClassStudent}>
-              <AddCircleOutlineOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        ) : role === "teacher" ? (
-          <Tooltip title="Create Classroom">
-            <IconButton
-              onClick={event => {
-                handleNavChange(event, "classrooms/create");
-              }}
-            >
-              <AddCircleOutlineOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        ) : role.includes("admin") ? (
-          filterToggleButton
-        ) : null}
-      </div>
-      {!role.includes("admin") ? (
-        <React.Fragment>
-          <Divider />
-          {filtersContainer}
-        </React.Fragment>
-      ) : filterCollapsable}
-    </Paper>
-  );
-
   const modalContainer = (
     <Modal openModal={openAddClassModal} closeModal={handleAddClassStudent}>
       <AddClassroomModal
@@ -546,7 +428,15 @@ const ClassroomController = props => {
         {loading ? <FloatingLoader></FloatingLoader> : null}
         {modalContainer}
         {redirect}
-        {managerCard}
+        <ClassroomManagerCard
+          role={role}
+          filterToggle={filterToggle}
+          handleFilterToggle={handleFilterToggle}
+          selectState={selectState}
+          handleselectState={handleselectState}
+          handleAddClassStudent={handleAddClassStudent}
+          handleNavChange={handleNavChange}
+        />
         {classroomsToMap(classrooms.data)}
         {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (
           <div className={classes.infiniteLoaderContainer}>
