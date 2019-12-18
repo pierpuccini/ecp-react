@@ -132,7 +132,7 @@ const ClassroomController = props => {
     time: "none"
   });
   const [filterToggle, setfilterToggle] = useState(false);
-  const [classroomSearch, setclassroomSearch] = useState("")
+  const [classroomSearch, setclassroomSearch] = useState("");
   const [classroomPage, setclassroomPage] = useState(1);
   const [ininiteLoader, setinfiniteLoader] = useState(false);
   const [addClassroomForm, setaddClassroomForm] = useState({
@@ -337,10 +337,28 @@ const ClassroomController = props => {
     setfilterToggle(!copy);
   };
 
-  const handleClassroomSearch = (event) =>{
-    setclassroomSearch(event.target.value)
-    searchClassroom({localSearch: true, classrooms: classroomsCopy, value: event.target.value})
-  }
+  const handleClassroomSearch = event => {
+    setclassroomSearch(event.target.value);
+    searchClassroom({
+      localSearch: true,
+      classrooms: classroomsCopy,
+      value: event.target.value
+    });
+  };
+
+  const handleBackendSearchButton = () => {
+    searchClassroom({
+      localSearch: false,
+      classrooms: classroomsCopy,
+      value: classroomSearch,
+      allClassroomsPayload: {
+        role: role,
+        uid: userId,
+        page: classroomPage
+      },
+      filter: selectState
+    });
+  };
 
   /* Incharge of displaying classroom list */
   const classroomsToMap = classroomsArray => {
@@ -446,6 +464,8 @@ const ClassroomController = props => {
           handleNavChange={handleNavChange}
           searchValue={classroomSearch}
           searchOnChange={handleClassroomSearch}
+          serverSearch={classrooms.data.length < classroomsCopy.data.length}
+          handleServerSearch={handleBackendSearchButton}
         />
         {classroomsToMap(classrooms.data)}
         {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (

@@ -61,6 +61,15 @@ const useStyles = makeStyles(theme => ({
   },
   statusSelect: {
     width: "120px"
+  },
+  backendSearch: {
+    display: "flex",
+    flexDirection: "column",
+    margin: "8px 16px 8px 8px"
+  },
+  caption: {
+    margin: theme.spacing(1),
+    color: "#FFA000"
   }
 }));
 
@@ -77,7 +86,9 @@ const ClassroomManagerCard = props => {
     handleNavChange,
     handleAddClassStudent,
     searchValue,
-    searchOnChange
+    searchOnChange,
+    serverSearch,
+    handleServerSearch
   } = props;
 
   const filterToggleButton = (
@@ -146,6 +157,40 @@ const ClassroomManagerCard = props => {
     </div>
   );
 
+  const serverSearchButton = (
+    <div className={classes.backendSearch}>
+      <Button className={classes.button} size="small" variant="outlined" onClick={()=>{handleServerSearch()}}>
+        Search all
+      </Button>
+      <Typography variant="caption" className={classes.caption}>
+        *This will take longer as search is done globaly
+      </Typography>
+    </div>
+  );
+
+  let topButton = filterToggleButton;
+  if (role === "student") {
+    topButton = (
+      <Tooltip title="Add Classroom">
+        <IconButton onClick={handleAddClassStudent}>
+          <AddCircleOutlineOutlinedIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  } else if (role === "teacher") {
+    topButton = (
+      <Tooltip title="Create Classroom">
+        <IconButton
+          onClick={event => {
+            handleNavChange(event, "classrooms/create");
+          }}
+        >
+          <AddCircleOutlineOutlinedIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  }
+
   return (
     <Paper
       className={classes.paper}
@@ -158,28 +203,17 @@ const ClassroomManagerCard = props => {
           </Icon>
           <Typography>Classroom List</Typography>
         </div>
-        {role === "student" ? (
-          <Tooltip title="Add Classroom">
-            <IconButton onClick={handleAddClassStudent}>
-              <AddCircleOutlineOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        ) : role === "teacher" ? (
-          <Tooltip title="Create Classroom">
-            <IconButton
-              onClick={event => {
-                handleNavChange(event, "classrooms/create");
-              }}
-            >
-              <AddCircleOutlineOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        ) : role.includes("admin") ? (
-          filterToggleButton
-        ) : null}
+        {topButton}
       </div>
-      <Divider style={{margin: "8px 0px"}}/>
-      <SearchBar value={searchValue} onChange={(event)=>{searchOnChange(event)}} placeholder="Search for classroom..." />
+      <Divider style={{ margin: "8px 0px" }} />
+      <SearchBar
+        value={searchValue}
+        onChange={event => {
+          searchOnChange(event);
+        }}
+        placeholder="Search by Name or ID..."
+      />
+      {serverSearch ? serverSearchButton : null}
       {!role.includes("admin") ? (
         <React.Fragment>{filtersContainer}</React.Fragment>
       ) : (

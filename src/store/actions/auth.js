@@ -1,4 +1,5 @@
 import * as actionTypes from "./actionTypes";
+import axios from "../../axios/axios";
 
 export const authStart = () => {
   return {
@@ -339,6 +340,7 @@ export const sendIdToken = () => {
       .auth()
       .currentUser.getIdToken(/* forceRefresh */ true)
       .then(idToken => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${idToken}`
         dispatch(getIdToken({type: "success", message: "", token: idToken}))
       })
       .catch(error => {
