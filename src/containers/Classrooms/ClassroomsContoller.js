@@ -330,7 +330,7 @@ const ClassroomController = props => {
       role: role,
       uid: userId,
       page: classroomPage,
-      filter: selectState
+      filter: { ...selectState, [control]: event.target.value }
     });
   };
 

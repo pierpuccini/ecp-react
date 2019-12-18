@@ -374,8 +374,8 @@ export const getAllMyClassrooms = payload => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentState.auth.token.token}`
       };
-
-      const url = `/all-classroom?type=${payload.role}&user_id=${payload.uid}&page=${payload.page}&filter=${payload.filter}`;
+      console.log(payload.filter);
+      const url = `/all-classroom?type=${payload.role}&user_id=${payload.uid}&page=${payload.page}&filter=${JSON.stringify(payload.filter)}`;
       axios
         .get(url, { headers: headers })
         .then(response => {
