@@ -7,7 +7,6 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
@@ -48,8 +47,7 @@ const useStyles = makeStyles(theme => ({
   },
   classroomFilters: {
     display: "flex",
-    alignSelf: "center",
-    margin: theme.spacing(0, 1)
+    alignSelf: "center"
   },
   classroomFiltersInputs: {
     display: "flex",
@@ -69,8 +67,8 @@ const useStyles = makeStyles(theme => ({
     color: "#FFA000"
   },
   listOptions: {
-      display: "flex",
-      justifyContent: "space-between"
+    display: "flex",
+    justifyContent: "space-between"
   }
 }));
 
@@ -88,22 +86,18 @@ const ClassroomManagerCard = props => {
     handleAddClassStudent,
     searchValue,
     searchOnChange,
-    serverSearch,
-    handleServerSearch
+    serverSearch
   } = props;
 
   const filterToggleButton = (
     <div className={classes.classroomFilters}>
-      <Button
+      <IconButton
         variant="outlined"
         onClick={handleFilterToggle}
         style={!role.includes("admin") ? { width: "100%" } : null}
       >
-        <Icon style={{ marginRight: "5px" }}>
-          <FilterListOutlinedIcon />
-        </Icon>
-        <Typography variant="button">Filters</Typography>
-      </Button>
+        <FilterListOutlinedIcon />
+      </IconButton>
     </div>
   );
 
@@ -150,43 +144,25 @@ const ClassroomManagerCard = props => {
     </Collapse>
   );
 
-  const serverSearchButton = (
-    <div className={classes.backendSearch}>
-      <Button
-        className={classes.button}
-        size="small"
-        variant="outlined"
-        onClick={() => {
-          handleServerSearch();
-        }}
-      >
-        Search all
-      </Button>
-      <Typography variant="caption" className={classes.caption}>
-        *This will take longer as search is done globaly
-      </Typography>
-    </div>
-  );
-
   let topButton = null;
-if (!role.includes('admin')) {
-  topButton = (
-    <Tooltip
-      placement="left"
-      title={role === "teacher" ? "Create Classroom" : "Add Classroom"}
-    >
-      <IconButton
-        onClick={event => {
-          role === "teacher"
-            ? handleNavChange(event, "classrooms/create")
-            : handleAddClassStudent();
-        }}
+  if (!role.includes("admin")) {
+    topButton = (
+      <Tooltip
+        placement="left"
+        title={role === "teacher" ? "Create Classroom" : "Add Classroom"}
       >
-        <AddCircleOutlineOutlinedIcon />
-      </IconButton>
-    </Tooltip>
-  );
-}
+        <IconButton
+          onClick={event => {
+            role === "teacher"
+              ? handleNavChange(event, "classrooms/create")
+              : handleAddClassStudent();
+          }}
+        >
+          <AddCircleOutlineOutlinedIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  }
 
   return (
     <Paper
@@ -210,10 +186,14 @@ if (!role.includes('admin')) {
             searchOnChange(event);
           }}
           placeholder="Search by Name or ID..."
+          endComponent={filterToggleButton}
         />
-        {filterToggleButton}
-        </div>
-        {serverSearch ? serverSearchButton : null}
+      </div>
+      {serverSearch ? (
+        <Typography variant="caption" className={classes.caption}>
+          *This will take longer as search is done globaly
+        </Typography>
+      ) : null}
       {filterCollapsable}
     </Paper>
   );

@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => ({
     "&:hover": {
       backgroundColor: fade(theme.palette.common.white, 0.25)
     },
+    border: "solid 1px #0000003b",
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
@@ -39,16 +40,14 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1, 1, 1, 7),
     transition: theme.transitions.create("width"),
     width: "100%",
-    textOverflow: "ellipsis",
-    border: "solid 1px #0000003b",
-    borderRadius: "4px"
+    textOverflow: "ellipsis"
   }
 }));
 
 const SearchBar = (props) => {
   const classes = useStyles();
 
-  const { value, onChange, placeholder } = props
+  const { value, onChange, placeholder, startComponent, endComponent } = props
 
   return (
     <div className={classes.search}>
@@ -64,6 +63,8 @@ const SearchBar = (props) => {
         inputProps={{ "aria-label": "search" }}
         value={value}
         onChange={onChange}
+        startAdornment={startComponent}
+        endAdornment={endComponent}
       />
     </div>
   );

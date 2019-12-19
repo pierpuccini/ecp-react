@@ -338,26 +338,27 @@ const ClassroomController = props => {
   };
 
   const handleClassroomSearch = event => {
+    const { data, total, perPage, page } = classrooms;
     setclassroomSearch(event.target.value);
-    searchClassroom({
-      localSearch: true,
-      classrooms: classroomsCopy,
-      value: event.target.value
-    });
-  };
-
-  const handleBackendSearchButton = () => {
-    searchClassroom({
-      localSearch: false,
-      classrooms: classroomsCopy,
-      value: classroomSearch,
-      allClassroomsPayload: {
-        role: role,
-        uid: userId,
-        page: classroomPage
-      },
-      filter: selectState
-    });
+    if (data.length === 0 && total > perPage * page) {
+      searchClassroom({
+        localSearch: false,
+        classrooms: classroomsCopy,
+        value: classroomSearch,
+        allClassroomsPayload: {
+          role: role,
+          uid: userId,
+          page: classroomPage
+        },
+        filter: selectState
+      });
+    } else {
+      searchClassroom({
+        localSearch: true,
+        classrooms: classroomsCopy,
+        value: event.target.value
+      });
+    }
   };
 
   /* Incharge of displaying classroom list */
@@ -464,8 +465,10 @@ const ClassroomController = props => {
           handleNavChange={handleNavChange}
           searchValue={classroomSearch}
           searchOnChange={handleClassroomSearch}
-          serverSearch={classrooms.data.length < classroomsCopy.data.length}
-          handleServerSearch={handleBackendSearchButton}
+          serverSearch={
+            classrooms.data.length === 0 &&
+            classrooms.total > classrooms.perPage * classrooms.page
+          }
         />
         {classroomsToMap(classrooms.data)}
         {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (
@@ -480,6 +483,11 @@ const ClassroomController = props => {
             Nothing else to show
           </Typography>
         )}
+        {classrooms.data.length === 0 ? (
+          <Typography style={{ textAlign: "center", margin: "16px 0px" }}>
+            No more clasrooms to show
+          </Typography>
+        ) : null}
       </Container>
     ) : (
       <React.Fragment>

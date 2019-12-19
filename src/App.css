@@ -21,6 +21,7 @@
     overflow: auto;
     display: flex;
     justify-content: center;
+    max-width: unset;
 }
 @media (max-width: 599px) {
     #content {
@@ -32,5 +33,6 @@
         overflow: auto;
         display: flex;
         justify-content: center;
+        max-width: unset;
     }
 }
