@@ -19,9 +19,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     margin: theme.spacing(1, 1)
   },
-  sectionContent: {
-    margin: theme.spacing(1, 1)
-  },
+  sectionContent: {},
   staticInfo: {
     textTransform: "capitalize",
     display: "flex",
@@ -45,12 +43,14 @@ const ViewClassroomInfo = props => {
           <div className={classes.sectionContent}>
             <div className={classes.staticInfo}>
               <DynamicText
+                style={{ marginBottom: "8px" }}
                 text="teacher"
                 dynamicText={teacher.name}
                 orientation="horizantal"
                 variantArray={["body1", "body1"]}
               />
               <DynamicText
+                style={{ marginBottom: "8px" }}
                 text="Classroom ID"
                 dynamicText={info.subject_id}
                 orientation="horizantal"

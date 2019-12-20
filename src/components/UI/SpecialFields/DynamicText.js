@@ -36,10 +36,11 @@ const DynamicText = props => {
     orientation,
     icon,
     variantArray,
-    component
+    component,
+    style
   } = props;
   return (
-    <div className={classes[orientation]}>
+    <div className={classes[orientation]} style={style}>
       {icon}
       <Typography variant={variantArray[0]}>{text}:</Typography>
       {component == null ? (
