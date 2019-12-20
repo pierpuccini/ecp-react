@@ -234,7 +234,14 @@ const ViewAndEditClassroom = props => {
   );
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
-  /* Transforms user ID's to readable names */
+  /**
+   * Transforms user ID's to readable names
+   *
+   * @param {*} usersArray array of user ids from back end
+   * @param {*} fbUsers array of users from firebase
+   * @param {*} teacher true if evaluating teachers
+   * @returns array of user names and id for processing
+   */
   const userObjCreator = (usersArray, fbUsers, teacher) => {
     if (usersArray.length === 0) {
       return [];
@@ -380,19 +387,19 @@ const ViewAndEditClassroom = props => {
   };
 
   /* Converts editable state to a value readonly state FOR VIEW */
-  // const convertStateToInfo = () => {
-  //   let classroomInfo = { ...updateClassroomInfo };
-  //   const formKeys = Object.keys(updateClassroomForm);
-  //   /* Es lint disabled because map does not return anything */
-  //   //eslint-disable-next-line
-  //   formKeys.map(key => {
-  //     classroomInfo = {
-  //       ...classroomInfo,
-  //       [key]: updateClassroomForm[key].value
-  //     };
-  //   });
-  //   return classroomInfo;
-  // };
+  const convertStateToInfo = () => {
+    let classroomInfo = { ...updateClassroomInfo };
+    const formKeys = Object.keys(updateClassroomForm);
+    /* Es lint disabled because map does not return anything */
+    //eslint-disable-next-line
+    formKeys.map(key => {
+      classroomInfo = {
+        ...classroomInfo,
+        [key]: updateClassroomForm[key].value
+      };
+    });
+    return classroomInfo;
+  };
 
   console.log("fb 2", isLoaded(clients, teachers, students));
   console.log("dm 2", domReady);
@@ -420,20 +427,19 @@ const ViewAndEditClassroom = props => {
           toggleButtonChangedHandler={classroomToggleButtonHandler}
           sliderChangedHandler={classroomSliderHandler}
           pending_students={userObjCreator(
-            classroom.pending_students == null
-              ? []
-              : classroom.pending_students,
+            classroom.pending_students,
             students
           )}
           active_students={userObjCreator(
-            classroom.active_students == null ? [] : classroom.active_students,
+            classroom.active_students,
             students
           )}
+          teacher={userObjCreator([classroom.teacher_id], teachers, true)}
+          viewInfo={convertStateToInfo()}
         />
       </React.Fragment>
     );
   } else {
-    // history.push({ state: { getAllClassrooms: false } });
     return (
       <div style={{ alignSelf: "center" }}>
         <Loader />

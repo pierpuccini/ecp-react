@@ -18,6 +18,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 /* App Imports */
 import EditClassroomFields from "./Edit/EditClassroomFields";
 import EditClassroomRoster from "./Edit/EditClassroomRoster";
+import ViewClassroomInfo from "./View/ViewClassroomInfo";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -91,7 +92,9 @@ const DetailedClassroomView = props => {
     toggleButtonChangedHandler,
     sliderChangedHandler,
     pending_students,
-    active_students
+    active_students,
+    viewInfo,
+    teacher,
   } = props;
 
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -203,7 +206,17 @@ const DetailedClassroomView = props => {
       />
     );
   } else if (view) {
-    info = null;
+    info = (
+      <ViewClassroomInfo
+        navActions={navActions}
+        info={viewInfo}
+        isTablet={isTablet}
+        institutions={institutions}
+        teacher={teacher}
+        pendingStudents={pendingStudents}
+        activeStudents={activeStudents}
+      />
+    );
   }
 
   return (

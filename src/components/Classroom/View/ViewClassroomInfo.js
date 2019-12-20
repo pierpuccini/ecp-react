@@ -2,12 +2,9 @@
 import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import Divider from "@material-ui/core/Divider";
+// import Typography from "@material-ui/core/Typography";
 //Icons
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined";
+/* App Imports */
 import DynamicText from "../../UI/SpecialFields/DynamicText";
 import CodyCopy from "../../UI/SpecialFields/CodeCopy";
 
@@ -15,11 +12,8 @@ const useStyles = makeStyles(theme => ({
   infoContainer: {
     display: "flex",
     flexDirection: "column",
-    height: "100%",
+    width: "100%",
     justifyContent: "space-between"
-  },
-  formSubheader: {
-    display: "flex"
   },
   sectionTitles: {
     display: "flex",
@@ -42,17 +36,12 @@ const useStyles = makeStyles(theme => ({
 const ViewClassroomInfo = props => {
   const classes = useStyles();
 
-  const { navActions, info, teacher } = props;
+  const { info, teacher } = props;
 
   return (
     <React.Fragment>
       <div className={classes.infoContainer}>
         <div className={classes.infoFieldsContainer}>
-          <div className={classes.sectionTitles}>
-            <InfoOutlinedIcon style={{ marginRight: "8px" }} />
-            <Typography>Basic Info</Typography>
-          </div>
-          <Divider></Divider>
           <div className={classes.sectionContent}>
             <div className={classes.staticInfo}>
               <DynamicText
@@ -75,20 +64,6 @@ const ViewClassroomInfo = props => {
             />
           </div>
         </div>
-      </div>
-      <div className={classes.formSubheader}>
-        <IconButton
-          size="small"
-          style={{ marginRight: "5px" }}
-          onClick={() => {
-            navActions();
-          }}
-        >
-          <ArrowBackIosOutlinedIcon />
-        </IconButton>
-        <Typography style={{ alignSelf: "center" }}>
-          Return to classroom List
-        </Typography>
       </div>
     </React.Fragment>
   );
