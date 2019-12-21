@@ -371,7 +371,7 @@ const ClassroomController = props => {
       } else {
         isClassroomActive = activeClassroom.find(fbClassroom => {
           if (fbClassroom.id === Number(classroom.id)) {
-            return classroom.active_classroom;
+            return fbClassroom.active;
           }
           return false;
         });
