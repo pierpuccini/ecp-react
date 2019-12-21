@@ -111,10 +111,12 @@ function App(props) {
       ) {
         payload = location.pathname.replace("/", "");
       }
-      setsnackbarPayload({
-        type: "none",
-        info: "none"
-      });
+      if (location.pathname !== "/login") {
+        setsnackbarPayload({
+          type: "none",
+          info: "none"
+        });
+      }
     }
     if (onboardingSuccessLogic) {
       payload = "home";
@@ -352,8 +354,7 @@ const mapStateToProps = state => {
       : false,
     onboardingSuccessLogic: state.onboarding.success,
     role: state.firebase.profile.role,
-    disabled: state.firebase.profile.disabled,
-    userDisabled: state.users.warning
+    disabled: state.firebase.profile.disabled
   };
 };
 

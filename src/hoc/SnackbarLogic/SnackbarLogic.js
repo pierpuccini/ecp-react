@@ -12,6 +12,7 @@ const SnackbarLogic = props => {
     setsnackbarPayload,
     //Warninigs
     disabled,
+    userDisabled,
     //Errors
     onboardingError,
     usersError,
@@ -19,7 +20,6 @@ const SnackbarLogic = props => {
     //Success
     myAccountSuccess,
     onboardingSuccess,
-    userDisabled,
     deleteSuccess,
     restoreSuccess
   } = props;
@@ -101,6 +101,8 @@ const mapStateToProps = state => {
     onboardingError: state.onboarding.error,
     usersError: state.users.error,
     classroomError: state.classrooms.error,
+    //Warning messages
+    userDisabled: state.users.warning,
     //Success messages
     onboardingSuccess: state.onboarding.showSuccess,
     myAccountSuccess: state.users.success,
