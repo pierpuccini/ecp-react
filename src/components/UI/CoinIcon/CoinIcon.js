@@ -16,11 +16,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+/**
+ * width for icon
+ * height for icon
+ * @param {*} props
+ * @returns
+ */
 const CoinIcon = (props) => {
   const classes = useStyles();
+  const { width, height } = props;
 
   return (
-    <Icon classes={{ root: classes.iconRootCoin }} style={{width: props.width, height: props.height}}>
+    <Icon classes={{ root: classes.iconRootCoin }} style={{width: width, height: height}}>
       <img className={classes.imageIcon} src={coinIcon} alt="coin icon" />
     </Icon>
   );

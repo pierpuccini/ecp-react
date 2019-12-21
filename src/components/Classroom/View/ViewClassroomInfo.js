@@ -2,11 +2,12 @@
 import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
-// import Typography from "@material-ui/core/Typography";
 //Icons
+import TimerOutlinedIcon from "@material-ui/icons/TimerOutlined";
 /* App Imports */
 import DynamicText from "../../UI/SpecialFields/DynamicText";
 import CodyCopy from "../../UI/SpecialFields/CodeCopy";
+import CoinIcon from "../../UI/CoinIcon/CoinIcon";
 
 const useStyles = makeStyles(theme => ({
   infoContainer: {
@@ -15,19 +16,14 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     justifyContent: "space-between"
   },
-  sectionTitles: {
-    display: "flex",
-    margin: theme.spacing(1, 1)
-  },
-  sectionContent: {},
   staticInfo: {
-    textTransform: "capitalize",
     display: "flex",
     justifyContent: "space-between",
-    flexWrap: "wrap"
+    flexDirection: "column"
   },
-  teacher: {
-    display: "flex"
+  basicInfoContainer: {
+    display: "flex",
+    justifyContent: "space-between"
   }
 }));
 
@@ -39,31 +35,65 @@ const ViewClassroomInfo = props => {
   return (
     <React.Fragment>
       <div className={classes.infoContainer}>
-        <div className={classes.infoFieldsContainer}>
-          <div className={classes.sectionContent}>
-            <div className={classes.staticInfo}>
-              <DynamicText
-                style={{ marginBottom: "8px" }}
-                text="teacher"
-                dynamicText={teacher.name}
-                variantArray={["body1"]}
-                type="subtext"
-              />
-              <DynamicText
-                style={{ marginBottom: "8px" }}
-                text="Classroom ID"
-                dynamicText={info.subject_id}
-                variantArray={["body1"]}
-                type="subtext"
-              />
-            </div>
-            <CodyCopy
-              value={info.code_classroom}
-              label="Join Code"
-              helper="Share code with classmates."
+        <div className={classes.basicInfoContainer}>
+          <div className={classes.staticInfo}>
+            <DynamicText
+              style={{ marginBottom: "8px" }}
+              text="Teacher"
+              dynamicText={teacher.name}
+              variantArray={["body1"]}
+              type="subtext"
+              capitalize
+            />
+            <DynamicText
+              style={{ marginBottom: "8px" }}
+              text="Classroom Name"
+              dynamicText={info.subject_name}
+              variantArray={["body1"]}
+              type="subtext"
+              capitalize
+            />
+            <DynamicText
+              style={{ marginBottom: "8px" }}
+              text="Challenge Duration"
+              dynamicText={`${info.challenge_duration} min`}
+              variantArray={["body1"]}
+              type="subtext"
+              icon={<TimerOutlinedIcon />}
+            />
+          </div>
+          <div className={classes.staticInfo}>
+            <DynamicText
+              style={{ marginBottom: "8px" }}
+              text="Classroom ID"
+              dynamicText={info.subject_id}
+              variantArray={["body1"]}
+              type="subtext"
+              capitalize
+            />
+            <DynamicText
+              style={{ marginBottom: "8px" }}
+              text="Group Size"
+              dynamicText={info.group_size}
+              variantArray={["body1"]}
+              type="subtext"
+              capitalize
+            />
+            <DynamicText
+              style={{ marginBottom: "8px" }}
+              text="Initial Coins"
+              dynamicText={info.initial_coins}
+              variantArray={["body1"]}
+              type="subtext"
+              icon={<CoinIcon width="24px" height="24px" />}
             />
           </div>
         </div>
+        <CodyCopy
+          value={info.code_classroom}
+          label="Join Code"
+          helper="Share code with classmates."
+        />
       </div>
     </React.Fragment>
   );

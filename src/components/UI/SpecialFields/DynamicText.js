@@ -19,6 +19,9 @@ const useStyles = makeStyles(theme => ({
   // subtext
   captions: {
     color: theme.palette.text.hint
+  },
+  textAndIcon: {
+    display: "flex"
   }
 }));
 
@@ -33,6 +36,7 @@ const useStyles = makeStyles(theme => ({
  *  -subtext: provides information uptop description bellow in grey
  *  -norrmal: description and information separated by colon
  *  *Type does NOT require a variantArry pos 2
+ * capitalize: If exisits, capitalize the dynamic info
  * @param {*} props
  * @returns
  */
@@ -47,22 +51,34 @@ const DynamicText = props => {
     variantArray,
     component,
     style,
-    type
+    type,
+    capitalize
   } = props;
   if (type === "subtext") {
     return (
       <div className={classes.vertical} style={style}>
-        {icon}
-        {component == null ? (
-          <Typography
-            variant={variantArray[0]}            
-          >
-            {dynamicText}
-          </Typography>
-        ) : (
-          component
-        )}
-        <Typography variant="caption" className={classes.captions}>{text}</Typography>
+        <div className={classes.textAndIcon}>
+          {icon}
+          {component == null ? (
+            <Typography
+              style={
+                icon != null
+                  ? { marginLeft: "8px" }
+                  : capitalize
+                  ? { textTransform: "capitalize" }
+                  : null
+              }
+              variant={variantArray[0]}
+            >
+              {dynamicText}
+            </Typography>
+          ) : (
+            component
+          )}
+        </div>
+        <Typography variant="caption" className={classes.captions}>
+          {text}
+        </Typography>
       </div>
     );
   }
