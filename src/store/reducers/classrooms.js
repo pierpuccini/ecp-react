@@ -127,6 +127,13 @@ const searchClassroomSuccess = (state, action) => {
   });
 };
 
+const studentGroupSuccess = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    success: true
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.CLASSROOM_ACTIONS_START: return classroomStart(state, action);
@@ -139,6 +146,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CLASSROOM_GET_ONE_CLASSROOM_SUCCESS: return getClassroomSuccess(state, action);
     case actionTypes.CLASSROOM_GET_ALL_CLASSROOMS_SUCCESS: return getAllClassroomSuccess(state, action);
     case actionTypes.CLASSROOM_SEARCH_SUCCESS: return searchClassroomSuccess(state, action);
+    case actionTypes.CLASSROOM_STUDENT_GROUPS_CREATE: return studentGroupSuccess(state, action);
     case actionTypes.CLASSROOM_ACTIONS_FETCH_RESET: return resetFetchClassroom(state, action);
     case actionTypes.CLASSROOM_ACTIONS_CREATE_RESET: return resetCreateClassroom(state, action);
     default:

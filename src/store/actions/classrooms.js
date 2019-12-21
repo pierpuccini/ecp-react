@@ -9,7 +9,7 @@ export const classroomStart = (action, classrooms) => {
   };
 };
 
-export const classroomFail = (error) => {
+export const classroomFail = error => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_FAILED,
     error: error
@@ -71,6 +71,12 @@ export const classroomSearchSuccess = classrooms => {
   return {
     type: actionTypes.CLASSROOM_SEARCH_SUCCESS,
     classrooms: classrooms
+  };
+};
+
+export const studentGroupSuccess = () => {
+  return {
+    type: actionTypes.CLASSROOM_STUDENT_GROUPS_CREATE
   };
 };
 
@@ -371,7 +377,9 @@ export const getOneClassroom = payload => {
       classroomStart("oneClassroom", currentState.classrooms.classrooms)
     );
 
-    const url = `/classroom/${payload.id.replace(":", "")}/${currentState.firebase.auth.uid}`;
+    const url = `/classroom/${payload.id.replace(":", "")}/${
+      currentState.firebase.auth.uid
+    }`;
     axios
       .get(url)
       .then(response => {
@@ -581,5 +589,32 @@ export const searchClassroom = payload => {
           dispatch(classroomFail(error));
         });
     }
+  };
+};
+
+export const createStudentGroup = payload => {
+  return (dispatch, getState) => {
+    dispatch(classroomStart());
+
+    console.log('payload',payload);
+    axios
+      .post("/create-group", payload)
+      .then(response => {
+        console.log("res", response);
+        dispatch(studentGroupSuccess());
+      })
+      .catch(error => {
+        console.log(error.response);
+        if (error.response == null) {
+          error = { message: "Server Error, contact support" };
+        } else {
+          error =
+            error.response.data.error != null
+              ? error.response.data.error
+              : error.response.data;
+        }
+
+        dispatch(classroomFail(error));
+      });
   };
 };

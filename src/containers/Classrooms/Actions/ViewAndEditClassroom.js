@@ -22,6 +22,7 @@ const ViewAndEditClassroom = props => {
   const {
     getOneClassroom,
     updateClassroom,
+    createStudentGroup,
     manageClassroomStudents,
     location,
     classroom,
@@ -301,8 +302,13 @@ const ViewAndEditClassroom = props => {
       });
       setstudentGroups(updatedControls);
     } else {
-      console.log('name', studentGroups);
+      console.log("name", studentGroups);
       console.log("data", data);
+      createStudentGroup({
+        classromm_id: id.replace(":", ""),
+        students_id: data,
+        group_name: studentGroups.groupName.value
+      });
     }
   };
 
@@ -477,6 +483,8 @@ const mapDispatchToProps = dispatch => {
   return {
     getOneClassroom: payload => dispatch(actions.getOneClassroom(payload)),
     updateClassroom: payload => dispatch(actions.updateClassroom(payload)),
+    createStudentGroup: payload =>
+      dispatch(actions.createStudentGroup(payload)),
     manageClassroomStudents: payload =>
       dispatch(actions.manageClassroomStudents(payload))
   };
