@@ -232,7 +232,7 @@ const EditClassroomFields = props => {
               <Typography>Student Group Size</Typography>
             </div>
             <ToggleButtonGroup
-              value={updateClassroomForm.group_size.value.toString()}
+              value={updateClassroomForm.group_size.value != null ? updateClassroomForm.group_size.value.toString():""}
               onChange={(event, value) => {
                 toggleButtonChangedHandler(event, value);
               }}
