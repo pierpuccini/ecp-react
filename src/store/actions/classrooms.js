@@ -371,7 +371,7 @@ export const getOneClassroom = payload => {
       classroomStart("oneClassroom", currentState.classrooms.classrooms)
     );
 
-    const url = `/classroom/${payload.id.replace(":", "")}`;
+    const url = `/classroom/${payload.id.replace(":", "")}/${currentState.firebase.auth.uid}`;
     axios
       .get(url)
       .then(response => {
