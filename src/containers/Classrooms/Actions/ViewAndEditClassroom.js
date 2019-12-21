@@ -145,7 +145,7 @@ const ViewAndEditClassroom = props => {
         pending_students,
         active_students
       } = classroom;
-      console.log("1");
+
       setupdateClassroomForm({
         client_id: {
           value: client_id,
@@ -202,7 +202,6 @@ const ViewAndEditClassroom = props => {
         pending_students: pending_students,
         active_students: active_students
       });
-      console.log("state ready");
       setstateReady(true);
     }
   }, [success, classroom]);
@@ -401,10 +400,6 @@ const ViewAndEditClassroom = props => {
     return classroomInfo;
   };
 
-  console.log("fb 2", isLoaded(clients, teachers, students));
-  console.log("dm 2", domReady);
-  console.log("st 2", stateReady);
-  console.log("cr 2", classroom);
   /* Incharge of showing detailed view or coin loader */
   if (
     isLoaded(clients, teachers, students) &&

@@ -101,6 +101,8 @@ const DetailedClassroomView = props => {
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
   const [activeStudents, setactiveStudents] = useState([...active_students]);
   const [deletedStudents, setdeletedStudents] = useState([]);
+  /* Checks the users in order to create groups */
+  const [checked, setChecked] = useState([]);
 
   useEffect(() => {
     if (pending_students.length > 0) {
@@ -174,6 +176,20 @@ const DetailedClassroomView = props => {
     }
   };
 
+  /* Handles the checkbox in order to push and create student groups */
+  const handleToggle = value => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
   let info, roster;
   /* This condition handles the info, roster and wallet for edit and view as well as save actions for edit */
   if (edit) {
@@ -219,6 +235,8 @@ const DetailedClassroomView = props => {
     roster = (
       <ViewClassroomRoster
         activeStudents={activeStudents}
+        checked={checked}
+        handleToggle={handleToggle}
       />
     );
   }
