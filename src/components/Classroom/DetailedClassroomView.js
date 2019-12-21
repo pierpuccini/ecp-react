@@ -19,6 +19,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EditClassroomFields from "./Edit/EditClassroomFields";
 import EditClassroomRoster from "./Edit/EditClassroomRoster";
 import ViewClassroomInfo from "./View/ViewClassroomInfo";
+import ViewClassroomRoster from "./View/ViewClassroomRoster";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -94,7 +95,7 @@ const DetailedClassroomView = props => {
     pending_students,
     active_students,
     viewInfo,
-    teacher,
+    teacher
   } = props;
 
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -213,7 +214,10 @@ const DetailedClassroomView = props => {
         isTablet={isTablet}
         institutions={institutions}
         teacher={teacher}
-        pendingStudents={pendingStudents}
+      />
+    );
+    roster = (
+      <ViewClassroomRoster
         activeStudents={activeStudents}
       />
     );
