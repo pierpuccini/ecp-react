@@ -30,8 +30,14 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2, 0)
   },
   institutionsField: {
-    width: "-webkit-fill-available",
+    // eslint-disable-next-line
+    width: "100%",
+    // eslint-disable-next-line
     width: "-moz-available",
+    // eslint-disable-next-line
+    width: "-webkit-fill-available",
+    // eslint-disable-next-line
+    width: "fill-available",
     margin: theme.spacing(0, 1)
   },
   codeAndNameContainer: {
@@ -43,6 +49,30 @@ const useStyles = makeStyles(theme => ({
       display: "flex",
       flexDirection: "column"
     }
+  },
+  textFieldCode: {
+    // eslint-disable-next-line
+    width: "100%",
+    // eslint-disable-next-line
+    width: "-moz-available",
+    // eslint-disable-next-line
+    width: "-webkit-fill-available",
+    // eslint-disable-next-line
+    width: "fill-available",
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
+  },
+  textFieldName: {
+    // eslint-disable-next-line
+    width: "100%",
+    // eslint-disable-next-line
+    width: "-moz-available",
+    // eslint-disable-next-line
+    width: "-webkit-fill-available",
+    // eslint-disable-next-line
+    width: "fill-available",
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   classCodeContainer: {
     display: "flex",
@@ -169,8 +199,7 @@ const EditClassroomFields = props => {
           </TextField>
           <div className={classes.codeAndNameContainer}>
             <TextField
-              className={classes.textField}
-              style={{ width: "-webkit-fill-available", width: "-moz-available" }}
+              className={classes.textFieldName}
               value={updateClassroomForm.subject_id.value}
               onChange={event => inputChangedHandler(event, "subject_id")}
               label="Class Code"
@@ -191,8 +220,7 @@ const EditClassroomFields = props => {
               required
             />
             <TextField
-              className={classes.textField}
-              style={{ width: "-webkit-fill-available", width: "-moz-available" }}
+              className={classes.textFieldName}
               value={updateClassroomForm.subject_name.value}
               onChange={event => inputChangedHandler(event, "subject_name")}
               label="Classroom Name"
@@ -233,7 +261,11 @@ const EditClassroomFields = props => {
               <Typography>Student Group Size</Typography>
             </div>
             <ToggleButtonGroup
-              value={updateClassroomForm.group_size.value != null ? updateClassroomForm.group_size.value.toString():""}
+              value={
+                updateClassroomForm.group_size.value != null
+                  ? updateClassroomForm.group_size.value.toString()
+                  : ""
+              }
               onChange={(event, value) => {
                 toggleButtonChangedHandler(event, value);
               }}
