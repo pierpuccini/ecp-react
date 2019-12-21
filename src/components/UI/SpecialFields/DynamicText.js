@@ -15,6 +15,10 @@ const useStyles = makeStyles(theme => ({
   },
   dtext: {
     alignSelf: "center"
+  },
+  // subtext
+  captions: {
+    color: theme.palette.text.hint
   }
 }));
 
@@ -24,6 +28,11 @@ const useStyles = makeStyles(theme => ({
  * Orientation: vertical horizantal
  * icon
  * variant Array, [0] = static text & [1] dynamic text
+ * style normal css styling
+ * type:
+ *  -subtext: provides information uptop description bellow in grey
+ *  -norrmal: description and information separated by colon
+ *  *Type does NOT require a variantArry pos 2
  * @param {*} props
  * @returns
  */
@@ -37,8 +46,26 @@ const DynamicText = props => {
     icon,
     variantArray,
     component,
-    style
+    style,
+    type
   } = props;
+  if (type === "subtext") {
+    return (
+      <div className={classes.vertical} style={style}>
+        {icon}
+        {component == null ? (
+          <Typography
+            variant={variantArray[0]}            
+          >
+            {dynamicText}
+          </Typography>
+        ) : (
+          component
+        )}
+        <Typography variant="caption" className={classes.captions}>{text}</Typography>
+      </div>
+    );
+  }
   return (
     <div className={classes[orientation]} style={style}>
       {icon}

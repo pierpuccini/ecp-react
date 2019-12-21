@@ -46,15 +46,15 @@ const ViewClassroomInfo = props => {
                 style={{ marginBottom: "8px" }}
                 text="teacher"
                 dynamicText={teacher.name}
-                orientation="horizantal"
-                variantArray={["body1", "body1"]}
+                variantArray={["body1"]}
+                type="subtext"
               />
               <DynamicText
                 style={{ marginBottom: "8px" }}
                 text="Classroom ID"
                 dynamicText={info.subject_id}
-                orientation="horizantal"
-                variantArray={["body1", "body1"]}
+                variantArray={["body1"]}
+                type="subtext"
               />
             </div>
             <CodyCopy
