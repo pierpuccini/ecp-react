@@ -94,7 +94,7 @@ export const sortDates = (how, list, listOrObjectParam) => {
  * @returns array of user names and id for processing
  */
 export const userObjCreator = (usersArray, fbUsers, teacher) => {
-  if (usersArray.length === 0) {
+  if (usersArray == null || usersArray.length === 0) {
     return [];
   }
 
