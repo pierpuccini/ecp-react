@@ -24,6 +24,7 @@ const ViewAndEditClassroom = props => {
     manageClassroomStudents,
     location,
     classroom,
+    classroomError,
     myInstitutions,
     history,
     role,
@@ -112,7 +113,7 @@ const ViewAndEditClassroom = props => {
     // eslint-disable-next-line
   }, []);
 
-  // Fetches new course on success
+  /* Fetches new course on success */
   useEffect(() => {
     async function getMyClassrooms() {
       await getOneClassroom({ id: id });
@@ -129,6 +130,17 @@ const ViewAndEditClassroom = props => {
     /* MISSING DEP: getAllMyClassrooms,id */
     // eslint-disable-next-line
   }, [updateSuccess]);
+
+  useEffect(() => {
+    if (
+      classroomError !== null &&
+      classroomError.code !== null &&
+      classroomError.code === "not-auth"
+    ) {
+      handleNav();
+    }
+    // eslint-disable-next-line
+  }, [classroomError]);
 
   /* use effect in charge of populating edit state with classroom info */
   useEffect(() => {
@@ -425,10 +437,7 @@ const ViewAndEditClassroom = props => {
             classroom.pending_students,
             students
           )}
-          active_students={userObjCreator(
-            classroom.active_students,
-            students
-          )}
+          active_students={userObjCreator(classroom.active_students, students)}
           teacher={userObjCreator([classroom.teacher_id], teachers, true)}
           viewInfo={convertStateToInfo()}
         />
@@ -450,6 +459,7 @@ const mapStateToProps = state => {
     updateSuccess: state.classrooms.updateSuccess,
     success: state.classrooms.success,
     classroom: state.classrooms.classroom,
+    classroomError: state.classrooms.error,
     myInstitutions: state.firebase.profile.institutions
   };
 };
