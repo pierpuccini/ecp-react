@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
   },
   institutionsField: {
     width: "-webkit-fill-available",
+    width: "-moz-available",
     margin: theme.spacing(0, 1)
   },
   codeAndNameContainer: {
@@ -169,7 +170,7 @@ const EditClassroomFields = props => {
           <div className={classes.codeAndNameContainer}>
             <TextField
               className={classes.textField}
-              style={{ width: "-webkit-fill-available" }}
+              style={{ width: "-webkit-fill-available", width: "-moz-available" }}
               value={updateClassroomForm.subject_id.value}
               onChange={event => inputChangedHandler(event, "subject_id")}
               label="Class Code"
@@ -191,7 +192,7 @@ const EditClassroomFields = props => {
             />
             <TextField
               className={classes.textField}
-              style={{ width: "-webkit-fill-available" }}
+              style={{ width: "-webkit-fill-available", width: "-moz-available" }}
               value={updateClassroomForm.subject_name.value}
               onChange={event => inputChangedHandler(event, "subject_name")}
               label="Classroom Name"
