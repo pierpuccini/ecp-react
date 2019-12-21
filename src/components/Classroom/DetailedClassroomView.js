@@ -87,6 +87,7 @@ const DetailedClassroomView = props => {
     updateClassroomInfo,
     institutions,
     inputChangedHandler,
+    studentGroupsChangedHandler,
     buttonClickHandler,
     switchToggle,
     toggleSwitchHandler,
@@ -95,7 +96,8 @@ const DetailedClassroomView = props => {
     pending_students,
     active_students,
     viewInfo,
-    teacher
+    teacher,
+    studentGroups
   } = props;
 
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -103,6 +105,8 @@ const DetailedClassroomView = props => {
   const [deletedStudents, setdeletedStudents] = useState([]);
   /* Checks the users in order to create groups */
   const [checked, setChecked] = useState([]);
+  /* Sets error when students pass the gruop limit */
+  const [groupLimitReached, setgroupLimitReached] = useState(false)
 
   useEffect(() => {
     if (pending_students.length > 0) {
@@ -179,7 +183,7 @@ const DetailedClassroomView = props => {
   /* Handles the checkbox in order to push and create student groups */
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+    let newChecked = [...checked];
 
     if (currentIndex === -1) {
       newChecked.push(value);
@@ -187,8 +191,22 @@ const DetailedClassroomView = props => {
       newChecked.splice(currentIndex, 1);
     }
 
+    if (newChecked.length > viewInfo.group_size) {
+      newChecked = [...checked];
+      setgroupLimitReached(true)
+    } else {
+      setgroupLimitReached(false)
+    }
     setChecked(newChecked);
   };
+
+  const studentGroupActions = (event, type) => {
+    if (type === 'cancel') {
+      setChecked([])
+    } else if (type === 'save') {
+      studentGroupsChangedHandler(event, 'studentArray', checked)
+    }
+  }
 
   let info, roster;
   /* This condition handles the info, roster and wallet for edit and view as well as save actions for edit */
@@ -237,6 +255,11 @@ const DetailedClassroomView = props => {
         activeStudents={activeStudents}
         checked={checked}
         handleToggle={handleToggle}
+        groupSize={viewInfo.group_size}
+        groupLimitReached={groupLimitReached}
+        studentGroups={studentGroups}
+        inputChangedHandler={studentGroupsChangedHandler}
+        studentGroupActions={studentGroupActions}
       />
     );
   }

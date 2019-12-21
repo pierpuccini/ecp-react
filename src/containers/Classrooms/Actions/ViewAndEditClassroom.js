@@ -38,6 +38,17 @@ const ViewAndEditClassroom = props => {
   const [stateReady, setstateReady] = useState(false);
 
   //Editable state fields
+  const [studentGroups, setstudentGroups] = useState({
+    groupName: {
+      value: "",
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    studentArray: []
+  });
   const [updateClassroomForm, setupdateClassroomForm] = useState({
     client_id: {
       value: "",
@@ -274,6 +285,27 @@ const ViewAndEditClassroom = props => {
     setupdateClassroomForm(updatedControls);
   };
 
+  /* Controls classroom input Logic */
+  const studentGroupsChangedHandler = (event, controlName, data) => {
+    let updatedControls;
+    if (controlName !== "studentArray") {
+      updatedControls = updateObject(studentGroups, {
+        [controlName]: updateObject(setstudentGroups[controlName], {
+          value: event.target.value,
+          valid: checkValidity(
+            event.target.value,
+            studentGroups[controlName].validation
+          ),
+          touched: true
+        })
+      });
+      setstudentGroups(updatedControls);
+    } else {
+      console.log('name', studentGroups);
+      console.log("data", data);
+    }
+  };
+
   /* Handles edit and view classroom actions */
   const editViewActions = (action, payload) => {
     const {
@@ -405,6 +437,7 @@ const ViewAndEditClassroom = props => {
           updateClassroomInfo={updateClassroomInfo}
           updateClassroomForm={updateClassroomForm}
           inputChangedHandler={classroomInputHandler}
+          studentGroupsChangedHandler={studentGroupsChangedHandler}
           buttonClickHandler={editViewActions}
           toggleButtonChangedHandler={classroomToggleButtonHandler}
           sliderChangedHandler={classroomSliderHandler}
@@ -415,6 +448,7 @@ const ViewAndEditClassroom = props => {
           active_students={userObjCreator(classroom.active_students, students)}
           teacher={userObjCreator([classroom.teacher_id], teachers, true)}
           viewInfo={convertStateToInfo()}
+          studentGroups={studentGroups}
         />
       </React.Fragment>
     );
