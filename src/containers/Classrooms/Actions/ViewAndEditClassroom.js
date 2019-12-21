@@ -13,7 +13,8 @@ import DetailedClassroomView from "../../../components/Classroom/DetailedClassro
 import {
   updateObject,
   checkValidity,
-  stateToPayload
+  stateToPayload,
+  userObjCreator
 } from "../../../shared/utility";
 
 const ViewAndEditClassroom = props => {
@@ -244,32 +245,6 @@ const ViewAndEditClassroom = props => {
     ({ firestore: { ordered } }) => ordered.teachers
   );
   const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
-
-  /**
-   * Transforms user ID's to readable names
-   *
-   * @param {*} usersArray array of user ids from back end
-   * @param {*} fbUsers array of users from firebase
-   * @param {*} teacher true if evaluating teachers
-   * @returns array of user names and id for processing
-   */
-  const userObjCreator = (usersArray, fbUsers, teacher) => {
-    if (usersArray.length === 0) {
-      return [];
-    }
-
-    let usersObj = [];
-    usersArray.forEach(userId => {
-      const foundUser = fbUsers.find(user => user.id === userId);
-      if (foundUser != null) {
-        usersObj.push({ id: userId, name: foundUser.displayName });
-      }
-    });
-    if (usersObj.length === 1 && teacher) {
-      usersObj = usersObj[0];
-    }
-    return usersObj;
-  };
 
   /*  --------------------- HANDLERS --------------------- */
   /* Action to push to the main classroom page /classrooms */

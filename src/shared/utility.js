@@ -40,7 +40,7 @@ export const stateToPayload = state => {
   let payload,
     formFieldsArr = [],
     payloadArr2Obj = {};
-    //extracts the keys in order to be able to map the object
+  //extracts the keys in order to be able to map the object
   Object.keys(state).forEach(formField => {
     formFieldsArr.push(formField);
   });
@@ -50,20 +50,20 @@ export const stateToPayload = state => {
       ...payload,
       [formFields]: state[formFields].touched
         ? state[formFields].value
-        : 'no-touch'
+        : "no-touch"
     };
   });
   payload.forEach(fields => {
     // eslint-disable-next-line
-    Object.keys(fields).map(field =>{      
-      payloadArr2Obj = {...payloadArr2Obj, [field]: fields[field]}
-    })
+    Object.keys(fields).map(field => {
+      payloadArr2Obj = { ...payloadArr2Obj, [field]: fields[field] };
+    });
   });
   payload = payloadArr2Obj;
   return payload;
 };
 
- /**
+/**
  *Date sorter
  *
  * @param {*} how new, old
@@ -71,9 +71,9 @@ export const stateToPayload = state => {
  * @param {*} listOrObjectParam specific parameter to search for in
  * @returns
  */
-export const sortDates = (how, list, listOrObjectParam) => {  
+export const sortDates = (how, list, listOrObjectParam) => {
   let sortedList;
-  if (how === 'new') {
+  if (how === "new") {
     sortedList = list.sort((a, b) => {
       return new Date(b[listOrObjectParam]) - new Date(a[listOrObjectParam]);
     });
@@ -82,5 +82,31 @@ export const sortDates = (how, list, listOrObjectParam) => {
       return new Date(a[listOrObjectParam]) - new Date(b[listOrObjectParam]);
     });
   }
-  return sortedList
-}
+  return sortedList;
+};
+
+/**
+ * Transforms user ID's to readable names
+ *
+ * @param {*} usersArray array of user ids from back end
+ * @param {*} fbUsers array of users from firebase
+ * @param {*} teacher true if evaluating teachers
+ * @returns array of user names and id for processing
+ */
+export const userObjCreator = (usersArray, fbUsers, teacher) => {
+  if (usersArray.length === 0) {
+    return [];
+  }
+
+  let usersObj = [];
+  usersArray.forEach(userId => {
+    const foundUser = fbUsers.find(user => user.id === userId);
+    if (foundUser != null) {
+      usersObj.push({ id: userId, name: foundUser.displayName });
+    }
+  });
+  if (usersObj.length === 1 && teacher) {
+    usersObj = usersObj[0];
+  }
+  return usersObj;
+};
