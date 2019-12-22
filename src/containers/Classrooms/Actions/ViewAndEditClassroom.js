@@ -305,7 +305,7 @@ const ViewAndEditClassroom = props => {
       console.log("name", studentGroups);
       console.log("data", data);
       createStudentGroup({
-        classromm_id: id.replace(":", ""),
+        classroom_id: id.replace(":", ""),
         students_id: data,
         group_name: studentGroups.groupName.value
       });
