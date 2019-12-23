@@ -60,7 +60,7 @@ const ViewClassroomRoster = props => {
     checked,
     groupSize,
     groupLimitReached,
-    studentGroups,
+    studentGroupsField,
     inputChangedHandler,
     studentGroupActions
   } = props;
@@ -108,21 +108,21 @@ const ViewClassroomRoster = props => {
           <div className={classes.collapseContainer}>
             <TextField
               className={classes.textField}
-              value={studentGroups.groupName.value}
+              value={studentGroupsField.groupName.value}
               onChange={event => inputChangedHandler(event, "groupName")}
               label="Group Name"
               placeholder="The winners"
               type="text"
               margin="normal"
               helperText={
-                !studentGroups.groupName.valid &&
-                studentGroups.groupName.touched
+                !studentGroupsField.groupName.valid &&
+                studentGroupsField.groupName.touched
                   ? "*Please Enter your Group name"
                   : null
               }
               error={
-                !studentGroups.groupName.valid &&
-                studentGroups.groupName.touched
+                !studentGroupsField.groupName.valid &&
+                studentGroupsField.groupName.touched
               }
               variant="outlined"
               required

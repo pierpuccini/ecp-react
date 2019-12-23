@@ -97,7 +97,8 @@ const DetailedClassroomView = props => {
     active_students,
     viewInfo,
     teacher,
-    studentGroups
+    studentGroupsField,
+    studentsGroupsArray
   } = props;
 
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -106,7 +107,7 @@ const DetailedClassroomView = props => {
   /* Checks the users in order to create groups */
   const [checked, setChecked] = useState([]);
   /* Sets error when students pass the gruop limit */
-  const [groupLimitReached, setgroupLimitReached] = useState(false)
+  const [groupLimitReached, setgroupLimitReached] = useState(false);
 
   useEffect(() => {
     if (pending_students.length > 0) {
@@ -193,20 +194,30 @@ const DetailedClassroomView = props => {
 
     if (newChecked.length > viewInfo.group_size) {
       newChecked = [...checked];
-      setgroupLimitReached(true)
+      setgroupLimitReached(true);
     } else {
-      setgroupLimitReached(false)
+      setgroupLimitReached(false);
     }
     setChecked(newChecked);
   };
 
+  /* Filters students in groups from active students array */
+  const filteredActiveStudents = (active, groups) => {
+    let groupsId = [];
+    groups.forEach(groupInfo => {
+      groupsId = groupInfo.students_id.map(student => student.id);
+    });
+
+    return active.filter(student => !groupsId.includes(student.id));
+  };
+
   const studentGroupActions = (event, type) => {
-    if (type === 'cancel') {
-      setChecked([])
-    } else if (type === 'save') {
-      studentGroupsChangedHandler(event, 'studentArray', checked)
+    if (type === "cancel") {
+      setChecked([]);
+    } else if (type === "save") {
+      studentGroupsChangedHandler(event, "studentArray", checked);
     }
-  }
+  };
 
   let info, roster;
   /* This condition handles the info, roster and wallet for edit and view as well as save actions for edit */
@@ -252,14 +263,15 @@ const DetailedClassroomView = props => {
     );
     roster = (
       <ViewClassroomRoster
-        activeStudents={activeStudents}
+        activeStudents={filteredActiveStudents(activeStudents,studentsGroupsArray)}
         checked={checked}
         handleToggle={handleToggle}
         groupSize={viewInfo.group_size}
         groupLimitReached={groupLimitReached}
-        studentGroups={studentGroups}
+        studentGroupsField={studentGroupsField}
         inputChangedHandler={studentGroupsChangedHandler}
         studentGroupActions={studentGroupActions}
+        studentsGroupsArray={studentsGroupsArray}
       />
     );
   }

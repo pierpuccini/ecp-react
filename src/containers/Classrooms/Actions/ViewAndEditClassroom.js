@@ -39,7 +39,7 @@ const ViewAndEditClassroom = props => {
   const [stateReady, setstateReady] = useState(false);
 
   //Editable state fields
-  const [studentGroups, setstudentGroups] = useState({
+  const [studentGroupsField, setstudentGroupsField] = useState({
     groupName: {
       value: "",
       validation: {
@@ -290,24 +290,24 @@ const ViewAndEditClassroom = props => {
   const studentGroupsChangedHandler = (event, controlName, data) => {
     let updatedControls;
     if (controlName !== "studentArray") {
-      updatedControls = updateObject(studentGroups, {
-        [controlName]: updateObject(setstudentGroups[controlName], {
+      updatedControls = updateObject(studentGroupsField, {
+        [controlName]: updateObject(setstudentGroupsField[controlName], {
           value: event.target.value,
           valid: checkValidity(
             event.target.value,
-            studentGroups[controlName].validation
+            studentGroupsField[controlName].validation
           ),
           touched: true
         })
       });
-      setstudentGroups(updatedControls);
+      setstudentGroupsField(updatedControls);
     } else {
-      console.log("name", studentGroups);
+      console.log("name", studentGroupsField);
       console.log("data", data);
       createStudentGroup({
         classroom_id: id.replace(":", ""),
         students_id: data,
-        group_name: studentGroups.groupName.value
+        group_name: studentGroupsField.groupName.value
       });
     }
   };
@@ -425,6 +425,18 @@ const ViewAndEditClassroom = props => {
     return classroomInfo;
   };
 
+  /* Adds students names to classroom groups array */
+  const assignStudentsNameToGroup = groups => {
+    let assignedGroups = groups.map(group => {
+      return {
+        ...group,
+        students_id: userObjCreator(group.students_id, students)
+      };
+    });
+    console.log('assignedGroups',assignedGroups);
+    return assignedGroups;
+  };
+
   /* Incharge of showing detailed view or coin loader */
   if (
     isLoaded(clients, teachers, students) &&
@@ -454,7 +466,8 @@ const ViewAndEditClassroom = props => {
           active_students={userObjCreator(classroom.active_students, students)}
           teacher={userObjCreator([classroom.teacher_id], teachers, true)}
           viewInfo={convertStateToInfo()}
-          studentGroups={studentGroups}
+          studentGroupsField={studentGroupsField}
+          studentsGroupsArray={assignStudentsNameToGroup(classroom.studentsgroup)}
         />
       </React.Fragment>
     );
