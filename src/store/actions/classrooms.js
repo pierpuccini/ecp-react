@@ -627,7 +627,6 @@ export const deleteStudentGroup = payload => {
     const currentState = getState()
     dispatch(classroomStart());
 
-    console.log(payload);
     axios
       .delete(`/delete-group/${payload}`, payload)
       .then(response => {

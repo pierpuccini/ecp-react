@@ -304,8 +304,6 @@ const ViewAndEditClassroom = props => {
       });
       setstudentGroupsField(updatedControls);
     } else {
-      console.log("name", studentGroupsField);
-      console.log("data", data);
       createStudentGroup({
         classroom_id: id.replace(":", ""),
         students_id: data,
@@ -470,6 +468,7 @@ const ViewAndEditClassroom = props => {
           studentGroupsField={studentGroupsField}
           studentsGroupsArray={assignStudentsNameToGroup(classroom.studentsgroup)}
           myId={myId}
+          role={role}
           deleteStudentGroup={deleteStudentGroup}
         />
       </React.Fragment>

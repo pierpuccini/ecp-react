@@ -78,7 +78,8 @@ const ViewClassroomRoster = props => {
     inputChangedHandler,
     studentGroupActions,
     studentsGroupsArray,
-    myId
+    myId,
+    role
   } = props;
 
   const listSubheader =
@@ -113,7 +114,7 @@ const ViewClassroomRoster = props => {
         icons={[<GroupOutlinedIcon />, <AccountCircleOutlinedIcon />]}
         text={groupInfo.group_name}
         list={groupInfo.students_id}
-        comp={found != null ? deleteGroup : null}
+        comp={found != null || role === 'teacher' ? deleteGroup : null}
       />
     );
   });

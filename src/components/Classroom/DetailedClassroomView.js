@@ -100,7 +100,8 @@ const DetailedClassroomView = props => {
     teacher,
     studentGroupsField,
     studentsGroupsArray,
-    myId
+    myId,
+    role
   } = props;
 
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -218,12 +219,12 @@ const DetailedClassroomView = props => {
       setChecked([]);
     } else if (type === "save") {
       studentGroupsChangedHandler(event, "studentArray", checked);
-    } else if (type === 'delete'){
-      deleteStudentGroup(id)
+    } else if (type === "delete") {
+      deleteStudentGroup(id);
     }
   };
 
-  let info, roster;
+  let info, roster, studentGroups;
   /* This condition handles the info, roster and wallet for edit and view as well as save actions for edit */
   if (edit) {
     info = (
@@ -255,6 +256,24 @@ const DetailedClassroomView = props => {
         setdeletedStudents={setdeletedStudents}
       />
     );
+    studentGroups = (
+      <ViewClassroomRoster
+        activeStudents={filteredActiveStudents(
+          activeStudents,
+          studentsGroupsArray
+        )}
+        checked={checked}
+        handleToggle={handleToggle}
+        groupSize={viewInfo.group_size}
+        groupLimitReached={groupLimitReached}
+        studentGroupsField={studentGroupsField}
+        inputChangedHandler={studentGroupsChangedHandler}
+        studentGroupActions={studentGroupActions}
+        studentsGroupsArray={studentsGroupsArray}
+        myId={myId}
+        role={role}
+      />
+    );
   } else if (view) {
     info = (
       <ViewClassroomInfo
@@ -267,7 +286,10 @@ const DetailedClassroomView = props => {
     );
     roster = (
       <ViewClassroomRoster
-        activeStudents={filteredActiveStudents(activeStudents,studentsGroupsArray)}
+        activeStudents={filteredActiveStudents(
+          activeStudents,
+          studentsGroupsArray
+        )}
         checked={checked}
         handleToggle={handleToggle}
         groupSize={viewInfo.group_size}
@@ -277,6 +299,7 @@ const DetailedClassroomView = props => {
         studentGroupActions={studentGroupActions}
         studentsGroupsArray={studentsGroupsArray}
         myId={myId}
+        role={role}
       />
     );
   }
@@ -371,6 +394,24 @@ const DetailedClassroomView = props => {
             </React.Fragment>
           ) : null}
         </ExpansionPanel>
+        {role === "teacher" ? (
+          <ExpansionPanel
+            defaultExpanded={isTablet}
+            className={classes.expandableContentCards}
+            TransitionProps={{ unmountOnExit: true }}
+          >
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1c-content"
+              id="panel1c-header"
+            >
+              <Typography variant="body1">Classroom student groups</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails className={classes.details}>
+              {studentGroups}
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        ) : null}
         <ExpansionPanel
           className={classes.expandableContentCards}
           TransitionProps={{ unmountOnExit: true }}
