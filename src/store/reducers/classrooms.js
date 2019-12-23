@@ -130,7 +130,9 @@ const searchClassroomSuccess = (state, action) => {
 const studentGroupSuccess = (state, action) => {
   return updateObject(state, {
     loading: false,
-    success: true
+    success: true,
+    classrooms: action.classrooms,
+    classroom: action.classroom
   });
 };
 

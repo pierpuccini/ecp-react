@@ -74,9 +74,11 @@ export const classroomSearchSuccess = classrooms => {
   };
 };
 
-export const studentGroupSuccess = () => {
+export const studentGroupSuccess = (classrooms, classroom) => {
   return {
-    type: actionTypes.CLASSROOM_STUDENT_GROUPS_CREATE
+    type: actionTypes.CLASSROOM_STUDENT_GROUPS_CREATE,
+    classrooms: classrooms,
+    classroom: classroom
   };
 };
 
@@ -594,6 +596,7 @@ export const searchClassroom = payload => {
 
 export const createStudentGroup = payload => {
   return (dispatch, getState) => {
+    const currentState = getState()
     dispatch(classroomStart());
 
     console.log('payload',payload);
@@ -601,7 +604,7 @@ export const createStudentGroup = payload => {
       .post("/create-group", payload)
       .then(response => {
         console.log("res", response);
-        dispatch(studentGroupSuccess());
+        dispatch(studentGroupSuccess(currentState.classrooms.classrooms,currentState.classrooms.classroom));
       })
       .catch(error => {
         console.log(error.response);
