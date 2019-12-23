@@ -88,6 +88,7 @@ const DetailedClassroomView = props => {
     institutions,
     inputChangedHandler,
     studentGroupsChangedHandler,
+    deleteStudentGroup,
     buttonClickHandler,
     switchToggle,
     toggleSwitchHandler,
@@ -212,11 +213,13 @@ const DetailedClassroomView = props => {
     return active.filter(student => !groupsId.includes(student.id));
   };
 
-  const studentGroupActions = (event, type) => {
+  const studentGroupActions = (event, type, id) => {
     if (type === "cancel") {
       setChecked([]);
     } else if (type === "save") {
       studentGroupsChangedHandler(event, "studentArray", checked);
+    } else if (type === 'delete'){
+      deleteStudentGroup(id)
     }
   };
 

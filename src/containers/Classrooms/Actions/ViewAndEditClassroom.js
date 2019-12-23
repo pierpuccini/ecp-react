@@ -23,6 +23,7 @@ const ViewAndEditClassroom = props => {
     getOneClassroom,
     updateClassroom,
     createStudentGroup,
+    deleteStudentGroup,
     manageClassroomStudents,
     location,
     classroom,
@@ -469,6 +470,7 @@ const ViewAndEditClassroom = props => {
           studentGroupsField={studentGroupsField}
           studentsGroupsArray={assignStudentsNameToGroup(classroom.studentsgroup)}
           myId={myId}
+          deleteStudentGroup={deleteStudentGroup}
         />
       </React.Fragment>
     );
@@ -500,6 +502,8 @@ const mapDispatchToProps = dispatch => {
     updateClassroom: payload => dispatch(actions.updateClassroom(payload)),
     createStudentGroup: payload =>
       dispatch(actions.createStudentGroup(payload)),
+    deleteStudentGroup: payload =>
+      dispatch(actions.deleteStudentGroup(payload)),
     manageClassroomStudents: payload =>
       dispatch(actions.manageClassroomStudents(payload))
   };

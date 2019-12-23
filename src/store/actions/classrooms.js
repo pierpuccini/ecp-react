@@ -621,3 +621,31 @@ export const createStudentGroup = payload => {
       });
   };
 };
+
+export const deleteStudentGroup = payload => {
+  return (dispatch, getState) => {
+    const currentState = getState()
+    dispatch(classroomStart());
+
+    console.log(payload);
+    axios
+      .delete(`/delete-group/${payload}`, payload)
+      .then(response => {
+        console.log("res", response);
+        dispatch(studentGroupSuccess(currentState.classrooms.classrooms,currentState.classrooms.classroom));
+      })
+      .catch(error => {
+        console.log(error.response);
+        if (error.response == null) {
+          error = { message: "Server Error, contact support" };
+        } else {
+          error =
+            error.response.data.error != null
+              ? error.response.data.error
+              : error.response.data;
+        }
+
+        dispatch(classroomFail(error));
+      });
+  };
+};

@@ -15,7 +15,7 @@ import Divider from "@material-ui/core/Divider/Divider";
 import Collapse from "@material-ui/core/Collapse/Collapse";
 import TextField from "@material-ui/core/TextField/TextField";
 import IconButton from "@material-ui/core/IconButton/IconButton";
-import Button from '@material-ui/core/Button/Button';
+import Button from "@material-ui/core/Button/Button";
 //icons
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
 import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
@@ -90,17 +90,23 @@ const ViewClassroomRoster = props => {
       </ListSubheader>
     ) : null;
 
-  const deleteGroup = (
-    <div className={classes.deleteGroupContainer}>
-      <Button variant="contained" className={classes.deleteGroup}>
-        <DeleteOutlineOutlinedIcon />
-        Delete Group
-      </Button>
-    </div>
-  );
-
-  const studentGroupsComponent = studentsGroupsArray.map(groupInfo => {
-    let found = groupInfo.students_id.find(student => student.id === myId);
+    
+    const studentGroupsComponent = studentsGroupsArray.map(groupInfo => {
+      let found = groupInfo.students_id.find(student => student.id === myId);
+        const deleteGroup = (
+          <div className={classes.deleteGroupContainer}>
+            <Button
+              variant="contained"
+              className={classes.deleteGroup}
+              onClick={event => {
+                studentGroupActions(event, "delete", groupInfo.id);
+              }}
+            >
+              <DeleteOutlineOutlinedIcon />
+              Delete Group
+            </Button>
+          </div>
+        );
     return (
       <ExpandableItem
         key={groupInfo.id}

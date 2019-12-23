@@ -26,5 +26,6 @@ export {
   deleteClassroom,
   restoreClassroom,
   searchClassroom,
-  createStudentGroup
+  createStudentGroup,
+  deleteStudentGroup
 } from "./classrooms";
