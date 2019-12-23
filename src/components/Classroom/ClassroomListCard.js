@@ -14,6 +14,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import RestoreFromTrashOutlinedIcon from '@material-ui/icons/RestoreFromTrashOutlined';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -353,6 +354,7 @@ const ClassroomListCard = props => {
           handleRestore(classroom.id);
         }}
       >
+      <RestoreFromTrashOutlinedIcon/>
         Restore
       </Button>
     );

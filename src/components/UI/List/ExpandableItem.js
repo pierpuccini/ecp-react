@@ -21,12 +21,15 @@ const useStyles = makeStyles(theme => ({
  * @icons: First position is outer icon
  * @text: Content to place in outer list element
  * @list: list to map inside collapse, primary must be set as NAME
+ * @endListComp: end component on list
+ * @startListComp: start component on list
+ * @comp: component at end of expandable list
  * @param {*} props
  * @returns
  */
 const ExpandableItem = props => {
   const classes = useStyles();
-  const { icons, text, list } = props;
+  const { icons, text, list, comp /* endListComp, startListComp */ } = props;
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -46,10 +49,14 @@ const ExpandableItem = props => {
             return (
               <ListItem key={item.id} className={classes.nested}>
                 <ListItemIcon>{icons[1]}</ListItemIcon>
-                <ListItemText primary={item.name} style={{textTransform: "capitalize"}}/>
+                <ListItemText
+                  primary={item.name}
+                  style={{ textTransform: "capitalize" }}
+                />
               </ListItem>
             );
           })}
+          {comp}
         </List>
       </Collapse>
     </React.Fragment>

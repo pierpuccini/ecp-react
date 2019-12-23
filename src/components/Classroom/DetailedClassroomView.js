@@ -98,7 +98,8 @@ const DetailedClassroomView = props => {
     viewInfo,
     teacher,
     studentGroupsField,
-    studentsGroupsArray
+    studentsGroupsArray,
+    myId
   } = props;
 
   const [pendingStudents, setpendingStudents] = useState([...pending_students]);
@@ -272,6 +273,7 @@ const DetailedClassroomView = props => {
         inputChangedHandler={studentGroupsChangedHandler}
         studentGroupActions={studentGroupActions}
         studentsGroupsArray={studentsGroupsArray}
+        myId={myId}
       />
     );
   }

@@ -15,11 +15,13 @@ import Divider from "@material-ui/core/Divider/Divider";
 import Collapse from "@material-ui/core/Collapse/Collapse";
 import TextField from "@material-ui/core/TextField/TextField";
 import IconButton from "@material-ui/core/IconButton/IconButton";
+import Button from '@material-ui/core/Button/Button';
 //icons
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
 import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
 import CheckOutlinedIcon from "@material-ui/icons/CheckOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 /* App imports */
 import ExpandableItem from "../../UI/List/ExpandableItem";
 
@@ -52,6 +54,14 @@ const useStyles = makeStyles(theme => ({
   },
   cancel: {
     color: theme.palette.error.main
+  },
+  deleteGroup: {
+    backgroundColor: theme.palette.error.main,
+    color: "#fff",
+    padding: "6px"
+  },
+  deleteGroupContainer: {
+    paddingLeft: "26px"
   }
 }));
 
@@ -67,63 +77,73 @@ const ViewClassroomRoster = props => {
     studentGroupsField,
     inputChangedHandler,
     studentGroupActions,
-    studentsGroupsArray
+    studentsGroupsArray,
+    myId
   } = props;
+
+  const listSubheader =
+    groupSize > 1 ? (
+      <ListSubheader component="div" id="nested-list-subheader">
+        <Typography className={classes.groupSizeWarning} variant="caption">
+          *Please create groups of {groupSize}
+        </Typography>
+      </ListSubheader>
+    ) : null;
+
+  const deleteGroup = (
+    <div className={classes.deleteGroupContainer}>
+      <Button variant="contained" className={classes.deleteGroup}>
+        <DeleteOutlineOutlinedIcon />
+        Delete Group
+      </Button>
+    </div>
+  );
+
+  const studentGroupsComponent = studentsGroupsArray.map(groupInfo => {
+    let found = groupInfo.students_id.find(student => student.id === myId);
+    return (
+      <ExpandableItem
+        key={groupInfo.id}
+        icons={[<GroupOutlinedIcon />, <AccountCircleOutlinedIcon />]}
+        text={groupInfo.group_name}
+        list={groupInfo.students_id}
+        comp={found != null ? deleteGroup : null}
+      />
+    );
+  });
+
+  const activeStudentsComponent = activeStudents.map(student => {
+    return (
+      <React.Fragment key={`fragment-${student.id}`}>
+        <ListItem>
+          <ListItemIcon>
+            <AccountCircleOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={student.name}
+            style={{ textTransform: "capitalize" }}
+          />
+          {groupSize > 1 ? (
+            <ListItemSecondaryAction>
+              <Checkbox
+                edge="end"
+                color="primary"
+                onChange={handleToggle(student.id)}
+                checked={checked.indexOf(student.id) !== -1}
+              />
+            </ListItemSecondaryAction>
+          ) : null}
+        </ListItem>
+        {activeStudents.length >= 1 ? null : <Divider />}
+      </React.Fragment>
+    );
+  });
 
   return (
     <div className={classes.root}>
-      <List
-        component="div"
-        className={classes.list}
-        subheader={
-          groupSize > 1 ? (
-            <ListSubheader component="div" id="nested-list-subheader">
-              <Typography
-                className={classes.groupSizeWarning}
-                variant="caption"
-              >
-                *Please create groups of {groupSize}
-              </Typography>
-            </ListSubheader>
-          ) : null
-        }
-      >
-        {studentsGroupsArray.map(groupInfo => {
-          return (
-            <ExpandableItem
-              key={groupInfo.id}
-              icons={[<GroupOutlinedIcon />, <AccountCircleOutlinedIcon />]}
-              text={groupInfo.group_name}
-              list={groupInfo.students_id}
-            />
-          );
-        })}
-        {activeStudents.map(student => {
-          return (
-            <React.Fragment key={`fragment-${student.id}`}>
-              <ListItem>
-                <ListItemIcon>
-                  <AccountCircleOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={student.name}
-                  style={{ textTransform: "capitalize" }}
-                />
-                {groupSize > 1 ? (
-                  <ListItemSecondaryAction>
-                    <Checkbox
-                      edge="end"
-                      color="primary"
-                      onChange={handleToggle(student.id)}
-                      checked={checked.indexOf(student.id) !== -1}
-                    />
-                  </ListItemSecondaryAction>
-                ) : null}
-              </ListItem>
-              {activeStudents.length >= 1 ? null : <Divider />}
-            </React.Fragment>
-          );
-        })}
+      <List component="div" className={classes.list} subheader={listSubheader}>
+        {studentGroupsComponent}
+        {activeStudentsComponent}
         <Collapse in={checked.length > 0 && checked.length <= groupSize}>
           {groupLimitReached ? (
             <Typography className={classes.limitReached} variant="caption">

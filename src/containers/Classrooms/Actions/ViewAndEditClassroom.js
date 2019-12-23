@@ -30,6 +30,7 @@ const ViewAndEditClassroom = props => {
     myInstitutions,
     history,
     role,
+    myId,
     updateSuccess,
     success,
     loading
@@ -467,6 +468,7 @@ const ViewAndEditClassroom = props => {
           viewInfo={convertStateToInfo()}
           studentGroupsField={studentGroupsField}
           studentsGroupsArray={assignStudentsNameToGroup(classroom.studentsgroup)}
+          myId={myId}
         />
       </React.Fragment>
     );
@@ -482,6 +484,7 @@ const ViewAndEditClassroom = props => {
 const mapStateToProps = state => {
   return {
     role: state.firebase.profile.role,
+    myId: state.firebase.auth.uid,
     loading: state.classrooms.loading,
     updateSuccess: state.classrooms.updateSuccess,
     success: state.classrooms.success,
