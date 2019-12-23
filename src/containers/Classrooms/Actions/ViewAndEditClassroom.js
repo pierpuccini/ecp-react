@@ -433,7 +433,6 @@ const ViewAndEditClassroom = props => {
         students_id: userObjCreator(group.students_id, students)
       };
     });
-    console.log('assignedGroups',assignedGroups);
     return assignedGroups;
   };
 

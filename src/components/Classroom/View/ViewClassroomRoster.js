@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { amber, green } from "@material-ui/core/colors";
 import Typography from "@material-ui/core/Typography/Typography";
 import List from "@material-ui/core/List";
+import ListSubheader from "@material-ui/core/ListSubheader";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -16,8 +17,11 @@ import TextField from "@material-ui/core/TextField/TextField";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 //icons
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
+import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
 import CheckOutlinedIcon from "@material-ui/icons/CheckOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+/* App imports */
+import ExpandableItem from "../../UI/List/ExpandableItem";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -62,17 +66,38 @@ const ViewClassroomRoster = props => {
     groupLimitReached,
     studentGroupsField,
     inputChangedHandler,
-    studentGroupActions
+    studentGroupActions,
+    studentsGroupsArray
   } = props;
 
   return (
     <div className={classes.root}>
-      {groupSize > 1 ? (
-        <Typography className={classes.groupSizeWarning} variant="caption">
-          *Please create groups of {groupSize}
-        </Typography>
-      ) : null}
-      <List component="div" className={classes.list}>
+      <List
+        component="div"
+        className={classes.list}
+        subheader={
+          groupSize > 1 ? (
+            <ListSubheader component="div" id="nested-list-subheader">
+              <Typography
+                className={classes.groupSizeWarning}
+                variant="caption"
+              >
+                *Please create groups of {groupSize}
+              </Typography>
+            </ListSubheader>
+          ) : null
+        }
+      >
+        {studentsGroupsArray.map(groupInfo => {
+          return (
+            <ExpandableItem
+              key={groupInfo.id}
+              icons={[<GroupOutlinedIcon />, <AccountCircleOutlinedIcon />]}
+              text={groupInfo.group_name}
+              list={groupInfo.students_id}
+            />
+          );
+        })}
         {activeStudents.map(student => {
           return (
             <React.Fragment key={`fragment-${student.id}`}>
@@ -130,7 +155,7 @@ const ViewClassroomRoster = props => {
             <span className={classes.iconButton}>
               <IconButton
                 className={classes.save}
-                onClick={(event) => {
+                onClick={event => {
                   studentGroupActions(event, "save");
                 }}
               >
@@ -140,7 +165,7 @@ const ViewClassroomRoster = props => {
             <span className={classes.iconButton}>
               <IconButton
                 className={classes.cancel}
-                onClick={(event) => {
+                onClick={event => {
                   studentGroupActions(event, "cancel");
                 }}
               >
