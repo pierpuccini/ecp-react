@@ -19,7 +19,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EditClassroomFields from "./Edit/EditClassroomFields";
 import EditClassroomRoster from "./Edit/EditClassroomRoster";
 import ViewClassroomInfo from "./View/ViewClassroomInfo";
-import StudentGroupsViewer from "./Shared/StudentGroupsViewer";
+import StudentGroupsViewer from "./Shared/StudentGroupsViewerer";
 
 const useStyles = makeStyles(theme => ({
   paper: {
