@@ -341,6 +341,7 @@ export const sendIdToken = () => {
       .currentUser.getIdToken(/* forceRefresh */ true)
       .then(idToken => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${idToken}`
+        axios.get()
         dispatch(getIdToken({type: "success", message: "", token: idToken}))
       })
       .catch(error => {
