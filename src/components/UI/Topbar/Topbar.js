@@ -7,6 +7,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Badge from "@material-ui/core/Badge";
 import IconButton from "@material-ui/core/IconButton";
+//Icons
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
@@ -14,6 +15,7 @@ import PowerSettingsNewOutlinedIcon from "@material-ui/icons/PowerSettingsNewOut
 import AssignmentIndOutlinedIcon from "@material-ui/icons/AssignmentIndOutlined";
 //App Imports
 import CoinIcon from "../CoinIcon/CoinIcon";
+import Notifications from "../../../containers/Users/Notifications";
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -53,9 +55,11 @@ const useStyles = makeStyles(theme => ({
 const Topbar = props => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [notificationanchorEl, setnotificationAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
+  const isMenuOpenNotifications = Boolean(notificationanchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = event => {
@@ -83,6 +87,14 @@ const Topbar = props => {
   const logout = typeOfScreen => {
     typeOfScreen === "desktop" ? handleMenuClose() : handleMobileMenuClose();
     props.logout();
+  };
+
+  const handleNotifications = event => {
+    setnotificationAnchorEl(event.currentTarget);
+  };
+
+  const handleNotificationsClose = () => {
+    setnotificationAnchorEl(null);
   };
 
   const menuId = "primary-search-account-menu";
@@ -177,10 +189,12 @@ const Topbar = props => {
       <div className={classes.grow} />
       <div className={classes.sectionDesktop}>
         {props.newUser ? null : (
-          <IconButton aria-label="show 17 new notifications" color="inherit">
-            <Badge badgeContent={17} color="secondary">
-              <NotificationsNoneOutlinedIcon />
-            </Badge>
+          <IconButton
+            aria-label="show 17 new notifications"
+            color="inherit"
+            onClick={handleNotifications}
+          >
+            <Notifications type="icon" />
           </IconButton>
         )}
         <IconButton
@@ -216,6 +230,14 @@ const Topbar = props => {
       </div>
       {renderMobileMenu}
       {renderMenu}
+      {isMenuOpenNotifications ? (
+        <Notifications
+          type="menu"
+          handleNotificationsClose={handleNotificationsClose}
+          notificationanchorEl={notificationanchorEl}
+          isMenuOpenNotifications={isMenuOpenNotifications}
+        />
+      ) : null}
     </React.Fragment>
   );
 };
