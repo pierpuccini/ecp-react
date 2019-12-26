@@ -1,5 +1,5 @@
 /* React Imports */
-import React from "react";
+import React, { useState, useEffect } from "react";
 /* Redux Imports */
 import { connect } from "react-redux";
 // import * as actions from "./store/actions/index";
@@ -12,21 +12,23 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 //Icons
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
+import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 /* App Imports */
-import formatDistance from 'date-fns/formatDistance'
+import formatDistance from "date-fns/formatDistance";
 import TitleDivider from "../../components/UI/SpecialFields/TitleDivider";
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles(theme => ({
   menuItem: {
     justifyContent: "space-between"
   },
   menuContent: {
-      display: "flex",
-      flexDirection: "column"
+    display: "flex",
+    flexDirection: "column"
   },
   NotificationMessage: {
-      maxWidth: "350px",
-      whiteSpace: "pre-wrap"
+    maxWidth: "350px",
+    whiteSpace: "pre-wrap"
   }
 }));
 
@@ -35,28 +37,66 @@ const Notifications = props => {
   /* Type refers to, icon and badge or menu Item */
   const {
     type,
-    notifications,
+    notificationsFromFB,
     handleNotificationsClose,
     notificationanchorEl,
     isMenuOpenNotifications
   } = props;
 
-  let totalNotifications = 0;
+  const [notifications, setnotifications] = useState(notificationsFromFB);
+  const [totalNotifications, settotalNotifications] = useState(0);
 
-  Object.keys(notifications).forEach(notificationType => totalNotifications += notifications[notificationType].length);
+  useEffect(() => {
+    Object.keys(notifications).forEach(notificationType => {
+      let total = totalNotifications + notifications[notificationType].length;
+      settotalNotifications(total);
+    });
+  }, [notifications]);
 
-  console.log(notifications);
-  console.log(Object.keys(notifications));
-  console.log(totalNotifications);
+  const clearHandler = (type, notificationType, index) => {
+    console.log(type, notificationType);
+    let deletedNotifications;
+    if (type === "all") {
+      deletedNotifications = notifications[notificationType] = [];
+      handleNotificationsClose();
+      console.log(notifications);
+    } else {
+      deletedNotifications = notifications[notificationType].splice(index, 1);
+      console.log(notifications);
+    }
+    setnotifications(deletedNotifications);
+  };
+
+  const clearIcon = (type, notificationType, index) => {
+    return (
+      <IconButton
+        onClick={() => {
+          clearHandler(type, notificationType, index);
+        }}
+      >
+        <ClearOutlinedIcon />
+      </IconButton>
+    );
+  };
 
   const notificationItems = type => {
-    return notifications[type].map(item => {
+    return notifications[type].map((item, index) => {
       return (
-        <MenuItem className={classes.menuItem} key={`${item.time.seconds}${item.time.nanoseconds}`}>
+        <MenuItem
+          className={classes.menuItem}
+          key={`${item.time.seconds}${item.time.nanoseconds}`}
+        >
           <div className={classes.menuContent}>
-              <Typography className={classes.NotificationMessage}>{item.message}</Typography>
-              <Typography variant="caption">{formatDistance(item.time.toDate(), new Date(), {addSuffix: true})}</Typography>
+            <Typography className={classes.NotificationMessage}>
+              {item.message}
+            </Typography>
+            <Typography variant="caption">
+              {formatDistance(item.time.toDate(), new Date(), {
+                addSuffix: true
+              })}
+            </Typography>
           </div>
+          {clearIcon("", type, index)}
         </MenuItem>
       );
     });
@@ -80,6 +120,7 @@ const Notifications = props => {
               title={notificationType}
               dividerVariant="middle"
               style={{ margin: "0px 8px" }}
+              endComponent={clearIcon("all", notificationType)}
             />
             {notificationItems(notificationType)}
           </div>
@@ -102,7 +143,7 @@ const Notifications = props => {
 
 const mapStateToProps = state => {
   return {
-    notifications: state.firebase.profile.notifications
+    notificationsFromFB: state.firebase.profile.notifications
   };
 };
 
