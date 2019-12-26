@@ -4,11 +4,8 @@ import { withRouter } from "react-router-dom";
 /* Redux */
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions/index";
-import { useSelector } from 'react-redux'
-import { useFirestoreConnect, isLoaded } from 'react-redux-firebase'
-/* Material Imports */
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import { useSelector } from "react-redux";
+import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* App imports */
 import {
   updateObject,
@@ -18,22 +15,10 @@ import {
 import ClassroomCreator from "../../../components/Classroom/Create/ClassroomCreator";
 import FloatingLoader from "../../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import Modal from "../../../components/UI/Modal/Modal";
-import Loader from "../../../components/UI/Loader/PngLoader/PngLoader"
-
-import CodeCopy from "../../../components/UI/SpecialFields/CodeCopy";
-
-const useStyles = makeStyles(theme => ({
-  succesfullCreateActions: {
-    display: "flex",
-    justifyContent: "center"
-  },
-  button: {
-    margin: theme.spacing(1)
-  }
-}));
+import CreatedClassroomModal from "../../../components/Classroom/Modals/CreatedClassroomModal";
+import Loader from "../../../components/UI/Loader/PngLoader/PngLoader";
 
 const CreateClassroom = props => {
-  const matClasses = useStyles();
   const {
     classrooms,
     myInstitutions,
@@ -55,7 +40,7 @@ const CreateClassroom = props => {
   //Extracts institution id in case there is only one assinged to account
   let singleInstitution;
   if (myInstitutions.length === 0) {
-    singleInstitution = ""
+    singleInstitution = "";
   } else if (myInstitutions.length <= 1) {
     singleInstitution = myInstitutions[0].id;
   }
@@ -144,7 +129,7 @@ const CreateClassroom = props => {
 
   //Action to push to the main classroom page /classrooms
   const handleNav = () => {
-    resetCreateClassroom()
+    resetCreateClassroom();
     props.history.push({ state: { overwriteLocalNavState: "classrooms" } });
   };
 
@@ -271,40 +256,21 @@ const CreateClassroom = props => {
   if (loading) {
     floatingLoader = <FloatingLoader />;
   }
-  const modalTemplate = (
-    <div>
-      <h2>Classroom created succesfully!</h2>
-      <p>Share the following code to register students</p>
-      <CodeCopy value={registrationCode} />
-      {!missingFields.noMissingFields ? (
-        <React.Fragment>
-          <h4>To active classroom, fill the following fields:</h4>
-          <ul>
-            {Object.keys(missingFields).map(field => {
-              return missingFields[field] ? <li key={field}>{field}</li> : null;
-            })}
-          </ul>
-        </React.Fragment>
-      ) : null}
-      <div className={matClasses.succesfullCreateActions}>
-        <Button
-          className={matClasses.button}
-          variant="contained"
-          color="primary"
-          type="submit"
-          disabled={!missingFields.noMissingFields}
-        >
-          Activate Classroom
-        </Button>
-      </div>
-    </div>
+
+  const modalContainer = (
+    <Modal openModal={openClassCodeModal} closeModal={() => handleModal(false)}>
+      <CreatedClassroomModal
+        registrationCode={registrationCode}
+        missingFields={missingFields}
+      />
+    </Modal>
   );
 
   /* Checks if data is loaded from firestore */
   if (!isLoaded(clients)) {
     return (
       <div className="App">
-        <Loader/>
+        <Loader />
       </div>
     );
   }
@@ -312,12 +278,7 @@ const CreateClassroom = props => {
   return (
     <React.Fragment>
       {floatingLoader}
-      <Modal
-        openModal={openClassCodeModal}
-        closeModal={() => handleModal(false)}
-      >
-        {modalTemplate}
-      </Modal>
+      {modalContainer}
       <ClassroomCreator
         navActions={handleNav}
         createClassroomForm={createClassroomForm}
@@ -349,8 +310,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     createClassroom: payload => dispatch(actions.createClassroom(payload)),
-    resetCreateClassroom: () => {dispatch(actions.resetCreateClassroom())}
+    resetCreateClassroom: () => {
+      dispatch(actions.resetCreateClassroom());
+    }
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateClassroom));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(CreateClassroom)
+);
