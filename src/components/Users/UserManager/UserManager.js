@@ -22,6 +22,12 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column"
   },
+  userContainer: {
+    height: "70%",
+    [theme.breakpoints.down("xs")]: {
+      height: "60%"
+    }
+  },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1)
@@ -81,14 +87,16 @@ const useStyles = makeStyles(theme => ({
   },
   userEditSection: {
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    height: "100%"
   },
   userCardSection: {
     flexDirection: "column",
     display: "flex",
-    flexGrow: 1
+    flexGrow: 1,
+    overflow: "auto"
   },
-  checkboxPhoneGp:{
+  checkboxPhoneGp: {
     display: "flex",
     flexDirection: "column"
   }
@@ -208,59 +216,59 @@ const UserManager = props => {
   //Changes checkbox layout for phones
   if (isPhone) {
     checboxLayout = (
-    <React.Fragment>
-      <div className={classes.checkboxPhoneGp}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              color="primary"
-              checked={checkboxState.all}
-              onChange={handleCheckboxChange("all")}
-            />
-          }
-          label="All"
-          labelPlacement="start"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              color="primary"
-              checked={checkboxState.students}
-              onChange={handleCheckboxChange("students")}
-            />
-          }
-          label="Students"
-          labelPlacement="start"
-        />
-      </div>
-      <div className={classes.checkboxPhoneGp}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              color="primary"
-              checked={checkboxState.teachers}
-              onChange={handleCheckboxChange("teachers")}
-            />
-          }
-          label="Teachers"
-          labelPlacement="start"
-        />
-        {admins.length !== 0 ? (
+      <React.Fragment>
+        <div className={classes.checkboxPhoneGp}>
           <FormControlLabel
             control={
               <Checkbox
                 color="primary"
-                checked={checkboxState.admins}
-                onChange={handleCheckboxChange("admins")}
+                checked={checkboxState.all}
+                onChange={handleCheckboxChange("all")}
               />
             }
-            label="Admins"
+            label="All"
             labelPlacement="start"
           />
-        ) : null}
-      </div>
-    </React.Fragment>
-  );
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={checkboxState.students}
+                onChange={handleCheckboxChange("students")}
+              />
+            }
+            label="Students"
+            labelPlacement="start"
+          />
+        </div>
+        <div className={classes.checkboxPhoneGp}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={checkboxState.teachers}
+                onChange={handleCheckboxChange("teachers")}
+              />
+            }
+            label="Teachers"
+            labelPlacement="start"
+          />
+          {admins.length !== 0 ? (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={checkboxState.admins}
+                  onChange={handleCheckboxChange("admins")}
+                />
+              }
+              label="Admins"
+              labelPlacement="start"
+            />
+          ) : null}
+        </div>
+      </React.Fragment>
+    );
   }
 
   /* USER CARD IS A SMART COMPONENT IN CASE ERROR ARRISES FROM THERE */
@@ -287,34 +295,36 @@ const UserManager = props => {
           ? "Admins"
           : "Pending Users"}
       </Typography>
-      <div className={classes.userEditSection}>
-        <div className={classes.userCardSection}>
-          {userDisplayArray.map(user => {
-            return (
+      <div className={classes.userContainer}>
+        <div className={classes.userEditSection}>
+          <div className={classes.userCardSection}>
+            {userDisplayArray.map(user => {
+              return (
+                <UserCard
+                  key={`${user.id}${user.role}`}
+                  user={user}
+                  isMobile={isMobile}
+                  isChanging={cardChangedHandler}
+                  clients={clients}
+                  myRole={myRole}
+                />
+              );
+            })}
+          </div>
+          {!isMobile && openCard ? (
+            <SideCollapseCard openCard={openCard}>
               <UserCard
-                key={`${user.id}${user.role}`}
-                user={user}
-                isMobile={isMobile}
+                onlyEditUsersCard
+                openCard={openCard}
+                user={selectedUser}
                 isChanging={cardChangedHandler}
                 clients={clients}
+                openCardHandler={openCardHandler}
                 myRole={myRole}
               />
-            );
-          })}
+            </SideCollapseCard>
+          ) : null}
         </div>
-        {!isMobile && openCard ? (
-          <SideCollapseCard openCard={openCard}>
-            <UserCard
-              onlyEditUsersCard
-              openCard={openCard}
-              user={selectedUser}
-              isChanging={cardChangedHandler}
-              clients={clients}
-              openCardHandler={openCardHandler}
-              myRole={myRole}
-            />
-          </SideCollapseCard>
-        ) : null}
       </div>
     </Container>
   );
