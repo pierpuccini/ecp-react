@@ -33,6 +33,8 @@ const ViewAndEditClassroom = asyncComponent(() => {
 const useStyles = makeStyles(theme => ({
   container: {
     padding: "unset !important",
+    display: "flex",
+    flexDirection: "column",
     [theme.breakpoints.up("md")]: {
       minWidth: "685px !important"
     }
@@ -45,6 +47,13 @@ const useStyles = makeStyles(theme => ({
       boxShadow: "unset",
       border: "2px solid"
     }
+  },
+  managerCard: {
+    overflow: "hidden"
+  },
+  contentCards: {
+    height: "73%",
+    overflow: "auto"
   },
   button: {
     [theme.breakpoints.down("xs")]: {
@@ -176,46 +185,6 @@ const ClassroomController = props => {
       setinfiniteLoader(false);
     }
   }, [loading]);
-
-  /* Incharge of attaching scroll event to scroll screen */
-  useEffect(() => {
-    /* Incharge of loading more classrooms and showing loader */
-    const handleScroll = e => {
-      const bottom =
-        e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-      if (bottom) {
-        if (classrooms.lastPage !== classroomPage) {
-          let classroomPageCopy = classroomPage;
-          setclassroomPage(classroomPageCopy + 1);
-          console.log("loading");
-          getAllMyClassrooms({
-            role: role,
-            uid: userId,
-            page: classroomPage
-          });
-          setinfiniteLoader(true);
-        } else {
-          setinfiniteLoader(false);
-        }
-      }
-    };
-
-    //Attaches event listener
-    if (location.pathname === "/classrooms") {
-      // content is the Id of the main container
-      document
-        .getElementById("content")
-        .addEventListener("scroll", handleScroll);
-    }
-    //Detaches event listener
-    return () => {
-      document
-        .getElementById("content")
-        .removeEventListener("scroll", handleScroll);
-    };
-    /* MISSING DEP: 'getAllMyClassrooms', 'role', and 'userId' */
-    //eslint-disable-next-line
-  }, [location, classrooms, classroomPage]);
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
@@ -449,45 +418,70 @@ const ClassroomController = props => {
     </Modal>
   );
 
+  const handleScroll = e => {
+    const bottom =
+      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (bottom) {
+      console.log('bottom')
+      if (classrooms.lastPage !== classroomPage) {
+        let classroomPageCopy = classroomPage;
+        setclassroomPage(classroomPageCopy + 1);
+        console.log("loading");
+        getAllMyClassrooms({
+          role: role,
+          uid: userId,
+          page: classroomPage
+        });
+        setinfiniteLoader(true);
+      } else {
+        setinfiniteLoader(false);
+      }
+    }
+  };
+
   if (isLoaded(clients, teachers, students) && domReady && fetchClassrooms) {
     return location.pathname === "/classrooms" ? (
       <Container maxWidth="md" className={classes.container}>
         {loading ? <FloatingLoader></FloatingLoader> : null}
         {modalContainer}
         {redirect}
-        <ClassroomManagerCard
-          role={role}
-          filterToggle={filterToggle}
-          handleFilterToggle={handleFilterToggle}
-          selectState={selectState}
-          handleselectState={handleselectState}
-          handleAddClassStudent={handleAddClassStudent}
-          handleNavChange={handleNavChange}
-          searchValue={classroomSearch}
-          searchOnChange={handleClassroomSearch}
-          serverSearch={
-            classrooms.data.length === 0 &&
-            classrooms.total > classrooms.perPage * classrooms.page
-          }
-        />
-        {classroomsToMap(classrooms.data)}
-        {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (
-          <div className={classes.infiniteLoaderContainer}>
-            <div style={{ display: "flex" }}>
-              <PngLoader />
+        <div className={classes.managerCard}>
+          <ClassroomManagerCard
+            role={role}
+            filterToggle={filterToggle}
+            handleFilterToggle={handleFilterToggle}
+            selectState={selectState}
+            handleselectState={handleselectState}
+            handleAddClassStudent={handleAddClassStudent}
+            handleNavChange={handleNavChange}
+            searchValue={classroomSearch}
+            searchOnChange={handleClassroomSearch}
+            serverSearch={
+              classrooms.data.length === 0 &&
+              classrooms.total > classrooms.perPage * classrooms.page
+            }
+          />
+        </div>
+        <div id="classroomCards" className={classes.contentCards} onScroll={(event)=>{handleScroll(event)}}>
+          {classroomsToMap(classrooms.data)}
+          {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (
+            <div className={classes.infiniteLoaderContainer}>
+              <div style={{ display: "flex" }}>
+                <PngLoader />
+              </div>
+              <Typography variant="caption">Fetching Classrooms</Typography>
             </div>
-            <Typography variant="caption">Fetching Classrooms</Typography>
-          </div>
-        ) : (
-          <Typography style={{ textAlign: "center", margin: "16px 0px" }}>
-            Nothing else to show
-          </Typography>
-        )}
-        {classrooms.data.length === 0 ? (
-          <Typography style={{ textAlign: "center", margin: "16px 0px" }}>
-            No more clasrooms to show
-          </Typography>
-        ) : null}
+          ) : (
+            <Typography style={{ textAlign: "center", margin: "16px 0px" }}>
+              Nothing else to show
+            </Typography>
+          )}
+          {classrooms.data.length === 0 ? (
+            <Typography style={{ textAlign: "center", margin: "16px 0px" }}>
+              No more clasrooms to show
+            </Typography>
+          ) : null}
+        </div>
       </Container>
     ) : (
       <React.Fragment>
