@@ -2,7 +2,6 @@
 import React from "react";
 /* Material UI Imports */
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -28,21 +27,22 @@ const HomeCards = (props) => {
   const { dashboardCards, loaded } = props;
 
   return (
-    <Container maxWidth="sm" className={classes.root}>
       <Grid container spacing={3}>
         {dashboardCards.map(card => {
-          return (
-            <Grid key={card.id} item sm={card.sm} xs={card.xs}>
-                {(card.customComp)? card.customComp :
-                <Paper className={classes.paper} onClick={event =>{props.dashboardToRoute(event, card.onClickLink)}}>                  
-                  {loaded ? (<Typography>{card.content}</Typography>) : (<Skeleton variant="rect" height={6} className={classes.skeleton}/>)}
-                </Paper>
-              }
-            </Grid>
-          );
+          if (card != null) {
+            return (
+              <Grid key={card.id} item sm={card.sm} xs={card.xs}>
+                  {(card.customComp)? card.customComp :
+                  <Paper className={classes.paper} onClick={event =>{props.dashboardToRoute(event, card.onClickLink)}}>                  
+                    {loaded ? (<Typography>{card.content}</Typography>) : (<Skeleton variant="rect" height={6} className={classes.skeleton}/>)}
+                  </Paper>
+                }
+              </Grid>
+            );            
+          } 
+          return null
         })}
       </Grid>
-    </Container>
   );
 };
 

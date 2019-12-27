@@ -4,13 +4,33 @@ import { withRouter } from "react-router-dom";
 //Redux
 import { connect } from "react-redux";
 // import * as actions from "../../store/actions/index";
+/* Material UI Imports */
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
 //App Imports
 import HomeCards from "../../components/Dashboard/HomeCards/HomeCards";
 import UserManagement from "../../components/Dashboard/UserManagement/UserManagement";
 //Personal Helpers
 // import { updateObject, checkValidity } from "../../shared/utility";
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+    padding: "0px 16px !important",
+    overflow: "auto",
+    marginTop: theme.spacing(2)
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center"
+  },
+  skeleton: {
+    borderRadius: theme.spacing(2)
+  }
+}));
+
 const Dashboard = props => {
+  const classes = useStyles();
   const [showSkeleton, setShowSkeleton] = useState(false);
 
   useEffect(() => {
@@ -23,7 +43,6 @@ const Dashboard = props => {
   }, []);
 
   const redirectDashboard = (event, redirectLink) => {
-    console.log('redirectLink',redirectLink);
     props.history.push(redirectLink);
   };
 
@@ -33,7 +52,7 @@ const Dashboard = props => {
       id: 1,
       sm: 12,
       xs: 12,
-      permision: "admin",
+      permision: ["admin"],
       customComp: (
         <UserManagement
           loaded={showSkeleton}
@@ -47,7 +66,7 @@ const Dashboard = props => {
       xs: 12,
       content: "Send or Create Challenge!",
       onClickLink: "/home",
-      permision: "student"
+      permision: ["student", "teacher"]
     },
     {
       id: 3,
@@ -55,7 +74,7 @@ const Dashboard = props => {
       xs: 12,
       content: "Get Power Ups!",
       onClickLink: "/home",
-      permision: "student-only"
+      permision: ["student"]
     },
     {
       id: 4,
@@ -63,7 +82,7 @@ const Dashboard = props => {
       xs: 12,
       content: "Power Up Manager",
       onClickLink: "/home",
-      permision: "teacher"
+      permision: ["teacher"]
     },
     {
       id: 5,
@@ -71,7 +90,7 @@ const Dashboard = props => {
       xs: 6,
       content: "Active Challenges",
       onClickLink: "/home",
-      permision: "student"
+      permision: ["student", "teacher"]
     },
     {
       id: 6,
@@ -79,7 +98,7 @@ const Dashboard = props => {
       xs: 6,
       content: "Pending Challenges",
       onClickLink: "/home",
-      permision: "student"
+      permision: ["student", "teacher"]
     },
     {
       id: 7,
@@ -87,7 +106,7 @@ const Dashboard = props => {
       xs: 12,
       content: "Create Classroom!",
       onClickLink: "/classrooms/create",
-      permision: "teacher"
+      permision: ["teacher"]
     },
     {
       id: 8,
@@ -95,7 +114,7 @@ const Dashboard = props => {
       xs: 6,
       content: "My Classrooms",
       onClickLink: "/classrooms",
-      permision: "student"
+      permision: ["student", "teacher", "admin"]
     },
     {
       id: 9,
@@ -103,7 +122,7 @@ const Dashboard = props => {
       xs: 6,
       content: "Past Classrooms",
       onClickLink: "/classrooms",
-      permision: "student"
+      permision: ["student", "teacher"]
     },
     {
       id: 10,
@@ -111,35 +130,43 @@ const Dashboard = props => {
       xs: 12,
       content: "My Transactions",
       onClickLink: "/home",
-      permision: "student"
+      permision: ["student", "teacher"]
+    },
+    {
+      id: 11,
+      sm: false,
+      xs: 6,
+      content: "All Transactions",
+      onClickLink: "/home",
+      permision: ["admin"]
     }
   ];
 
-  dashboardItems.forEach((item, index) => {
-    if (props.role === "student" && item.permision === "teacher") {
-      dashboardItems.splice(index, 1);
-    } else if (props.role !== "student" && item.permision === "student-only") {
-      dashboardItems.splice(index, 1);
-    } else if (!props.role.includes("admin") && item.permision === "admin") {
-      dashboardItems.splice(index, 1);
+  let availableItems = dashboardItems.map((item, index) => {
+    if (item.permision.includes(props.role)) {
+      return item
     }
+    return null
   });
 
   return (
-    <React.Fragment>
+    <Container maxWidth="sm" className={classes.root}>
       <HomeCards
-        dashboardCards={dashboardItems}
+        dashboardCards={availableItems}
         loaded={showSkeleton}
         dashboardToRoute={redirectDashboard}
       />
-    </React.Fragment>
+    </Container>
   );
 };
 
 const mapStateToProps = state => {
   return {
     profileLoaded: state.firebase.profile.isLoaded,
-    role: state.firebase.profile.role
+    role:
+      state.firebase.profile.role === "super-admin"
+        ? "admin"
+        : state.firebase.profile.role
   };
 };
 
