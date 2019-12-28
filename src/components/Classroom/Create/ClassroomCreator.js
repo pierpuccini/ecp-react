@@ -59,6 +59,7 @@ const useStyles = makeStyles(theme => ({
   },
   classroomContainer: {
     padding: "unset !important",
+    overflow: "auto",
     [theme.breakpoints.up("md")]: {
       minWidth: "685px !important"
     }
