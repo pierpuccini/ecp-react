@@ -41,7 +41,7 @@ const SideList = props => {
     },
     {
       text: "Power Ups",
-      url: "power-ups",
+      url: "power-ups/view",
       icon: <TrendingUpOutlinedIcon />
     },
     {

@@ -73,7 +73,7 @@ const Dashboard = props => {
       sm: 6,
       xs: 12,
       content: "Get Power Ups!",
-      onClickLink: "/home",
+      onClickLink: "/power-ups/view",
       permision: ["student"]
     },
     {
@@ -81,7 +81,7 @@ const Dashboard = props => {
       sm: 6,
       xs: 12,
       content: "Power Up Manager",
-      onClickLink: "/home",
+      onClickLink: "/power-ups/manage",
       permision: ["teacher"]
     },
     {
