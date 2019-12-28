@@ -26,20 +26,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
- * @[dynamicText]: text is the one that will always change OR Main text (1)
- * @[text]: is your static text OR Seconday Text (2)
- * @[orientation]: vertical horizantal
- * @[icon]
- * @[variantArray]: [0] = static text & [1] dynamic text
- * @[component]: custom text component
- * @style normal css styling
- * @[type]:
- *  -subtext: provides information uptop description bellow in grey
- *  -norrmal: description and information separated by colon
- *  *Type does NOT require a variantArry pos 2
- * @[capitalize]: If exisits, capitalize the dynamic info
- * @param {*} props
- * @returns
+ * @param [dynamicText]: text is the one that will always change OR Main text (1)
+ * @param [text]: is your static text OR Seconday Text (2)
+ * @param [orientation]: vertical horizantal
+ * @param [icon]
+ * @param [variantArray]: [0] = static text & [1] dynamic text
+ * @param [component]: custom text component
+ * @param [style] normal css styling
+ * @param [capitalize]: If exisits, capitalize the dynamic info
+ * @param [type]:
+ *  @[type] subtext: provides information uptop description bellow in grey
+ *  @[type] norrmal: description and information separated by colon
+ *  @[type] DOES NOT require a variantArry pos 2
  */
 const DynamicText = props => {
   const classes = useStyles();
@@ -52,8 +50,8 @@ const DynamicText = props => {
     variantArray,
     component,
     style,
-    type,
-    capitalize
+    capitalize,
+    type
   } = props;
   if (type === "subtext") {
     return (
