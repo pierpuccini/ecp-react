@@ -94,7 +94,6 @@ function App(props) {
 
     //Conditional Routes
     let payload = navRoute;
-    console.log(navRoute)
     if (location.state) {
       payload = `${location.state.overwriteLocalNavState}`;
       setsnackbarPayload({
@@ -111,7 +110,6 @@ function App(props) {
         !location.pathname.includes("/classrooms")
         && !location.pathname.includes("/user-manager")
       ) {
-        console.log('3')
         payload = location.pathname.replace("/", "");
       }
       if (location.pathname !== "/login") {
