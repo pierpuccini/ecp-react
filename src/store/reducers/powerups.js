@@ -56,8 +56,8 @@ const logout = state => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.POWERUPS_START: return powerupsStart(state, action);
-    case actionTypes.POWERUPS_FAILED: return powerupsFailed(state, action);
+    case actionTypes.POWERUP_START: return powerupsStart(state, action);
+    case actionTypes.POWERUP_FAILED: return powerupsFailed(state, action);
     case actionTypes.POWERUP_CREATE: return powerupsCreate(state, action);
     case actionTypes.POWERUP_EDIT: return powerupsEdit(state, action);
     case actionTypes.POWERUP_DELETE: return powerupsDelete(state, action);

@@ -22,6 +22,7 @@ import authReducer from "./store/reducers/auth";
 import onboardingReducer from "./store/reducers/onboarding";
 import usersReducer from "./store/reducers/users";
 import classroomsReducer from "./store/reducers/classrooms";
+import powerupsReducer from "./store/reducers/powerups"
 
 // Initialize Firebase & firebase services
 firebase.initializeApp(firebaseConfig);
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   onboarding: onboardingReducer,
   users: usersReducer,
   classrooms: classroomsReducer,
+  powerups: powerupsReducer,
   firebase: firebaseReducer,
   firestore: firestoreReducer
 });

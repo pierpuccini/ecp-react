@@ -13,7 +13,11 @@ import Modal from "../../components/UI/Modal/Modal";
 import EditCreatePowerup from "../../components/Powerups/Modals/EditCreatePowerup";
 import PowerupInfoCard from "../../components/Powerups/PowerupInfoCard";
 import PowerupCards from "../../components/Powerups/PowerupCards";
-import { updateObject, checkValidity, stateToPayload } from "../../shared/utility";
+import {
+  updateObject,
+  checkValidity,
+  stateToPayload
+} from "../../shared/utility";
 
 const useStyles = makeStyles(theme => ({
   powerupsContainer: {
@@ -30,7 +34,7 @@ const Powerups = props => {
   const classes = useStyles();
 
   let { type } = useParams();
-  const { role, powerupActions } = props;
+  const { role, userId, powerupActions } = props;
 
   const [createEditPowerup, setcreateEditPowerup] = useState({
     name: {
@@ -91,10 +95,11 @@ const Powerups = props => {
     setcreateEditPowerup(updatedControls);
   };
 
-  const createEditActions = action => {
+  const createEditActions = (action, id) => {
     console.log("action", action);
     if (action === "save") {
-        powerupActions(stateToPayload(createEditPowerup))
+      let info = stateToPayload(createEditPowerup);
+      powerupActions({ ...info, id: id, userId: userId });
     }
   };
 
@@ -136,7 +141,8 @@ const Powerups = props => {
 
 const mapStateToProps = state => {
   return {
-    role: state.firebase.profile.role
+    role: state.firebase.profile.role,
+    userId: state.firebase.auth.uid
   };
 };
 
