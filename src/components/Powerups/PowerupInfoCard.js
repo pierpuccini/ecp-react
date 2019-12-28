@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 const PowerupInfoCard = props => {
   const classes = useStyles();
 
-  const { viewType, role, handlePowerupModal } = props;
+  const { viewType, handlePowerupModal } = props;
 
   let title = viewType === "manage" ? "Managing power ups" : "Buy power ups";
   let endItem = <div>5000</div>;
