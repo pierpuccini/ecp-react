@@ -23,25 +23,32 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
+/**
+ * @param {*} openModal: Incharge of opening the modal
+ * @param {*} closeModal: Incharge of closing the modal MUST create a Fn.
+ * @param {*} children: custom child to display
+ * @returns
+ */
 const AddClassroomModal = (props) => {
     const classes = useStyles();
+    const { openModal, closeModal, children } = props
 
     return (
       <Modal
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
       className={classes.modal}
-      open={props.openModal}
-      onClose={props.closeModal}
+      open={openModal}
+      onClose={closeModal}
       closeAfterTransition
       BackdropComponent={Backdrop}
       BackdropProps={{
         timeout: 500,
       }}
     >
-      <Fade in={props.openModal}>
+      <Fade in={openModal}>
         <div className={classes.paper}>
-          {props.children}
+          {children}
         </div>
       </Fade>
     </Modal>
