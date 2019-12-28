@@ -18,6 +18,21 @@ const EditCreatePowerup = props => {
   const classes = useStyles();
 
   const { form, inputChangedHandler, buttonClickHandler } = props;
+
+  //Creacts a valid field object
+  let formArr = Object.keys(form).map(controlName => {
+    return {
+      controlName: controlName,
+      data: form[controlName]
+    };
+  });
+  let validFields = formArr.map(item => {
+    return {
+      [item.controlName]: item.data.valid && item.data.touched
+    };
+  });
+  validFields = Object.assign({}, ...validFields);
+
   return (
     <div>
       <div className={classes.inputs}>
@@ -112,10 +127,10 @@ const EditCreatePowerup = props => {
           size="small"
           color="primary"
           disabled={
-            !form.name.valid &&
-            !form.description.valid &&
-            !form.cost.valid &&
-            !form.quantity.valid
+            !validFields.name &&
+            !validFields.description &&
+            !validFields.cost &&
+            !validFields.quantity
           }
         >
           save
