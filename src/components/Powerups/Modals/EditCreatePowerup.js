@@ -66,7 +66,7 @@ const EditCreatePowerup = props => {
           margin="normal"
           helperText={
             !form.cost.valid && form.cost.touched
-              ? "*Please Enter your powerup's cost"
+              ? "*Powerup's cost. No decimals or negative numbers"
               : "Enter your powerup's cost"
           }
           error={!form.cost.valid && form.cost.touched}
@@ -83,7 +83,7 @@ const EditCreatePowerup = props => {
           margin="normal"
           helperText={
             !form.quantity.valid && form.quantity.touched
-              ? "*Please Enter your powerup's quantity"
+              ? "*Powerup's quantity. No decimals or negative numbers"
               : "Enter your powerup's quantity"
           }
           error={!form.quantity.valid && form.quantity.touched}

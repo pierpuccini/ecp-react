@@ -56,7 +56,12 @@ const Powerups = props => {
     cost: {
       value: "",
       validation: {
-        required: true
+        required: true,
+        specialNumber: {
+            min: 0,
+            max: null,
+            step: 1
+        }
       },
       valid: false,
       touched: false
@@ -64,7 +69,12 @@ const Powerups = props => {
     quantity: {
       value: "",
       validation: {
-        required: true
+        required: true,
+        specialNumber: {
+            min: 0,
+            max: null,
+            step: 1
+        }
       },
       valid: false,
       touched: false
