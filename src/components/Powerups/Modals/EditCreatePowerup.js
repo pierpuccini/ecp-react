@@ -7,7 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
-  inputs: {display: "flex", flexDirection: "column"},
+  inputs: { display: "flex", flexDirection: "column" },
   actions: { display: "flex", justifyContent: "flex-end" },
   button: {
     margin: theme.spacing(1)
@@ -21,7 +21,7 @@ const EditCreatePowerup = props => {
   return (
     <div>
       <div className={classes.inputs}>
-        <TextField          
+        <TextField
           value={form.name.value}
           onChange={event => inputChangedHandler(event, "name")}
           label="Name"
@@ -93,13 +93,13 @@ const EditCreatePowerup = props => {
       </div>
       <div className={classes.actions}>
         <Button
-          variant="outlined"
+          variant="contained"
           className={classes.button}
           onClick={() => {
             buttonClickHandler("cancel");
           }}
           size="small"
-          style={{ color: "#f44336", borderColor: "#f44336" }}
+          style={{ color: "#fff", backgroundColor: "#f44336" }}
         >
           Cancel
         </Button>
@@ -111,6 +111,12 @@ const EditCreatePowerup = props => {
           }}
           size="small"
           color="primary"
+          disabled={
+            !form.name.valid &&
+            !form.description.valid &&
+            !form.cost.valid &&
+            !form.quantity.valid
+          }
         >
           save
         </Button>
