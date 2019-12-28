@@ -444,7 +444,7 @@ const ViewAndEditClassroom = props => {
     classroom
   ) {
     return (
-      <React.Fragment>
+      <div style={{ width: "100%", overflow: "auto" }}>
         {loading ? <FloatingLoader></FloatingLoader> : null}
         <DetailedClassroomView
           navActions={handleNav}
@@ -466,12 +466,14 @@ const ViewAndEditClassroom = props => {
           teacher={userObjCreator([classroom.teacher_id], teachers, true)}
           viewInfo={convertStateToInfo()}
           studentGroupsField={studentGroupsField}
-          studentsGroupsArray={assignStudentsNameToGroup(classroom.studentsgroup)}
+          studentsGroupsArray={assignStudentsNameToGroup(
+            classroom.studentsgroup
+          )}
           myId={myId}
           role={role}
           deleteStudentGroup={deleteStudentGroup}
         />
-      </React.Fragment>
+      </div>
     );
   } else {
     return (

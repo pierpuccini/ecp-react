@@ -27,7 +27,6 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
     border: "unset",
-    width: "100%",
     [theme.breakpoints.down("sm")]: {
       boxShadow: "unset",
       border: "2px solid"

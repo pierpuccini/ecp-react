@@ -18,10 +18,11 @@
     bottom: 0;
     left: 0;
     right: 0;
-    overflow: auto;
+    height:100vh;
     display: flex;
     justify-content: center;
     max-width: unset;
+    padding: unset;
 }
 @media (max-width: 599px) {
     #content {
@@ -30,9 +31,10 @@
         bottom: 76px;
         left: 0;
         right: 0;
-        overflow: auto;
+        height: unset;
         display: flex;
         justify-content: center;
         max-width: unset;
+        padding: unset;
     }
 }
