@@ -39,7 +39,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column"
   },
   myAccountContainer: {
-    padding: "unset !important"
+    padding: "unset !important",
+    overflow: "auto"
   },
   textField: {
     marginLeft: theme.spacing(1),
