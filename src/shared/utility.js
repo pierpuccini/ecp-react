@@ -5,6 +5,18 @@ export const updateObject = (oldObject, updatedProperties) => {
   };
 };
 
+ /**
+ *
+ * @param {*} value These are Requiered for validity function
+ * @param {*} rules various types, see bellow
+ * @param {*} required
+ * @param {*} minLength
+ * @param {*} maxLength
+ * @param {*} isEmail
+ * @param {*} isName
+ * @param {*} specialNumber Obj. {min, max, step}
+ * @returns
+ */
 export const checkValidity = (value, rules) => {
   let isValid = true;
   if (!rules) {
@@ -31,6 +43,15 @@ export const checkValidity = (value, rules) => {
   if (rules.isName) {
     const pattern = /(\w.+\s+\w.).+/i;
     isValid = pattern.test(value) && isValid;
+  }
+
+  if (rules.specialNumber) {
+    const { min, max, step } = rules.specialNumber
+
+    let checkMin = (min != null) ? value >= min : true
+    let checkMax = (max != null) ? value <= max : true
+    let checkStep = (step != null) ? value%step === 0 : true
+    isValid = checkMin && checkMax && checkStep
   }
 
   return isValid;
