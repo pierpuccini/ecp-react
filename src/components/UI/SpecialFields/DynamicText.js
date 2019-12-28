@@ -26,8 +26,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
- * @Dynamic text is the one that will always change
- * @Text is your static text
+ * @Dynamic text is the one that will always change OR Main text (1)
+ * @Text is your static text OR Seconday Text (2)
  * @Orientation: vertical horizantal
  * @icon
  * @variant Array, [0] = static text & [1] dynamic text
