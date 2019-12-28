@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { withRouter, useParams } from "react-router-dom";
 /* Redux */
 import { connect } from "react-redux";
-// import * as actions from "../../store/actions/index";
+import * as actions from "../../store/actions/index";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -13,7 +13,7 @@ import Modal from "../../components/UI/Modal/Modal";
 import EditCreatePowerup from "../../components/Powerups/Modals/EditCreatePowerup";
 import PowerupInfoCard from "../../components/Powerups/PowerupInfoCard";
 import PowerupCards from "../../components/Powerups/PowerupCards";
-import { updateObject, checkValidity } from "../../shared/utility";
+import { updateObject, checkValidity, stateToPayload } from "../../shared/utility";
 
 const useStyles = makeStyles(theme => ({
   powerupsContainer: {
@@ -30,7 +30,7 @@ const Powerups = props => {
   const classes = useStyles();
 
   let { type } = useParams();
-  const { role } = props;
+  const { role, powerupActions } = props;
 
   const [createEditPowerup, setcreateEditPowerup] = useState({
     name: {
@@ -93,6 +93,9 @@ const Powerups = props => {
 
   const createEditActions = action => {
     console.log("action", action);
+    if (action === "save") {
+        powerupActions(stateToPayload(createEditPowerup))
+    }
   };
 
   const handlePowerupModal = () => {
@@ -137,4 +140,12 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(Powerups));
+const mapDispatchToProps = dispatch => {
+  return {
+    powerupActions: payload => dispatch(actions.powerupActions(payload))
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Powerups)
+);

@@ -1,4 +1,4 @@
-/* -------------------------------- auth -------------------------------- */
+/* ---------------------------------------------- auth ---------------------------------------------- */
 export const AUTH_START = "AUTH_START";
 export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAIL = "AUTH_FAIL";
@@ -19,7 +19,7 @@ export const GET_ID_TOKEN = "GET_ID_TOKEN"
 /* Deletes user if it has not been signed up */
 export const DELETE_NEW_USER = "DELETE_NEW_USER";
 
-/* -------------------------------- users -------------------------------- */
+/* ---------------------------------------------- users ---------------------------------------------- */
 export const ONBOARDING_START = "ONBOARDING_START"
 export const ONBOARDING_FAILED = 'ONBOARDING_FAILED';
 export const ONBOARDING_SUCCESS = "ONBOARDING_SUCCESS"
@@ -32,7 +32,7 @@ export const USER_RESET_ERRORS = "USER_RESET_ERRORS";
 export const USER_RESET = "USER_RESET";
 export const USER_DISABLED = "USER_DISABLED";
 
-/* -------------------------------- clasrooms -------------------------------- */
+/* ---------------------------------------------- clasrooms ---------------------------------------------- */
 export const CLASSROOM_ACTIONS_START = "CLASSROOM_ACTIONS_START";
 export const CLASSROOM_ACTIONS_FAILED = "CLASSROOM_ACTIONS_FAILED";
 
@@ -51,3 +51,11 @@ export const CLASSROOM_RESTORE_SUCCESS = "CLASSROOM_RESTORE_SUCCESS";
 export const CLASSROOM_SEARCH_SUCCESS = "CLASSROOM_SEARCH_SUCCESS";
 
 export const CLASSROOM_STUDENT_GROUPS_CREATE = 'CLASSROOM_STUDENT_GROUPS_CREATE';
+
+/* ---------------------------------------------- power ups ---------------------------------------------- */
+export const POWERUP_START = "POWERUP_START"
+export const POWERUP_FAILED = "POWERUP_FAILED"
+
+export const POWERUP_CREATE ="POWERUP_CREATE"
+export const POWERUP_EDIT ="POWERUP_EDIT"
+export const POWERUP_DELETE ="POWERUP_DELETE"
