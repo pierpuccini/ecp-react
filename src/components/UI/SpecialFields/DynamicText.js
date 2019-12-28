@@ -26,17 +26,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
- * @Dynamic text is the one that will always change OR Main text (1)
- * @Text is your static text OR Seconday Text (2)
- * @Orientation: vertical horizantal
- * @icon
- * @variant Array, [0] = static text & [1] dynamic text
+ * @[dynamicText]: text is the one that will always change OR Main text (1)
+ * @[text]: is your static text OR Seconday Text (2)
+ * @[orientation]: vertical horizantal
+ * @[icon]
+ * @[variantArray]: [0] = static text & [1] dynamic text
+ * @[component]: custom text component
  * @style normal css styling
- * @type:
+ * @[type]:
  *  -subtext: provides information uptop description bellow in grey
  *  -norrmal: description and information separated by colon
  *  *Type does NOT require a variantArry pos 2
- * @capitalize: If exisits, capitalize the dynamic info
+ * @[capitalize]: If exisits, capitalize the dynamic info
  * @param {*} props
  * @returns
  */
