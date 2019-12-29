@@ -21,7 +21,7 @@ import AccountBalanceWalletOutlinedIcon from "@material-ui/icons/AccountBalanceW
 //For dark theme
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { createMuiTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 /* component Imports */
 import "./App.css";
 import Loader from "./components/UI/Loader/PngLoader/PngLoader";
