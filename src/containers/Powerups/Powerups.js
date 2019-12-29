@@ -13,6 +13,7 @@ import Modal from "../../components/UI/Modal/Modal";
 import EditCreatePowerup from "../../components/Powerups/Modals/EditCreatePowerup";
 import PowerupInfoCard from "../../components/Powerups/PowerupInfoCard";
 import PowerupCards from "../../components/Powerups/PowerupCards";
+import PngLoader from "../../components/UI/Loader/PngLoader/PngLoader";
 import {
   updateObject,
   checkValidity,
@@ -39,11 +40,14 @@ const Powerups = props => {
     classrooms,
     loading,
     success,
+    powerups,
     userId,
     powerupActions,
     getPowerups
   } = props;
 
+  //Checks if DOM is ready to un mount loading icon
+  const [domReady, setDomReady] = useState(false);
   const [createEditPowerup, setcreateEditPowerup] = useState({
     name: {
       value: "",
@@ -87,7 +91,7 @@ const Powerups = props => {
       valid: false,
       touched: false
     },
-    classroom: {
+    classroom_id: {
       value: "",
       validation: {
         required: true
@@ -100,6 +104,9 @@ const Powerups = props => {
 
   /* Fetches powerups on initial load */
   useEffect(() => {
+    async function getMyPowerups(payload) {
+      await getPowerups(payload);
+    }
     let payload = { role: role };
     if (role === "teacher") {
       payload.id = userId;
@@ -110,7 +117,13 @@ const Powerups = props => {
       });
       payload.id = classrooms;
     }
-    getPowerups(payload);
+    getMyPowerups(payload)
+      .then(res => {
+        setDomReady(true);
+      })
+      .catch(err => {
+        console.log("err", err);
+      });
     /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId' */
     // eslint-disable-next-line
   }, []);
@@ -118,6 +131,9 @@ const Powerups = props => {
   /* Fetches powerups after creating them */
   useEffect(() => {
     if (success) {
+      async function getMyPowerups(payload) {
+        await getPowerups(payload);
+      }
       let payload = { role: role };
       if (role === "teacher") {
         payload.id = userId;
@@ -128,8 +144,14 @@ const Powerups = props => {
         });
         payload.id = classrooms;
       }
-      getPowerups(payload);
-      setopenModal(false)
+      getMyPowerups(payload)
+        .then(res => {
+          setDomReady(true);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+      setopenModal(false);
     }
     /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId' */
     // eslint-disable-next-line
@@ -142,7 +164,6 @@ const Powerups = props => {
   } else {
     type = "view";
   }
-  let test = ["a", "a", "a", "a", "a"];
 
   const createEditInputHandler = (event, controlName) => {
     const updatedControls = updateObject(createEditPowerup, {
@@ -208,34 +229,42 @@ const Powerups = props => {
     setopenModal(!openModalCopy);
   };
 
-  return (
-    <Container className={classes.powerupsContainer}>
-      <Modal openModal={openModal} closeModal={handleCloseModal}>
-        <EditCreatePowerup
-          form={createEditPowerup}
-          inputChangedHandler={createEditInputHandler}
-          buttonClickHandler={createEditActions}
-          teacherId={userId}
-          handleAutocompleteChange={handleAutocompleteChange}
-          dbLoading={loading}
+  if (domReady && !loading) {
+    return (
+      <Container className={classes.powerupsContainer}>
+        <Modal openModal={openModal} closeModal={handleCloseModal}>
+          <EditCreatePowerup
+            form={createEditPowerup}
+            inputChangedHandler={createEditInputHandler}
+            buttonClickHandler={createEditActions}
+            teacherId={userId}
+            handleAutocompleteChange={handleAutocompleteChange}
+            dbLoading={loading}
+          />
+        </Modal>
+        <PowerupInfoCard
+          viewType={type}
+          role={role}
+          handlePowerupModal={handlePowerupModal}
         />
-      </Modal>
-      <PowerupInfoCard
-        viewType={type}
-        role={role}
-        handlePowerupModal={handlePowerupModal}
-      />
-      <Grid container spacing={2} className={classes.grid}>
-        {test.map((item, index) => {
-          return (
-            <Grid key={index} item md={3} sm={6} xs={12}>
-              <PowerupCards viewType={type} role={role} />
-            </Grid>
-          );
-        })}
-      </Grid>
-    </Container>
-  );
+        <Grid container spacing={2} className={classes.grid}>
+          {powerups.map((powerUp, index) => {
+            return (
+              <Grid key={index} item md={3} sm={6} xs={12}>
+                <PowerupCards viewType={type} role={role} powerUp={powerUp} />
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Container>
+    );
+  } else {
+    return (
+      <div style={{ alignSelf: "center" }}>
+        <PngLoader />
+      </div>
+    );
+  }
 };
 
 const mapStateToProps = state => {
@@ -243,6 +272,7 @@ const mapStateToProps = state => {
     role: state.firebase.profile.role,
     classrooms: state.firebase.profile.classrooms,
     loading: state.powerups.loading,
+    powerups: state.powerups.dbPowerups,
     success: state.powerups.success,
     userId: state.firebase.auth.uid
   };

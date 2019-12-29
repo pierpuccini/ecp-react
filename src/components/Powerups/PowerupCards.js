@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 //Icons
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
@@ -38,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 const PowerupCards = props => {
   const classes = useStyles();
 
-  const { /* viewType, */ role } = props;
+  const { viewType, role } = props;
   return (
     <Paper className={classes.paper}>
       <div className={classes.header}>
@@ -49,9 +50,14 @@ const PowerupCards = props => {
           type="subtext"
         />
         {role === "teacher" ? (
-          <IconButton>
-            <EditOutlinedIcon />
-          </IconButton>
+          <div>
+            <IconButton color="primary">
+              <EditOutlinedIcon />
+            </IconButton>
+            <IconButton style={{ color: "#f44336" }}>
+              <DeleteOutlineOutlinedIcon />
+            </IconButton>
+          </div>
         ) : (
           <Tooltip placement="left" title="Edit Powerup">
             <Icon>
