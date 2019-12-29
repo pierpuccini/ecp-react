@@ -19,19 +19,29 @@ export const powerupsCreate = err => {
     type: actionTypes.POWERUP_CREATE
   };
 };
+
 export const powerupsEdit = err => {
   return {
     type: actionTypes.POWERUP_EDIT
   };
 };
+
 export const powerupsDelete = err => {
   return {
     type: actionTypes.POWERUP_DELETE
   };
 };
 
-export const powerupActions = (data) => {
-    return (dispatch, /* getState */) => {
-        console.log('data',data);
-    }
-}
+export const powerupActions = data => {
+  return (dispatch /* getState */) => {
+    console.log("data", data);
+    axios
+      .post("/create-master-powerup", data)
+      .then(res => {
+        console.log("res", res);
+      })
+      .catch(error => {
+        console.log("error", error);
+      });
+  };
+};

@@ -58,9 +58,9 @@ const Powerups = props => {
       validation: {
         required: true,
         specialNumber: {
-            min: 0,
-            max: null,
-            step: 1
+          min: 0,
+          max: null,
+          step: 1
         }
       },
       valid: false,
@@ -71,10 +71,18 @@ const Powerups = props => {
       validation: {
         required: true,
         specialNumber: {
-            min: 0,
-            max: null,
-            step: 1
+          min: 0,
+          max: null,
+          step: 1
         }
+      },
+      valid: false,
+      touched: false
+    },
+    classroom: {
+      value: "",
+      validation: {
+        required: true
       },
       valid: false,
       touched: false
@@ -105,11 +113,26 @@ const Powerups = props => {
     setcreateEditPowerup(updatedControls);
   };
 
+  const handleAutocompleteChange = (event, value) => {
+    console.log(value);
+    const updatedControls = updateObject(createEditPowerup, {
+        classroom: updateObject(createEditPowerup.classroom, {
+          value: value != null ? value.id : "",
+          valid: checkValidity(
+            value != null ? value.subject_name : "",
+            createEditPowerup.classroom.validation
+          ),
+          touched: true
+        })
+      });
+      setcreateEditPowerup(updatedControls);
+  };
+
   const createEditActions = (action, id) => {
     console.log("action", action);
     if (action === "save") {
       let info = stateToPayload(createEditPowerup);
-      powerupActions({ ...info, id: id, userId: userId });
+      powerupActions({ ...info, id: id, teacher_id: userId });
     }
   };
 
@@ -129,6 +152,8 @@ const Powerups = props => {
           form={createEditPowerup}
           inputChangedHandler={createEditInputHandler}
           buttonClickHandler={createEditActions}
+          teacherId={userId}
+          handleAutocompleteChange={handleAutocompleteChange}
         />
       </Modal>
       <PowerupInfoCard
