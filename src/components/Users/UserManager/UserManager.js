@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column"
   },
   userContainer: {
-    height: "70%",
+    height: "65%",
     [theme.breakpoints.down("xs")]: {
       height: "60%"
     }
@@ -284,6 +284,7 @@ const UserManager = props => {
           <div className={classes.specificFiltersDiv}>{checboxLayout}</div>
         </div>
       </Paper>
+      <div className={classes.userContainer}>
       <Typography style={{ margin: "0px 16px" }}>
         {userType.includes("all")
           ? "All Users"
@@ -295,7 +296,6 @@ const UserManager = props => {
           ? "Admins"
           : "Pending Users"}
       </Typography>
-      <div className={classes.userContainer}>
         <div className={classes.userEditSection}>
           <div className={classes.userCardSection}>
             {userDisplayArray.map(user => {
