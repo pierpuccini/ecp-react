@@ -9,10 +9,11 @@ export const classroomStart = (action, classrooms) => {
   };
 };
 
-export const classroomFail = error => {
+export const classroomFail = (error, classrooms) => {
   return {
     type: actionTypes.CLASSROOM_ACTIONS_FAILED,
-    error: error
+    error: error,
+    classrooms: classrooms
   };
 };
 
@@ -282,8 +283,8 @@ export const updateClassroom = payload => {
 
 export const addClassroom = payload => {
   return (dispatch, getState) => {
-    dispatch(classroomStart());
     const currentState = getState();
+    dispatch(classroomStart());
 
     payload = { ...payload, student_id: currentState.firebase.auth.uid };
     axios
@@ -309,7 +310,7 @@ export const addClassroom = payload => {
               : error.response.data;
         }
 
-        dispatch(classroomFail(error));
+        dispatch(classroomFail(error,currentState.classrooms.classrooms));
       });
   };
 };
