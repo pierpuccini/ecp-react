@@ -30,6 +30,7 @@ const powerupsCreate = (state, action) => {
     loading: false,
     error: false,
     success: true,
+    tempPowerup: action.temp
   });
 };
 

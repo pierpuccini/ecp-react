@@ -133,6 +133,8 @@ const Powerups = props => {
     if (action === "save") {
       let info = stateToPayload(createEditPowerup);
       powerupActions({ ...info, id: id, teacher_id: userId });
+    } else if (action === "cancel") {
+      handleCloseModal();
     }
   };
 
@@ -140,8 +142,24 @@ const Powerups = props => {
     setopenModal(true);
   };
 
+  const clearCreateEditState = () => {
+    let updatedControls = createEditPowerup;
+    for (const controlName in updatedControls) {
+      if (updatedControls.hasOwnProperty(controlName)) {
+        updatedControls[controlName] = {
+          ...updatedControls[controlName],
+          value: "",
+          valid: false,
+          touched: false
+        };
+      }
+    }
+    setcreateEditPowerup(updatedControls);
+  };
+
   const handleCloseModal = () => {
     let openModalCopy = openModal;
+    clearCreateEditState();
     setopenModal(!openModalCopy);
   };
 

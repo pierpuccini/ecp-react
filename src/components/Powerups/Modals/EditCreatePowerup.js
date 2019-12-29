@@ -104,7 +104,7 @@ const EditCreatePowerup = props => {
           style={{ marginBottom: "16px" }}
           value={form.description.value}
           onChange={event => inputChangedHandler(event, "description")}
-          label="description"
+          label="Description"
           placeholder="x2 Duplicate"
           type="text"
           margin="normal"
@@ -188,7 +188,7 @@ const EditCreatePowerup = props => {
           classcost={classes.textField}
           value={form.cost.value}
           onChange={event => inputChangedHandler(event, "cost")}
-          label="cost"
+          label="Cost"
           placeholder="5000"
           type="number"
           margin="normal"
@@ -205,7 +205,7 @@ const EditCreatePowerup = props => {
           classquantity={classes.textField}
           value={form.quantity.value}
           onChange={event => inputChangedHandler(event, "quantity")}
-          label="quantity"
+          label="Quantity"
           placeholder="25"
           type="number"
           margin="normal"
