@@ -9,6 +9,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 //Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
+/* App Imports */
+import CoinIcon from "../UI/CoinIcon/CoinIcon";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -34,7 +36,12 @@ const PowerupInfoCard = props => {
   const { viewType, handlePowerupModal } = props;
 
   let title = viewType === "manage" ? "Managing power ups" : "Buy power ups";
-  let endItem = <div>5000</div>;
+  let endItem = (
+    <div style={{ display: "flex" }}>
+      <CoinIcon width="32px" height="32px" />
+      <Typography style={{ alignSelf: "center" }}>5000</Typography>
+    </div>
+  );
   if (viewType === "manage") {
     endItem = (
       <Tooltip placement="left" title="Create Powerup">

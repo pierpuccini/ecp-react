@@ -3,8 +3,8 @@ import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { green } from "@material-ui/core/colors";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
@@ -49,6 +49,12 @@ const useStyles = makeStyles(theme => ({
   },
   footerActions: {
     display: "flex"
+  },
+  buyPowerup: {
+    color: green[700]
+  },
+  removePowerup: {
+    color: theme.palette.error.main
   }
 }));
 
@@ -60,15 +66,39 @@ const PowerupCards = props => {
 
   let cardActions = (
     <div className={classes.footer}>
-      <IconButton>
-        <RemoveOutlinedIcon />
-      </IconButton>
-      <Typography style={{ alignSelf: "center" }}>
-        {powerup.quantity}
-      </Typography>
-      <IconButton>
-        <AddOutlinedIcon />
-      </IconButton>
+      <div className={classes.costAndQuantity}>
+        <DynamicText
+          mainText={powerup.cost}
+          text="Power up cost"
+          variantArray={["body1"]}
+          type="subtext"
+          icon={<CoinIcon width="24px" height="24px" />}
+          style={{ marginRight: "8px" }}
+        />
+        <DynamicText
+          mainText={powerup.quantity}
+          text="Quantity"
+          variantArray={["body1"]}
+          type="subtext"
+          style={{ marginLeft: "8px" }}
+        />
+      </div>
+      <div className={classes.footerActions}>
+        <Tooltip placement="left" title="Remove powerup">
+          <span>
+            <IconButton className={classes.removePowerup}>
+              <RemoveOutlinedIcon />
+            </IconButton>
+          </span>
+        </Tooltip>
+        <Tooltip placement="left" title="Buy powerup">
+          <span>
+            <IconButton className={classes.buyPowerup}>
+              <AddOutlinedIcon />
+            </IconButton>
+          </span>
+        </Tooltip>
+      </div>
     </div>
   );
   if (viewType === "manage") {
@@ -132,9 +162,6 @@ const PowerupCards = props => {
           </Icon>
         </Tooltip>
       </div>
-      {viewType === "manage" ? null : (
-        <div className={classes.content}>cost: {powerup.cost}</div>
-      )}
       {cardActions}
     </Paper>
   );
