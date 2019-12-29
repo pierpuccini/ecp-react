@@ -29,4 +29,4 @@ export {
   createStudentGroup,
   deleteStudentGroup
 } from "./classrooms";
-export { powerupActions } from "./powerups";
+export { powerupActions, getPowerups } from "./powerups";

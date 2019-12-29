@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 const PowerupCards = props => {
   const classes = useStyles();
 
-  const { viewType, role } = props;
+  const { /* viewType, */ role } = props;
   return (
     <Paper className={classes.paper}>
       <div className={classes.header}>

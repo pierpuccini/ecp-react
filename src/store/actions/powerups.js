@@ -33,6 +33,13 @@ export const powerupsDelete = err => {
   };
 };
 
+export const powerupsGetAll = powerups => {
+  return {
+    type: actionTypes.POWERUP_GET_ALL,
+    powerups: powerups
+  };
+};
+
 export const powerupActions = data => {
   return (dispatch /* getState */) => {
     dispatch(powerupsStart());
@@ -56,6 +63,22 @@ export const powerupActions = data => {
             ? powerupsEdit()
             : powerupsDelete()
         );
+      })
+      .catch(error => {
+        console.log("error", error.response);
+        dispatch(powerupsFailed(error));
+      });
+  };
+};
+
+export const getPowerups = payload => {
+  return dispatch => {
+    dispatch(powerupsStart());
+
+    axios
+      .get(`get-all-powerups/${payload.id}/${payload.role}`)
+      .then(res => {
+        dispatch(powerupsGetAll(res.data));
       })
       .catch(error => {
         console.log("error", error.response);

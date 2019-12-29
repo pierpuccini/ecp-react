@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "isomorphic-fetch";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+// import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -46,7 +46,6 @@ const EditCreatePowerup = props => {
 
     (async () => {
       const response = await axios.get(`/short-teacher-list/${teacherId}`);
-      console.log("response", response);
 
       if (active) {
         setOptions(response.data.list);

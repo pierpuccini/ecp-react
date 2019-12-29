@@ -1,5 +1,5 @@
 /* React Imports */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter, useParams } from "react-router-dom";
 /* Redux */
 import { connect } from "react-redux";
@@ -34,7 +34,15 @@ const Powerups = props => {
   const classes = useStyles();
 
   let { type } = useParams();
-  const { role, loading, userId, powerupActions } = props;
+  const {
+    role,
+    classrooms,
+    loading,
+    success,
+    userId,
+    powerupActions,
+    getPowerups
+  } = props;
 
   const [createEditPowerup, setcreateEditPowerup] = useState({
     name: {
@@ -89,6 +97,43 @@ const Powerups = props => {
     }
   });
   const [openModal, setopenModal] = useState(false);
+
+  /* Fetches powerups on initial load */
+  useEffect(() => {
+    let payload = { role: role };
+    if (role === "teacher") {
+      payload.id = userId;
+    } else {
+      let classroomIds = [];
+      classrooms.forEach(classrooms => {
+        classroomIds.push(classrooms.id);
+      });
+      payload.id = classrooms;
+    }
+    getPowerups(payload);
+    /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId' */
+    // eslint-disable-next-line
+  }, []);
+
+  /* Fetches powerups after creating them */
+  useEffect(() => {
+    if (success) {
+      let payload = { role: role };
+      if (role === "teacher") {
+        payload.id = userId;
+      } else {
+        let classroomIds = [];
+        classrooms.forEach(classrooms => {
+          classroomIds.push(classrooms.id);
+        });
+        payload.id = classrooms;
+      }
+      getPowerups(payload);
+      setopenModal(false)
+    }
+    /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId' */
+    // eslint-disable-next-line
+  }, [success]);
 
   if (type === "view" && role === "teacher") {
     type = "manage";
@@ -196,14 +241,17 @@ const Powerups = props => {
 const mapStateToProps = state => {
   return {
     role: state.firebase.profile.role,
+    classrooms: state.firebase.profile.classrooms,
     loading: state.powerups.loading,
+    success: state.powerups.success,
     userId: state.firebase.auth.uid
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    powerupActions: payload => dispatch(actions.powerupActions(payload))
+    powerupActions: payload => dispatch(actions.powerupActions(payload)),
+    getPowerups: payload => dispatch(actions.getPowerups(payload))
   };
 };
 
