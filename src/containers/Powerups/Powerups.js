@@ -10,6 +10,7 @@ import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
+import Typography from "@material-ui/core/Typography";
 /* App Imports */
 import Modal from "../../components/UI/Modal/Modal";
 import EditCreatePowerup from "../../components/Powerups/Modals/EditCreatePowerup";
@@ -308,6 +309,9 @@ const Powerups = props => {
           role={role}
           handlePowerupModal={handlePowerupModal}
         />
+        {localPowerups.length === 0 ? (
+          <Typography style={{textAlign: "center"}}>No power ups available.</Typography>
+        ) : null}
         <Grid container spacing={2} className={classes.grid}>
           {localPowerups.map((powerUp, index) => {
             return (

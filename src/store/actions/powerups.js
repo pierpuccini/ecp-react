@@ -76,12 +76,15 @@ export const powerupActions = data => {
 export const getPowerups = payload => {
   return dispatch => {
     dispatch(powerupsStart());
+    console.log("payload", payload);
+    let searchParams = payload.id.length === 0 ? 1 : payload.id;
+    if (payload.role === "student") {
+      searchParams = [];
+      payload.id.forEach(classroom => searchParams.push(classroom.id));
+    }
+    console.log(`get-all-powerups/${searchParams}/${payload.role}`);
     axios
-      .get(
-        `get-all-powerups/${payload.id.length === 0 ? 1 : payload.id}/${
-          payload.role
-        }`
-      )
+      .get(`/get-all-powerups/${searchParams}/${payload.role}`)
       .then(res => {
         dispatch(powerupsGetAll(res.data));
       })
