@@ -80,7 +80,7 @@ const EditCreatePowerup = props => {
 
   return (
     <div>
-    {dbLoading ? <FloatingLoader></FloatingLoader> : null}
+      {dbLoading ? <FloatingLoader></FloatingLoader> : null}
       <div className={classes.inputs}>
         <TextField
           value={form.name.value}
@@ -128,35 +128,41 @@ const EditCreatePowerup = props => {
             setOpen(false);
           }}
           autoHighlight
-          getOptionLabel={option => option.subject_name}
+          autoSelect
           options={options}
           loading={loading}
+          value={
+            form.classroom.value != null
+              ? form.classroom.value.subject_name
+              : ""
+          }
           onChange={(event, value) => handleAutocompleteChange(event, value)}
           renderInput={params => {
             const inputProps = params.inputProps;
             inputProps.autoComplete = "off";
             return (
-            <TextField
-              {...params}
-              inputProps={inputProps}
-              label="Your Classrooms"
-              fullWidth
-              variant="outlined"
-              helperText="Select one of your available classrooms" 
-              autoComplete="off"             
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <React.Fragment>
-                    {loading ? (
-                      <CircularProgress color="inherit" size={20} />
-                    ) : null}
-                    {params.InputProps.endAdornment}
-                  </React.Fragment>
-                )
-              }}
-            />
-          )}}
+              <TextField
+                {...params}
+                inputProps={inputProps}
+                label="Your Classrooms"
+                fullWidth
+                variant="outlined"
+                helperText="Select one of your available classrooms"
+                autoComplete="off"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <React.Fragment>
+                      {loading ? (
+                        <CircularProgress color="inherit" size={20} />
+                      ) : null}
+                      {params.InputProps.endAdornment}
+                    </React.Fragment>
+                  )
+                }}
+              />
+            );
+          }}
           renderOption={option => (
             <div
               style={{
@@ -166,7 +172,7 @@ const EditCreatePowerup = props => {
               }}
             >
               <DynamicText
-                dynamicText={option.subject_name}
+                mainText={option.subject_name}
                 text="Classroom name"
                 variantArray={["body2"]}
                 type="subtext"
@@ -176,7 +182,7 @@ const EditCreatePowerup = props => {
                 }}
               />
               <DynamicText
-                dynamicText={option.subject_id}
+                mainText={option.subject_id}
                 text="Classroom ID"
                 variantArray={["body2"]}
                 type="subtext"
@@ -239,7 +245,7 @@ const EditCreatePowerup = props => {
           variant="contained"
           className={classes.button}
           onClick={() => {
-            buttonClickHandler("save");
+            buttonClickHandler("save", form.id );
           }}
           size="small"
           color="primary"

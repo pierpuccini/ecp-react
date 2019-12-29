@@ -16,6 +16,7 @@ import EditCreatePowerup from "../../components/Powerups/Modals/EditCreatePoweru
 import PowerupInfoCard from "../../components/Powerups/PowerupInfoCard";
 import PowerupCards from "../../components/Powerups/PowerupCards";
 import PngLoader from "../../components/UI/Loader/PngLoader/PngLoader";
+import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLoader";
 import {
   updateObject,
   checkValidity,
@@ -236,6 +237,10 @@ const Powerups = props => {
       case "delete":
         powerupActions({ deleted: "", id: id });
         break;
+      case "edit":
+        setEditPowerup(id);
+        handlePowerupModal();
+        break;
       default:
         handleCloseModal();
         break;
@@ -244,6 +249,22 @@ const Powerups = props => {
 
   const handlePowerupModal = () => {
     setopenModal(true);
+  };
+
+  const setEditPowerup = powerup => {
+    console.log("editing", powerup);
+    let updatedControls = createEditPowerup;
+    for (const controlName in updatedControls) {
+      if (updatedControls.hasOwnProperty(controlName)) {
+        updatedControls[controlName] = {
+          ...updatedControls[controlName],
+          value: powerup[controlName],
+          valid: true,
+          touched: true
+        };
+      }
+    }
+    setcreateEditPowerup({ ...updatedControls, id: powerup.id });
   };
 
   const clearCreateEditState = () => {
@@ -267,9 +288,11 @@ const Powerups = props => {
     setopenModal(!openModalCopy);
   };
 
-  if (isLoaded(clients, teachers, students) && domReady && !loading) {
+  if (isLoaded(clients, teachers, students) && domReady) {
+    let localPowerups = powerups != null ? [...powerups] : [];
     return (
       <Container className={classes.powerupsContainer}>
+        {loading ? <FloatingLoader></FloatingLoader> : null}
         <Modal openModal={openModal} closeModal={handleCloseModal}>
           <EditCreatePowerup
             form={createEditPowerup}
@@ -286,7 +309,7 @@ const Powerups = props => {
           handlePowerupModal={handlePowerupModal}
         />
         <Grid container spacing={2} className={classes.grid}>
-          {powerups.map((powerUp, index) => {
+          {localPowerups.map((powerUp, index) => {
             return (
               <Grid key={index} item md={3} sm={6} xs={12}>
                 <PowerupCards

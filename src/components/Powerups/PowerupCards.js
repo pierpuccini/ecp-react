@@ -16,10 +16,11 @@ import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
 /* App Imports */
 import DynamicText from "../UI/SpecialFields/DynamicText";
+import CoinIcon from "../UI/CoinIcon/CoinIcon";
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    padding: theme.spacing(2, 2),
+    padding: theme.spacing(2, 2, 0, 2),
     margin: theme.spacing(2),
     border: "unset",
     [theme.breakpoints.down("sm")]: {
@@ -32,51 +33,44 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "row",
     justifyContent: "space-between"
   },
-  content: {},
-  actions: {
+  nameAndDescription: {
+    height: "64px"
+  },
+  costAndQuantity: {
+    display: "flex",
+    paddingBottom: "12px",
+    minWidth: "150px"
+  },
+  footer: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between"
+  },
+  footerActions: {
+    display: "flex"
   }
 }));
+
 const PowerupCards = props => {
   const classes = useStyles();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const { viewType, role, actionHandler, powerup } = props;
-  console.log("powerup", powerup);
-  return (
-    <Paper
-      className={classes.paper}
-      style={prefersDarkMode ? { border: "unset" } : null}
-    >
+  const { viewType, actionHandler, powerup } = props;
+
+  let cardView = (
+    <React.Fragment>
       <div className={classes.header}>
         <DynamicText
-          dynamicText={powerup.name}
+          mainText={powerup.name}
           text={powerup.description}
           variantArray={["body1"]}
           type="subtext"
-          style={{width: "225px"}}
         />
-        {role === "teacher" ? (
-          <div>
-            <IconButton color="primary">
-              <EditOutlinedIcon />
-            </IconButton>
-            <IconButton
-              style={{ color: "#f44336" }}
-              onClick={() => actionHandler("delete", powerup.id)}
-            >
-              <DeleteOutlineOutlinedIcon />
-            </IconButton>
-          </div>
-        ) : (
-          <Tooltip placement="left" title="Edit Powerup">
-            <Icon>
-              <InfoOutlinedIcon />
-            </Icon>
-          </Tooltip>
-        )}
+        <Tooltip placement="left" title={powerup.description}>
+          <Icon>
+            <InfoOutlinedIcon />
+          </Icon>
+        </Tooltip>
       </div>
       <div className={classes.content}>cost: {powerup.cost}</div>
       <div className={classes.actions}>
@@ -90,8 +84,69 @@ const PowerupCards = props => {
           <AddOutlinedIcon />
         </IconButton>
       </div>
+    </React.Fragment>
+  );
+  if (viewType === "manage") {
+    cardView = (
+      <React.Fragment>
+        <div className={classes.header}>
+          <div className={classes.nameAndDescription}>
+            <DynamicText
+              mainText={powerup.name}
+              text={powerup.description}
+              variantArray={["body1"]}
+              type="subtext"
+            />
+          </div>
+        </div>
+        <div className={classes.footer}>
+          <div className={classes.costAndQuantity}>
+            <DynamicText
+              mainText={powerup.cost}
+              text="Power up cost"
+              variantArray={["body1"]}
+              type="subtext"
+              icon={<CoinIcon width="24px" height="24px" />}
+              style={{ margin: "16px 8px 0px 0px" }}
+            />
+            <DynamicText
+              mainText={powerup.quantity}
+              text="Quantity"
+              variantArray={["body1"]}
+              type="subtext"
+              style={{ margin: "16px 0px 0px 8px" }}
+            />
+          </div>
+          <div className={classes.footerActions}>
+            <span style={{alignSelf: "center"}}>
+              <IconButton
+                style={{ color: "#f44336" }}
+                onClick={() => actionHandler("delete", powerup.id)}
+              >
+                <DeleteOutlineOutlinedIcon />
+              </IconButton>
+            </span>
+            <span style={{alignSelf: "center"}}>
+              <IconButton
+                color="primary"
+                onClick={() => actionHandler("edit", powerup)}
+              >
+                <EditOutlinedIcon />
+              </IconButton>
+            </span>
+          </div>
+        </div>
+      </React.Fragment>
+    );
+  }
+  return (
+    <Paper
+      className={classes.paper}
+      style={prefersDarkMode ? { border: "unset" } : null}
+    >
+      {cardView}
     </Paper>
   );
 };
-/* name, description, cost, cuantity */
+
 export default PowerupCards;

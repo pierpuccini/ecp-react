@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
- * @param [dynamicText]: text is the one that will always change OR Main text (1)
+ * @param [mainText]: text is the one that will always change OR Main text (1)
  * @param [text]: is your static text OR Seconday Text (2)
  * @param [orientation]: vertical horizantal
  * @param [icon]
@@ -43,7 +43,7 @@ const DynamicText = props => {
   const classes = useStyles();
 
   const {
-    dynamicText,
+    mainText,
     text,
     orientation,
     icon,
@@ -69,7 +69,7 @@ const DynamicText = props => {
               }
               variant={variantArray[0]}
             >
-              {dynamicText}
+              {mainText}
             </Typography>
           ) : (
             component
@@ -91,7 +91,7 @@ const DynamicText = props => {
           className={classes.dtext}
           style={orientation !== "vertical" ? { margin: "0px 8px" } : null}
         >
-          {dynamicText}
+          {mainText}
         </Typography>
       ) : (
         component

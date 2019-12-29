@@ -40,7 +40,7 @@ const ViewClassroomInfo = props => {
             <DynamicText
               style={{ marginBottom: "8px" }}
               text="Teacher"
-              dynamicText={teacher.name}
+              mainText={teacher.name}
               variantArray={["body1"]}
               type="subtext"
               capitalize
@@ -48,7 +48,7 @@ const ViewClassroomInfo = props => {
             <DynamicText
               style={{ marginBottom: "8px" }}
               text="Classroom Name"
-              dynamicText={info.subject_name}
+              mainText={info.subject_name}
               variantArray={["body1"]}
               type="subtext"
               capitalize
@@ -56,7 +56,7 @@ const ViewClassroomInfo = props => {
             <DynamicText
               style={{ marginBottom: "8px" }}
               text="Challenge Duration"
-              dynamicText={`${info.challenge_duration} min`}
+              mainText={`${info.challenge_duration} min`}
               variantArray={["body1"]}
               type="subtext"
               icon={<TimerOutlinedIcon />}
@@ -66,7 +66,7 @@ const ViewClassroomInfo = props => {
             <DynamicText
               style={{ marginBottom: "8px" }}
               text="Classroom ID"
-              dynamicText={info.subject_id}
+              mainText={info.subject_id}
               variantArray={["body1"]}
               type="subtext"
               capitalize
@@ -74,7 +74,7 @@ const ViewClassroomInfo = props => {
             <DynamicText
               style={{ marginBottom: "8px" }}
               text="Group Size"
-              dynamicText={info.group_size}
+              mainText={info.group_size}
               variantArray={["body1"]}
               type="subtext"
               capitalize
@@ -82,7 +82,7 @@ const ViewClassroomInfo = props => {
             <DynamicText
               style={{ marginBottom: "8px" }}
               text="Initial Coins"
-              dynamicText={info.initial_coins}
+              mainText={info.initial_coins}
               variantArray={["body1"]}
               type="subtext"
               icon={<CoinIcon width="24px" height="24px" />}

@@ -76,9 +76,12 @@ export const powerupActions = data => {
 export const getPowerups = payload => {
   return dispatch => {
     dispatch(powerupsStart());
-
     axios
-      .get(`get-all-powerups/${payload.id}/${payload.role}`)
+      .get(
+        `get-all-powerups/${payload.id.length === 0 ? 1 : payload.id}/${
+          payload.role
+        }`
+      )
       .then(res => {
         dispatch(powerupsGetAll(res.data));
       })
