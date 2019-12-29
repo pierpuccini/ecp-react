@@ -34,7 +34,7 @@ const Powerups = props => {
   const classes = useStyles();
 
   let { type } = useParams();
-  const { role, userId, powerupActions } = props;
+  const { role, loading, userId, powerupActions } = props;
 
   const [createEditPowerup, setcreateEditPowerup] = useState({
     name: {
@@ -116,16 +116,16 @@ const Powerups = props => {
   const handleAutocompleteChange = (event, value) => {
     console.log(value);
     const updatedControls = updateObject(createEditPowerup, {
-        classroom: updateObject(createEditPowerup.classroom, {
-          value: value != null ? value.id : "",
-          valid: checkValidity(
-            value != null ? value.subject_name : "",
-            createEditPowerup.classroom.validation
-          ),
-          touched: true
-        })
-      });
-      setcreateEditPowerup(updatedControls);
+      classroom: updateObject(createEditPowerup.classroom, {
+        value: value != null ? value.id : "",
+        valid: checkValidity(
+          value != null ? value.subject_name : "",
+          createEditPowerup.classroom.validation
+        ),
+        touched: true
+      })
+    });
+    setcreateEditPowerup(updatedControls);
   };
 
   const createEditActions = (action, id) => {
@@ -154,6 +154,7 @@ const Powerups = props => {
           buttonClickHandler={createEditActions}
           teacherId={userId}
           handleAutocompleteChange={handleAutocompleteChange}
+          dbLoading={loading}
         />
       </Modal>
       <PowerupInfoCard
@@ -177,6 +178,7 @@ const Powerups = props => {
 const mapStateToProps = state => {
   return {
     role: state.firebase.profile.role,
+    loading: state.powerups.loading,
     userId: state.firebase.auth.uid
   };
 };

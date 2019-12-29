@@ -11,6 +11,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 /* App imports */
 import axios from "../../../axios/axios";
 import DynamicText from "../../UI/SpecialFields/DynamicText";
+import FloatingLoader from "../../UI/Loader/FloatingLoader/FloatingLoader";
 
 const useStyles = makeStyles(theme => ({
   inputs: { display: "flex", flexDirection: "column" },
@@ -28,7 +29,8 @@ const EditCreatePowerup = props => {
     inputChangedHandler,
     buttonClickHandler,
     teacherId,
-    handleAutocompleteChange
+    handleAutocompleteChange,
+    dbLoading
   } = props;
   /* --- start code for fetching individual classrooms --- */
   const [open, setOpen] = useState(false);
@@ -80,6 +82,7 @@ const EditCreatePowerup = props => {
 
   return (
     <div>
+    {dbLoading ? <FloatingLoader></FloatingLoader> : null}
       <div className={classes.inputs}>
         <TextField
           value={form.name.value}
@@ -136,6 +139,7 @@ const EditCreatePowerup = props => {
               label="Your Classrooms"
               fullWidth
               variant="outlined"
+              helperText="Select one of your available classrooms"
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (

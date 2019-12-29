@@ -17,10 +17,12 @@ const SnackbarLogic = props => {
     onboardingError,
     usersError,
     classroomError,
+    powerupsError,
     //Success
     myAccountSuccess,
     onboardingSuccess,
     deleteSuccess,
+    powerupsSuccess,
     restoreSuccess
   } = props;
 
@@ -40,6 +42,9 @@ const SnackbarLogic = props => {
     if (classroomError) {
       payload = { type: "error", info: classroomError };
     }
+    if (powerupsError) {
+      payload = { type: "error", info: powerupsError };
+    }
     //success handler
     if (myAccountSuccess) {
       payload = {
@@ -51,6 +56,13 @@ const SnackbarLogic = props => {
       payload = {
         type: "success",
         info: { message: "Classroom succesfully added!" },
+        duration: 10000
+      };
+    }
+    if (powerupsSuccess) {
+      payload = {
+        type: "success",
+        info: { message: "Powerup succesfully created or modified!" },
         duration: 10000
       };
     }
@@ -84,12 +96,14 @@ const SnackbarLogic = props => {
     onboardingError,
     usersError,
     classroomError,
+    powerupsError,
     //Succes
     myAccountSuccess,
     onboardingSuccess,
     userDisabled,
     deleteSuccess,
-    restoreSuccess
+    restoreSuccess,
+    powerupsSuccess
   ]);
 
   return <Snackbar payload={snackbarPayload} />;
@@ -101,11 +115,13 @@ const mapStateToProps = state => {
     onboardingError: state.onboarding.error,
     usersError: state.users.error,
     classroomError: state.classrooms.error,
+    powerupsError: state.powerups.error,
     //Warning messages
     userDisabled: state.users.warning,
     //Success messages
     onboardingSuccess: state.onboarding.showSuccess,
     myAccountSuccess: state.users.success,
+    powerupsSuccess: state.powerups.success,
     deleteSuccess: state.classrooms.deleteSuccess,
     restoreSuccess: state.classrooms.restoreSuccess
   };

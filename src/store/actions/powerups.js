@@ -34,14 +34,30 @@ export const powerupsDelete = err => {
 
 export const powerupActions = data => {
   return (dispatch /* getState */) => {
+    dispatch(powerupsStart());
+
     console.log("data", data);
+    let url, dispatchType;
+    if (data.id == null) {
+      url = "/create-master-powerup";
+      dispatchType = powerupsCreate();
+    } else if (data.deleted != null) {
+      dispatchType = powerupsEdit();
+      url = "/delete-master-powerup";
+    } else {
+      dispatchType = powerupsDelete();
+      url = "/update-master-powerup";
+    }
+
     axios
-      .post("/create-master-powerup", data)
+      .post(url, data)
       .then(res => {
         console.log("res", res);
+        dispatch(dispatchType);
       })
       .catch(error => {
         console.log("error", error);
+        dispatch(powerupsFailed(error));
       });
   };
 };
