@@ -347,6 +347,15 @@ export const getAllMyClassrooms = payload => {
           dispatch(
             getAllclassroomCreateSuccess(response.data.classrooms, loading)
           );
+          if (currentState.classrooms.action === 'oneClassroom') {
+            dispatch(
+              getclassroomCreateSuccess(
+                null,
+                response.data.classrooms,
+                true
+              )
+            );
+          }
         } else {
           const unknownError = {
             code: "add-classroom-error",
@@ -386,6 +395,7 @@ export const getOneClassroom = payload => {
       .get(url)
       .then(response => {
         if (response.status === 200) {
+          console.log(currentState.classrooms.updateSuccess);
           dispatch(
             getclassroomCreateSuccess(
               response.data.classroom,
