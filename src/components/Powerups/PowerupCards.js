@@ -43,7 +43,8 @@ const PowerupCards = props => {
   const classes = useStyles();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const { viewType, role } = props;
+  const { viewType, role, actionHandler, powerup } = props;
+  console.log('powerup',powerup);
   return (
     <Paper
       className={classes.paper}
@@ -61,7 +62,7 @@ const PowerupCards = props => {
             <IconButton color="primary">
               <EditOutlinedIcon />
             </IconButton>
-            <IconButton style={{ color: "#f44336" }}>
+            <IconButton style={{ color: "#f44336" }} onClick={()=>actionHandler('delete', powerup.id)}>
               <DeleteOutlineOutlinedIcon />
             </IconButton>
           </div>

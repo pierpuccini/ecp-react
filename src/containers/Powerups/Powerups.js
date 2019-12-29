@@ -194,13 +194,22 @@ const Powerups = props => {
     setcreateEditPowerup(updatedControls);
   };
 
-  const createEditActions = (action, id) => {
+  const powerupActionButtons = (action, id) => {
     console.log("action", action);
-    if (action === "save") {
-      let info = stateToPayload(createEditPowerup);
-      powerupActions({ ...info, id: id, teacher_id: userId });
-    } else if (action === "cancel") {
-      handleCloseModal();
+    switch (action) {
+      case "save":
+        let info = stateToPayload(createEditPowerup);
+        powerupActions({ ...info, id: id, teacher_id: userId });
+        break;
+      case "cancel":
+        handleCloseModal();
+        break;
+      case "delete":
+        powerupActions({ deleted: "", id: id });
+        break;
+      default:
+        handleCloseModal();
+        break;
     }
   };
 
@@ -236,7 +245,7 @@ const Powerups = props => {
           <EditCreatePowerup
             form={createEditPowerup}
             inputChangedHandler={createEditInputHandler}
-            buttonClickHandler={createEditActions}
+            buttonClickHandler={powerupActionButtons}
             teacherId={userId}
             handleAutocompleteChange={handleAutocompleteChange}
             dbLoading={loading}
@@ -251,7 +260,12 @@ const Powerups = props => {
           {powerups.map((powerUp, index) => {
             return (
               <Grid key={index} item md={3} sm={6} xs={12}>
-                <PowerupCards viewType={type} role={role} powerUp={powerUp} />
+                <PowerupCards
+                  viewType={type}
+                  role={role}
+                  powerup={powerUp}
+                  actionHandler={powerupActionButtons}
+                />
               </Grid>
             );
           })}
