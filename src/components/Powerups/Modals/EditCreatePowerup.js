@@ -127,17 +127,23 @@ const EditCreatePowerup = props => {
           onClose={() => {
             setOpen(false);
           }}
+          autoHighlight
           getOptionLabel={option => option.subject_name}
           options={options}
           loading={loading}
           onChange={(event, value) => handleAutocompleteChange(event, value)}
-          renderInput={params => (
+          renderInput={params => {
+            const inputProps = params.inputProps;
+            inputProps.autoComplete = "off";
+            return (
             <TextField
               {...params}
+              inputProps={inputProps}
               label="Your Classrooms"
               fullWidth
               variant="outlined"
-              helperText="Select one of your available classrooms"
+              helperText="Select one of your available classrooms" 
+              autoComplete="off"             
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (
@@ -150,7 +156,7 @@ const EditCreatePowerup = props => {
                 )
               }}
             />
-          )}
+          )}}
           renderOption={option => (
             <div
               style={{

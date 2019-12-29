@@ -2,6 +2,7 @@
 import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -13,19 +14,22 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
+    border: "unset",
     [theme.breakpoints.down("sm")]: {
-      "box-shadow": "unset"
+      "box-shadow": "unset",
+      border: "2px solid"
     }
   },
   content: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between"
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
   }
 }));
 
 const PowerupInfoCard = props => {
   const classes = useStyles();
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const { viewType, handlePowerupModal } = props;
 
@@ -34,7 +38,11 @@ const PowerupInfoCard = props => {
   if (viewType === "manage") {
     endItem = (
       <Tooltip placement="left" title="Create Powerup">
-        <IconButton onClick={()=>{handlePowerupModal()}}> 
+        <IconButton
+          onClick={() => {
+            handlePowerupModal();
+          }}
+        >
           <AddCircleOutlineOutlinedIcon />
         </IconButton>
       </Tooltip>
@@ -42,10 +50,13 @@ const PowerupInfoCard = props => {
   }
 
   return (
-    <Paper className={classes.paper}>
+    <Paper
+      className={classes.paper}
+      style={prefersDarkMode ? { border: "unset" } : null}
+    >
       <div className={classes.content}>
-          <Typography style={{alignSelf: "center"}}>{title}</Typography>
-          {endItem}
+        <Typography style={{ alignSelf: "center" }}>{title}</Typography>
+        {endItem}
       </div>
     </Paper>
   );

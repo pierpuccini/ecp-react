@@ -183,7 +183,7 @@ const Powerups = props => {
     console.log(value);
     const updatedControls = updateObject(createEditPowerup, {
       classroom: updateObject(createEditPowerup.classroom, {
-        value: value != null ? value.id : "",
+        value: value,
         valid: checkValidity(
           value != null ? value.subject_name : "",
           createEditPowerup.classroom.validation
