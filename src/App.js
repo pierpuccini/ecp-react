@@ -297,12 +297,17 @@ function App(props) {
           type: prefersDarkMode ? "dark" : "light"
         },
         overrides: {
-          MuiInputBase: {
-            input: {
-              "&:-webkit-autofill": {
-                "border-radius": "4px",
-                "-webkit-box-shadow": "0 0 0px  #fff inset"
-              }
+          // MuiInputBase: {
+          //   input: {
+          //     "&:-webkit-autofill": {
+          //       "border-radius": "4px",
+          //       "-webkit-box-shadow": "0 0 0px  #fff inset"
+          //     }
+          //   }
+          // },
+          MuiTooltip: {
+            tooltip: {
+              fontSize: "12px"
             }
           }
         }

@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /**
+ * @[NOWRAP]: in order for ellipisis to take effect, add overflow hidden to parent div where using comps
  * @param [mainText]: text is the one that will always change OR Main text (1)
  * @param [text]: is your static text OR Seconday Text (2)
  * @param [orientation]: vertical horizantal
@@ -60,6 +61,7 @@ const DynamicText = props => {
           {icon}
           {component == null ? (
             <Typography
+              noWrap
               style={
                 icon != null
                   ? { marginLeft: "8px" }
@@ -75,7 +77,7 @@ const DynamicText = props => {
             component
           )}
         </div>
-        <Typography variant="caption" className={classes.captions}>
+        <Typography noWrap variant="caption" className={classes.captions}>
           {text}
         </Typography>
       </div>
@@ -84,9 +86,12 @@ const DynamicText = props => {
   return (
     <div className={classes[orientation]} style={style}>
       {icon}
-      <Typography variant={variantArray[0]}>{text}:</Typography>
+      <Typography noWrap variant={variantArray[0]}>
+        {text}:
+      </Typography>
       {component == null ? (
         <Typography
+          noWrap
           variant={variantArray[1]}
           className={classes.dtext}
           style={orientation !== "vertical" ? { margin: "0px 8px" } : null}

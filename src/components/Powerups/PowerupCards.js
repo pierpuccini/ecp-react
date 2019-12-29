@@ -34,7 +34,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between"
   },
   nameAndDescription: {
-    height: "64px"
+    height: "64px",
+    overflow: "hidden"
   },
   costAndQuantity: {
     display: "flex",
@@ -57,86 +58,58 @@ const PowerupCards = props => {
 
   const { viewType, actionHandler, powerup } = props;
 
-  let cardView = (
-    <React.Fragment>
-      <div className={classes.header}>
-        <DynamicText
-          mainText={powerup.name}
-          text={powerup.description}
-          variantArray={["body1"]}
-          type="subtext"
-        />
-        <Tooltip placement="left" title={powerup.description}>
-          <Icon>
-            <InfoOutlinedIcon />
-          </Icon>
-        </Tooltip>
-      </div>
-      <div className={classes.content}>cost: {powerup.cost}</div>
-      <div className={classes.actions}>
-        <IconButton>
-          <RemoveOutlinedIcon />
-        </IconButton>
-        <Typography style={{ alignSelf: "center" }}>
-          {powerup.quantity}
-        </Typography>
-        <IconButton>
-          <AddOutlinedIcon />
-        </IconButton>
-      </div>
-    </React.Fragment>
+  let cardActions = (
+    <div className={classes.footer}>
+      <IconButton>
+        <RemoveOutlinedIcon />
+      </IconButton>
+      <Typography style={{ alignSelf: "center" }}>
+        {powerup.quantity}
+      </Typography>
+      <IconButton>
+        <AddOutlinedIcon />
+      </IconButton>
+    </div>
   );
   if (viewType === "manage") {
-    cardView = (
-      <React.Fragment>
-        <div className={classes.header}>
-          <div className={classes.nameAndDescription}>
-            <DynamicText
-              mainText={powerup.name}
-              text={powerup.description}
-              variantArray={["body1"]}
-              type="subtext"
-            />
-          </div>
+    cardActions = (
+      <div className={classes.footer}>
+        <div className={classes.costAndQuantity}>
+          <DynamicText
+            mainText={powerup.cost}
+            text="Power up cost"
+            variantArray={["body1"]}
+            type="subtext"
+            icon={<CoinIcon width="24px" height="24px" />}
+            style={{ margin: "16px 8px 0px 0px" }}
+          />
+          <DynamicText
+            mainText={powerup.quantity}
+            text="Quantity"
+            variantArray={["body1"]}
+            type="subtext"
+            style={{ margin: "16px 0px 0px 8px" }}
+          />
         </div>
-        <div className={classes.footer}>
-          <div className={classes.costAndQuantity}>
-            <DynamicText
-              mainText={powerup.cost}
-              text="Power up cost"
-              variantArray={["body1"]}
-              type="subtext"
-              icon={<CoinIcon width="24px" height="24px" />}
-              style={{ margin: "16px 8px 0px 0px" }}
-            />
-            <DynamicText
-              mainText={powerup.quantity}
-              text="Quantity"
-              variantArray={["body1"]}
-              type="subtext"
-              style={{ margin: "16px 0px 0px 8px" }}
-            />
-          </div>
-          <div className={classes.footerActions}>
-            <span style={{alignSelf: "center"}}>
-              <IconButton
-                style={{ color: "#f44336" }}
-                onClick={() => actionHandler("delete", powerup.id)}
-              >
-                <DeleteOutlineOutlinedIcon />
-              </IconButton>
-            </span>
-            <span style={{alignSelf: "center"}}>
-              <IconButton
-                color="primary"
-                onClick={() => actionHandler("edit", powerup)}
-              >
-                <EditOutlinedIcon />
-              </IconButton>
-            </span>
-          </div>
+        <div className={classes.footerActions}>
+          <span style={{ alignSelf: "center" }}>
+            <IconButton
+              style={{ color: "#f44336" }}
+              onClick={() => actionHandler("delete", powerup.id)}
+            >
+              <DeleteOutlineOutlinedIcon />
+            </IconButton>
+          </span>
+          <span style={{ alignSelf: "center" }}>
+            <IconButton
+              color="primary"
+              onClick={() => actionHandler("edit", powerup)}
+            >
+              <EditOutlinedIcon />
+            </IconButton>
+          </span>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
   return (
@@ -144,7 +117,25 @@ const PowerupCards = props => {
       className={classes.paper}
       style={prefersDarkMode ? { border: "unset" } : null}
     >
-      {cardView}
+      <div className={classes.header}>
+        <div className={classes.nameAndDescription}>
+          <DynamicText
+            mainText={powerup.name}
+            text={powerup.description}
+            variantArray={["body1"]}
+            type="subtext"
+          />
+        </div>
+        <Tooltip placement="left" title={powerup.description}>
+          <Icon>
+            <InfoOutlinedIcon />
+          </Icon>
+        </Tooltip>
+      </div>
+      {viewType === "manage" ? null : (
+        <div className={classes.content}>cost: {powerup.cost}</div>
+      )}
+      {cardActions}
     </Paper>
   );
 };
