@@ -107,24 +107,14 @@ function App(props) {
         payload = "home";
       } else if (
         location.pathname !== "/home" &&
-        !location.pathname.includes("/classrooms")
-        && !location.pathname.includes("/user-manager")
+        !location.pathname.includes("/classrooms") &&
+        !location.pathname.includes("/user-manager")
       ) {
         payload = location.pathname.replace("/", "");
-      }
-      if (location.pathname !== "/login") {
-        setsnackbarPayload({
-          type: "none",
-          info: "none"
-        });
       }
     }
     if (onboardingSuccessLogic) {
       payload = "home";
-      setsnackbarPayload({
-        type: "none",
-        info: "none"
-      });
     }
     setNavRoute(payload);
     return () => {
