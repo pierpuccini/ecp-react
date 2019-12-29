@@ -14,10 +14,9 @@ export const powerupsFailed = err => {
   };
 };
 
-export const powerupsCreate = temp => {
+export const powerupsCreate = () => {
   return {
-    type: actionTypes.POWERUP_CREATE,
-    temp: temp
+    type: actionTypes.POWERUP_CREATE
   };
 };
 
@@ -45,24 +44,27 @@ export const powerupActions = data => {
     dispatch(powerupsStart());
 
     console.log("data", data);
-    let url =
-      data.id == null
-        ? "/create-master-powerup"
-        : data.deleted != null
-        ? "/delete-master-powerup"
-        : "/update-master-powerup";
+    let url = "/update-master-powerup",
+      dispatcher = powerupsEdit(),
+      method = "put";
+    if (data.id == null) {
+      url = "/create-master-powerup";
+      dispatcher = powerupsCreate();
+      method = "post";
+    } else if (data.deleted != null) {
+      url = "/delete-master-powerup";
+      dispatcher = powerupsDelete();
+      method = "delete";
+    }
 
-    axios
-      .post(url, data)
+    axios({
+      method: method,
+      url: url,
+      data: data
+    })
       .then(res => {
         console.log("res", res);
-        dispatch(
-          data.id == null
-            ? powerupsCreate({ ...data, id: res.data.powerupId })
-            : data.deleted != null
-            ? powerupsEdit()
-            : powerupsDelete()
-        );
+        dispatch(dispatcher);
       })
       .catch(error => {
         console.log("error", error.response);

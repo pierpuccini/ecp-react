@@ -4,6 +4,8 @@ import { withRouter, useParams } from "react-router-dom";
 /* Redux */
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
+import { useSelector } from "react-redux";
+import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -91,7 +93,7 @@ const Powerups = props => {
       valid: false,
       touched: false
     },
-    classroom_id: {
+    classroom: {
       value: "",
       validation: {
         required: true
@@ -156,6 +158,33 @@ const Powerups = props => {
     /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId' */
     // eslint-disable-next-line
   }, [success]);
+
+  /* Loads clients, teachers and studets data from Firestore */
+  useFirestoreConnect(() => [
+    {
+      collection: "users",
+      storeAs: "students",
+      where: ["role", "==", "student"]
+    },
+    {
+      collection: "users",
+      storeAs: "teachers",
+      where: ["role", "==", "teacher"]
+    },
+    {
+      collection: "clients",
+      storeAs: "clients",
+      where: ["active", "==", true]
+    }
+  ]);
+
+  const students = useSelector(
+    ({ firestore: { ordered } }) => ordered.students
+  );
+  const teachers = useSelector(
+    ({ firestore: { ordered } }) => ordered.teachers
+  );
+  const clients = useSelector(({ firestore: { ordered } }) => ordered.clients);
 
   if (type === "view" && role === "teacher") {
     type = "manage";
@@ -238,7 +267,7 @@ const Powerups = props => {
     setopenModal(!openModalCopy);
   };
 
-  if (domReady && !loading) {
+  if (isLoaded(clients, teachers, students) && domReady && !loading) {
     return (
       <Container className={classes.powerupsContainer}>
         <Modal openModal={openModal} closeModal={handleCloseModal}>

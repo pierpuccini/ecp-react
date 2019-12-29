@@ -5,7 +5,6 @@ const initialState = {
   loading: false,
   error: false,
   success: false,
-  tempPowerup: null,
   dbPowerups: null
 };
 
@@ -30,8 +29,7 @@ const powerupsCreate = (state, action) => {
   return updateObject(state, {
     loading: false,
     error: false,
-    success: true,
-    tempPowerup: action.temp,
+    success: true
   });
 };
 

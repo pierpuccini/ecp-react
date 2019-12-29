@@ -44,7 +44,7 @@ const PowerupCards = props => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const { viewType, role, actionHandler, powerup } = props;
-  console.log('powerup',powerup);
+  console.log("powerup", powerup);
   return (
     <Paper
       className={classes.paper}
@@ -52,17 +52,21 @@ const PowerupCards = props => {
     >
       <div className={classes.header}>
         <DynamicText
-          dynamicText="Duplicate"
-          text="x2 Duplication"
+          dynamicText={powerup.name}
+          text={powerup.description}
           variantArray={["body1"]}
           type="subtext"
+          style={{width: "225px"}}
         />
         {role === "teacher" ? (
           <div>
             <IconButton color="primary">
               <EditOutlinedIcon />
             </IconButton>
-            <IconButton style={{ color: "#f44336" }} onClick={()=>actionHandler('delete', powerup.id)}>
+            <IconButton
+              style={{ color: "#f44336" }}
+              onClick={() => actionHandler("delete", powerup.id)}
+            >
               <DeleteOutlineOutlinedIcon />
             </IconButton>
           </div>
@@ -74,12 +78,14 @@ const PowerupCards = props => {
           </Tooltip>
         )}
       </div>
-      <div className={classes.content}>cost: 300</div>
+      <div className={classes.content}>cost: {powerup.cost}</div>
       <div className={classes.actions}>
         <IconButton>
           <RemoveOutlinedIcon />
         </IconButton>
-        <Typography style={{ alignSelf: "center" }}>5</Typography>
+        <Typography style={{ alignSelf: "center" }}>
+          {powerup.quantity}
+        </Typography>
         <IconButton>
           <AddOutlinedIcon />
         </IconButton>
