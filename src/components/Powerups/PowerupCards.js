@@ -101,7 +101,7 @@ const PowerupCards = props => {
       }
       counter -= 1;
       if (counter < 0) {
-        counter += 1; 
+        counter += 1;
       }
     }
     setlocalPowerupQuantity(counter);
@@ -165,7 +165,10 @@ const PowerupCards = props => {
   if (viewType === "manage") {
     cardActions = (
       <div className={classes.footer}>
-        <div className={classes.costAndQuantity}>
+        <div
+          className={classes.costAndQuantity}
+          style={{ flexDirection: "unset" }}
+        >
           <DynamicText
             mainText={powerup.cost}
             text="Power up cost"
@@ -182,7 +185,10 @@ const PowerupCards = props => {
             style={{ margin: "16px 0px 0px 8px" }}
           />
         </div>
-        <div className={classes.footerActions}>
+        <div
+          className={classes.footerActions}
+          style={{ flexDirection: "unset" }}
+        >
           <span style={{ alignSelf: "center" }}>
             <IconButton
               style={{ color: "#f44336" }}

@@ -31,6 +31,7 @@ const CodeCopy = props => {
   const copyToClipboard = event => {
     textAreaRef.current.select();
     document.execCommand("copy");
+    event.target.focus()
     setCopySuccess("Copied!");
   };
 

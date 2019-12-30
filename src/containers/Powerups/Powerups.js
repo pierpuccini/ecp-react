@@ -28,7 +28,8 @@ import {
 const useStyles = makeStyles(theme => ({
   powerupsContainer: {
     padding: "unset !important",
-    overflow: "auto"
+    overflow: "auto",
+    maxWidth: "unset"
   },
   grid: {
     width: "100%",
@@ -349,18 +350,6 @@ const Powerups = props => {
 
   if (isLoaded(clients, teachers, students) && domReady) {
     let localPowerups = powerups != null ? [...powerups] : [];
-    let classrooms = [];
-    if (localPowerups.length > 0) {
-      localPowerups.forEach(pw => classrooms.push(pw.classroom.subject_name));
-      classrooms = [...new Set(classrooms)];
-      let tmpLocalPowerups = [...localPowerups];
-      localPowerups = [];
-      classrooms.forEach(cl => {
-        localPowerups.push({
-          [cl]: tmpLocalPowerups.filter(pw => pw.classroom.subject_name === cl)
-        });
-      });
-    }
 
     return (
       <Container className={classes.powerupsContainer}>
