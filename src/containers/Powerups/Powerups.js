@@ -334,6 +334,21 @@ const Powerups = props => {
     }
   };
 
+  const getOccurrence = (array, value) => array.filter(v => v === value).length;
+
+  const purchasePowerup = classroomName => {
+    let payload = [];
+    let uniquecheckoutCart = [...new Set(checkoutCart[classroomName])];
+    uniquecheckoutCart.forEach(pw => {
+      let quantity = getOccurrence(checkoutCart[classroomName], pw);
+      let master_id = pw.id;
+      let benefit = pw.benefit;
+      let buyer = userId;
+      payload = [...payload, { quantity, master_id, benefit, buyer }];
+    });
+    console.log("purchase", payload);
+  };
+
   /* Creates cart per classroom */
   useEffect(() => {
     if (powerups != null) {
@@ -438,27 +453,30 @@ const Powerups = props => {
                   variantArray={["body1"]}
                   type="subtext"
                 />
-                {role !== 'teacher' ? (
-                  <DynamicText
-                    mainText={"900"}
-                    text="Coins for this course"
-                    variantArray={["body1"]}
-                    type="subtext"
-                    icon={<CoinIcon width="24px" height="24px" />}
-                  />
-                ) : null}
-                {role !== 'teacher' ? (
-                  <Button
-                    variant="contained"
-                    className={classes.button}
-                    size="small"
-                  >
-                    <ShoppingCartOutlinedIcon /> Buy (
-                    {checkoutCart[classroomName] == null
-                      ? 0
-                      : checkoutCart[classroomName].length}
-                    )
-                  </Button>
+                {role !== "teacher" ? (
+                  <React.Fragment>
+                    <DynamicText
+                      mainText={"900"}
+                      text="Coins for this course"
+                      variantArray={["body1"]}
+                      type="subtext"
+                      icon={<CoinIcon width="24px" height="24px" />}
+                    />
+                    <Button
+                      variant="contained"
+                      className={classes.button}
+                      size="small"
+                      onClick={() => {
+                        purchasePowerup(classroomName);
+                      }}
+                    >
+                      <ShoppingCartOutlinedIcon /> Buy (
+                      {checkoutCart[classroomName] == null
+                        ? 0
+                        : checkoutCart[classroomName].length}
+                      )
+                    </Button>
+                  </React.Fragment>
                 ) : null}
               </div>
               <Divider variant="middle"></Divider>
