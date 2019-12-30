@@ -64,7 +64,8 @@ const Powerups = props => {
     powerups,
     userId,
     powerupActions,
-    getPowerups
+    getPowerups,
+    purchasePowerupAPI
   } = props;
 
   //Checks if DOM is ready to un mount loading icon
@@ -346,7 +347,7 @@ const Powerups = props => {
       let buyer = userId;
       payload = [...payload, { quantity, master_id, benefit, buyer }];
     });
-    console.log("purchase", payload);
+    purchasePowerupAPI(payload);
   };
 
   /* Creates cart per classroom */
@@ -466,6 +467,7 @@ const Powerups = props => {
                       variant="contained"
                       className={classes.button}
                       size="small"
+                      disabled={checkoutCart[classroomName] == null || checkoutCart[classroomName].length === 0}
                       onClick={() => {
                         purchasePowerup(classroomName);
                       }}
@@ -523,7 +525,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     powerupActions: payload => dispatch(actions.powerupActions(payload)),
-    getPowerups: payload => dispatch(actions.getPowerups(payload))
+    getPowerups: payload => dispatch(actions.getPowerups(payload)),
+    purchasePowerupAPI: payload => dispatch(actions.purchasePowerup(payload))
   };
 };
 

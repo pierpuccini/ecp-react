@@ -39,6 +39,12 @@ export const powerupsGetAll = powerups => {
   };
 };
 
+export const powerupsPurchase = () => {
+  return {
+    type: actionTypes.POWERUP_PURCHASE
+  };
+};
+
 export const powerupActions = data => {
   return (dispatch /* getState */) => {
     dispatch(powerupsStart());
@@ -75,7 +81,7 @@ export const powerupActions = data => {
 
 export const getPowerups = payload => {
   return (dispatch, getState) => {
-    const currentState = getState()
+    const currentState = getState();
     dispatch(powerupsStart());
     console.log("payload", payload);
     let searchParams = payload.id.length === 0 ? 1 : payload.id;
@@ -83,11 +89,32 @@ export const getPowerups = payload => {
       searchParams = [];
       payload.id.forEach(classroom => searchParams.push(classroom.id));
     }
-    console.log(`get-all-powerups/${searchParams}/${payload.role}/${currentState.firebase.auth.uid}`);
+    console.log(
+      `get-all-powerups/${searchParams}/${payload.role}/${currentState.firebase.auth.uid}`
+    );
     axios
-      .get(`/get-all-powerups/${searchParams}/${payload.role}/${currentState.firebase.auth.uid}`)
+      .get(
+        `/get-all-powerups/${searchParams}/${payload.role}/${currentState.firebase.auth.uid}`
+      )
       .then(res => {
         dispatch(powerupsGetAll(res.data));
+      })
+      .catch(error => {
+        console.log("error", error.response);
+        dispatch(powerupsFailed(error));
+      });
+  };
+};
+
+export const purchasePowerup = payload => {
+  return dispatch => {
+    dispatch(powerupsStart());
+    console.log("payload", payload);
+
+    axios
+      .post('/buy-powerups', payload)
+      .then(res => {
+        dispatch(powerupsPurchase());
       })
       .catch(error => {
         console.log("error", error.response);

@@ -57,6 +57,14 @@ const powerupsGetAll = (state, action) => {
   });
 };
 
+const powerupsPurchase = (state, action) => {
+  return updateObject(state, {
+    loading: false,
+    error: false,
+    success: true
+  });
+};
+
 const logout = state => {
   return updateObject(state, null);
 };
@@ -69,6 +77,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.POWERUP_EDIT: return powerupsEdit(state, action);
     case actionTypes.POWERUP_DELETE: return powerupsDelete(state, action);
     case actionTypes.POWERUP_GET_ALL: return powerupsGetAll(state, action);
+    case actionTypes.POWERUP_PURCHASE: return powerupsPurchase(state, action);
     case actionTypes.AUTH_LOGOUT: return logout(state, action);
     default:
       return state;
