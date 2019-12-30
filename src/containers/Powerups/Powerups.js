@@ -102,6 +102,14 @@ const Powerups = props => {
       },
       valid: false,
       touched: false
+    },
+    benefit: {
+      value: { type: "", value: 0 },
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
     }
   });
   const [openModal, setopenModal] = useState(false);
@@ -225,6 +233,49 @@ const Powerups = props => {
     setcreateEditPowerup(updatedControls);
   };
 
+  const benefitChangeHandler = (event, value, control) => {
+    let updatedControls = updateObject(createEditPowerup, {
+      benefit: updateObject(createEditPowerup.benefit, {
+        value: updateObject(createEditPowerup.benefit.value, {
+          [control]: value
+        }),
+        valid: checkValidity(
+          value == null ? "" : value.toString(),
+          createEditPowerup.benefit.validation
+        ),
+        touched: true
+      })
+    });
+    
+    let { benefit } = updatedControls;
+    benefit = benefit.value
+
+    let valid = false,
+      descriptionValue;
+    if (benefit.type != null && benefit.value != null && benefit.value !== 0) {
+      valid = true;
+      descriptionValue = `This powerup will ${
+        benefit.type === "*" ? "Multiply" : "Divide"
+      } the challenges coins by ${benefit.value}`;
+    }
+
+    if (benefit.type == null) {
+      descriptionValue = "Please select a benefit type";
+    }
+    if (benefit.value == null || benefit.value === 0) {
+      descriptionValue = "Please select a benefit value";
+    }
+
+    updatedControls = updateObject(updatedControls, {
+      description: updateObject(updatedControls.description, {
+        value: descriptionValue,
+        valid: valid,
+        touched: true
+      })
+    });
+    setcreateEditPowerup(updatedControls);
+  };
+
   const powerupActionButtons = (action, id) => {
     console.log("action", action);
     switch (action) {
@@ -274,7 +325,7 @@ const Powerups = props => {
       if (updatedControls.hasOwnProperty(controlName)) {
         updatedControls[controlName] = {
           ...updatedControls[controlName],
-          value: "",
+          value: controlName === "benefit" ? { type: "", value: 0 } : "",
           valid: false,
           touched: false
         };
@@ -302,6 +353,7 @@ const Powerups = props => {
             teacherId={userId}
             handleAutocompleteChange={handleAutocompleteChange}
             dbLoading={loading}
+            benefitChangeHandler={benefitChangeHandler}
           />
         </Modal>
         <PowerupInfoCard
@@ -310,7 +362,9 @@ const Powerups = props => {
           handlePowerupModal={handlePowerupModal}
         />
         {localPowerups.length === 0 ? (
-          <Typography style={{textAlign: "center"}}>No power ups available.</Typography>
+          <Typography style={{ textAlign: "center" }}>
+            No power ups available.
+          </Typography>
         ) : null}
         <Grid container spacing={2} className={classes.grid}>
           {localPowerups.map((powerUp, index) => {

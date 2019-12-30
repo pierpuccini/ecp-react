@@ -3,9 +3,13 @@ import React, { useState, useEffect } from "react";
 import "isomorphic-fetch";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import Slider from "@material-ui/core/Slider";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import CircularProgress from "@material-ui/core/CircularProgress";
 /* App imports */
 import axios from "../../../axios/axios";
@@ -17,6 +21,18 @@ const useStyles = makeStyles(theme => ({
   actions: { display: "flex", justifyContent: "flex-end" },
   button: {
     margin: theme.spacing(1)
+  },
+  costAndQuantity: { display: "flex", flexDirection: "row" },
+  benefitContainer: {
+    marginTop: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column"
+  },
+  slider: {
+    padding: theme.spacing(1, 3)
+  },
+  benefitCreator: {
+    display: "flex"
   }
 }));
 
@@ -29,9 +45,10 @@ const EditCreatePowerup = props => {
     buttonClickHandler,
     teacherId,
     handleAutocompleteChange,
+    benefitChangeHandler,
     dbLoading
   } = props;
-  /* --- start code for fetching individual classrooms --- */
+
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
@@ -62,9 +79,7 @@ const EditCreatePowerup = props => {
     }
   }, [open]);
 
-  /* --- start code for fetching individual classrooms --- */
-
-  //Creacts a valid field object
+  //Creates a valid field object
   let formArr = Object.keys(form).map(controlName => {
     return {
       controlName: controlName,
@@ -77,6 +92,26 @@ const EditCreatePowerup = props => {
     };
   });
   validFields = Object.assign({}, ...validFields);
+
+  const benefitType = [
+    <ToggleButton key={1} value="*">
+      <Typography>Multiply</Typography>
+    </ToggleButton>,
+    <ToggleButton key={2} value="/">
+      <Typography>Divide</Typography>
+    </ToggleButton>
+  ];
+
+  const benefitValue = [
+    {
+      value: 1,
+      label: "1"
+    },
+    {
+      value: 10,
+      label: "10"
+    }
+  ];
 
   return (
     <div>
@@ -96,30 +131,75 @@ const EditCreatePowerup = props => {
           }
           error={!form.name.valid && form.name.touched}
           variant="outlined"
+          size="small"
           required
         />
+        <div className={classes.benefitCreator}>
+          <div className={classes.benefitContainer}>
+            <Typography
+              gutterBottom
+              variant="body2"
+            >
+              Benefit's type
+            </Typography>
+            <ToggleButtonGroup
+              value={form.benefit.value.type}
+              onChange={(event, value) => {
+                benefitChangeHandler(event, value, 'type');
+              }}
+              size="small"
+              exclusive
+            >
+              {benefitType}
+            </ToggleButtonGroup>
+          </div>
+          <div className={classes.benefitContainer} style={{width: "100%"}}>
+            <Typography
+              style={{ marginLeft: "16px" }}
+              gutterBottom
+              variant="body2"
+            >
+              Benefit's value
+            </Typography>
+            <div className={classes.slider}>
+              <Slider
+                defaultValue={15}
+                value={form.benefit.value.value}
+                valueLabelDisplay="auto"
+                onChange={(event, value) => {
+                  benefitChangeHandler(event, value, 'value');
+                }}
+                step={1}
+                marks={benefitValue}
+                min={1}
+                max={10}
+              />
+            </div>
+          </div>
+        </div>
         <TextField
           style={{ marginBottom: "16px" }}
-          value={form.description.value}
-          onChange={event => inputChangedHandler(event, "description")}
+          value={form.description.value}          
           label="Description"
           placeholder="x2 Duplicate"
           type="text"
           margin="normal"
           helperText={
             !form.description.valid && form.description.touched
-              ? "*Please Enter your powerup's description"
-              : "Enter your powerup's description"
+              ? "*Please Enter your powerup's benifit"
+              : "This is the powerup's description"
           }
           error={!form.description.valid && form.description.touched}
           variant="outlined"
           multiline
-          rows="5"
+          InputProps={{
+            readOnly: true
+          }}
+          size="small"
           required
         />
         <Autocomplete
           id="asynchronous-classrooms"
-          style={{ width: 300 }}
           open={open}
           onOpen={() => {
             setOpen(true);
@@ -194,40 +274,44 @@ const EditCreatePowerup = props => {
             </div>
           )}
         />
-        <TextField
-          classcost={classes.textField}
-          value={form.cost.value}
-          onChange={event => inputChangedHandler(event, "cost")}
-          label="Cost"
-          placeholder="5000"
-          type="number"
-          margin="normal"
-          helperText={
-            !form.cost.valid && form.cost.touched
-              ? "*Powerup's cost. No decimals or negative numbers"
-              : "Enter your powerup's cost"
-          }
-          error={!form.cost.valid && form.cost.touched}
-          variant="outlined"
-          required
-        />
-        <TextField
-          classquantity={classes.textField}
-          value={form.quantity.value}
-          onChange={event => inputChangedHandler(event, "quantity")}
-          label="Quantity"
-          placeholder="25"
-          type="number"
-          margin="normal"
-          helperText={
-            !form.quantity.valid && form.quantity.touched
-              ? "*Powerup's quantity. No decimals or negative numbers"
-              : "Enter your powerup's quantity"
-          }
-          error={!form.quantity.valid && form.quantity.touched}
-          variant="outlined"
-          required
-        />
+        <div className={classes.costAndQuantity}>
+          <TextField
+            style={{ marginRight: "8px" }}
+            value={form.cost.value}
+            onChange={event => inputChangedHandler(event, "cost")}
+            label="Cost"
+            placeholder="5000"
+            type="number"
+            margin="normal"
+            helperText={
+              !form.cost.valid && form.cost.touched
+                ? "*Powerup's cost. No decimals or negative numbers"
+                : "Enter your powerup's cost"
+            }
+            error={!form.cost.valid && form.cost.touched}
+            variant="outlined"
+            size="small"
+            required
+          />
+          <TextField
+            style={{ marginLeft: "8px" }}
+            value={form.quantity.value}
+            onChange={event => inputChangedHandler(event, "quantity")}
+            label="Quantity"
+            placeholder="25"
+            type="number"
+            margin="normal"
+            helperText={
+              !form.quantity.valid && form.quantity.touched
+                ? "*Powerup's quantity. No decimals or negative numbers"
+                : "Enter your powerup's quantity"
+            }
+            error={!form.quantity.valid && form.quantity.touched}
+            variant="outlined"
+            size="small"
+            required
+          />
+        </div>
       </div>
       <div className={classes.actions}>
         <Button
@@ -245,7 +329,7 @@ const EditCreatePowerup = props => {
           variant="contained"
           className={classes.button}
           onClick={() => {
-            buttonClickHandler("save", form.id );
+            buttonClickHandler("save", form.id);
           }}
           size="small"
           color="primary"
