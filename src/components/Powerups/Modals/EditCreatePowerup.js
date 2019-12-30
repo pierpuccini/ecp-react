@@ -50,7 +50,7 @@ const EditCreatePowerup = props => {
   } = props;
 
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState([form.classroom.value]);
   const loading = open && options.length === 0;
 
   useEffect(() => {
@@ -136,16 +136,13 @@ const EditCreatePowerup = props => {
         />
         <div className={classes.benefitCreator}>
           <div className={classes.benefitContainer}>
-            <Typography
-              gutterBottom
-              variant="body2"
-            >
+            <Typography gutterBottom variant="body2">
               Benefit's type
             </Typography>
             <ToggleButtonGroup
               value={form.benefit.value.type}
               onChange={(event, value) => {
-                benefitChangeHandler(event, value, 'type');
+                benefitChangeHandler(event, value, "type");
               }}
               size="small"
               exclusive
@@ -153,7 +150,7 @@ const EditCreatePowerup = props => {
               {benefitType}
             </ToggleButtonGroup>
           </div>
-          <div className={classes.benefitContainer} style={{width: "100%"}}>
+          <div className={classes.benefitContainer} style={{ width: "100%" }}>
             <Typography
               style={{ marginLeft: "16px" }}
               gutterBottom
@@ -167,7 +164,7 @@ const EditCreatePowerup = props => {
                 value={form.benefit.value.value}
                 valueLabelDisplay="auto"
                 onChange={(event, value) => {
-                  benefitChangeHandler(event, value, 'value');
+                  benefitChangeHandler(event, value, "value");
                 }}
                 step={1}
                 marks={benefitValue}
@@ -179,7 +176,7 @@ const EditCreatePowerup = props => {
         </div>
         <TextField
           style={{ marginBottom: "16px" }}
-          value={form.description.value}          
+          value={form.description.value}
           label="Description"
           placeholder="x2 Duplicate"
           type="text"
@@ -209,13 +206,10 @@ const EditCreatePowerup = props => {
           }}
           autoHighlight
           autoSelect
+          getOptionLabel={option => option.subject_name}
           options={options}
           loading={loading}
-          value={
-            form.classroom.value != null
-              ? form.classroom.value.subject_name
-              : ""
-          }
+          value={form.classroom.value != null ? form.classroom.value : ""}
           onChange={(event, value) => handleAutocompleteChange(event, value)}
           renderInput={params => {
             const inputProps = params.inputProps;
