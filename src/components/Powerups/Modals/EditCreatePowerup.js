@@ -95,10 +95,10 @@ const EditCreatePowerup = props => {
 
   const benefitType = [
     <ToggleButton key={1} value="*">
-      <Typography>Multiply</Typography>
+      <Typography>&#215;</Typography>
     </ToggleButton>,
     <ToggleButton key={2} value="/">
-      <Typography>Divide</Typography>
+      <Typography>&#247;</Typography>
     </ToggleButton>
   ];
 
@@ -119,7 +119,7 @@ const EditCreatePowerup = props => {
       <div className={classes.inputs}>
         <Autocomplete
           id="asynchronous-classrooms"
-          style={{marginTop: "24px"}}
+          style={{marginTop: "16px"}}
           open={open}
           onOpen={() => {
             setOpen(true);
@@ -144,7 +144,7 @@ const EditCreatePowerup = props => {
                 label="Your Classrooms"
                 fullWidth
                 variant="outlined"
-                helperText="Select one of your available classrooms"
+                helperText="Select from your classrooms"
                 autoComplete="off"
                 InputProps={{
                   ...params.InputProps,
@@ -201,7 +201,7 @@ const EditCreatePowerup = props => {
           helperText={
             !form.name.valid && form.name.touched
               ? "*Please Enter your powerup's name"
-              : "Enter your powerup's name"
+              : "Enter powerup's name"
           }
           error={!form.name.valid && form.name.touched}
           variant="outlined"
@@ -249,7 +249,6 @@ const EditCreatePowerup = props => {
           </div>
         </div>
         <TextField
-          style={{ marginBottom: "16px" }}
           value={form.description.value}
           label="Description"
           placeholder="x2 Duplicate"
@@ -258,7 +257,7 @@ const EditCreatePowerup = props => {
           helperText={
             !form.description.valid && form.description.touched
               ? "*Please Enter your powerup's benifit"
-              : "This is the powerup's description"
+              : "Powerup's description"
           }
           error={!form.description.valid && form.description.touched}
           variant="outlined"
@@ -281,7 +280,7 @@ const EditCreatePowerup = props => {
             helperText={
               !form.cost.valid && form.cost.touched
                 ? "*Powerup's cost. No decimals or negative numbers"
-                : "Enter your powerup's cost"
+                : "Powerup's cost"
             }
             error={!form.cost.valid && form.cost.touched}
             variant="outlined"
@@ -299,7 +298,7 @@ const EditCreatePowerup = props => {
             helperText={
               !form.quantity.valid && form.quantity.touched
                 ? "*Powerup's quantity. No decimals or negative numbers"
-                : "Enter your powerup's quantity"
+                : "Powerup's quantity"
             }
             error={!form.quantity.valid && form.quantity.touched}
             variant="outlined"
