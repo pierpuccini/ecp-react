@@ -19,14 +19,10 @@ import UserCard from "./UserCard";
 
 const useStyles = makeStyles(theme => ({
   container: {
-    display: "flex",
-    flexDirection: "column"
+    height: "100%",
+    overflow: "auto"
   },
   userContainer: {
-    height: "65%",
-    [theme.breakpoints.down("xs")]: {
-      height: "60%"
-    }
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -273,7 +269,7 @@ const UserManager = props => {
 
   /* USER CARD IS A SMART COMPONENT IN CASE ERROR ARRISES FROM THERE */
   return (
-    <Container>
+    <Container className={classes.container}>
       <Paper
         className={classes.paper}
         style={prefersDarkMode ? { border: "unset" } : null}
