@@ -216,7 +216,8 @@ const Powerups = props => {
 
     let valid = false,
       descriptionValue;
-    if (benefit.type != null && benefit.value != null && benefit.value !== 0) {
+      console.log('benefit',benefit);
+    if (benefit.type != null && benefit.value != null && benefit.type !== "" && benefit.value !== 0) {
       valid = true;
       descriptionValue = `This powerup will ${
         benefit.type === "*" ? "Multiply" : "Divide"
