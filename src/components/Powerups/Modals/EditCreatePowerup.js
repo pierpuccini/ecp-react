@@ -209,7 +209,7 @@ const EditCreatePowerup = props => {
           getOptionLabel={option => option.subject_name}
           options={options}
           loading={loading}
-          value={form.classroom.value != null ? form.classroom.value : ""}
+          value={form.classroom.value}
           onChange={(event, value) => handleAutocompleteChange(event, value)}
           renderInput={params => {
             const inputProps = params.inputProps;
