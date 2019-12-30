@@ -453,12 +453,13 @@ const Powerups = props => {
                   text="Classroom"
                   variantArray={["body1"]}
                   type="subtext"
+                  style={{textTransform: "capitalize"}}
                 />
                 {role !== "teacher" ? (
                   <React.Fragment>
                     <DynamicText
                       mainText={"900"}
-                      text="Coins for this course"
+                      text="Coins for course"
                       variantArray={["body1"]}
                       type="subtext"
                       icon={<CoinIcon width="24px" height="24px" />}

@@ -2,6 +2,7 @@
 import React from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -24,6 +25,15 @@ import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined"
 import gIcon from "../../../assets/svg/search.svg";
 
 const useStyles = makeStyles(theme => ({
+  paper: {
+    padding: theme.spacing(2, 2),
+    margin: theme.spacing(2),
+    border: "unset",
+    [theme.breakpoints.down("sm")]: {
+      boxShadow: "unset",
+      border: "2px solid"
+    }
+  },
   imageIcon: {
     height: "100%"
   },
@@ -58,13 +68,6 @@ const useStyles = makeStyles(theme => ({
   inputFullName: {
     "text-transform": "capitalize"
   },
-  paper: {
-    padding: theme.spacing(2, 2),
-    margin: theme.spacing(2),
-    [theme.breakpoints.down("sm")]: {
-      "box-shadow": "unset"
-    }
-  },
   MuiMenuList: {
     width: "auto !important"
   },
@@ -94,6 +97,7 @@ const useStyles = makeStyles(theme => ({
 
 const MyAccount = props => {
   const classes = useStyles();
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   props.clients.sort((a, b) => {
     var textA = a.value.toUpperCase();
@@ -113,7 +117,7 @@ const MyAccount = props => {
 
   return (
     <Container maxWidth="sm" className={classes.myAccountContainer}>
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} style={prefersDarkMode ? { border: "unset" } : null}>
         <form onSubmit={props.submitHandler}>
           <div className={classes.sectionTitles}>
             <AccountCircleOutlinedIcon style={{marginRight: "8px"}}/>

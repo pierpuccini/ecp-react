@@ -10,6 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 //Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 /* App Imports */
+import DynamicText from "../../components/UI/SpecialFields/DynamicText";
 import CoinIcon from "../UI/CoinIcon/CoinIcon";
 
 const useStyles = makeStyles(theme => ({
@@ -38,9 +39,14 @@ const PowerupInfoCard = props => {
   let title = viewType === "manage" ? "Managing power ups" : "Buy power ups";
   let endItem = (
     <div style={{ display: "flex" }}>
-    <Typography style={{ alignSelf: "center" }}>Total coins: </Typography>
-      <CoinIcon width="32px" height="32px" />
-      <Typography style={{ alignSelf: "center" }}>5000</Typography>
+      <DynamicText
+        mainText={"5000"}
+        text="My total coins"
+        variantArray={["body1"]}
+        type="subtext"
+        icon={<CoinIcon width="24px" height="24px" />}
+        style={{ margin: "16px 8px 0px 0px" }}
+      />
     </div>
   );
   if (viewType === "manage") {

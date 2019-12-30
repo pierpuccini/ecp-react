@@ -116,7 +116,7 @@ const PowerupCards = props => {
 
   let cardActions = (
     <div className={classes.footer}>
-      <div className={classes.costAndQuantity}>
+      <div className={classes.costAndQuantity} style={{minWidth: "unset"}}>
         <DynamicText
           mainText={powerup.cost}
           text="Power up cost"
@@ -228,6 +228,7 @@ const PowerupCards = props => {
             text={powerup.description}
             variantArray={["body1"]}
             type="subtext"
+            style={{textTransform: "capitalize"}}
           />
         </div>
         <Tooltip placement="left" title={powerup.description}>
