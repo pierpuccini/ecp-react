@@ -38,6 +38,7 @@ const PowerupInfoCard = props => {
   let title = viewType === "manage" ? "Managing power ups" : "Buy power ups";
   let endItem = (
     <div style={{ display: "flex" }}>
+    <Typography style={{ alignSelf: "center" }}>Total coins: </Typography>
       <CoinIcon width="32px" height="32px" />
       <Typography style={{ alignSelf: "center" }}>5000</Typography>
     </div>

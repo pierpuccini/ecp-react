@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 /* App Imports */
 import Modal from "../../components/UI/Modal/Modal";
 import EditCreatePowerup from "../../components/Powerups/Modals/EditCreatePowerup";
@@ -96,7 +97,7 @@ const Powerups = props => {
       touched: false
     },
     classroom: {
-      value: "",
+      value: { subject_name: "" },
       validation: {
         required: true
       },
@@ -113,7 +114,7 @@ const Powerups = props => {
     }
   });
   const [openModal, setopenModal] = useState(false);
-  const [checkoutCart, setcheckoutCart] = useState([])
+  const [checkoutCart, setcheckoutCart] = useState([]);
 
   /* Fetches powerups on initial load */
   useEffect(() => {
@@ -140,35 +141,6 @@ const Powerups = props => {
     /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId' */
     // eslint-disable-next-line
   }, []);
-
-  /* Fetches powerups after creating them */
-  useEffect(() => {
-    if (success) {
-      async function getMyPowerups(payload) {
-        await getPowerups(payload);
-      }
-      let payload = { role: role };
-      if (role === "teacher") {
-        payload.id = userId;
-      } else {
-        let classroomIds = [];
-        classrooms.forEach(classrooms => {
-          classroomIds.push(classrooms.id);
-        });
-        payload.id = classrooms;
-      }
-      getMyPowerups(payload)
-        .then(res => {
-          setDomReady(true);
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-      setopenModal(false);
-    }
-    /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId' */
-    // eslint-disable-next-line
-  }, [success]);
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
@@ -346,8 +318,50 @@ const Powerups = props => {
     setopenModal(!openModalCopy);
   };
 
+  /* Fetches powerups after creating them */
+  useEffect(() => {
+    if (success) {
+      async function getMyPowerups(payload) {
+        await getPowerups(payload);
+      }
+      let payload = { role: role };
+      if (role === "teacher") {
+        payload.id = userId;
+      } else {
+        let classroomIds = [];
+        classrooms.forEach(classrooms => {
+          classroomIds.push(classrooms.id);
+        });
+        payload.id = classrooms;
+      }
+      getMyPowerups(payload)
+        .then(res => {
+          setDomReady(true);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+      handleCloseModal();
+    }
+    /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId', handleCloseModal */
+    // eslint-disable-next-line
+  }, [success]);
+
   if (isLoaded(clients, teachers, students) && domReady) {
     let localPowerups = powerups != null ? [...powerups] : [];
+    let classrooms = [];
+    if (localPowerups.length > 0) {
+      localPowerups.forEach(pw => classrooms.push(pw.classroom.subject_name));
+      classrooms = [...new Set(classrooms)];
+      let tmpLocalPowerups = [...localPowerups];
+      localPowerups = [];
+      classrooms.forEach(cl => {
+        localPowerups.push({
+          [cl]: tmpLocalPowerups.filter(pw => pw.classroom.subject_name === cl)
+        });
+      });
+    }
+
     return (
       <Container className={classes.powerupsContainer}>
         {loading ? <FloatingLoader></FloatingLoader> : null}
@@ -372,20 +386,32 @@ const Powerups = props => {
             No power ups available.
           </Typography>
         ) : null}
-        <Grid container spacing={2} className={classes.grid}>
-          {localPowerups.map((powerUp, index) => {
-            return (
-              <Grid key={index} item md={3} sm={6} xs={12}>
-                <PowerupCards
-                  viewType={type}
-                  role={role}
-                  powerup={powerUp}
-                  actionHandler={powerupActionButtons}
-                />
+        {localPowerups.map((powerupsByClassroom, index) => {
+          const classroomName = Object.keys(powerupsByClassroom);
+          return (
+            <React.Fragment key={index}>
+              <div>
+                <Typography>{classroomName}</Typography>
+                <Typography>Coins for this course: 900</Typography>
+                <Divider variant="middle"></Divider>
+              </div>
+              <Grid container spacing={2} className={classes.grid}>
+                {powerupsByClassroom[classroomName].map((powerUp, index) => {
+                  return (
+                    <Grid key={index} item md={3} sm={6} xs={12}>
+                      <PowerupCards
+                        viewType={type}
+                        role={role}
+                        powerup={powerUp}
+                        actionHandler={powerupActionButtons}
+                      />
+                    </Grid>
+                  );
+                })}
               </Grid>
-            );
-          })}
-        </Grid>
+            </React.Fragment>
+          );
+        })}
       </Container>
     );
   } else {
