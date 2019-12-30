@@ -248,7 +248,7 @@ const Powerups = props => {
     });
 
     let { benefit } = updatedControls;
-    benefit = benefit.value
+    benefit = benefit.value;
 
     let valid = false,
       descriptionValue;
@@ -325,7 +325,12 @@ const Powerups = props => {
       if (updatedControls.hasOwnProperty(controlName)) {
         updatedControls[controlName] = {
           ...updatedControls[controlName],
-          value: controlName === "benefit" ? { type: "", value: 0 } : controlName === 'classroom' ? {subject_name: ""} :  "",
+          value:
+            controlName === "benefit"
+              ? { type: "", value: 0 }
+              : controlName === "classroom"
+              ? { subject_name: "" }
+              : "",
           valid: false,
           touched: false
         };

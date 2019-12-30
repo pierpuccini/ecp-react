@@ -117,6 +117,80 @@ const EditCreatePowerup = props => {
     <div>
       {dbLoading ? <FloatingLoader></FloatingLoader> : null}
       <div className={classes.inputs}>
+        <Autocomplete
+          id="asynchronous-classrooms"
+          style={{marginTop: "24px"}}
+          open={open}
+          onOpen={() => {
+            setOpen(true);
+          }}
+          onClose={() => {
+            setOpen(false);
+          }}
+          autoHighlight
+          autoSelect
+          getOptionLabel={option => option.subject_name}
+          options={options}
+          loading={loading}
+          value={form.classroom.value}
+          onChange={(event, value) => handleAutocompleteChange(event, value)}
+          renderInput={params => {
+            const inputProps = params.inputProps;
+            inputProps.autoComplete = "off";
+            return (
+              <TextField
+                {...params}
+                inputProps={inputProps}
+                label="Your Classrooms"
+                fullWidth
+                variant="outlined"
+                helperText="Select one of your available classrooms"
+                autoComplete="off"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <React.Fragment>
+                      {loading ? (
+                        <CircularProgress color="inherit" size={20} />
+                      ) : null}
+                      {params.InputProps.endAdornment}
+                    </React.Fragment>
+                  )
+                }}
+              />
+            );
+          }}
+          renderOption={option => (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%"
+              }}
+            >
+              <DynamicText
+                mainText={option.subject_name}
+                text="Classroom name"
+                variantArray={["body2"]}
+                type="subtext"
+                style={{
+                  textTransform: "capitalize",
+                  textOverflow: "ellipsis"
+                }}
+              />
+              <DynamicText
+                mainText={option.subject_id}
+                text="Classroom ID"
+                variantArray={["body2"]}
+                type="subtext"
+                style={{
+                  textTransform: "capitalize",
+                  textOverflow: "ellipsis"
+                }}
+              />
+            </div>
+          )}
+        />
         <TextField
           value={form.name.value}
           onChange={event => inputChangedHandler(event, "name")}
@@ -194,79 +268,6 @@ const EditCreatePowerup = props => {
           }}
           size="small"
           required
-        />
-        <Autocomplete
-          id="asynchronous-classrooms"
-          open={open}
-          onOpen={() => {
-            setOpen(true);
-          }}
-          onClose={() => {
-            setOpen(false);
-          }}
-          autoHighlight
-          autoSelect
-          getOptionLabel={option => option.subject_name}
-          options={options}
-          loading={loading}
-          value={form.classroom.value}
-          onChange={(event, value) => handleAutocompleteChange(event, value)}
-          renderInput={params => {
-            const inputProps = params.inputProps;
-            inputProps.autoComplete = "off";
-            return (
-              <TextField
-                {...params}
-                inputProps={inputProps}
-                label="Your Classrooms"
-                fullWidth
-                variant="outlined"
-                helperText="Select one of your available classrooms"
-                autoComplete="off"
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <React.Fragment>
-                      {loading ? (
-                        <CircularProgress color="inherit" size={20} />
-                      ) : null}
-                      {params.InputProps.endAdornment}
-                    </React.Fragment>
-                  )
-                }}
-              />
-            );
-          }}
-          renderOption={option => (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%"
-              }}
-            >
-              <DynamicText
-                mainText={option.subject_name}
-                text="Classroom name"
-                variantArray={["body2"]}
-                type="subtext"
-                style={{
-                  textTransform: "capitalize",
-                  textOverflow: "ellipsis"
-                }}
-              />
-              <DynamicText
-                mainText={option.subject_id}
-                text="Classroom ID"
-                variantArray={["body2"]}
-                type="subtext"
-                style={{
-                  textTransform: "capitalize",
-                  textOverflow: "ellipsis"
-                }}
-              />
-            </div>
-          )}
         />
         <div className={classes.costAndQuantity}>
           <TextField
