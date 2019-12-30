@@ -81,7 +81,7 @@ const PowerupCards = props => {
   const classes = useStyles();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const { viewType, actionHandler, powerup } = props;
+  const { viewType, actionHandler, powerup, handleClassroomCart } = props;
 
   const [localPowerupQuantity, setlocalPowerupQuantity] = useState(0);
   const [quantityError, setquantityError] = useState(false);
@@ -105,6 +105,7 @@ const PowerupCards = props => {
       }
     }
     setlocalPowerupQuantity(counter);
+    handleClassroomCart()
   };
 
   let cardActions = (

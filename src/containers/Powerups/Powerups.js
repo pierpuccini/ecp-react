@@ -8,10 +8,14 @@ import { useSelector } from "react-redux";
 import { useFirestoreConnect, isLoaded } from "react-redux-firebase";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
+import { green } from "@material-ui/core/colors";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
+//Icons
+import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
 /* App Imports */
 import Modal from "../../components/UI/Modal/Modal";
 import EditCreatePowerup from "../../components/Powerups/Modals/EditCreatePowerup";
@@ -19,6 +23,8 @@ import PowerupInfoCard from "../../components/Powerups/PowerupInfoCard";
 import PowerupCards from "../../components/Powerups/PowerupCards";
 import PngLoader from "../../components/UI/Loader/PngLoader/PngLoader";
 import FloatingLoader from "../../components/UI/Loader/FloatingLoader/FloatingLoader";
+import DynamicText from "../../components/UI/SpecialFields/DynamicText";
+import CoinIcon from "../../components/UI/CoinIcon/CoinIcon";
 import {
   updateObject,
   checkValidity,
@@ -34,6 +40,15 @@ const useStyles = makeStyles(theme => ({
   grid: {
     width: "100%",
     margin: "unset"
+  },
+  classroomDivider: {
+    display: "flex",
+    margin: theme.spacing(0, 3),
+    justifyContent: "space-between"
+  },
+  button: {
+    margin: theme.spacing(1),
+    backgroundColor: green[700]
   }
 }));
 
@@ -115,33 +130,7 @@ const Powerups = props => {
     }
   });
   const [openModal, setopenModal] = useState(false);
-  const [checkoutCart, setcheckoutCart] = useState([]);
-
-  /* Fetches powerups on initial load */
-  useEffect(() => {
-    async function getMyPowerups(payload) {
-      await getPowerups(payload);
-    }
-    let payload = { role: role };
-    if (role === "teacher") {
-      payload.id = userId;
-    } else {
-      let classroomIds = [];
-      classrooms.forEach(classrooms => {
-        classroomIds.push(classrooms.id);
-      });
-      payload.id = classrooms;
-    }
-    getMyPowerups(payload)
-      .then(res => {
-        setDomReady(true);
-      })
-      .catch(err => {
-        console.log("err", err);
-      });
-    /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId' */
-    // eslint-disable-next-line
-  }, []);
+  const [checkoutCart, setcheckoutCart] = useState({});
 
   /* Loads clients, teachers and studets data from Firestore */
   useFirestoreConnect(() => [
@@ -319,6 +308,54 @@ const Powerups = props => {
     setopenModal(!openModalCopy);
   };
 
+  const handleCart = () => {};
+
+  const createCarts = classrooms => {
+    if (classrooms != null && classrooms.length > 0) {
+      let carts = {};
+      classrooms.forEach(cl => (carts[cl] = []));
+      setcheckoutCart(carts);
+    }
+  };
+
+  /* Creates cart per classroom */
+  useEffect(() => {
+    if (powerups != null) {
+      let classrooms = [];
+      powerups.forEach(pw => {
+        classrooms = [...classrooms, ...Object.keys(pw)];
+      });
+      createCarts(classrooms);
+    }
+  }, [powerups]);
+
+  /* Fetches powerups on initial load */
+  useEffect(() => {
+    async function getMyPowerups(payload) {
+      await getPowerups(payload);
+    }
+    let payload = { role: role };
+    if (role === "teacher") {
+      payload.id = userId;
+    } else {
+      let classroomIds = [];
+      classrooms.forEach(classrooms => {
+        classroomIds.push(classrooms.id);
+      });
+      payload.id = classrooms;
+    }
+    getMyPowerups(payload)
+      .then(res => {
+        setDomReady(true);
+        createCarts(powerups);
+      })
+      .catch(err => {
+        console.log("err", err);
+      });
+    /* MISSING DEP: 'classrooms', 'getPowerups', 'role', and 'userId' */
+    // eslint-disable-next-line
+  }, []);
+
   /* Fetches powerups after creating them */
   useEffect(() => {
     if (success) {
@@ -350,7 +387,6 @@ const Powerups = props => {
 
   if (isLoaded(clients, teachers, students) && domReady) {
     let localPowerups = powerups != null ? [...powerups] : [];
-
     return (
       <Container className={classes.powerupsContainer}>
         {loading ? <FloatingLoader></FloatingLoader> : null}
@@ -379,11 +415,33 @@ const Powerups = props => {
           const classroomName = Object.keys(powerupsByClassroom);
           return (
             <React.Fragment key={index}>
-              <div>
-                <Typography>{classroomName}</Typography>
-                <Typography>Coins for this course: 900</Typography>
-                <Divider variant="middle"></Divider>
+              <div className={classes.classroomDivider}>
+                <DynamicText
+                  mainText={classroomName}
+                  text="Classroom"
+                  variantArray={["body1"]}
+                  type="subtext"
+                />
+                <DynamicText
+                  mainText={"900"}
+                  text="Coins for this course"
+                  variantArray={["body1"]}
+                  type="subtext"
+                  icon={<CoinIcon width="24px" height="24px" />}
+                />
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  size="small"
+                >
+                  <ShoppingCartOutlinedIcon /> Buy (
+                  {checkoutCart[classroomName] == null
+                    ? 0
+                    : checkoutCart[classroomName].length}
+                  )
+                </Button>
               </div>
+              <Divider variant="middle"></Divider>
               <Grid container spacing={2} className={classes.grid}>
                 {powerupsByClassroom[classroomName].map((powerUp, index) => {
                   return (
@@ -393,6 +451,7 @@ const Powerups = props => {
                         role={role}
                         powerup={powerUp}
                         actionHandler={powerupActionButtons}
+                        handleClassroomCart={handleCart}
                       />
                     </Grid>
                   );
