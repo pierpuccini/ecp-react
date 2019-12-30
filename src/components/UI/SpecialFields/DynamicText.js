@@ -61,7 +61,7 @@ const DynamicText = props => {
           {icon}
           {component == null ? (
             <Typography
-              noWrap
+              
               style={
                 icon != null
                   ? { marginLeft: "8px" }
@@ -77,7 +77,7 @@ const DynamicText = props => {
             component
           )}
         </div>
-        <Typography noWrap variant="caption" className={classes.captions}>
+        <Typography  variant="caption" className={classes.captions}>
           {text}
         </Typography>
       </div>
@@ -86,12 +86,12 @@ const DynamicText = props => {
   return (
     <div className={classes[orientation]} style={style}>
       {icon}
-      <Typography noWrap variant={variantArray[0]}>
+      <Typography  variant={variantArray[0]}>
         {text}:
       </Typography>
       {component == null ? (
         <Typography
-          noWrap
+          
           variant={variantArray[1]}
           className={classes.dtext}
           style={orientation !== "vertical" ? { margin: "0px 8px" } : null}

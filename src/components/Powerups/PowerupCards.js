@@ -1,8 +1,9 @@
 /* React Imports */
-import React from "react";
+import React, { useState } from "react";
 /* Material Imports */
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Typography from "@material-ui/core/Typography";
 import { green } from "@material-ui/core/colors";
 import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -40,21 +41,39 @@ const useStyles = makeStyles(theme => ({
   costAndQuantity: {
     display: "flex",
     paddingBottom: "12px",
-    minWidth: "150px"
+    minWidth: "150px",
+    flexDirection: "column"
   },
   footer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    marginTop: theme.spacing(1)
   },
   footerActions: {
-    display: "flex"
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-around"
   },
   buyPowerup: {
     color: green[700]
   },
   removePowerup: {
     color: theme.palette.error.main
+  },
+  quantityContainer: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  quantityError: {
+    color: theme.palette.error.main
+  },
+  addRemoveContainer: {
+    display: "flex"
+  },
+  buying: {
+    display: "flex",
+    flexDirection: "column"
   }
 }));
 
@@ -63,6 +82,30 @@ const PowerupCards = props => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const { viewType, actionHandler, powerup } = props;
+
+  const [localPowerupQuantity, setlocalPowerupQuantity] = useState(0);
+  const [quantityError, setquantityError] = useState(false);
+
+  const handleCart = type => {
+    const { quantity } = powerup;
+    let counter = localPowerupQuantity;
+    if (type === "+") {
+      counter += 1;
+      if (counter > quantity) {
+        counter -= 1;
+        setquantityError(true);
+      }
+    } else {
+      if (counter === quantity) {
+        setquantityError(false);
+      }
+      counter -= 1;
+      if (counter < 0) {
+        counter += 1; 
+      }
+    }
+    setlocalPowerupQuantity(counter);
+  };
 
   let cardActions = (
     <div className={classes.footer}>
@@ -73,31 +116,49 @@ const PowerupCards = props => {
           variantArray={["body1"]}
           type="subtext"
           icon={<CoinIcon width="24px" height="24px" />}
-          style={{ marginRight: "8px" }}
         />
         <DynamicText
           mainText={powerup.quantity}
           text="Quantity"
           variantArray={["body1"]}
           type="subtext"
-          style={{ marginLeft: "8px" }}
         />
       </div>
       <div className={classes.footerActions}>
-        <Tooltip placement="left" title="Remove powerup">
+        <div className={classes.quantityContainer}>
+          <Typography
+            variant="body2"
+            style={{ paddingLeft: "16px" }}
+          >{`My powerups: 0`}</Typography>
+        </div>
+        <div className={classes.addRemoveContainer}>
           <span>
-            <IconButton className={classes.removePowerup}>
+            <IconButton
+              className={classes.removePowerup}
+              onClick={() => {
+                handleCart("-");
+              }}
+            >
               <RemoveOutlinedIcon />
             </IconButton>
           </span>
-        </Tooltip>
-        <Tooltip placement="left" title="Buy powerup">
+          <div className={classes.buying}>
+            <Typography variant="body2" style={{ textAlign: "center" }}>
+              {localPowerupQuantity}
+            </Typography>
+            <Typography variant="caption">Buying</Typography>
+          </div>
           <span>
-            <IconButton className={classes.buyPowerup}>
+            <IconButton
+              className={classes.buyPowerup}
+              onClick={() => {
+                handleCart("+");
+              }}
+            >
               <AddOutlinedIcon />
             </IconButton>
           </span>
-        </Tooltip>
+        </div>
       </div>
     </div>
   );
@@ -162,6 +223,11 @@ const PowerupCards = props => {
           </Icon>
         </Tooltip>
       </div>
+      {quantityError ? (
+        <Typography variant="caption" className={classes.quantityError}>
+          There are no more powerups to buy
+        </Typography>
+      ) : null}
       {cardActions}
     </Paper>
   );

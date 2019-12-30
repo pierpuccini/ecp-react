@@ -113,6 +113,7 @@ const Powerups = props => {
     }
   });
   const [openModal, setopenModal] = useState(false);
+  const [checkoutCart, setcheckoutCart] = useState([])
 
   /* Fetches powerups on initial load */
   useEffect(() => {

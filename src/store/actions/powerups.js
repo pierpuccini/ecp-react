@@ -74,7 +74,8 @@ export const powerupActions = data => {
 };
 
 export const getPowerups = payload => {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const currentState = getState()
     dispatch(powerupsStart());
     console.log("payload", payload);
     let searchParams = payload.id.length === 0 ? 1 : payload.id;
@@ -82,9 +83,9 @@ export const getPowerups = payload => {
       searchParams = [];
       payload.id.forEach(classroom => searchParams.push(classroom.id));
     }
-    console.log(`get-all-powerups/${searchParams}/${payload.role}`);
+    console.log(`get-all-powerups/${searchParams}/${payload.role}/${currentState.firebase.auth.uid}`);
     axios
-      .get(`/get-all-powerups/${searchParams}/${payload.role}`)
+      .get(`/get-all-powerups/${searchParams}/${payload.role}/${currentState.firebase.auth.uid}`)
       .then(res => {
         dispatch(powerupsGetAll(res.data));
       })
