@@ -1,3 +1,8 @@
+/**
+ * @param {*} oldObject
+ * @param {*} updatedProperties
+ * @returns new object with no reference to old one
+ */
 export const updateObject = (oldObject, updatedProperties) => {
   return {
     ...oldObject,
@@ -5,7 +10,7 @@ export const updateObject = (oldObject, updatedProperties) => {
   };
 };
 
- /**
+/**
  *
  * @param {*} value These are Requiered for validity function
  * @param {*} rules various types, see bellow
@@ -46,12 +51,12 @@ export const checkValidity = (value, rules) => {
   }
 
   if (rules.specialNumber) {
-    const { min, max, step } = rules.specialNumber
+    const { min, max, step } = rules.specialNumber;
 
-    let checkMin = (min != null) ? value >= min : true
-    let checkMax = (max != null) ? value <= max : true
-    let checkStep = (step != null) ? value%step === 0 : true
-    isValid = checkMin && checkMax && checkStep
+    let checkMin = min != null ? value >= min : true;
+    let checkMax = max != null ? value <= max : true;
+    let checkStep = step != null ? value % step === 0 : true;
+    isValid = checkMin && checkMax && checkStep;
   }
 
   return isValid;
