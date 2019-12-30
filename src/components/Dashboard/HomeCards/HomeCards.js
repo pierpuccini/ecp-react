@@ -15,7 +15,11 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: "center"
+    textAlign: "center",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column"
   },
   skeleton: {
     borderRadius: theme.spacing(2)

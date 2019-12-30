@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 2),
     margin: theme.spacing(2),
     border: "unset",
+    width: "100%",    
     [theme.breakpoints.down("sm")]: {
       boxShadow: "unset",
       border: "2px solid"
@@ -152,6 +153,7 @@ const ClassroomManagerCard = props => {
         title={role === "teacher" ? "Create Classroom" : "Add Classroom"}
       >
         <IconButton
+          style={{paddingRight: "4px"}}
           onClick={event => {
             role === "teacher"
               ? handleNavChange(event, "classrooms/create")

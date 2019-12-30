@@ -49,7 +49,9 @@ const useStyles = makeStyles(theme => ({
     }
   },
   managerCard: {
-    overflow: "hidden"
+    overflow: "hidden",
+    display: "flex",
+    flex: "none"
   },
   contentCards: {
     height: "73%",
@@ -462,7 +464,7 @@ const ClassroomController = props => {
             }
           />
         </div>
-        <div id="classroomCards" className={classes.contentCards} onScroll={(event)=>{handleScroll(event)}}>
+        <div className={classes.contentCards} onScroll={(event)=>{handleScroll(event)}}>
           {classroomsToMap(classrooms.data)}
           {classrooms.page === classrooms.lastPage ? null : ininiteLoader ? (
             <div className={classes.infiniteLoaderContainer}>
