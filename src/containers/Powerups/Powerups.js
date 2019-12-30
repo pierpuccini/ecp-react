@@ -308,7 +308,23 @@ const Powerups = props => {
     setopenModal(!openModalCopy);
   };
 
-  const handleCart = () => {};
+  const handleCart = data => {
+    if (data.classroom in checkoutCart && data.type === "+") {
+      let updatedCart = checkoutCart[data.classroom].push(data.powerup);
+      setcheckoutCart({ ...checkoutCart, updatedCart });
+    } else if (data.classroom in checkoutCart && data.type === "-") {
+      let powerupToRemove = checkoutCart[data.classroom].findIndex(
+        pw => pw.id === data.powerup.id
+      );
+      if (powerupToRemove !== -1) {
+        let updatedCart = checkoutCart[data.classroom].splice(
+          powerupToRemove,
+          1
+        );
+        setcheckoutCart({ ...checkoutCart, updatedCart });
+      }
+    }
+  };
 
   const createCarts = classrooms => {
     if (classrooms != null && classrooms.length > 0) {

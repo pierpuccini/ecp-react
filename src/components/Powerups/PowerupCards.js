@@ -105,7 +105,13 @@ const PowerupCards = props => {
       }
     }
     setlocalPowerupQuantity(counter);
-    handleClassroomCart()
+    let data = {
+      counter,
+      powerup,
+      classroom: powerup.classroom.subject_name,
+      type
+    };
+    handleClassroomCart(data);
   };
 
   let cardActions = (
@@ -231,7 +237,7 @@ const PowerupCards = props => {
         </Tooltip>
       </div>
       {quantityError ? (
-        <Typography variant="caption" className={classes.quantityError}>
+        <Typography variant="body2" className={classes.quantityError}>
           There are no more powerups to buy
         </Typography>
       ) : null}
