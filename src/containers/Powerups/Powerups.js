@@ -438,24 +438,28 @@ const Powerups = props => {
                   variantArray={["body1"]}
                   type="subtext"
                 />
-                <DynamicText
-                  mainText={"900"}
-                  text="Coins for this course"
-                  variantArray={["body1"]}
-                  type="subtext"
-                  icon={<CoinIcon width="24px" height="24px" />}
-                />
-                <Button
-                  variant="contained"
-                  className={classes.button}
-                  size="small"
-                >
-                  <ShoppingCartOutlinedIcon /> Buy (
-                  {checkoutCart[classroomName] == null
-                    ? 0
-                    : checkoutCart[classroomName].length}
-                  )
-                </Button>
+                {role !== 'teacher' ? (
+                  <DynamicText
+                    mainText={"900"}
+                    text="Coins for this course"
+                    variantArray={["body1"]}
+                    type="subtext"
+                    icon={<CoinIcon width="24px" height="24px" />}
+                  />
+                ) : null}
+                {role !== 'teacher' ? (
+                  <Button
+                    variant="contained"
+                    className={classes.button}
+                    size="small"
+                  >
+                    <ShoppingCartOutlinedIcon /> Buy (
+                    {checkoutCart[classroomName] == null
+                      ? 0
+                      : checkoutCart[classroomName].length}
+                    )
+                  </Button>
+                ) : null}
               </div>
               <Divider variant="middle"></Divider>
               <Grid container spacing={2} className={classes.grid}>
