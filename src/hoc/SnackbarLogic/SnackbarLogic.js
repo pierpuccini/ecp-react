@@ -64,7 +64,7 @@ const SnackbarLogic = props => {
     if (powerupsSuccess) {
       payload = {
         type: "success",
-        info: { message: `Powerup succesfully ${role === 'student' ? "Bought" : "created or modified!"}` },
+        info: { message: `Powerup succesfully ${role === 'student' ? "bought" : "created or modified!"}` },
         duration: 10000
       };
     }
