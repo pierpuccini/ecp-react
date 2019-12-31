@@ -10,6 +10,8 @@ const SnackbarLogic = props => {
     //Props
     snackbarPayload,
     setsnackbarPayload,
+    //stateProps
+    role,
     //Warninigs
     disabled,
     userDisabled,
@@ -62,7 +64,7 @@ const SnackbarLogic = props => {
     if (powerupsSuccess) {
       payload = {
         type: "success",
-        info: { message: "Powerup succesfully created or modified!" },
+        info: { message: `Powerup succesfully ${role === 'student' ? "Bought" : "created or modified!"}` },
         duration: 10000
       };
     }
@@ -111,6 +113,7 @@ const SnackbarLogic = props => {
 
 const mapStateToProps = state => {
   return {
+    role: state.firebase.profile.role,
     //Error messages
     onboardingError: state.onboarding.error,
     usersError: state.users.error,
