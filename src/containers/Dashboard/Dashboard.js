@@ -129,7 +129,7 @@ const Dashboard = props => {
       sm: 12,
       xs: 12,
       content: "My Transactions",
-      onClickLink: "/home",
+      onClickLink: "/wallet",
       permision: ["student", "teacher"]
     },
     {

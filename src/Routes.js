@@ -23,7 +23,10 @@ const asyncClassroom = asyncComponent(() => {
 });
 const asyncPowerups = asyncComponent(() => {
   return import("./containers/Powerups/Powerups")
-})
+});
+const asyncWallet = asyncComponent(() => {
+  return import("./containers/Wallet/Wallet")
+});
 
 const Routes = props => {
   const isMobile = useMediaQuery("(max-width: 600px)");
@@ -43,6 +46,11 @@ const Routes = props => {
     {
       url: "power-ups/:type",
       comp: asyncPowerups,
+      availableTo: ["protected", "all"]
+    },
+    {
+      url: "wallet",
+      comp: asyncWallet,
       availableTo: ["protected", "all"]
     },
     {

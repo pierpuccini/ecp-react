@@ -214,7 +214,7 @@ function App(props) {
         />
         <BottomNavigationAction
           label="Wallet"
-          value="balance"
+          value="wallet"
           icon={<AccountBalanceWalletOutlinedIcon />}
         />
         <BottomNavigationAction
