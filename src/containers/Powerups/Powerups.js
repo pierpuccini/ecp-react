@@ -58,6 +58,7 @@ const Powerups = props => {
   let { type } = useParams();
   const {
     role,
+    fbClassrooms,
     classrooms,
     loading,
     success,
@@ -216,8 +217,13 @@ const Powerups = props => {
 
     let valid = false,
       descriptionValue;
-      console.log('benefit',benefit);
-    if (benefit.type != null && benefit.value != null && benefit.type !== "" && benefit.value !== 0) {
+    console.log("benefit", benefit);
+    if (
+      benefit.type != null &&
+      benefit.value != null &&
+      benefit.type !== "" &&
+      benefit.value !== 0
+    ) {
       valid = true;
       descriptionValue = `This powerup will ${
         benefit.type === "*" ? "Multiply" : "Divide"
@@ -339,13 +345,19 @@ const Powerups = props => {
   const getOccurrence = (array, value) => array.filter(v => v === value).length;
 
   const purchasePowerup = classroomName => {
-    let payload = [];
+    let payload = [],
+      groupId,
+      quantity,
+      master_id,
+      benefit,
+      buyer;
     let uniquecheckoutCart = [...new Set(checkoutCart[classroomName])];
     uniquecheckoutCart.forEach(pw => {
-      let quantity = getOccurrence(checkoutCart[classroomName], pw);
-      let master_id = pw.id;
-      let benefit = pw.benefit;
-      let buyer = userId;
+      groupId = fbClassrooms.find(classroom => classroom.id === pw.classroom.id)?.groupId;
+      quantity = getOccurrence(checkoutCart[classroomName], pw);
+      master_id = pw.id;
+      benefit = pw.benefit;
+      buyer = groupId == null ? userId : groupId;
       payload = [...payload, { quantity, master_id, benefit, buyer }];
     });
     purchasePowerupAPI(payload);
@@ -454,7 +466,7 @@ const Powerups = props => {
                   text="Classroom"
                   variantArray={["body1"]}
                   type="subtext"
-                  style={{textTransform: "capitalize"}}
+                  style={{ textTransform: "capitalize" }}
                 />
                 {role !== "teacher" ? (
                   <React.Fragment>
@@ -469,7 +481,10 @@ const Powerups = props => {
                       variant="contained"
                       className={classes.button}
                       size="small"
-                      disabled={checkoutCart[classroomName] == null || checkoutCart[classroomName].length === 0}
+                      disabled={
+                        checkoutCart[classroomName] == null ||
+                        checkoutCart[classroomName].length === 0
+                      }
                       onClick={() => {
                         purchasePowerup(classroomName);
                       }}
@@ -520,7 +535,8 @@ const mapStateToProps = state => {
     loading: state.powerups.loading,
     powerups: state.powerups.dbPowerups,
     success: state.powerups.success,
-    userId: state.firebase.auth.uid
+    userId: state.firebase.auth.uid,
+    fbClassrooms: state.firebase.profile.classrooms
   };
 };
 

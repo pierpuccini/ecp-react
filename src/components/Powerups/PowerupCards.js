@@ -231,7 +231,7 @@ const PowerupCards = props => {
             style={{textTransform: "capitalize"}}
           />
         </div>
-        <Tooltip placement="left" title={powerup.description}>
+        <Tooltip enterTouchDelay={50} placement="left" title={powerup.description}>
           <Icon>
             <InfoOutlinedIcon />
           </Icon>
