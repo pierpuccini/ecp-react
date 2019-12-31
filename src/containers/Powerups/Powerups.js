@@ -311,9 +311,8 @@ const Powerups = props => {
   };
 
   const handleCloseModal = () => {
-    let openModalCopy = openModal;
     clearCreateEditState();
-    setopenModal(!openModalCopy);
+    setopenModal(false);
   };
 
   const handleCart = data => {
@@ -353,7 +352,8 @@ const Powerups = props => {
       buyer;
     let uniquecheckoutCart = [...new Set(checkoutCart[classroomName])];
     uniquecheckoutCart.forEach(pw => {
-      groupId = fbClassrooms.find(classroom => classroom.id === pw.classroom.id)?.groupId;
+      groupId = fbClassrooms.find(classroom => classroom.id === pw.classroom.id)
+        ?.groupId;
       quantity = getOccurrence(checkoutCart[classroomName], pw);
       master_id = pw.id;
       benefit = pw.benefit;
