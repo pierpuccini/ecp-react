@@ -347,7 +347,7 @@ const Powerups = props => {
     let payload = [],
       groupId,
       quantity,
-      master_id,
+      master_powerup_id,
       benefit,
       buyer;
     let uniquecheckoutCart = [...new Set(checkoutCart[classroomName])];
@@ -355,10 +355,10 @@ const Powerups = props => {
       groupId = fbClassrooms.find(classroom => classroom.id === pw.classroom.id)
         ?.groupId;
       quantity = getOccurrence(checkoutCart[classroomName], pw);
-      master_id = pw.id;
+      master_powerup_id = pw.id;
       benefit = pw.benefit;
       buyer = groupId == null ? userId : groupId;
-      payload = [...payload, { quantity, master_id, benefit, buyer }];
+      payload = [...payload, { quantity, master_powerup_id, benefit, buyer }];
     });
     purchasePowerupAPI(payload);
   };
