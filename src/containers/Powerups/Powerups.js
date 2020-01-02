@@ -316,19 +316,21 @@ const Powerups = props => {
   };
 
   const handleCart = data => {
+    console.log('data',data);
     if (data.classroom in checkoutCart && data.type === "+") {
-      let updatedCart = checkoutCart[data.classroom].push(data.powerup);
-      setcheckoutCart({ ...checkoutCart, updatedCart });
+      console.log('data.counter',data.counter);
+      console.log('data.powerup.quantity',data.powerup.quantity);
+      if (data.counter <= data.powerup.quantity) {
+        checkoutCart[data.classroom].push(data.powerup);
+      }
+      setcheckoutCart({ ...checkoutCart });
     } else if (data.classroom in checkoutCart && data.type === "-") {
       let powerupToRemove = checkoutCart[data.classroom].findIndex(
         pw => pw.id === data.powerup.id
       );
       if (powerupToRemove !== -1) {
-        let updatedCart = checkoutCart[data.classroom].splice(
-          powerupToRemove,
-          1
-        );
-        setcheckoutCart({ ...checkoutCart, updatedCart });
+        checkoutCart[data.classroom].splice(powerupToRemove,1);
+        setcheckoutCart({ ...checkoutCart });
       }
     }
   };
